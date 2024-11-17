@@ -6,18 +6,27 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sat, 16 Nov 2024 21:04:54 +0100</lastBuildDate>
+		<lastBuildDate>Sat, 16 Nov 2024 20:00:00 +0000</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>Hello World</title>
-			<link>https://sdn-warrior.org/posts/hello-world/</link>
-			<pubDate>Sat, 16 Nov 2024 21:04:54 +0100</pubDate>
+			<title>Homelab V4</title>
+			<link>https://sdn-warrior.org/posts/labv4/</link>
+			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/hello-world/</guid>
+			<guid>https://sdn-warrior.org/posts/labv4/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
-<p>Hello World</p>
+			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
+<p>I have done a huge redesign of my Homelab.
+To better test VCF scenarios, 3 new #Minisforum MS-01 have been added.
+These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.
+They also have 2x10G and 2x2.5G networking on board for various VM workloads.
+Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built #Unraid.
+I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.</p>
+<p><img src="bench1.png" alt="Benchmark"></p>
+<p><img src="bench2.png" alt="Benchmark IOPS"></p>
+<p>Pretty impressive for my setup. I still have to customize the rack a bit so that I can add the 10G Mikrotik switch and clean up the VLANs from old labs.
+I&rsquo;m already planning a further expansion stage though.</p>
 ]]></content>
 		</item>
 		
