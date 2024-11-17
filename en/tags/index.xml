@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on SDN Warrior</title>
-    <link>sdn-warrior.github.io/en/tags/</link>
+    <link>https://sdn-warrior.github.io/en/tags/</link>
     <description>Recent content in Tags on SDN Warrior</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <atom:link href="sdn-warrior.github.io/en/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.github.io/en/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
