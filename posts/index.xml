@@ -6,8 +6,146 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sat, 16 Nov 2024 20:00:00 +0000</lastBuildDate>
+		<lastBuildDate>Sun, 17 Nov 2024 11:57:43 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>How to get most out of your Nuc </title>
+			<link>https://sdn-warrior.org/posts/nuc/</link>
+			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nuc/</guid>
+			<description><![CDATA[%!s(<nil>)]]></description>
+			<content type="html"><![CDATA[<h2 id="first-things-first">First things first</h2>
+<p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
+Unfortunately, these are relatively difficult to get in Germany, but it&rsquo;s worth the effort.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Search for</b>
+        </div>
+        <div class="admonition-content">ASUS NUC LAN and USB Expansion Module (90AR0000-P00010)</div>
+    </aside></p>
+<p>
+<figure><picture>
+          <source srcset="/NIC_hu6903087498817470336.webp" type="image/webp">
+          <source srcset="/NIC_hu4204005753805133783.jpg" type="image/jpeg">
+          <img src="/NIC_hu6903087498817470336.webp"alt="Image of an IO expansion"  width="1200"  height="800" />
+        </picture><figcaption>
+            <p>IO expansion</p>
+          </figcaption></figure>
+vSphere 8 supports the cards natively and you don&rsquo;t have to install any drivers.
+It also supports jumbo frames, which is relevant for NSX Labs.
+It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name <code>CRS326-4C +20G+2Q</code>.</p>
+
+    <aside class="admonition tip">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+   </svg></div><b>Practical tip</b>
+        </div>
+        <div class="admonition-content">My experience with 2.5 Gb/s Lan has shown that it makes sense to set the ports to a fixed speed in the hypervisor and on the switch, otherwise I kept having network failures.</div>
+    </aside>
+<h2 id="memory-tiering">Memory Tiering</h2>
+<p>Memory Tiering is very new in ESXi vSphere 8.0U3 and is still a Tech Preview.
+With memory tiering, you can use up to 400% of the physical RAM. This requires a fast NVMe.
+I would recommend a PCIe4 NVMe with at least 5000 MB/s read/write.
+Memory Tiering stores very cold (unused RAM pages) and cold RAM pages (less than 20% used) on the NVMe (Memory Tier).
+There is a wonderful <a href="https://www.vmware.com/explore/video-library/video/6360757998112" title="Explore USA">Explore Session</a> on this.</p>
+<p>To enable memory tiering, you have to enter the following commands via the ESX Cli:</p>
+<ul>
+<li>This command turns on memory tiering</li>
+</ul>
+<pre tabindex="0"><code>esxcli system settings kernel set -s MemoryTiering -v TRUE
+</code></pre><ul>
+<li>This command selects the NVMe</li>
+</ul>
+<pre tabindex="0"><code>esxcli system tierdevice create -d /vmfs/devices/disks/&lt;Your NVME&gt;
+</code></pre><ul>
+<li>Enter the factor here (0-400%).</li>
+</ul>
+<pre tabindex="0"><code>esxcli system settings advanced set -o /Mem/TierNvmePct -i 400
+</code></pre><p>After a reboot, you have the selected amount of additional memory.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">The selected disk is no longer available to the ESXi.
+The minimum capacity must match the selected factor.
+If the disk is larger, it will still be used entirely for memory tiering.
+My recommendation is to use 1 TB NVMe with 64 GB of physical RAM and 400% as the factor.
+ESXi will use the NVMe evenly so that the disk doesn&rsquo;t break as quickly.</div>
+    </aside>
+<h2 id="using-pe-cores">Using P/E Cores</h2>
+<p>Intel has introduced the big.little CPU architecture from the 12th generation of their consumer CPUs. This leads to some problems with ESXi. If the efficiency cores are activated, the ESXi starts with a PSOD (Purble Screen of Death).
+Fortunately, there are a few workarounds here.</p>
+<ul>
+<li>Disable the E cores in the BIOS</li>
+</ul>
+<p>This means that you can use hyperthreading and the P Cores. However, you are clearly wasting potential here. That&rsquo;s why we don&rsquo;t want to.</p>
+<ul>
+<li>Use P and E cores and sacrifice hyperthreading for them</li>
+</ul>
+<p>My tests showed that I got significantly more performance out of my 13th generation i7 if I didn&rsquo;t use hyperthreading and only used “real” CPU cores, even if the E cores have a lower clock rate.
+<a href="https://williamlam.com/2023/01/video-of-esxi-install-workaround-for-fatal-cpu-mismatch-on-feature-for-intel-12th-gen-cpus-and-newer.html">William Lam</a> has written very detailed blog articles about this, I link to him here for more information, as this article was actually only intended to be a short summary.</p>
+<p>We actually only need two ESX CLI commands to make it all work.</p>
+<ul>
+<li>With this command, we prevent the PSOD from occurring when the ESXi boots.</li>
+</ul>
+<pre tabindex="0"><code>esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE
+</code></pre><ul>
+<li>With this command, we prevent the ESXi from getting a PSOD when the VMs are switched on.</li>
+</ul>
+<pre tabindex="0"><code>esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
+</code></pre>
+    <aside class="admonition tip">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+   </svg></div><b>Practical tip</b>
+        </div>
+        <div class="admonition-content">When reinstalling an ESXi server, I always switch off the E Cores, which saves me from having to manipulate the boot loader. After I have allowed memory tiering and the E/P Cores via the ESX CLI, I switch the E/P Cores back on in the BIOS.</div>
+    </aside>
+<p>If everything is correct, an ESX NUC of the 13th generation looks like this.
+
+<figure><picture>
+          <source srcset="/nuc_hu16244612542378356649.webp" type="image/webp">
+          <source srcset="/nuc_hu988947436421053682.jpg" type="image/jpeg">
+          <img src="/nuc_hu16244612542378356649.webp"alt="NUC i7"  width="1098"  height="458" />
+        </picture><figcaption>
+            <p>NUC i7 13th Gen with Memory Tiering and P/E Cores</p>
+          </figcaption></figure></p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Homelab V4</title>
