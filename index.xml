@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>SDN Warrior aka Daniel Krieger</title>
-    <link>https://evilcorp.info/</link>
+    <link>https://sdn-warrior.github.io/</link>
     <description>Recent content on SDN Warrior aka Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Sat, 16 Nov 2024 21:04:54 +0100</lastBuildDate>
-    <atom:link href="https://evilcorp.info/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hello World</title>
-      <link>https://evilcorp.info/posts/hello-world/</link>
+      <link>https://sdn-warrior.github.io/posts/hello-world/</link>
       <pubDate>Sat, 16 Nov 2024 21:04:54 +0100</pubDate>
-      <guid>https://evilcorp.info/posts/hello-world/</guid>
+      <guid>https://sdn-warrior.github.io/posts/hello-world/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Hello World&lt;/p&gt;</description>
     </item>
     <item>
       <title>ABOUT ME</title>
-      <link>https://evilcorp.info/about/</link>
+      <link>https://sdn-warrior.github.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://evilcorp.info/about/</guid>
+      <guid>https://sdn-warrior.github.io/about/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;me.png&#34; alt=&#34;Bild von mir&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;hi-im-daniel&#34;&gt;Hi, I’m Daniel,&lt;/h2&gt;&#xA;&lt;p&gt;a passionate homelab enthusiast and Software-Defined Networking engineer based in Germany.&#xA;With a strong focus on VMware technologies, I enjoy exploring the boundaries of virtualization and building innovative solutions in my home lab.&#xA;This blog is my space to share insights, tips, and projects from my journey in the world of software-defined infrastructure.&lt;/p&gt;</description>
     </item>
   </channel>
