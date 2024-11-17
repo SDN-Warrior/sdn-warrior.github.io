@@ -18,15 +18,29 @@
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
 <p>I have done a huge redesign of my Homelab.
-To better test VCF scenarios, 3 new #Minisforum MS-01 have been added.
+To better test VCF scenarios, 3 new Minisforum MS-01 have been added.
 These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.
 They also have 2x10G and 2x2.5G networking on board for various VM workloads.
-Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built #Unraid.
+Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.
 I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.</p>
-<p><img src="bench1.png" alt="Benchmark"></p>
-<p><img src="bench2.png" alt="Benchmark IOPS"></p>
+
+<figure><picture>
+          <source srcset="/bench1_hu2966482509308598586.webp" type="image/webp">
+          <source srcset="/bench1_hu2660173491905647916.jpg" type="image/jpeg">
+          <img src="/bench1_hu2966482509308598586.webp"alt="Disk Performance iSCSI Multipathing"  width="483"  height="351" />
+        </picture><figcaption>
+            <p>Disk Performance iSCSI Multipathing</p>
+          </figcaption></figure>
+
+<figure><picture>
+          <source srcset="/bench2_hu3593698816181082095.webp" type="image/webp">
+          <source srcset="/bench2_hu10297252823232288012.jpg" type="image/jpeg">
+          <img src="/bench2_hu3593698816181082095.webp"alt="IOPS iSCSI Multipathing"  width="483"  height="356" />
+        </picture><figcaption>
+            <p>IOPS iSCSI Multipathing</p>
+          </figcaption></figure>
 <p>Pretty impressive for my setup. I still have to customize the rack a bit so that I can add the 10G Mikrotik switch and clean up the VLANs from old labs.
-I&rsquo;m already planning a further expansion stage though.</p>
+I&rsquo;m already planning a further expansion stage though.\</p>
 ]]></content>
 		</item>
 		

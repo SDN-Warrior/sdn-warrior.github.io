@@ -14,7 +14,7 @@
       <link>https://sdn-warrior.org/posts/labv4/</link>
       <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
       <guid>https://sdn-warrior.org/posts/labv4/</guid>
-      <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new #Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built #Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
     </item>
     <item>
       <title>ABOUT ME</title>
