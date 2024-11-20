@@ -61,11 +61,11 @@ The NVMe drives also serve as a fast cache for incoming data. Files uploaded to 
 Unraid’s flexibility makes it easy to decide whether specific shares or data should stay on the NVMe pool or be automatically moved to the Array on a scheduled basis. This level of control ensures you can optimize storage placement to suit your workload, balancing speed and capacity seamlessly.</p>
 </li>
 <li>
-<p>Tier 3: Enterprise NVMe via iSCSI (Fast and Durable Storage)</p>
+<p>Tier 3: Enterprise NVMe via iSCSI (Fast and Durable Storage)
+The top tier features a 4TB enterprise NVMe drive, designed for high-speed and durable performance under constant load. This storage tier is shared with my homelab servers via iSCSI Multichannel, utilizing a 2x10Gb Intel X710 NIC for redundancy and maximum throughput.
+This tier provides fast, reliable storage for workloads that demand consistent performance, such as virtual machines or other critical applications in my homelab. By leveraging enterprise-grade hardware and robust networking, this storage layer ensures low-latency access and can handle the demands of continuous use without compromising reliability.</p>
 </li>
 </ul>
-<p>The top tier features a 4TB enterprise NVMe drive, designed for high-speed and durable performance under constant load. This storage tier is shared with my homelab servers via iSCSI Multichannel, utilizing a 2x10Gb Intel X710 NIC for redundancy and maximum throughput.</p>
-<p>This tier provides fast, reliable storage for workloads that demand consistent performance, such as virtual machines or other critical applications in my homelab. By leveraging enterprise-grade hardware and robust networking, this storage layer ensures low-latency access and can handle the demands of continuous use without compromising reliability.</p>
 <h2 id="current-setup">Current Setup</h2>
 <p>My Unraid server is built on a Intel NUC Extreme 11th Gen i7 with 64GB of RAM, offering a powerful and compact platform for my homelab. The storage setup includes 2x 1TB consumer-grade NVMe drives for fast cache and 4TB enterprise-grade NVMe for ultra-reliable, high-performance storage.</p>
 <p>The Unraid Array has a total capacity of 42TB, with 33.4TB usable for data storage. This provides ample space for both my active projects and long-term storage needs.</p>
@@ -113,6 +113,7 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 <li>2x Samsung 970 EVO Plus 1TB</li>
 <li>1x Samsung MZ1L23T8HBLA-00A07 4 TB Enterprise NVMe 110mm</li>
 <li>1x Intel X710 2x 10 Gb/s</li>
+<li>1x Good USB Stick (32GB)</li>
 </ul>
 <p><img src="das.jpg" alt="DAS Disk Array">
 <img src="unraid.jpg" alt="Unraid"></p>
