@@ -72,7 +72,7 @@ Unraid’s flexibility makes it easy to decide whether specific shares or data s
 <p>On the software side, I host 29 Docker container services and 4 virtual machines, including critical services such as my Active Directory (AD), Certificate Authority (CA), and a Veeam Proxy for file backups. This setup allows for a highly efficient and flexible environment that supports a wide range of use cases while maintaining reliable performance.</p>
 <p><img src="unraid2.jpg" alt="Gui"></p>
 <h2 id="performance">Performance</h2>
-<p>The performance of my Unraid setup was measured using CrystalDiskMark with a 16GB test file to evaluate both sequential and random read and write speeds, as well as IOPS (Input/Output Operations Per Second). The results highlight the impressive capabilities of the system:</p>
+<p>The performance of my Unraid setup was measured using CrystalDiskMark with a 16GB test file (on a Windows 11 VM) to evaluate both sequential and random read and write speeds, as well as IOPS (Input/Output Operations Per Second) of my iSCSI Storage (Tier 3). The results highlight the impressive capabilities of the system:</p>
 <p>Read Performance:</p>
 <ul>
 <li>Sequential Read (Q8T1): 1.993 GB/s | IOPS: 1900.35</li>
