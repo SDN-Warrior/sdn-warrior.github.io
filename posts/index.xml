@@ -294,5 +294,79 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 ]]></content>
 		</item>
 		
+		<item>
+			<title>Nsx Integration Fortigate</title>
+			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+			<description><![CDATA[%!s(<nil>)]]></description>
+			<content type="html"><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
+<p>Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.</p>
+<h2 id="first-things-first">First things first</h2>
+<p>The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups.
+This allows us to use dynamic groups that were previously created in NSX using tags, for example.</p>
+<p>First we need to configure our connector. To do this, go to the Fortigate at <em><strong>Security Fabric / External Connectors</strong></em> and click on <em><strong>Create New</strong></em>.</p>
+<p><img src="01.webp" alt="Fortigate Dialog"></p>
+<p>Here we need to enter our NSX Manager, if we have an NSX Manager Cluster then of course the Cluster VIP or FQDN is needed.
+We can define an update interval, this determines how long it takes to update the groups on the Fortigate.
+In my lab I chose 30 seconds, depending on the environment lower or higher values may make sense. In a productive environment, the certificate should always be verified.
+In my homelab environment I deliberately turned this off.</p>
+<p><img src="02_External-Connector.webp" alt="External Connector"></p>
+<h2 id="importing-the-dynamic-nsx-groups">Importing the dynamic NSX groups</h2>
+<p>The groups need to be imported via the Fortigate CLI. This is relatively easy to do for all groups and specifically for individual groups.
+Groups imported this way will be automatically updated in the future. If new groups are configured in NSX, they must be imported via the CLI if they play a role in the rules.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Fortigate CLI</b>
+        </div>
+        <div class="admonition-content"><code>execute nsx group import &lt;SDN Connector&gt; &lt;VDOM&gt; &lt;group&gt;</code></div>
+    </aside>
+<p>If you want to import all NSX groups, you need to omit the group name in the CLI call. In the screenshot you can see me importing the <em><strong>dFG_AlpineLinux</strong></em> NSX group.
+This uses an NSX tag to combine all VMs of type Alpine Linux into one security group.</p>
+<p><img src="03_Group-Import.png" alt="Group-Import"></p>
+<p>In the Fortigate, you can now find the group under <em><strong>Policy &amp; Objects / Addresses</strong></em> and use it like any other group in firewall policies. The NSX groups can be used not only for firewall rules, but also for policy-based routing via the SD-WAN feature.</p>
+<p><img src="04_FW-Groups.webp" alt="Firewall Groups"></p>
+<p>In my example, I am prohibiting the Alpine Linux VMs from accessing the Internet. The current realised group assignment can be checked at any time via <em><strong>Policy &amp; Objects&gt; / Addresses</strong></em> and a double click on the group.</p>
+<p><img src="05_matched-adress.webp" alt="Matched Adrewss"></p>
+<h2 id="delete-groups">Delete groups</h2>
+<p>Groups need to be deleted manually. The easiest way to do this is via the Fortigate CLI. To do this, execute the following CLI command:</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Fortigate CLI</b>
+        </div>
+        <div class="admonition-content"><code>execute nsx group delete &lt;VDOM&gt; &lt;filter&gt;</code></div>
+    </aside>
+<p>If you want to delete all groups, you can simply leave the filter empty. If a group is used in a firewall policy, it cannot be deleted and you will receive a message that the group is in use.</p>
+<h2 id="testing-the-solution">Testing the solution</h2>
+<p>To do this, I log on to the Alpine2 VM and check the current IP. The VM has currently been assigned 172.31.2.10. We can also find this on the Fortigate in our dFG_AlpineLinux group. I am trying to send an ICMP to the Internet, which is blocked by the Fortigate firewall as expected.</p>
+<p><img src="06_test-1.webp" alt="First Test"></p>
+<p>Next, I remove the Alpine Linux tag in the NSX, which ensures that the VM is no longer realised in the dFG_Alpine Linux group on the Fortigate after 30 seconds at the latest.</p>
+<p><img src="07_test-2.webp" alt="Second Test"></p>
+<p>Finally, I repeated my ping test. As expected, Internet access is now without any problems.</p>
+<p><img src="08_icmp.png" alt="Test Number three"></p>
+<h2 id="remarks">Remarks</h2>
+<p>If the connection to NSX Manager is interrupted, group membership remains at the last synchronised state. This means that in highly dynamic environments, too much or too little traffic may be allowed or blocked. For this reason, the SDN connection should always be monitored. All group changes are saved in the Log SDN Connector Log of the Fortigate.</p>
+<h2 id="use-cases">Use cases</h2>
+<p>One conceivable scenario would be to enable a dynamic firewall for VMs that are allowed to access the Internet. This can be done in NSX using a tag and a group. Every VM that does not have a tag and is therefore not in the group will be blocked at the Fortigate perimeter firewall.</p>
+<p><img src="09_firewall_rule.webp" alt="Firewall Rules"></p>
+<p>The firewall rule allows everything that does not go into RFC1918 networks (private IP range). Of course, this is only a simple example and more complex setups are possible.</p>
+<h2 id="additional-information">Additional information</h2>
+<p><a href="https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/753961/public-and-private-sdn-connectors">Fortinet Documentation: Public and private SDN connectors</a></p>
+]]></content>
+		</item>
+		
 	</channel>
 </rss>
