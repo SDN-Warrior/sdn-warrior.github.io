@@ -162,7 +162,8 @@ To revert the system to its default behavior and restrict the execution of non-i
 Better performance, as traffic is only sent where needed.
 Stronger security, since traffic is not broadcast unnecessarily.</div>
     </aside>
-<p>MAC Learning with Forged Transmits is a significant performance gamechanger, especially when running multiple nested VMs on a single physical ESXi host.</p>
+<p>MAC Learning with Forged Transmits is a significant performance gamechanger, especially when running multiple nested VMs on a single physical ESXi host.
+However, it&rsquo;s important to note that MAC Learning with Forged Transmits requires a Distributed Switch. If you&rsquo;re using a Standard Switch, you&rsquo;ll still need to rely on Promiscuous Mode to achieve similar functionality.</p>
 ]]></content>
 		</item>
 		
