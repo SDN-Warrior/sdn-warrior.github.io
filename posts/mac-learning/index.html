@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="Daniel Krieger">
+
+  <meta itemprop="name" content="MAC Learning is your friend">
+  <meta itemprop="description" content="Intro When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.
+MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.">
+  <meta itemprop="datePublished" content="2024-11-27T19:54:18+01:00">
+  <meta itemprop="dateModified" content="2024-11-27T19:54:18+01:00">
+  <meta itemprop="wordCount" content="1669">
+  <meta itemprop="keywords" content="Homelab,Vcf,Nested Lab,Vmware,Esxi,Network,Performance"><meta property="og:url" content="https://sdn-warrior.org/posts/mac-learning/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="MAC Learning is your friend">
+  <meta property="og:description" content="Intro When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.
+MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-27T19:54:18+01:00">
+    <meta property="article:modified_time" content="2024-11-27T19:54:18+01:00">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="Nested Lab">
+    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="Esxi">
+    <meta property="article:tag" content="Network">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MAC Learning is your friend">
+  <meta name="twitter:description" content="Intro When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.
+MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "MAC Learning is your friend",
+    "name": "MAC Learning is your friend",
+    "description": "Intro When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.\nMAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.\n",
+    "keywords": ["homelab", "vcf", "nested lab", "vmware", "esxi", "network", "performance"],
+    "articleBody": "Intro When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.\nMAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.\nPromiscuous Mode: On the other hand, this allows a VM or virtual switch to capture all traffic on a port group, whether addressed to it or not. It’s a useful feature for troubleshooting and monitoring but comes with potential security and performance implications.\nForged Transmits: Forged Transmits plays a complementary role in this configuration. It ensures that traffic originating from a VM with a source MAC address different from its assigned MAC address is allowed to leave the virtual switch. This is crucial in nested environments.\nLab environment In this lab environment, I am using two Minisforum MS-01 workstations, each equipped with ESXi 8.0.3 as the hypervisor. These compact systems provide a balance of performance and energy efficiency, fitting perfectly into my goal of maintaining a powerful yet quiet setup.\nEach workstation is interconnected via dual 10 Gb/s network links, ensuring high-speed communication with minimal latency. This setup is particularly advantageous for simulating complex network scenarios and nested virtualization environments.\nOn each workstation, a nested ESXi host is deployed. These nested hosts act as virtualized hypervisors for a future VCF deployment.\nThe problems I’ve caused In my previous lab setups, Promiscuous Mode was my go-to solution for nested virtualization. It was reliable, simple to configure, and worked flawlessly for years. While I was aware of the security risks associated with it, in a controlled homelab environment, those risks were not a significant concern.\nHowever, everything changed when I upgraded my lab to dual 10 Gb/s network links and, powered by the i9 CPU, gained the ability to run multiple nested ESXi hosts on a single physical machine. One of the first challenges I encountered was during the configuration of a vSAN port group for my nested ESXi hosts. This port group was configured to use Active/Active load balancing across both 10 Gb/s uplinks on the MS-01 workstations. Almost immediately, I noticed unexpected performance issues. Nested VMs were experiencing slow network speeds, and vSAN operations were significantly hindered. Initially, I struggled to pinpoint the root cause. Given my past success with Promiscuous Mode, I didn’t suspect it could be contributing to the problem.\nWhy Promiscuous Mode Became a Problem The performance degradation stemmed from how traffic was handled with Promiscuous Mode in a dual-uplink, Active/Active configuration:\nBroadcasting Traffic Across Both Uplinks: Promiscuous Mode caused the virtual switch to deliver all traffic to every uplink, regardless of the destination. With two high-speed uplinks in an Active/Active configuration, this created excessive overhead, saturating the uplinks and causing packet drops.\nvSAN’s High Sensitivity to Latency: vSAN traffic is highly dependent on low latency and consistent performance. The unnecessary broadcast of packets interfered with its ability to operate efficiently.\nNested Virtualization Amplified the Problem: Nested ESXi hosts added another layer of complexity. The inner VMs were sending and receiving traffic that the parent ESXi host’s virtual switch struggled to handle efficiently under Promiscuous Mode.\nOK, but how bad is the performance? To quantify the performance issues, I turned to iPerf3, a reliable tool for measuring network throughput that is conveniently included in ESXi 8. Using iPerf3, I conducted a series of tests to better understand the extent of the performance degradation.\nPerformance Measurement 1: Both Physical NICs Active, Nested Hosts on the Same Physical Host For the first test, I configured both pNICs (10 Gb/s) as active in an Active/Active load balancing setup and placed both nested ESXi hosts on the same physical host. Additionally, Promiscuous Mode was enabled on the port group to ensure traffic could flow properly between the nested hosts.\nResults [ ID] Interval Transfer Bitrate Retr\r[ 5] 0.00-10.00 sec 1.35 GBytes 1.16 Gbits/sec 0 sender [ 5] 0.00-10.00 sec 1.35 GBytes 1.16 Gbits/sec receiver Performance Measurement 2: Single NIC Active, Nested Hosts on the Same Physical Host For the second test, I modified the setup to use only one physical NIC (pNIC) while keeping both nested ESXi hosts on the same physical host. Promiscuous Mode was still enabled on the port group to ensure traffic routing between the nested hosts. By disabling the second uplink, the traffic path was simplified, reducing potential conflicts.\nResults [ ID] Interval Transfer Bitrate Retr\r[ 5] 0.00-10.00 sec 11.4 GBytes 9.82 Gbits/sec 0 sender\r[ 5] 0.00-10.01 sec 11.4 GBytes 9.80 Gbits/sec receiver Performance Measurement 3: MAC Learning and Forged Transmits, Dual Uplinks, Nested Hosts on the Same Physical Host For the third test, I switched to using MAC Learning and Forged Transmits, while keeping both physical NICs (pNICs) active in the Active/Active load balancing configuration. Both nested ESXi hosts were still located on the same physical host. This configuration was designed to optimize traffic handling without relying on Promiscuous Mode\nResults [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-10.00 sec 24.2 GBytes 20.8 Gbits/sec 0 sender [ 5] 0.00-10.01 sec 24.2 GBytes 20.8 Gbits/sec receiver Performance Measurement 4: MAC Learning and Forged Transmits, Single Uplink, Nested Hosts on the Same Physical Host For the fourth test, I used a single uplink (pNIC) with both nested ESXi hosts on the same ESXi server. MAC Learning and Forged Transmits were enabled to optimize traffic handling. The throughput was 20.7 Gbits/sec, almost identical to Test 3. This confirms that, since the traffic did not need to traverse the physical network infrastructure, the single uplink configuration with MAC Learning and Forged Transmits performed just as efficiently, without the overhead of Promiscuous Mode.\nResults [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-10.00 sec 24.2 GBytes 20.8 Gbits/sec 0 sender [ 5] 0.00-10.01 sec 24.2 GBytes 20.8 Gbits/sec receiver Further Performance Measurements and Security Considerations Additional performance tests revealed that the difference between Promiscuous Mode and MAC Learning was minimal or even non-existent when the nested hosts were placed on two different physical hosts. The traffic between the nested VMs did not significantly differ whether Promiscuous Mode or MAC Learning was enabled, indicating that both configurations performed similarly in a multi-host environment.\nIt's important to note the security implications of using Promiscuous Mode\rEnabling Promiscuous Mode on a network interface allows all traffic to be sent to the VM, even traffic not intended for it, which can expose sensitive data or potentially allow malicious activity. Because of this security concern, Promiscuous Mode should only be used temporarily, and for troubleshooting purposes, in production environments. It is recommended to disable it once the issue is resolved to maintain a secure network setup.\rSide Effect of Promiscuous Mode: Duplicate Packets Enabling Promiscuous Mode on a network interface can lead to duplicate packets when both the source and destination are on the same ESXi host. In this mode, the virtual machine receives all traffic, including its own outbound packets, causing unnecessary duplication. This can result in performance degradation due to increased CPU usage and network inefficiencies.\n[root@esxnuc04:/usr/lib/vmware/vsan/bin] vmkping -I vmk1 192.168.69.203\rPING 192.168.69.203 (192.168.69.203): 56 data bytes\r64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.356 ms\r64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.423 ms (DUP!)\r64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.426 ms (DUP!)\r64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.429 ms (DUP!)\r64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.249 ms\r64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.274 ms (DUP!)\r64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.277 ms (DUP!)\r64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.281 ms (DUP!)\r64 bytes from 192.168.69.203: icmp_seq=2 ttl=64 time=0.261 ms Sidequest: Using iPerf on ESXi 8.0.3 To use iPerf for network performance testing on ESXi 8.0.3, you’ll need to follow a few steps to enable and configure the necessary settings.\nStep 1: Disable the ESXi firewall temporarily First, disable the ESXi firewall to allow the iPerf tool to operate without restrictions: esxcli network firewall set --enabled false Step 2: Allow executing iPerf Next, set the system to allow execution of non-installed binaries (such as iPerf), which are not part of the default ESXi installation: localcli system settings advanced set -o /User/execInstalledOnly -i 0 Step 3: Execute iPerf (Client example) Once you’ve set the necessary configuration, you can execute iPerf to test the network performance. Use the following command to run iPerf as a client (-c) and specify the target IP address (e.g., 192.168.69.203): ./usr/lib/vmware/vsan/bin/iperf3 -c 192.168.69.203 Step 4: Re-enable the firewall Once you’ve finished testing, remember to re-enable the firewall for security reasons: esxcli network firewall set --enabled true Step 5: Restrict execution of non-installed binaries To revert the system to its default behavior and restrict the execution of non-installed binaries, run the following command: localcli system settings advanced set -o /User/execInstalledOnly -i 1 Why MAC Learning and Forged Transmits Replace Promiscuous Mode in Nested Environments In a typical nested ESXi environment, each inner VM sends packets with its unique MAC address, which the virtual switch on the parent ESXi host does not recognize by default. This creates a challenge because:\nWithout Promiscuous Mode, the switch drops packets destined for or originating from these MAC addresses. Without Forged Transmits, packets from inner VMs with “forged” source MAC addresses are also dropped. By enabling MAC Learning and Forged Transmits: MAC Learning ensures that the virtual switch learns the inner VMs’ MAC addresses dynamically, so it can correctly forward traffic to them without requiring Promiscuous Mode. Forged Transmits ensures that traffic from inner VMs with different source MAC addresses is allowed to leave the parent VM’s vNIC.\nConclusion\rThe combination of MAC Learning and Forged Transits removes the need for promiscuous mode, while maintaining: Better performance, as traffic is only sent where needed. Stronger security, since traffic is not broadcast unnecessarily.\rMAC Learning with Forged Transmits is a significant performance gamechanger, especially when running multiple nested VMs on a single physical ESXi host.\n",
+    "wordCount" : "1669",
+    "inLanguage": "en",
+    "datePublished": "2024-11-27T19:54:18+01:00",
+    "dateModified": "2024-11-27T19:54:18+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "Daniel Krieger",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/mac-learning/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>MAC Learning is your friend</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
+	</head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fmac-learning%2f&amp;text=MAC%20Learning%20is%20your%20friend" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fmac-learning%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=MAC%20Learning%20is%20your%20friend&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fmac-learning%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fmac-learning%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=MAC%20Learning%20is%20your%20friend&amp;summary=MAC%20Learning%20is%20your%20friend%2c%20by%20Daniel%20Krieger%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;MAC Learning is your friend&#34;,&#34;https://sdn-warrior.org/posts/mac-learning/&#34;,&#34;MAC Learning is your friend, by Daniel Krieger\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Nov 27, 2024</span></div>
+				<h1>MAC Learning is your friend</h1>
+			</header>
+			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">Daniel Krieger</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nested-lab">nested lab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/esxi">esxi</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/network">network</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/performance">performance</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>1669 Words
+     Words // ReadTime
+    
+    
+    
+    7 Minutes, 35 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2024-11-27 19:54 &#43;0100</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="intro">Intro<a href="#intro" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
+<ul>
+<li>
+<p>MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.</p>
+</li>
+<li>
+<p>Promiscuous Mode: On the other hand, this allows a VM or virtual switch to capture all traffic on a port group, whether addressed to it or not. It&rsquo;s a useful feature for troubleshooting and monitoring but comes with potential security and performance implications.</p>
+</li>
+<li>
+<p>Forged Transmits: Forged Transmits plays a complementary role in this configuration. It ensures that traffic originating from a VM with a source MAC address different from its assigned MAC address is allowed to leave the virtual switch. This is crucial in nested environments.</p>
+</li>
+</ul>
+<h2 id="lab-environment">Lab environment<a href="#lab-environment" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In this lab environment, I am using two Minisforum MS-01 workstations, each equipped with ESXi 8.0.3 as the hypervisor. These compact systems provide a balance of performance and energy efficiency, fitting perfectly into my goal of maintaining a powerful yet quiet setup.</p>
+<p>Each workstation is interconnected via dual 10 Gb/s network links, ensuring high-speed communication with minimal latency. This setup is particularly advantageous for simulating complex network scenarios and nested virtualization environments.</p>
+<p>On each workstation, a nested ESXi host is deployed. These nested hosts act as virtualized hypervisors for a future VCF deployment.</p>
+<h2 id="the-problems-ive-caused">The problems I&rsquo;ve caused<a href="#the-problems-ive-caused" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In my previous lab setups, Promiscuous Mode was my go-to solution for nested virtualization. It was reliable, simple to configure, and worked flawlessly for years. While I was aware of the security risks associated with it, in a controlled homelab environment, those risks were not a significant concern.</p>
+<p>However, everything changed when I upgraded my lab to dual 10 Gb/s network links and, powered by the i9 CPU, gained the ability to run multiple nested ESXi hosts on a single physical machine.
+One of the first challenges I encountered was during the configuration of a vSAN port group for my nested ESXi hosts. This port group was configured to use Active/Active load balancing across both 10 Gb/s uplinks on the MS-01 workstations.
+Almost immediately, I noticed unexpected performance issues. Nested VMs were experiencing slow network speeds, and vSAN operations were significantly hindered. Initially, I struggled to pinpoint the root cause. Given my past success with Promiscuous Mode, I didn’t suspect it could be contributing to the problem.</p>
+<h2 id="why-promiscuous-mode-became-a-problem">Why Promiscuous Mode Became a Problem<a href="#why-promiscuous-mode-became-a-problem" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The performance degradation stemmed from how traffic was handled with Promiscuous Mode in a dual-uplink, Active/Active configuration:</p>
+<ul>
+<li>
+<p>Broadcasting Traffic Across Both Uplinks: Promiscuous Mode caused the virtual switch to deliver all traffic to every uplink, regardless of the destination. With two high-speed uplinks in an Active/Active configuration, this created excessive overhead, saturating the uplinks and causing packet drops.</p>
+</li>
+<li>
+<p>vSAN’s High Sensitivity to Latency: vSAN traffic is highly dependent on low latency and consistent performance. The unnecessary broadcast of packets interfered with its ability to operate efficiently.</p>
+</li>
+<li>
+<p>Nested Virtualization Amplified the Problem: Nested ESXi hosts added another layer of complexity. The inner VMs were sending and receiving traffic that the parent ESXi host’s virtual switch struggled to handle efficiently under Promiscuous Mode.</p>
+</li>
+</ul>
+<h2 id="ok-but-how-bad-is-the-performance">OK, but how bad is the performance?<a href="#ok-but-how-bad-is-the-performance" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To quantify the performance issues, I turned to iPerf3, a reliable tool for measuring network throughput that is conveniently included in ESXi 8. Using iPerf3, I conducted a series of tests to better understand the extent of the performance degradation.</p>
+<h3 id="performance-measurement-1-both-physical-nics-active-nested-hosts-on-the-same-physical-host">Performance Measurement 1: Both Physical NICs Active, Nested Hosts on the Same Physical Host<a href="#performance-measurement-1-both-physical-nics-active-nested-hosts-on-the-same-physical-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>For the first test, I configured both pNICs (10 Gb/s) as active in an Active/Active load balancing setup and placed both nested ESXi hosts on the same physical host. Additionally, Promiscuous Mode was enabled on the port group to ensure traffic could flow properly between the nested hosts.</p>
+<p><img src="test1.png" alt="Test 1"></p>
+<h3 id="results">Results<a href="#results" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.35 GBytes  1.16 Gbits/sec    0            sender  
+[  5]   0.00-10.00  sec  1.35 GBytes  1.16 Gbits/sec                 receiver 
+</code></pre><h3 id="performance-measurement-2-single-nic-active-nested-hosts-on-the-same-physical-host">Performance Measurement 2: Single NIC Active, Nested Hosts on the Same Physical Host<a href="#performance-measurement-2-single-nic-active-nested-hosts-on-the-same-physical-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>For the second test, I modified the setup to use only one physical NIC (pNIC) while keeping both nested ESXi hosts on the same physical host. Promiscuous Mode was still enabled on the port group to ensure traffic routing between the nested hosts. By disabling the second uplink, the traffic path was simplified, reducing potential conflicts.</p>
+<p><img src="test2.png" alt="Test 2"></p>
+<h3 id="results-1">Results<a href="#results-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  11.4 GBytes  9.82 Gbits/sec    0            sender
+[  5]   0.00-10.01  sec  11.4 GBytes  9.80 Gbits/sec                 receiver
+</code></pre><h3 id="performance-measurement-3-mac-learning-and-forged-transmits-dual-uplinks-nested-hosts-on-the-same-physical-host">Performance Measurement 3: MAC Learning and Forged Transmits, Dual Uplinks, Nested Hosts on the Same Physical Host<a href="#performance-measurement-3-mac-learning-and-forged-transmits-dual-uplinks-nested-hosts-on-the-same-physical-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>For the third test, I switched to using MAC Learning and Forged Transmits, while keeping both physical NICs (pNICs) active in the Active/Active load balancing configuration. Both nested ESXi hosts were still located on the same physical host. This configuration was designed to optimize traffic handling without relying on Promiscuous Mode</p>
+<p><img src="test3.png" alt="Test 3"></p>
+<h3 id="results-2">Results<a href="#results-2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr  
+[  5]   0.00-10.00  sec  24.2 GBytes  20.8 Gbits/sec    0            sender  
+[  5]   0.00-10.01  sec  24.2 GBytes  20.8 Gbits/sec                 receiver  
+</code></pre><h3 id="performance-measurement-4-mac-learning-and-forged-transmits-single-uplink-nested-hosts-on-the-same-physical-host">Performance Measurement 4: MAC Learning and Forged Transmits, Single Uplink, Nested Hosts on the Same Physical Host<a href="#performance-measurement-4-mac-learning-and-forged-transmits-single-uplink-nested-hosts-on-the-same-physical-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>For the fourth test, I used a single uplink (pNIC) with both nested ESXi hosts on the same ESXi server. MAC Learning and Forged Transmits were enabled to optimize traffic handling.
+The throughput was 20.7 Gbits/sec, almost identical to Test 3. This confirms that, since the traffic did not need to traverse the physical network infrastructure, the single uplink configuration with MAC Learning and Forged Transmits performed just as efficiently, without the overhead of Promiscuous Mode.</p>
+<p><img src="test4.png" alt="Test 4"></p>
+<h3 id="results-3">Results<a href="#results-3" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr  
+[  5]   0.00-10.00  sec  24.2 GBytes  20.8 Gbits/sec    0            sender  
+[  5]   0.00-10.01  sec  24.2 GBytes  20.8 Gbits/sec                 receiver  
+</code></pre><h3 id="further-performance-measurements-and-security-considerations">Further Performance Measurements and Security Considerations<a href="#further-performance-measurements-and-security-considerations" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Additional performance tests revealed that the difference between Promiscuous Mode and MAC Learning was minimal or even non-existent when the nested hosts were placed on two different physical hosts.
+The traffic between the nested VMs did not significantly differ whether Promiscuous Mode or MAC Learning was enabled, indicating that both configurations performed similarly in a multi-host environment.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>It&#39;s important to note the security implications of using Promiscuous Mode</b>
+        </div>
+        <div class="admonition-content">Enabling Promiscuous Mode on a network interface allows all traffic to be sent to the VM, even traffic not intended for it, which can expose sensitive data or potentially allow malicious activity.
+Because of this security concern, Promiscuous Mode should only be used temporarily, and for troubleshooting purposes, in production environments.
+It is recommended to disable it once the issue is resolved to maintain a secure network setup.</div>
+    </aside>
+<h3 id="side-effect-of-promiscuous-mode-duplicate-packets">Side Effect of Promiscuous Mode: Duplicate Packets<a href="#side-effect-of-promiscuous-mode-duplicate-packets" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Enabling Promiscuous Mode on a network interface can lead to duplicate packets when both the source and destination are on the same ESXi host. In this mode, the virtual machine receives all traffic, including its own outbound packets, causing unnecessary duplication. This can result in performance degradation due to increased CPU usage and network inefficiencies.</p>
+<pre tabindex="0"><code>[root@esxnuc04:/usr/lib/vmware/vsan/bin] vmkping -I vmk1 192.168.69.203
+PING 192.168.69.203 (192.168.69.203): 56 data bytes
+64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.356 ms
+64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.423 ms (DUP!)
+64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.426 ms (DUP!)
+64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.429 ms (DUP!)
+64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.249 ms
+64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.274 ms (DUP!)
+64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.277 ms (DUP!)
+64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.281 ms (DUP!)
+64 bytes from 192.168.69.203: icmp_seq=2 ttl=64 time=0.261 ms
+</code></pre><h2 id="sidequest-using-iperf-on-esxi-803">Sidequest: Using iPerf on ESXi 8.0.3<a href="#sidequest-using-iperf-on-esxi-803" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To use iPerf for network performance testing on ESXi 8.0.3, you&rsquo;ll need to follow a few steps to enable and configure the necessary settings.</p>
+<ul>
+<li>Step 1: Disable the ESXi firewall temporarily
+First, disable the ESXi firewall to allow the iPerf tool to operate without restrictions:</li>
+</ul>
+<pre tabindex="0"><code>esxcli network firewall set --enabled false
+</code></pre><ul>
+<li>Step 2: Allow executing iPerf
+Next, set the system to allow execution of non-installed binaries (such as iPerf), which are not part of the default ESXi installation:</li>
+</ul>
+<pre tabindex="0"><code>localcli system settings advanced set -o /User/execInstalledOnly -i 0
+</code></pre><ul>
+<li>Step 3: Execute iPerf (Client example)
+Once you&rsquo;ve set the necessary configuration, you can execute iPerf to test the network performance. Use the following command to run iPerf as a client (-c) and specify the target IP address (e.g., 192.168.69.203):</li>
+</ul>
+<pre tabindex="0"><code>./usr/lib/vmware/vsan/bin/iperf3 -c 192.168.69.203
+</code></pre><ul>
+<li>Step 4: Re-enable the firewall
+Once you’ve finished testing, remember to re-enable the firewall for security reasons:</li>
+</ul>
+<pre tabindex="0"><code>esxcli network firewall set --enabled true
+</code></pre><ul>
+<li>Step 5: Restrict execution of non-installed binaries
+To revert the system to its default behavior and restrict the execution of non-installed binaries, run the following command:</li>
+</ul>
+<pre tabindex="0"><code>localcli system settings advanced set -o /User/execInstalledOnly -i 1
+</code></pre><h2 id="why-mac-learning-and-forged-transmits-replace-promiscuous-mode-in-nested-environments">Why MAC Learning and Forged Transmits Replace Promiscuous Mode in Nested Environments<a href="#why-mac-learning-and-forged-transmits-replace-promiscuous-mode-in-nested-environments" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In a typical nested ESXi environment, each inner VM sends packets with its unique MAC address, which the virtual switch on the parent ESXi host does not recognize by default. This creates a challenge because:</p>
+<ul>
+<li>Without Promiscuous Mode, the switch drops packets destined for or originating from these MAC addresses.</li>
+<li>Without Forged Transmits, packets from inner VMs with &ldquo;forged&rdquo; source MAC addresses are also dropped.</li>
+</ul>
+<h3 id="by-enabling-mac-learning-and-forged-transmits">By enabling MAC Learning and Forged Transmits:<a href="#by-enabling-mac-learning-and-forged-transmits" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><em><strong>MAC Learning</strong></em> ensures that the virtual switch learns the inner VMs’ MAC addresses dynamically, so it can correctly forward traffic to them without requiring Promiscuous Mode.
+<em><strong>Forged Transmits</strong></em> ensures that traffic from inner VMs with different source MAC addresses is allowed to leave the parent VM&rsquo;s vNIC.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Conclusion</b>
+        </div>
+        <div class="admonition-content">The combination of MAC Learning and Forged Transits removes the need for promiscuous mode, while maintaining:
+Better performance, as traffic is only sent where needed.
+Stronger security, since traffic is not broadcast unnecessarily.</div>
+    </aside>
+<p>MAC Learning with Forged Transmits is a significant performance gamechanger, especially when running multiple nested VMs on a single physical ESXi host.</p>
+
+			</div>
+			
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/unraid-storage/">Unraid - A Storage Journey</a></li>
+	
+	<li><a href="/posts/nuc/">How to get most out of your Nuc </a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/unraid-storage/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>Unraid - A Storage Journey</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2024 <a href="https://sdn-warrior.org/">Daniel Krieger</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

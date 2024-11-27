@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Security on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/security/</link>
+    <description>Recent content in Security on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Mon, 26 Aug 2024 19:49:23 +0100</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nsx Integration Fortigate</title>
+      <link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+      <pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+      <description>&lt;h2 id=&#34;nsx-integration-for-fortinet-fortigate-firewalls&#34;&gt;NSX integration for Fortinet Fortigate Firewalls&lt;/h2&gt;&#xA;&lt;p&gt;Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.&lt;/p&gt;&#xA;&lt;h2 id=&#34;first-things-first&#34;&gt;First things first&lt;/h2&gt;&#xA;&lt;p&gt;The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups.&#xA;This allows us to use dynamic groups that were previously created in NSX using tags, for example.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

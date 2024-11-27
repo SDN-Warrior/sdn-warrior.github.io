@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Untagged on SDN-Warrior | Daniel Krieger</title>
-    <link>//192.168.16.200:1313/tags/untagged/</link>
-    <description>Recent content in Untagged on SDN-Warrior | Daniel Krieger</description>
+    <title>Nestedesx on SDN-Warrior | Daniel Krieger</title>
+    <link>//192.168.16.200:1313/tags/nestedesx/</link>
+    <description>Recent content in Nestedesx on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Wed, 27 Nov 2024 19:54:18 +0100</lastBuildDate>
-    <atom:link href="//192.168.16.200:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="//192.168.16.200:1313/tags/nestedesx/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Mac Learning</title>
+      <title>MAC Learning is your friend</title>
       <link>//192.168.16.200:1313/posts/mac-learning/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
       <guid>//192.168.16.200:1313/posts/mac-learning/</guid>

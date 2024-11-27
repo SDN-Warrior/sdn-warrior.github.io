@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="Daniel Krieger">
+
+  <meta itemprop="name" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
+  <meta itemprop="description" content="DisclaimerThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.Intro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.">
+  <meta itemprop="datePublished" content="2024-08-02T08:34:23+01:00">
+  <meta itemprop="dateModified" content="2024-08-02T08:34:23+01:00">
+  <meta itemprop="wordCount" content="293">
+  <meta itemprop="keywords" content="Nsx,Security,Vdi"><meta property="og:url" content="//192.168.16.200:1313/posts/nsx-idfw-vdi/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
+  <meta property="og:description" content="DisclaimerThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.Intro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-08-02T08:34:23+01:00">
+    <meta property="article:modified_time" content="2024-08-02T08:34:23+01:00">
+    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Security">
+    <meta property="article:tag" content="Vdi">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
+  <meta name="twitter:description" content="DisclaimerThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.Intro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "NSX Identity Firewall – A Case Study With the Flavour VDI",
+    "name": "NSX Identity Firewall – A Case Study With the Flavour VDI",
+    "description": "\rDisclaimer\rThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.\rIntro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.\n",
+    "keywords": ["nsx", "security", "vdi"],
+    "articleBody": "\rDisclaimer\rThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.\rIntro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.\nYou can use the Identity Firewall in 2 ways: Variant 1 would be with VMware Tools and Guest Introspection. Variant 2 would be with log scraping and, for example, Aria Operations for Logs as a log server. I use variant 1 because the implementation means less effort in my customer setup and we only want to protect the VDIs with Idendity Firewall.\nLimitations No User /Group ID Support for Federation. No direct integration with VDI and RDSH. User-ID based rules are supported for only firewall rules. No User-ID based policy for IDS/IPS and TLS Inspection. Multi-User (RDSH) does not support Server Message Block (SMP) protocol. ",
+    "wordCount" : "293",
+    "inLanguage": "en",
+    "datePublished": "2024-08-02T08:34:23+01:00",
+    "dateModified": "2024-08-02T08:34:23+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "Daniel Krieger",
+        "url": "//192.168.16.200:1313/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "//192.168.16.200:1313/posts/nsx-idfw-vdi/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "//192.168.16.200:1313/favicon.ico"
+      }
+    }
+}
+</script><title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="//192.168.16.200:1313/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
+	</head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="//192.168.16.200:1313/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="//192.168.16.200:1313/posts/">Posts</a><a href="//192.168.16.200:1313/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=%2f%2f192.168.16.200%3a1313%2fposts%2fnsx-idfw-vdi%2f&amp;text=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=%2f%2f192.168.16.200%3a1313%2fposts%2fnsx-idfw-vdi%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI&amp;body=%2f%2f192.168.16.200%3a1313%2fposts%2fnsx-idfw-vdi%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2f%2f192.168.16.200%3a1313%2fposts%2fnsx-idfw-vdi%2f&amp;source=%2f%2f192.168.16.200%3a1313%2f&amp;title=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI&amp;summary=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI%2c%20by%20Daniel%20Krieger%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;NSX Identity Firewall – A Case Study With the Flavour VDI&#34;,&#34;//192.168.16.200:1313/posts/nsx-idfw-vdi/&#34;,&#34;NSX Identity Firewall – A Case Study With the Flavour VDI, by Daniel Krieger\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="//192.168.16.200:1313/posts/">Posts</a></li>
+			<li><a href="//192.168.16.200:1313/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Aug 2, 2024</span></div>
+				<h1>NSX Identity Firewall – A Case Study With the Flavour VDI</h1>
+			</header>
+			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">Daniel Krieger</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="//192.168.16.200:1313/tags/nsx">nsx</a></span><span class="tag"><a href="//192.168.16.200:1313/tags/security">security</a></span><span class="tag"><a href="//192.168.16.200:1313/tags/vdi">vdi</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>293 Words
+     Words // ReadTime
+    
+    
+    
+    1 Minute, 19 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2024-08-02 09:34 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Disclaimer</b>
+        </div>
+        <div class="admonition-content">There are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.</div>
+    </aside>
+<h2 id="intro">Intro<a href="#intro" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.</p>
+<h3 id="you-can-use-the-identity-firewall-in-2-ways">You can use the Identity Firewall in 2 ways:<a href="#you-can-use-the-identity-firewall-in-2-ways" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>Variant 1 would be with VMware Tools and Guest Introspection.</li>
+<li>Variant 2 would be with log scraping and, for example, Aria Operations for Logs as a log server.</li>
+</ul>
+<p>I use variant 1 because the implementation means less effort in my customer setup and we only want to protect the VDIs with Idendity Firewall.</p>
+<h2 id="limitations">Limitations<a href="#limitations" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ul>
+<li>No User /Group ID Support for Federation.</li>
+<li>No direct integration with VDI and RDSH.</li>
+<li>User-ID based rules are supported for only firewall rules.</li>
+<li>No User-ID based policy for IDS/IPS and TLS Inspection.</li>
+<li>Multi-User (RDSH) does not support Server Message Block (SMP) protocol.</li>
+</ul>
+
+			</div>
+			
+
+		</article>
+		<div class="post-nav thin">
+			<a class="next-post" href="//192.168.16.200:1313/posts/nsx-integration-fortigate/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>Nsx Integration Fortigate</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2024 <a href="//192.168.16.200:1313/">Daniel Krieger</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="//192.168.16.200:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+</footer>
+<script async src="//192.168.16.200:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="//192.168.16.200:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>
