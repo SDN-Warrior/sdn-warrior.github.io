@@ -20,7 +20,8 @@
 <p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
 <ul>
 <li>
-<p>MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.</p>
+<p>MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.
+<a href="https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html">(more Information about MAC learning)</a></p>
 </li>
 <li>
 <p>Promiscuous Mode: On the other hand, this allows a VM or virtual switch to capture all traffic on a port group, whether addressed to it or not. It&rsquo;s a useful feature for troubleshooting and monitoring but comes with potential security and performance implications.</p>
