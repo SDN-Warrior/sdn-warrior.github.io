@@ -40,6 +40,7 @@ Without MAC learning, when the ESXi VM&rsquo;s vNIC connects to a switch port, i
 <p>However, everything changed when I upgraded my lab to dual 10 Gb/s network links and, powered by the i9 CPU, gained the ability to run multiple nested ESXi hosts on a single physical machine.
 One of the first challenges I encountered was during the configuration of a vSAN port group for my nested ESXi hosts. This port group was configured to use Active/Active load balancing across both 10 Gb/s uplinks on the MS-01 workstations.
 Almost immediately, I noticed unexpected performance issues. Nested VMs were experiencing slow network speeds, and vSAN operations were significantly hindered. Initially, I struggled to pinpoint the root cause. Given my past success with Promiscuous Mode, I didn’t suspect it could be contributing to the problem.</p>
+<p><a href="https://cybernils.net/2024/11/26/the-effect-of-using-mac-learning-in-esxi-nested-labs/">This article</a> by my fellow vExpert colleague Nils Kristiansen inspired me to delve deeper into the topic.</p>
 <h2 id="why-promiscuous-mode-became-a-problem">Why Promiscuous Mode Became a Problem</h2>
 <p>The performance degradation stemmed from how traffic was handled with Promiscuous Mode in a dual-uplink, Active/Active configuration:</p>
 <ul>
