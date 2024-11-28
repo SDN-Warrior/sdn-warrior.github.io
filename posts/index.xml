@@ -21,6 +21,7 @@
 <ul>
 <li>
 <p>MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.
+Without MAC learning, when the ESXi VM&rsquo;s vNIC connects to a switch port, it only contains a static MAC address.
 <a href="https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html">(more Information about MAC learning)</a></p>
 </li>
 <li>
