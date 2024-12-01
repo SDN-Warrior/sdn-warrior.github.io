@@ -2,67 +2,67 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/</link>
+    <link>https://sdn-warrior.org/</link>
     <description>Recent content on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Wed, 27 Nov 2024 19:54:18 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MAC Learning is your friend</title>
-      <link>http://localhost:1313/posts/mac-learning/</link>
+      <link>https://sdn-warrior.org/posts/mac-learning/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>http://localhost:1313/posts/mac-learning/</guid>
+      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Unraid - A Storage Journey</title>
-      <link>http://localhost:1313/posts/unraid-storage/</link>
+      <link>https://sdn-warrior.org/posts/unraid-storage/</link>
       <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/unraid-storage/</guid>
+      <guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
       <description>&lt;h2 id=&#34;my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing&#34;&gt;My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing&lt;/h2&gt;&#xA;&lt;p&gt;As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.&lt;/p&gt;&#xA;&lt;p&gt;After thorough research, I decided to go with Unraid – an operating system renowned for its simplicity, flexibility, and scalability. These key features were the deciding factors for me:&lt;/p&gt;</description>
     </item>
     <item>
       <title>How to get most out of your Nuc </title>
-      <link>http://localhost:1313/posts/nuc/</link>
+      <link>https://sdn-warrior.org/posts/nuc/</link>
       <pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nuc/</guid>
-      <description>&lt;h2 id=&#34;first-things-first&#34;&gt;First things first&lt;/h2&gt;&#xA;&lt;p&gt;Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.&#xA;Unfortunately, these are relatively difficult to get in Germany, but it&amp;rsquo;s worth the effort.&#xA;&#xD;&#xA;    &lt;aside class=&#34;admonition info&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-info&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12.01&#34; y2=&#34;8&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Search for&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;ASUS NUC LAN and USB Expansion Module (90AR0000-P00010)&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xD;&#xA;&lt;figure&gt;&lt;picture&gt;&#xD;&#xA;          &lt;source srcset=&#34;http://localhost:1313/NIC_hu6903087498817470336.webp&#34; type=&#34;image/webp&#34;&gt;&#xD;&#xA;          &lt;source srcset=&#34;http://localhost:1313/NIC_hu4204005753805133783.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img src=&#34;http://localhost:1313/NIC_hu6903087498817470336.webp&#34;alt=&#34;Image of an IO expansion&#34;  width=&#34;1200&#34;  height=&#34;800&#34; /&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&#xD;&#xA;            &lt;p&gt;IO expansion&lt;/p&gt;&#xD;&#xA;          &lt;/figcaption&gt;&lt;/figure&gt;&#xA;vSphere 8 supports the cards natively and you don&amp;rsquo;t have to install any drivers.&#xA;It also supports jumbo frames, which is relevant for NSX Labs.&#xA;It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name &lt;code&gt;CRS326-4C +20G+2Q&lt;/code&gt;.&lt;/p&gt;</description>
+      <guid>https://sdn-warrior.org/posts/nuc/</guid>
+      <description>&lt;h2 id=&#34;first-things-first&#34;&gt;First things first&lt;/h2&gt;&#xA;&lt;p&gt;Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.&#xA;Unfortunately, these are relatively difficult to get in Germany, but it&amp;rsquo;s worth the effort.&#xA;&#xD;&#xA;    &lt;aside class=&#34;admonition info&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-info&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12.01&#34; y2=&#34;8&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Search for&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;ASUS NUC LAN and USB Expansion Module (90AR0000-P00010)&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xD;&#xA;&lt;figure&gt;&lt;picture&gt;&#xD;&#xA;          &lt;source srcset=&#34;https://sdn-warrior.org/NIC_hu6903087498817470336.webp&#34; type=&#34;image/webp&#34;&gt;&#xD;&#xA;          &lt;source srcset=&#34;https://sdn-warrior.org/NIC_hu4204005753805133783.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img src=&#34;https://sdn-warrior.org/NIC_hu6903087498817470336.webp&#34;alt=&#34;Image of an IO expansion&#34;  width=&#34;1200&#34;  height=&#34;800&#34; /&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&#xD;&#xA;            &lt;p&gt;IO expansion&lt;/p&gt;&#xD;&#xA;          &lt;/figcaption&gt;&lt;/figure&gt;&#xA;vSphere 8 supports the cards natively and you don&amp;rsquo;t have to install any drivers.&#xA;It also supports jumbo frames, which is relevant for NSX Labs.&#xA;It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name &lt;code&gt;CRS326-4C +20G+2Q&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V4</title>
-      <link>http://localhost:1313/posts/labv4/</link>
+      <link>https://sdn-warrior.org/posts/labv4/</link>
       <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/labv4/</guid>
+      <guid>https://sdn-warrior.org/posts/labv4/</guid>
       <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Nsx Integration Fortigate</title>
-      <link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
+      <link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
       <pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
       <description>&lt;h2 id=&#34;nsx-integration-for-fortinet-fortigate-firewalls&#34;&gt;NSX integration for Fortinet Fortigate Firewalls&lt;/h2&gt;&#xA;&lt;p&gt;Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.&lt;/p&gt;&#xA;&lt;h2 id=&#34;first-things-first&#34;&gt;First things first&lt;/h2&gt;&#xA;&lt;p&gt;The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups.&#xA;This allows us to use dynamic groups that were previously created in NSX using tags, for example.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-      <link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
+      <link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
       <pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
       <description>&lt;aside class=&#34;admonition info&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-info&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12.01&#34; y2=&#34;8&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Disclaimer&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;There are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&#xA;&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX 4.X Certificate exchange of the NSX Manager</title>
-      <link>http://localhost:1313/posts/nsx-cert-exchange/</link>
+      <link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
       <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
       <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
     </item>
     <item>
       <title>ABOUT ME</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://sdn-warrior.org/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://sdn-warrior.org/about/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;me.png&#34; alt=&#34;Bild von mir&#34;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;hi-im-daniel&#34;&gt;Hi, I’m Daniel,&lt;/h1&gt;&#xA;&lt;p&gt;a passionate &#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    42&#xD;&#xA;year old homelab enthusiast and Software-Defined Networking engineer based in Germany.&#xA;With a strong focus on VMware technologies, I enjoy exploring the boundaries of virtualization and building innovative solutions in my home lab.&#xA;This blog is my space to share insights, tips, and projects from my journey in the world of software-defined infrastructure.&#xA;Alongside being a homelabber, I’m also a proud vExpert (including NSX) and VCIX NV. My skills are backed by certifications like CCNP Security, CCNP Enterprise, and Checkpoint CCSA R81 and many more.&lt;/p&gt;</description>
     </item>
   </channel>
