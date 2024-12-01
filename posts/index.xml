@@ -1,20 +1,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>https://sdn-warrior.org/posts/</link>
+		<link>http://localhost:1313/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
 		<lastBuildDate>Wed, 27 Nov 2024 19:54:18 +0100</lastBuildDate>
-		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>https://sdn-warrior.org/posts/mac-learning/</link>
+			<link>http://localhost:1313/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
+			<guid>http://localhost:1313/posts/mac-learning/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[<h2 id="intro">Intro</h2>
 <p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
@@ -172,10 +172,10 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
+			<link>http://localhost:1313/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
+			<guid>http://localhost:1313/posts/unraid-storage/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[<h2 id="my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing">My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing</h2>
 <p>As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.</p>
@@ -284,10 +284,10 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>https://sdn-warrior.org/posts/nuc/</link>
+			<link>http://localhost:1313/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nuc/</guid>
+			<guid>http://localhost:1313/posts/nuc/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[<h2 id="first-things-first">First things first</h2>
 <p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
@@ -422,10 +422,10 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>https://sdn-warrior.org/posts/labv4/</link>
+			<link>http://localhost:1313/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/labv4/</guid>
+			<guid>http://localhost:1313/posts/labv4/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
 <p>I have done a huge redesign of my Homelab.
@@ -457,10 +457,10 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>Nsx Integration Fortigate</title>
-			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+			<link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+			<guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
 <p>Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.</p>
@@ -531,10 +531,10 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
+			<link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
+			<guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
 			<description><![CDATA[%!s(<nil>)]]></description>
 			<content type="html"><![CDATA[
     <aside class="admonition info">
@@ -727,6 +727,84 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>The Identity Firewall is a wonderful extension of the Distributed firewall and should be treated as such. Used correctly, it provides a very nice way to manage and delegate firewall permissions dynamically and centrally for individual users or user groups. It enables generic VDIs that can be used for different purposes depending on the user. This can reduce the number of VDI pools required, which in turn makes it easier to manage the customers VDI environment. The RBAC concept is even more tightly bound to the firewall policies and AD tiering can also be enforced via the firewall. And best of all, this great feature is included in the NSX Firewall license. I would recommend every NSX firewall administrator to take a closer look at the Identity Firewall.</p>
 <h2 id="additional-resources">Additional resources</h2>
 <p><a href="https://docs.vmware.com/en/VMware-NSX/4.1/administration/GUID-9CD3FC21-9ED4-4FB3-9E19-67A7C4D1F53E.html">VMware Docs Idendity Firewall</a></p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
+			<link>http://localhost:1313/posts/nsx-cert-exchange/</link>
+			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
+			
+			<guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+			<description><![CDATA[%!s(<nil>)]]></description>
+			<content type="html"><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
+<h1 id="certificate-creation">Certificate creation</h1>
+<p>First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.</p>
+<pre tabindex="0"><code>[req]
+default_bits = 4096
+default_md = sha256
+days = 365
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+ 
+[req_distinguished_name]
+C   = DE
+ST  = RLP
+L   = NW
+O   = Land RLP
+OU  = sdnwarrior
+CN  = nsxm0001.lab.home
+emailAddress = mail@lab.home
+ 
+[v3_req]
+subjectAltName = @sans
+ 
+[sans]
+DNS.1 = nsxm0001.lab.home
+DNS.2 = nsxm0002.lab.home
+DNS.3 = nsxm0003.lab.home
+DNS.4 = nsxm0004.lab.home
+IP.1 = 192.168.12.110
+IP.2 = 192.168.12.111
+IP.3 = 192.168.12.112
+IP.4 = 192.168.12.113
+</code></pre><p>The CSR is generated with the following command:</p>
+<pre tabindex="0"><code>openssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf
+</code></pre><p>Two files are generated, a private key file and the actual request, which must be submitted to the CA.</p>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">The CA must issue the certificate with the extension basicConstraints = cA:FALSE, otherwise the certificate cannot be used. With a Windows CA, this must be explicitly permitted in the template. If the extension is missing, the certificate validation will fail with an error message that the certificate key does not match the certificate.</div>
+    </aside>
+<h2 id="import-certificate">Import certificate</h2>
+<p>The certificate can be imported in the NSX Manager under System &gt; Certificates &gt; Import. Here it must be ensured that the service certificate slider is set to NO. The complete certificate chain is also required. The certificate chain must be in the industry standard order of ‘certificate – intermediate – root.</p>
+
+<figure><picture>
+          <source srcset="/nsx-cert/01_hu8747713429439574210.webp" type="image/webp">
+          <source srcset="/nsx-cert/01_hu1064617936367254404.jpg" type="image/jpeg">
+          <img src="/nsx-cert/01_hu8747713429439574210.webp"alt="NSX Cert"  width="582"  height="924" />
+        </picture><figcaption>
+            <p>Import NSX Cert</p>
+          </figcaption></figure>
+<p>After the import, the certificate can be validated using an API request.
+API calls may vary depending on the NSX-T versions, in my example NSX version 4.1.2.3 is used.</p>
+<pre tabindex="0"><code>GET https://&lt;nsx-mgr&gt;/api/v1/trust- management/certificates/&lt;cert-id&gt;?action=validate
+</code></pre><h2 id="exchange-of-certificates">Exchange of certificates</h2>
+<p>An API request must be executed for each manager node and for the VIP. This requires the certificate ID and the manager node ID. Both can be copied from the WebGUI or requested via API Get Requests.</p>
+<p>The following API call is used to exchange the Manager Node certificate:</p>
+<pre tabindex="0"><code>POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=API&amp;node_id=&lt;node- id&gt;
+</code></pre><p>The following API call is used to exchange the cluster VIP certificate:</p>
+<pre tabindex="0"><code>POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=MGMT_CLUSTER
+</code></pre><p>After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.</p>
+<h2 id="further-resources">Further resources:</h2>
+<p><a href="https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.2/administration/GUID-50C36862-A29D-48FA-8CE7-697E64E10E37.html">VMware Administration Handbook</a></p>
 ]]></content>
 		</item>
 		
