@@ -14,7 +14,7 @@
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="Daniel Krieger">
 
-  <meta itemprop="name" content="Nsx Integration Fortigate">
+  <meta itemprop="name" content="NSX Integration Fortigate">
   <meta itemprop="description" content="NSX integration for Fortinet Fortigate Firewalls Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.
 First things first The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups. This allows us to use dynamic groups that were previously created in NSX using tags, for example.">
   <meta itemprop="datePublished" content="2024-08-26T19:49:23+01:00">
@@ -22,7 +22,7 @@ First things first The Fortinet NSX integration works via a so-called external c
   <meta itemprop="wordCount" content="735">
   <meta itemprop="keywords" content="Fortigate,Firewall,Nsx,Security"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-integration-fortigate/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
-  <meta property="og:title" content="Nsx Integration Fortigate">
+  <meta property="og:title" content="NSX Integration Fortigate">
   <meta property="og:description" content="NSX integration for Fortinet Fortigate Firewalls Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.
 First things first The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups. This allows us to use dynamic groups that were previously created in NSX using tags, for example.">
   <meta property="og:locale" content="en_us">
@@ -36,7 +36,7 @@ First things first The Fortinet NSX integration works via a so-called external c
     <meta property="article:tag" content="Security">
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Nsx Integration Fortigate">
+  <meta name="twitter:title" content="NSX Integration Fortigate">
   <meta name="twitter:description" content="NSX integration for Fortinet Fortigate Firewalls Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.
 First things first The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups. This allows us to use dynamic groups that were previously created in NSX using tags, for example.">
 
@@ -44,8 +44,8 @@ First things first The Fortinet NSX integration works via a so-called external c
 {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "Nsx Integration Fortigate",
-    "name": "Nsx Integration Fortigate",
+    "headline": "NSX Integration Fortigate",
+    "name": "NSX Integration Fortigate",
     "description": "NSX integration for Fortinet Fortigate Firewalls Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.\nFirst things first The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups. This allows us to use dynamic groups that were previously created in NSX using tags, for example.\n",
     "keywords": ["fortigate", "firewall", "nsx", "security"],
     "articleBody": "NSX integration for Fortinet Fortigate Firewalls Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.\nFirst things first The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups. This allows us to use dynamic groups that were previously created in NSX using tags, for example.\nFirst we need to configure our connector. To do this, go to the Fortigate at Security Fabric / External Connectors and click on Create New.\nHere we need to enter our NSX Manager, if we have an NSX Manager Cluster then of course the Cluster VIP or FQDN is needed. We can define an update interval, this determines how long it takes to update the groups on the Fortigate. In my lab I chose 30 seconds, depending on the environment lower or higher values may make sense. In a productive environment, the certificate should always be verified. In my homelab environment I deliberately turned this off.\nImporting the dynamic NSX groups The groups need to be imported via the Fortigate CLI. This is relatively easy to do for all groups and specifically for individual groups. Groups imported this way will be automatically updated in the future. If new groups are configured in NSX, they must be imported via the CLI if they play a role in the rules.\nFortigate CLI\rexecute nsx group import If you want to import all NSX groups, you need to omit the group name in the CLI call. In the screenshot you can see me importing the dFG_AlpineLinux NSX group. This uses an NSX tag to combine all VMs of type Alpine Linux into one security group.\nIn the Fortigate, you can now find the group under Policy \u0026 Objects / Addresses and use it like any other group in firewall policies. The NSX groups can be used not only for firewall rules, but also for policy-based routing via the SD-WAN feature.\nIn my example, I am prohibiting the Alpine Linux VMs from accessing the Internet. The current realised group assignment can be checked at any time via Policy \u0026 Objects\u003e / Addresses and a double click on the group.\nDelete groups Groups need to be deleted manually. The easiest way to do this is via the Fortigate CLI. To do this, execute the following CLI command:\nFortigate CLI\rexecute nsx group delete If you want to delete all groups, you can simply leave the filter empty. If a group is used in a firewall policy, it cannot be deleted and you will receive a message that the group is in use.\nTesting the solution To do this, I log on to the Alpine2 VM and check the current IP. The VM has currently been assigned 172.31.2.10. We can also find this on the Fortigate in our dFG_AlpineLinux group. I am trying to send an ICMP to the Internet, which is blocked by the Fortigate firewall as expected.\nNext, I remove the Alpine Linux tag in the NSX, which ensures that the VM is no longer realised in the dFG_Alpine Linux group on the Fortigate after 30 seconds at the latest.\nFinally, I repeated my ping test. As expected, Internet access is now without any problems.\nRemarks If the connection to NSX Manager is interrupted, group membership remains at the last synchronised state. This means that in highly dynamic environments, too much or too little traffic may be allowed or blocked. For this reason, the SDN connection should always be monitored. All group changes are saved in the Log SDN Connector Log of the Fortigate.\nUse cases One conceivable scenario would be to enable a dynamic firewall for VMs that are allowed to access the Internet. This can be done in NSX using a tag and a group. Every VM that does not have a tag and is therefore not in the group will be blocked at the Fortigate perimeter firewall.\nThe firewall rule allows everything that does not go into RFC1918 networks (private IP range). Of course, this is only a simple example and more complex setups are possible.\nAdditional information Fortinet Documentation: Public and private SDN connectors\n",
@@ -72,7 +72,7 @@ First things first The Fortinet NSX integration works via a so-called external c
       }
     }
 }
-</script><title>Nsx Integration Fortigate</title>
+</script><title>NSX Integration Fortigate</title>
 <link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
 	</head>
 <body id="page">
@@ -106,7 +106,7 @@ First things first The Fortinet NSX integration works via a so-called external c
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-integration-fortigate%2f&amp;text=Nsx%20Integration%20Fortigate" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-integration-fortigate%2f&amp;text=NSX%20Integration%20Fortigate" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
@@ -118,14 +118,14 @@ First things first The Fortinet NSX integration works via a so-called external c
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=Nsx%20Integration%20Fortigate&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-integration-fortigate%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=NSX%20Integration%20Fortigate&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-integration-fortigate%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-integration-fortigate%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Nsx%20Integration%20Fortigate&amp;summary=Nsx%20Integration%20Fortigate%2c%20by%20Daniel%20Krieger%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-integration-fortigate%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=NSX%20Integration%20Fortigate&amp;summary=NSX%20Integration%20Fortigate%2c%20by%20Daniel%20Krieger%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -133,7 +133,7 @@ First things first The Fortinet NSX integration works via a so-called external c
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;Nsx Integration Fortigate&#34;,&#34;https://sdn-warrior.org/posts/nsx-integration-fortigate/&#34;,&#34;Nsx Integration Fortigate, by Daniel Krieger\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;NSX Integration Fortigate&#34;,&#34;https://sdn-warrior.org/posts/nsx-integration-fortigate/&#34;,&#34;NSX Integration Fortigate, by Daniel Krieger\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -160,7 +160,7 @@ First things first The Fortinet NSX integration works via a so-called external c
 	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
 			<header class="post-header">
 				<div class="post-meta"><span>Aug 26, 2024</span></div>
-				<h1>Nsx Integration Fortigate</h1>
+				<h1>NSX Integration Fortigate</h1>
 			</header>
 			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
