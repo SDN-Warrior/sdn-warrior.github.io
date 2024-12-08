@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="UTF-8">
+<head><meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
@@ -19,8 +19,8 @@
   <meta itemprop="datePublished" content="2024-11-17T11:57:43+01:00">
   <meta itemprop="dateModified" content="2024-11-17T11:57:43+01:00">
   <meta itemprop="wordCount" content="624">
-  <meta itemprop="image" content="http://localhost:1313/images/head.jpg">
-  <meta itemprop="keywords" content="Homelab,Nuc,Memory Tiering"><meta property="og:url" content="http://localhost:1313/posts/nuc/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/head.jpg">
+  <meta itemprop="keywords" content="Homelab,Nuc,Memory Tiering"><meta property="og:url" content="https://sdn-warrior.org/posts/nuc/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="How to get most out of your Nuc ">
   <meta property="og:description" content="Performance tuning for NUCs">
@@ -32,10 +32,10 @@
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Nuc">
     <meta property="article:tag" content="Memory Tiering">
-    <meta property="og:image" content="http://localhost:1313/images/head.jpg">
+    <meta property="og:image" content="https://sdn-warrior.org/images/head.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/head.jpg">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/head.jpg">
   <meta name="twitter:title" content="How to get most out of your Nuc ">
   <meta name="twitter:description" content="Performance tuning for NUCs">
 
@@ -50,16 +50,16 @@
     "articleBody": "First things first Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC. Unfortunately, these are relatively difficult to get in Germany, but it’s worth the effort. Search for\rASUS NUC LAN and USB Expansion Module (90AR0000-P00010)\rIO expansion\nvSphere 8 supports the cards natively and you don’t have to install any drivers. It also supports jumbo frames, which is relevant for NSX Labs. It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name CRS326-4C +20G+2Q.\nPractical tip\rMy experience with 2.5 Gb/s Lan has shown that it makes sense to set the ports to a fixed speed in the hypervisor and on the switch, otherwise I kept having network failures.\rMemory Tiering Memory Tiering is very new in ESXi vSphere 8.0U3 and is still a Tech Preview. With memory tiering, you can use up to 400% of the physical RAM. This requires a fast NVMe. I would recommend a PCIe4 NVMe with at least 5000 MB/s read/write. Memory Tiering stores very cold (unused RAM pages) and cold RAM pages (less than 20% used) on the NVMe (Memory Tier). There is a wonderful Explore Session on this.\nTo enable memory tiering, you have to enter the following commands via the ESX Cli:\nThis command turns on memory tiering esxcli system settings kernel set -s MemoryTiering -v TRUE This command selects the NVMe esxcli system tierdevice create -d /vmfs/devices/disks/ Enter the factor here (0-400%). esxcli system settings advanced set -o /Mem/TierNvmePct -i 400 After a reboot, you have the selected amount of additional memory.\nAttention\rThe selected disk is no longer available to the ESXi. The minimum capacity must match the selected factor. If the disk is larger, it will still be used entirely for memory tiering. My recommendation is to use 1 TB NVMe with 64 GB of physical RAM and 400% as the factor. ESXi will use the NVMe evenly so that the disk doesn’t break as quickly.\rUsing P/E Cores Intel has introduced the big.little CPU architecture from the 12th generation of their consumer CPUs. This leads to some problems with ESXi. If the efficiency cores are activated, the ESXi starts with a PSOD (Purble Screen of Death). Fortunately, there are a few workarounds here.\nDisable the E cores in the BIOS This means that you can use hyperthreading and the P Cores. However, you are clearly wasting potential here. That’s why we don’t want to.\nUse P and E cores and sacrifice hyperthreading for them My tests showed that I got significantly more performance out of my 13th generation i7 if I didn’t use hyperthreading and only used “real” CPU cores, even if the E cores have a lower clock rate. William Lam has written very detailed blog articles about this, I link to him here for more information, as this article was actually only intended to be a short summary.\nWe actually only need two ESX CLI commands to make it all work.\nWith this command, we prevent the PSOD from occurring when the ESXi boots. esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE With this command, we prevent the ESXi from getting a PSOD when the VMs are switched on. esxcli system settings kernel set -s ignoreMsrFaults -v TRUE Practical tip\rWhen reinstalling an ESXi server, I always switch off the E Cores, which saves me from having to manipulate the boot loader. After I have allowed memory tiering and the E/P Cores via the ESX CLI, I switch the E/P Cores back on in the BIOS.\rIf everything is correct, an ESX NUC of the 13th generation looks like this. NUC i7 13th Gen with Memory Tiering and P/E Cores\n",
     "wordCount" : "624",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/head.jpg","datePublished": "2024-11-17T11:57:43+01:00",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2024-11-17T11:57:43+01:00",
     "dateModified": "2024-11-17T11:57:43+01:00",
     "author":{
         "@type": "Person",
         "name": "Daniel Krieger",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/nuc/"
+      "@id": "https://sdn-warrior.org/posts/nuc/"
     },
     "publisher": {
       "@type": "Organization",
@@ -67,21 +67,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>How to get most out of your Nuc </title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -110,26 +110,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnuc%2f&amp;text=How%20to%20get%20most%20out%20of%20your%20Nuc%20" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnuc%2f&amp;text=How%20to%20get%20most%20out%20of%20your%20Nuc%20" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnuc%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnuc%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=How%20to%20get%20most%20out%20of%20your%20Nuc%20&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fnuc%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=How%20to%20get%20most%20out%20of%20your%20Nuc%20&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnuc%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnuc%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=How%20to%20get%20most%20out%20of%20your%20Nuc%20&amp;summary=How%20to%20get%20most%20out%20of%20your%20Nuc%20%2c%20by%20Daniel%20Krieger%0a%0aPerformance%20tuning%20for%20NUCs%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnuc%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=How%20to%20get%20most%20out%20of%20your%20Nuc%20&amp;summary=How%20to%20get%20most%20out%20of%20your%20Nuc%20%2c%20by%20Daniel%20Krieger%0a%0aPerformance%20tuning%20for%20NUCs%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -137,7 +137,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;How to get most out of your Nuc &#34;,&#34;http://localhost:1313/posts/nuc/&#34;,&#34;How to get most out of your Nuc , by Daniel Krieger\n\nPerformance tuning for NUCs\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;How to get most out of your Nuc &#34;,&#34;https://sdn-warrior.org/posts/nuc/&#34;,&#34;How to get most out of your Nuc , by Daniel Krieger\n\nPerformance tuning for NUCs\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -155,8 +155,8 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -177,7 +177,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/nuc">nuc</a></span><span class="tag"><a href="http://localhost:1313/tags/memory-tiering">memory Tiering</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nuc">nuc</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/memory-tiering">memory Tiering</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -343,14 +343,14 @@ Fortunately, there are a few workarounds here.</p>
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/unraid-storage/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/unraid-storage/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>Unraid - A Storage Journey</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/labv4/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/labv4/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -363,17 +363,11 @@ Fortunately, there are a few workarounds here.</p>
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2024 <a href="http://localhost:1313/">Daniel Krieger</a>
-		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
-   <path d="M4 11a9 9 0 0 1 9 9"></path>
-   <path d="M4 4a16 16 0 0 1 16 16"></path>
-   <circle cx="5" cy="19" r="1"></circle>
-</svg></a></p>
+		&copy; 2024 <a href="https://sdn-warrior.org/">Daniel Krieger</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
 
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

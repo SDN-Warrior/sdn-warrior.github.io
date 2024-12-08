@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Storage on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/storage/</link>
+    <link>https://sdn-warrior.org/tags/storage/</link>
     <description>Recent content in Storage on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Tue, 19 Nov 2024 23:00:00 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/storage/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/storage/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Unraid - A Storage Journey</title>
-      <link>http://localhost:1313/posts/unraid-storage/</link>
+      <link>https://sdn-warrior.org/posts/unraid-storage/</link>
       <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/unraid-storage/</guid>
+      <guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
       <description>&lt;h2 id=&#34;my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing&#34;&gt;My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing&lt;/h2&gt;&#xA;&lt;p&gt;As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.&lt;/p&gt;&#xA;&lt;p&gt;After thorough research, I decided to go with Unraid – an operating system renowned for its simplicity, flexibility, and scalability. These key features were the deciding factors for me:&lt;/p&gt;</description>
     </item>
   </channel>
