@@ -140,7 +140,13 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
         </div>
         <div class="admonition-content">the multipath policy must now be VMW_PSP_RR</div>
     </aside>
-<h2 id="why-jumbo-frames-matter">Why Jumbo Frames Matter</h2>
+<p>To further optimize path usage and load distribution, I adjusted the IOPS parameter for the Round Robin policy. By default, ESXi switches storage paths after 1000 I/O operations, but I used the following command snippet to change this behavior to switch after every single I/O:</p>
+<pre tabindex="0"><code>for i in `esxcfg-scsidevs -c |awk &#39;{print $1}&#39; | grep naa.xxxx`; do 
+   esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i
+done
+</code></pre><p>Where .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.</p>
+<p>However, when combined with changes like increasing MaxIoSizeKB, the outcome can vary. In some cases, this adjustment may yield better results, while in others it could degrade performance. Therefore, it’s crucial to test these parameters individually for each storage environment to determine the most effective configuration.</p>
+<h2 id="why-jumbo-frames-matter-bonus">Why Jumbo Frames Matter (bonus)</h2>
 <p>Jumbo frames allow Ethernet frames larger than the standard 1500 bytes to be transmitted, reducing the total number of frames required to send the same amount of data. This results in lower CPU overhead and better performance, particularly in high-bandwidth and storage-intensive environments. However, it’s essential to ensure that every device in the network path—NICs, switches, and storage systems—supports and is configured for jumbo frames for optimal performance.</p>
 <p>To verify that jumbo frames are functioning correctly in your environment, you can use the <em><strong>vmkping</strong></em> command on your ESXi host:</p>
 <pre tabindex="0"><code>vmkping -I vmk1 -s 8973 -d 192.168.67.250
