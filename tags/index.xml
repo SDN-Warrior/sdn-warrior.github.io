@@ -2,81 +2,81 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 27 Nov 2024 19:54:18 +0100</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 08 Dec 2024 12:21:20 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Esxi</title>
-      <link>https://sdn-warrior.org/tags/esxi/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/esxi/</guid>
+      <link>http://localhost:1313/tags/esxi/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>http://localhost:1313/tags/esxi/</guid>
       <description></description>
     </item>
     <item>
       <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nested Lab</title>
-      <link>https://sdn-warrior.org/tags/nested-lab/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/nested-lab/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Network</title>
-      <link>https://sdn-warrior.org/tags/network/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/network/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Performance</title>
-      <link>https://sdn-warrior.org/tags/performance/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/performance/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf</title>
-      <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
+      <link>http://localhost:1313/tags/homelab/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>http://localhost:1313/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
       <title>Iscsi</title>
-      <link>https://sdn-warrior.org/tags/iscsi/</link>
-      <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/iscsi/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Storage</title>
-      <link>https://sdn-warrior.org/tags/storage/</link>
-      <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/storage/</guid>
+      <link>http://localhost:1313/tags/iscsi/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>http://localhost:1313/tags/iscsi/</guid>
       <description></description>
     </item>
     <item>
       <title>Unraid</title>
-      <link>https://sdn-warrior.org/tags/unraid/</link>
+      <link>http://localhost:1313/tags/unraid/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>http://localhost:1313/tags/unraid/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>http://localhost:1313/tags/vmware/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>http://localhost:1313/tags/vmware/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nested Lab</title>
+      <link>http://localhost:1313/tags/nested-lab/</link>
+      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+      <guid>http://localhost:1313/tags/nested-lab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Network</title>
+      <link>http://localhost:1313/tags/network/</link>
+      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+      <guid>http://localhost:1313/tags/network/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Performance</title>
+      <link>http://localhost:1313/tags/performance/</link>
+      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+      <guid>http://localhost:1313/tags/performance/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf</title>
+      <link>http://localhost:1313/tags/vcf/</link>
+      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+      <guid>http://localhost:1313/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Storage</title>
+      <link>http://localhost:1313/tags/storage/</link>
       <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/unraid/</guid>
+      <guid>http://localhost:1313/tags/storage/</guid>
       <description></description>
     </item>
   </channel>

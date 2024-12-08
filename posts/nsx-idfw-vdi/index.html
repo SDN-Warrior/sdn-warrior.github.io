@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><meta charset="UTF-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
@@ -12,18 +12,18 @@
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="Daniel Krieger">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="Daniel Krieger"><meta name="description" content="IDFW with NSX and Windows Clients">
 
   <meta itemprop="name" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
-  <meta itemprop="description" content="DisclaimerThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.Intro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.">
+  <meta itemprop="description" content="IDFW with NSX and Windows Clients">
   <meta itemprop="datePublished" content="2024-08-02T08:34:23+01:00">
   <meta itemprop="dateModified" content="2024-08-02T08:34:23+01:00">
   <meta itemprop="wordCount" content="2060">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/head.jpg">
-  <meta itemprop="keywords" content="Nsx,Security,Vdi"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-idfw-vdi/">
+  <meta itemprop="image" content="http://localhost:1313/images/head.jpg">
+  <meta itemprop="keywords" content="Nsx,Security,Vdi"><meta property="og:url" content="http://localhost:1313/posts/nsx-idfw-vdi/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
-  <meta property="og:description" content="DisclaimerThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.Intro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.">
+  <meta property="og:description" content="IDFW with NSX and Windows Clients">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -32,12 +32,12 @@
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Security">
     <meta property="article:tag" content="Vdi">
-    <meta property="og:image" content="https://sdn-warrior.org/images/head.jpg">
+    <meta property="og:image" content="http://localhost:1313/images/head.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/head.jpg">
+  <meta name="twitter:image" content="http://localhost:1313/images/head.jpg">
   <meta name="twitter:title" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
-  <meta name="twitter:description" content="DisclaimerThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.Intro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.">
+  <meta name="twitter:description" content="IDFW with NSX and Windows Clients">
 
 <script type="application/ld+json">
 {
@@ -45,21 +45,21 @@
     "@type": "BlogPosting",
     "headline": "NSX Identity Firewall – A Case Study With the Flavour VDI",
     "name": "NSX Identity Firewall – A Case Study With the Flavour VDI",
-    "description": "\rDisclaimer\rThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.\rIntro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.\n",
+    "description": "IDFW with NSX and Windows Clients",
     "keywords": ["nsx", "security", "vdi"],
     "articleBody": "\rDisclaimer\rThere are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.\rIntro A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.\nYou can use the Identity Firewall in 2 ways: Variant 1 would be with VMware Tools and Guest Introspection. Variant 2 would be with log scraping and, for example, Aria Operations for Logs as a log server. I use variant 1 because the implementation means less effort in my customer setup and we only want to protect the VDIs with Idendity Firewall.\nLimitations No User /Group ID Support for Federation. No direct integration with VDI and RDSH. User-ID based rules are supported for only firewall rules. No User-ID based policy for IDS/IPS and TLS Inspection. Multi-User (RDSH) does not support Server Message Block (SMP) protocol. Supported protocols Single user (VDI, or Non-RDSH Server) use case support – TCP, UDP Multi-User (RDSH) use case support – TCP, UDP Supported clients Windows 8,10,11 Windows Server 2012 – 2022 What is needed? NSX in the VDI cluster AD infrastructure VMware tools VMware Aria Operations for Logs (optional) First things first Identity based groups can only be used as a source for a firewall rule. In addition, the rules only come into effect after a successful logon to the client. Thus, normal dFW rules must be written for all communication that happens before the user logs on. This applies, for example, to Windows AD communication. The NSX Manager synchronises cyclically with the domain controllers. The default interval is 180 minutes. If changes are made to the group membership at short notice, a manual sync can be performed. Alternatively, the sync interval can also be shortened or extended. Using network introspection, the NSX Manager recognises when a user logs on to a client and can perform matching with the AD groups and thus add the client dynamically to the security group of the IDFW firewall rule.\nIdendity Firewall function\nGetting started Firstly, I start by customising the golden images of the VDI and installing NSX Guest Introspection. These are not installed by default and have to be installed explicitly. You can find them under VMware Device Driver – NSX Network Introspection. File Introspection is installed automatically.\nVMware Tools\nOnce Guestintrospection has been successfully installed, we no longer need to do anything on our Windows clients. Next, the domain must be integrated.\nThis is done in the NSX Manager under System -\u003e Identity Firewall AD. Several domains can be entered so that multi-tenant setups can also be realised. The NSX Manager requires firewall activations and must be able to reach the domain controllers via LDAP or LDAPS. I strongly recommend the use of LDAPS. These settings can also be used to perform a manual sync or check the synchronisation status.\nIdetity firewall AD settings (click to enlarge)\nUnder LDAP Server you can set several domain controllers for the previously set up domain. The protocol used is also selected here. I use the Domain Administrator in my lab. In a productive environment, an LDAP bind user should always be used.\nLDAP Server settings (click to enlarge)\nAttention\rIf LDAPS is used, NSX imports the SHA thumbprint of the domain controller certificate. As the certificate is usually renewed automatically after 2 years at the latest, NSX loses the trust with the domain controller. In this case, the trust must be established manually. To do this, delete the thumbprint and reconnect to the bind user. It has proven to be practical to monitor certificate expiry times and to enter at least 2 domain controllers that exchange their certificates with a 4-week time lag. If the trust fails completely, no more identity rules are applied and the default firewall rule comes into effect. In practice, this should be an any/any default drop and log rule.\rAfter we have successfully setup and synchronised our domain, we only need to activate the Identity Firewall. By default, this feature is disabled (it is a free feature that is available with the NSX Firewall VCF add-on). To activate the Identity Firewall, go to Security -\u003e Distributed Firewall -\u003e Settings -\u003e Identity Firewall Settings and activate the identity firewall service button. Then we select the cluster on which we want to activate the service. Now we can get started.\nDistributed Firewall Settings (click to enlarge)\nIdentity Firewall Rules A general recommendation that applies to all firewalls is to think about a naming concept. At my customer, we have different name prefixes for the various security groups in NSX or in the other firewalls. For my part, I prefer the following naming convention, for example:\nDistributed firewall groups start with dFW_XXX, an LDAP backed security group with dFWU_XXX (the U stands for user). For a group that contains an NSX segment it would be dFWS_XXX and for the gateway firewall a gWF_XXX and so on.\nSo we create our first LDAP user group. As with any group, we can do this either when creating the rules or in the inventory under Groups. The process is the same as for a normal Distributed Firewall Group, except that we don’t use tags but Distinguished Names, which can be conveniently selected or filtered from the synchronised AD elements.\nSecurity Groups (click to enlarge)\nI also need at least one segment group and at least one group containing my target servers. The target servers are assigned to their groups via tags. The same applies to the segment group. To do this, I set one or more tags on the overlay segment and use this tag as a condition for group membership.\nMember selection (click to enlarge)\nOur goal will be that we authorise our users assigned to dFWU_UserGroup1 to access our fileserver with SMB and the users of the group dFWU_UserGroup2 must not receive any authorisation. I have two domain users in my lab, User1 is in the AD group assigned to dFWU_UserGroup1 and User2 is only assigned to dFWU_UserGroup2.\nCreating the firewall rules For each identity firewall rule that allows traffic from a group of users to a destination, there must be a corresponding distributed firewall rule that allows traffic from a group of computers to the same destination specified in the identity firewall rule. We therefore need two firewall rules.\nFirewall Rules (click to enlarge)\nThe first rule is pretty straight forward, as source we have our dFWU_UserGroup1, the target is our dFG_Fileserver and the service is SMB. The Applied To Field is even more important than usual for the Identity Firewall. We may only apply this rule to our VDIs. Since my customer has different pools that are named according to a specific naming scheme, I can further restrict the scope based on the computer name. Each pool has different rules and we only want the rules to be realised on VMs where they are needed. The second rule is a bit more interesting. As a source, we have our VDI segment or segments. As in the first rule, the target is our file server. Logically, the service is also the same.\nAttention\rIt is important that the Apply To field can only be on the file servers or on the target that we want to enable. If we were to use the dFG_VDI_GroupA or the dFGS_VDI group here, for example, then the entire Identity Firewall Rule is cancelled out!\rTesting and verifying The test is considered successful if User1 on the TestVDI can establish a successful SMB connection to the file server. If User2 is used instead of User1, the traffic to the file server must be blocked by the firewall.\nFor testing, I log in to my VDI with the credentials of User1 and perform a TestNetConnection with Powershell. This is a simple and quick way to test TCP connections. I also open a share on the file server.\nNetwork test user 1 (click to enlarge)\nThe test was successful, both the TNC command and the actual opening of the file share worked. Now I’m running the same test on the same VDI (after it was recreated, because non-persistent VDI), only this time I’m using User2, which has no explicit firewall rules and is therefore blocked by my default cleanup rule. As expected, the traffic was successfully blocked.\nNetwork test user 2 (click to enlarge)\nLessons learned This is where I would like to add a few more thoughts on the subject. Troubleshooting is more difficult in practice than I thought. Tools such as NSX Traceflow cannot be used because you cannot add an AD user to the request. This means that the traffic in the traceflow is always dropped or the identity rule is maybe configured incorrectly.\nBut there is light at the end of the tunnel. In NSX 4.X there is a session view of the active IDFW user session under Security -\u003e Security Overview -\u003e Configuration. All active sessions, UserIDs and VMs are displayed here, as well as the source of the information.\nActive Sessions (click to enlarge)\nNext tip would be to always check the sync status with the AD. Ask your AD admin when the user was added to the group. If the user has several accounts, ask for the user name used. Experience has shown that this is where most problems occur.\nUse a syslog server and check exactly with which rule ID the traffic was discarded. Have all deny rules logged.\nNot all rules can be implemented as Identity Firewall Rules. The Windows domain basic communication can only be enabled via a classic set of rules, as no Identity Firewall rules are active for the VM without an active user session.\nImportant things to know Never install Guest Introspection on a target. If a user has remote desktop permissions on the target and guest introspection is active there, then the target receives all of the user’s firewall rules. This can lead to unwanted firewall permissions.\nIf targets outside of NSX are addressed, such as a NAS or legacy infrastructure, a second rule is not required (unless the gateway firewall is also used). In this case, the distributed firewall will only check the traffic at the source VM.\nAny change on a domain, including a domain name change, will trigger a full sync with Active Directory. Because a full sync can take a long time, i recommend syncing during off-peak or non-business hours.\nMutiUser setups only work with RDSH (Remote Desktop Session Hosts) which requires a special configuration. Otherwise, if several users are logged on to a client at the same time, this leads to unwanted behavior and, in the worst case, to unwanted firewall permissions.\nConclusion The Identity Firewall is a wonderful extension of the Distributed firewall and should be treated as such. Used correctly, it provides a very nice way to manage and delegate firewall permissions dynamically and centrally for individual users or user groups. It enables generic VDIs that can be used for different purposes depending on the user. This can reduce the number of VDI pools required, which in turn makes it easier to manage the customers VDI environment. The RBAC concept is even more tightly bound to the firewall policies and AD tiering can also be enforced via the firewall. And best of all, this great feature is included in the NSX Firewall license. I would recommend every NSX firewall administrator to take a closer look at the Identity Firewall.\nAdditional resources VMware Docs Idendity Firewall\n",
     "wordCount" : "2060",
     "inLanguage": "en",
-    "datePublished": "2024-08-02T08:34:23+01:00",
+    "image":"http://localhost:1313/images/disc.jpg","datePublished": "2024-08-02T08:34:23+01:00",
     "dateModified": "2024-08-02T08:34:23+01:00",
     "author":{
         "@type": "Person",
         "name": "Daniel Krieger",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/nsx-idfw-vdi/"
+      "@id": "http://localhost:1313/posts/nsx-idfw-vdi/"
     },
     "publisher": {
       "@type": "Organization",
@@ -67,24 +67,29 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
-	</head>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.fa9055313831870e3f34599b9c7656ad0e1bfdf2425db1da2ee40ea6a7b9c0e5.css" integrity="sha256-+pBVMTgxhw4/NFmbnHZWrQ4b/fJCXbHaLuQOpqe5wOU=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
-				<span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -105,26 +110,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-idfw-vdi%2f&amp;text=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-idfw-vdi%2f&amp;text=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-idfw-vdi%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-idfw-vdi%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-idfw-vdi%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-idfw-vdi%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-idfw-vdi%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI&amp;summary=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI%2c%20by%20Daniel%20Krieger%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-idfw-vdi%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI&amp;summary=NSX%20Identity%20Firewall%20%e2%80%93%20A%20Case%20Study%20With%20the%20Flavour%20VDI%2c%20by%20Daniel%20Krieger%0a%0aIDFW%20with%20NSX%20and%20Windows%20Clients%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -132,7 +137,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;NSX Identity Firewall – A Case Study With the Flavour VDI&#34;,&#34;https://sdn-warrior.org/posts/nsx-idfw-vdi/&#34;,&#34;NSX Identity Firewall – A Case Study With the Flavour VDI, by Daniel Krieger\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;NSX Identity Firewall – A Case Study With the Flavour VDI&#34;,&#34;http://localhost:1313/posts/nsx-idfw-vdi/&#34;,&#34;NSX Identity Firewall – A Case Study With the Flavour VDI, by Daniel Krieger\n\nIDFW with NSX and Windows Clients\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -150,18 +155,19 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
 
+	<div class="bg-img"></div>
 	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
 			<header class="post-header">
 				<div class="post-meta"><span>Aug 2, 2024</span></div>
 				<h1>NSX Identity Firewall – A Case Study With the Flavour VDI</h1>
 			</header>
-			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+			<div class="post-info"><p>IDFW with NSX and Windows Clients</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
    <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
    <line x1="16" y1="8" x2="2" y2="22"></line>
@@ -171,7 +177,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/security">security</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vdi">vdi</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/security">security</a></span><span class="tag"><a href="http://localhost:1313/tags/vdi">vdi</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -400,14 +406,14 @@
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="https://sdn-warrior.org/posts/nsx-integration-fortigate/">
+			<a class="next-post" href="http://localhost:1313/posts/nsx-integration-fortigate/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>NSX Integration Fortigate</span>
 			</a>
-			<a class="prev-post" href="https://sdn-warrior.org/posts/nsx-cert-exchange/">
+			<a class="prev-post" href="http://localhost:1313/posts/nsx-cert-exchange/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -420,9 +426,9 @@
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2024 <a href="https://sdn-warrior.org/">Daniel Krieger</a>
+		&copy; 2024 <a href="http://localhost:1313/">Daniel Krieger</a>
 		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
    <path d="M4 11a9 9 0 0 1 9 9"></path>
    <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -430,7 +436,7 @@
 </svg></a></p>
 
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

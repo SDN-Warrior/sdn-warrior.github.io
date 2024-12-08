@@ -1,21 +1,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>https://sdn-warrior.org/posts/</link>
+		<link>http://localhost:1313/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
 		<lastBuildDate>Sun, 08 Dec 2024 12:21:20 +0100</lastBuildDate>
-		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>iSCSI Tuning</title>
+			<link>http://localhost:1313/posts/iscsi-tuning/</link>
+			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+			
+			<guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+			<description><![CDATA[Short Blog about iSCSI performance tuning]]></description>
+			<content type="html"><![CDATA[<p>I use iSCSI in combination with Unraid as my DIY block storage solution. To achieve this, I rely on the Linux iSCSI implementation, which I installed on Unraid through a plugin. This setup allows me to leverage Unraid’s flexibility while benefiting from block-level storage for various use cases.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>https://sdn-warrior.org/posts/mac-learning/</link>
+			<link>http://localhost:1313/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/mac-learning/</guid>
+			<description><![CDATA[Why you should use MAC Learning]]></description>
 			<content type="html"><![CDATA[<h2 id="intro">Intro</h2>
 <p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
 <ul>
@@ -172,11 +183,11 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
+			<link>http://localhost:1313/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/unraid-storage/</guid>
+			<description><![CDATA[How i use Unraid]]></description>
 			<content type="html"><![CDATA[<h2 id="my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing">My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing</h2>
 <p>As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.</p>
 <p>After thorough research, I decided to go with Unraid – an operating system renowned for its simplicity, flexibility, and scalability. These key features were the deciding factors for me:</p>
@@ -284,11 +295,11 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>https://sdn-warrior.org/posts/nuc/</link>
+			<link>http://localhost:1313/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nuc/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/nuc/</guid>
+			<description><![CDATA[Performance tuning for NUCs]]></description>
 			<content type="html"><![CDATA[<h2 id="first-things-first">First things first</h2>
 <p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
 Unfortunately, these are relatively difficult to get in Germany, but it&rsquo;s worth the effort.
@@ -422,11 +433,11 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>https://sdn-warrior.org/posts/labv4/</link>
+			<link>http://localhost:1313/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/labv4/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/labv4/</guid>
+			<description><![CDATA[Homelab v4]]></description>
 			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
 <p>I have done a huge redesign of my Homelab.
 To better test VCF scenarios, 3 new Minisforum MS-01 have been added.
@@ -457,11 +468,11 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
-			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+			<link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
+			<description><![CDATA[NSX and Fortigate]]></description>
 			<content type="html"><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
 <p>Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.</p>
 <h2 id="first-things-first">First things first</h2>
@@ -531,11 +542,11 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
+			<link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
+			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
 			<content type="html"><![CDATA[
     <aside class="admonition info">
         <div class="admonition-title">
@@ -732,11 +743,11 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
-			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
+			<link>http://localhost:1313/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+			<description><![CDATA[Exchange your NSX Manager certificates]]></description>
 			<content type="html"><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
 <h1 id="certificate-creation">Certificate creation</h1>
 <p>First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.</p>

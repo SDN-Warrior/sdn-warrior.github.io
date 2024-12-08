@@ -2,19 +2,33 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Esxi on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/esxi/</link>
+    <link>http://localhost:1313/tags/esxi/</link>
     <description>Recent content in Esxi on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 27 Nov 2024 19:54:18 +0100</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/esxi/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 08 Dec 2024 12:21:20 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/esxi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>iSCSI Tuning</title>
+      <link>http://localhost:1313/posts/iscsi-tuning/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+      <description>&lt;p&gt;I use iSCSI in combination with Unraid as my DIY block storage solution. To achieve this, I rely on the Linux iSCSI implementation, which I installed on Unraid through a plugin. This setup allows me to leverage Unraid’s flexibility while benefiting from block-level storage for various use cases.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>MAC Learning is your friend</title>
-      <link>https://sdn-warrior.org/posts/mac-learning/</link>
+      <link>http://localhost:1313/posts/mac-learning/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
+      <guid>http://localhost:1313/posts/mac-learning/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Homelab V4</title>
+      <link>http://localhost:1313/posts/labv4/</link>
+      <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/labv4/</guid>
+      <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
