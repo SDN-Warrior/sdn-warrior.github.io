@@ -66,7 +66,7 @@
       <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>ABOUT ME</title>
+      <title>About Me</title>
       <link>https://sdn-warrior.org/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://sdn-warrior.org/about/</guid>
