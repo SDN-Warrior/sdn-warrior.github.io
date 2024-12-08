@@ -2,17 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/esxi/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/homelab/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/iscsi/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/iscsi-tuning/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/posts/</loc>
     <lastmod>2024-12-08T12:21:20+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/</loc>
     <lastmod>2024-12-08T12:21:20+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/esxi/</loc>
-    <lastmod>2024-11-27T19:54:18+01:00</lastmod>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2024-11-27T19:54:18+01:00</lastmod>
+    <loc>https://sdn-warrior.org/tags/unraid/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vmware/</loc>
+    <lastmod>2024-12-08T12:21:20+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/mac-learning/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
@@ -26,22 +41,10 @@
     <loc>https://sdn-warrior.org/tags/performance/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2024-11-27T19:54:18+01:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/vcf/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vmware/</loc>
-    <lastmod>2024-11-27T19:54:18+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/iscsi/</loc>
-    <lastmod>2024-11-19T23:00:00+01:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/storage/</loc>
-    <lastmod>2024-11-19T23:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/unraid/</loc>
     <lastmod>2024-11-19T23:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/unraid-storage/</loc>

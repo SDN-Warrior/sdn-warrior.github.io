@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 19 Nov 2024 23:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 08 Dec 2024 12:21:20 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/unraid/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>iSCSI Tuning</title>
+      <link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
+      <description>&lt;p&gt;In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.&lt;/p&gt;&#xA;&lt;p&gt;For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Unraid - A Storage Journey</title>
       <link>https://sdn-warrior.org/posts/unraid-storage/</link>

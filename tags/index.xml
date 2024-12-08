@@ -7,20 +7,41 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 27 Nov 2024 19:54:18 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 08 Dec 2024 12:21:20 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Esxi</title>
       <link>https://sdn-warrior.org/tags/esxi/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/esxi/</guid>
       <description></description>
     </item>
     <item>
       <title>Homelab</title>
       <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Iscsi</title>
+      <link>https://sdn-warrior.org/tags/iscsi/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/iscsi/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Unraid</title>
+      <link>https://sdn-warrior.org/tags/unraid/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/unraid/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -52,31 +73,10 @@
       <description></description>
     </item>
     <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Iscsi</title>
-      <link>https://sdn-warrior.org/tags/iscsi/</link>
-      <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/iscsi/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Storage</title>
       <link>https://sdn-warrior.org/tags/storage/</link>
       <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/storage/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Unraid</title>
-      <link>https://sdn-warrior.org/tags/unraid/</link>
-      <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/unraid/</guid>
       <description></description>
     </item>
   </channel>
