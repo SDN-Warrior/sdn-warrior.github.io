@@ -17,20 +17,20 @@
 			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
 			<content type="html"><![CDATA[<p>The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:</p>
-<h1 id="1-enhanced-stability-for-virtual-environments">1. Enhanced Stability for Virtual Environments</h1>
+<h2 id="1-enhanced-stability-for-virtual-environments">1. Enhanced Stability for Virtual Environments</h2>
 <ul>
 <li>Loss of IP Bindings after VMotion (Issue 3453866): Addressed the removal of IP bindings and logical ports associated with VMs during vMotion events.</li>
 <li>Critical ESXi Errors with UENS (Issue 3456283): Fixed intermittent PSODs caused by control priority filter lookups, ensuring smoother ESXi operations.</li>
 <li>Portgroup Creation Issue (Issue 3458111): Resolved the creation of additional portgroups during full sync, preventing potential vCenter crashes.</li>
 <li>Transport Zone Reference Issue (Issue 3454291): Fixed transport zone profile mismatches, restoring vMotion and service functionality.</li>
 </ul>
-<h1 id="2-improved-network-performance">2. Improved Network Performance</h1>
+<h2 id="2-improved-network-performance">2. Improved Network Performance</h2>
 <ul>
 <li>TCP Packet Drops in EDP (Issue 3457047): Resolved issues causing TCP connection drops when using Enhanced Datapath configurations.</li>
 <li>Packet Reordering with LRO (Issue 3456533): Fixed packet reordering issues when HW Large Receive Offload is enabled, improving TCP throughput.</li>
 <li>Reduced Traffic Performance with UENS and LRO (Issue 3456289): Addressed performance degradation in VSAN workloads.</li>
 </ul>
-<h1 id="3-robust-security-and-monitoring">3. Robust Security and Monitoring</h1>
+<h2 id="3-robust-security-and-monitoring">3. Robust Security and Monitoring</h2>
 <ul>
 <li>NSX UI Alarm for Metrics Delivery Failure (Issue 3456663): Fixed authentication issues following certificate changes to restore metrics delivery.</li>
 <li>IDPS and TLS Prevention (Issue 3458040): Enhanced malicious traffic prevention by resolving decryption issues with IDPS.</li>
