@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2024-12-09T19:41:40+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2024-12-09T19:41:40+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
     <lastmod>2024-12-09T14:55:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx4_2_1_1/</loc>
-    <lastmod>2024-12-09T14:55:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2024-12-09T14:55:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
     <lastmod>2024-12-09T14:55:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/</loc>

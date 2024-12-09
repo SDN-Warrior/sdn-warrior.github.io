@@ -6,11 +6,11 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Mon, 09 Dec 2024 14:55:00 +0100</lastBuildDate>
+		<lastBuildDate>Mon, 09 Dec 2024 19:41:40 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>Nsx 4.2.1.1 Hotfix Update</title>
+			<title>NSX 4.2.1.1 Hotfix Update</title>
 			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 			
