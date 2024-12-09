@@ -7,8 +7,29 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 08 Dec 2024 12:21:20 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 09 Dec 2024 14:55:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nsx</title>
+      <link>https://sdn-warrior.org/tags/nsx/</link>
+      <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Update</title>
+      <link>https://sdn-warrior.org/tags/update/</link>
+      <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/update/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Esxi</title>
       <link>https://sdn-warrior.org/tags/esxi/</link>
@@ -38,13 +59,6 @@
       <description></description>
     </item>
     <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Nested Lab</title>
       <link>https://sdn-warrior.org/tags/nested-lab/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
@@ -63,20 +77,6 @@
       <link>https://sdn-warrior.org/tags/performance/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/performance/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf</title>
-      <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Storage</title>
-      <link>https://sdn-warrior.org/tags/storage/</link>
-      <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/storage/</guid>
       <description></description>
     </item>
   </channel>

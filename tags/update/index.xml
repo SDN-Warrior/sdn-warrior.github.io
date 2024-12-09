@@ -1,48 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Vmware on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/vmware/</link>
-    <description>Recent content in Vmware on SDN-Warrior | Daniel Krieger</description>
+    <title>Update on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/update/</link>
+    <description>Recent content in Update on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Mon, 09 Dec 2024 14:55:00 +0100</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/update/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Nsx 4.2.1.1 Hotfix Update</title>
       <link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
       <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
       <description>&lt;p&gt;The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:&lt;/p&gt;&#xA;&lt;h1 id=&#34;1-enhanced-stability-for-virtual-environments&#34;&gt;1. Enhanced Stability for Virtual Environments&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Loss of IP Bindings after VMotion (Issue 3453866): Addressed the removal of IP bindings and logical ports associated with VMs during vMotion events.&lt;/li&gt;&#xA;&lt;li&gt;Critical ESXi Errors with UENS (Issue 3456283): Fixed intermittent PSODs caused by control priority filter lookups, ensuring smoother ESXi operations.&lt;/li&gt;&#xA;&lt;li&gt;Portgroup Creation Issue (Issue 3458111): Resolved the creation of additional portgroups during full sync, preventing potential vCenter crashes.&lt;/li&gt;&#xA;&lt;li&gt;Transport Zone Reference Issue (Issue 3454291): Fixed transport zone profile mismatches, restoring vMotion and service functionality.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;2-improved-network-performance&#34;&gt;2. Improved Network Performance&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;TCP Packet Drops in EDP (Issue 3457047): Resolved issues causing TCP connection drops when using Enhanced Datapath configurations.&lt;/li&gt;&#xA;&lt;li&gt;Packet Reordering with LRO (Issue 3456533): Fixed packet reordering issues when HW Large Receive Offload is enabled, improving TCP throughput.&lt;/li&gt;&#xA;&lt;li&gt;Reduced Traffic Performance with UENS and LRO (Issue 3456289): Addressed performance degradation in VSAN workloads.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;3-robust-security-and-monitoring&#34;&gt;3. Robust Security and Monitoring&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NSX UI Alarm for Metrics Delivery Failure (Issue 3456663): Fixed authentication issues following certificate changes to restore metrics delivery.&lt;/li&gt;&#xA;&lt;li&gt;IDPS and TLS Prevention (Issue 3458040): Enhanced malicious traffic prevention by resolving decryption issues with IDPS.&lt;/li&gt;&#xA;&lt;li&gt;IDPS Events and Certificate Verification (Issue 3458038): Restored the flow of IDPS events to Security Intelligence by fixing Kafka channel errors.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;4-stability-in-upgrades-and-configurations&#34;&gt;4. Stability in Upgrades and Configurations&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NSX Manager Slowness (Issue 3453882): Resolved slowness and instability in NSX Manager post-upgrade.&lt;/li&gt;&#xA;&lt;li&gt;Edge Node IP Table Rules (Issue 3452795): Ensured proper application of IP table rules on Edge nodes.&lt;/li&gt;&#xA;&lt;li&gt;NSX Configuration Realization (Issue 3452794): Fixed issues preventing configuration realization on Transport Nodes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;5-enhancements-in-distributed-firewall-and-flow-management&#34;&gt;5. Enhancements in Distributed Firewall and Flow Management&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;DFW Rules During Upgrade (Issue 3450247): Mitigated periods where DFW rules were disabled during the upgrade process.&lt;/li&gt;&#xA;&lt;li&gt;Flow Exporter Alarms (Issues 3429787, 3456644): Fixed alarms and restored flow export functionality for Security Intelligence.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;6-overlay-and-connectivity-improvements&#34;&gt;6. Overlay and Connectivity Improvements&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Overlay Segment Connectivity (Issue 3450019): Addressed connectivity loss in Overlay Segments when Edge TEP groups were enabled.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;&#xA;&lt;p&gt;This NSX update resolves critical issues to improve operational reliability, security, and performance in virtual environments. For a seamless experience, upgrading to this release is highly recommended. As always, thorough testing in a staging environment before deployment in production is advised.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>iSCSI Tuning</title>
-      <link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
-      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
-      <description>&lt;p&gt;In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.&lt;/p&gt;&#xA;&lt;p&gt;For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>MAC Learning is your friend</title>
-      <link>https://sdn-warrior.org/posts/mac-learning/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Homelab V4</title>
-      <link>https://sdn-warrior.org/posts/labv4/</link>
-      <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/posts/labv4/</guid>
-      <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>NSX 4.X Certificate exchange of the NSX Manager</title>
-      <link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
-      <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
-      <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
