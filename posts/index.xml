@@ -15,7 +15,7 @@
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 			
 			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
 			<content type="html"><![CDATA[<p>The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:</p>
 <h1 id="1-enhanced-stability-for-virtual-environments">1. Enhanced Stability for Virtual Environments</h1>
 <ul>
