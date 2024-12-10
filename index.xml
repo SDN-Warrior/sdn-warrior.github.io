@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 09 Dec 2024 14:55:00 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 10 Dec 2024 02:00:40 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to use QoS in NSX</title>
+      <link>https://sdn-warrior.org/posts/nsx-qos/</link>
+      <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.&lt;/p&gt;&#xA;&lt;p&gt;In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&amp;rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>NSX 4.2.1.1 Hotfix Update</title>
       <link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
@@ -71,13 +78,6 @@
       <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
       <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>About Me</title>
-      <link>https://sdn-warrior.org/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/about/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;me.png&#34; alt=&#34;Bild von mir&#34;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;hi-im-daniel&#34;&gt;Hi, I’m Daniel,&lt;/h1&gt;&#xA;&lt;p&gt;a passionate &#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    42&#xD;&#xA;year old homelab enthusiast and Software-Defined Networking engineer based in Germany.&#xA;With a strong focus on VMware technologies, I enjoy exploring the boundaries of virtualization and building innovative solutions in my home lab.&#xA;This blog is my space to share insights, tips, and projects from my journey in the world of software-defined infrastructure.&#xA;Alongside being a homelabber, I’m also a proud vExpert (including NSX) and VCIX NV. My skills are backed by certifications like CCNP Security, CCNP Enterprise, and Checkpoint CCSA R81 and many more.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

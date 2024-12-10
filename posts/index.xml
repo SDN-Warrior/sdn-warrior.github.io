@@ -6,8 +6,524 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Mon, 09 Dec 2024 19:41:40 +0100</lastBuildDate>
+		<lastBuildDate>Tue, 10 Dec 2024 02:00:40 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>How to use QoS in NSX</title>
+			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
+			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
+			<description><![CDATA[How to use QoS in NSX]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.</p>
+<p>In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.</p>
+<h2 id="qos-on-an-nsx-segment">QoS on an NSX Segment</h2>
+<p>Quality of Service (QoS) on an NSX segment focuses on managing traffic flows within a specific segment, providing comprehensive control over bandwidth and traffic priorities. Unlike gateway-level QoS, which typically manages north-south traffic at the boundary of the network, segment-level QoS applies to all traffic associated with virtual machines (VMs) on the segment, regardless of direction.</p>
+<p>To implement QoS at this level, you must first create a Segment Profile, which defines the QoS policies. This includes settings such as ingress and egress traffic shaping, bandwidth guarantees, and DSCP marking. Once configured, this profile is attached to the segment, ensuring that the specified QoS policies are applied consistently to all VMs on that segment.</p>
+
+<figure><a href="qos1.png"><picture>
+          <source srcset="/nsx-qos/qos1_hu9376800852532490140.webp" type="image/webp">
+          <source srcset="/nsx-qos/qos1_hu16011686681575812025.jpg" type="image/jpeg">
+          <img src="/nsx-qos/qos1_hu9376800852532490140.webp"alt="QoS Profile"  width="1157"  height="466" />
+        </picture></a><figcaption>
+            <p>QoS Profile</p>
+          </figcaption></figure>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">A crucial aspect of segment-level QoS is that it impacts all traffic originating from or destined for VMs on the segment. For example, if a Segment Profile specifies a guaranteed bandwidth of 30 Mbps, each VM on that segment will have this guarantee for all traffic, whether it is east-west within the same data center or north-south to external networks.</div>
+    </aside>
+<h2 id="explanation-of-segment-qos-profile-parameters-in-nsx">Explanation of Segment QoS Profile Parameters in NSX</h2>
+<h3 id="mode"><strong>Mode</strong></h3>
+<p>Defines how DSCP (Differentiated Services Code Point) values are handled for traffic originating from or destined for a logical port.</p>
+<ul>
+<li>
+<p><strong>Trusted Mode</strong>:</p>
+<ul>
+<li>The DSCP value from the <strong>inner packet header</strong> (original header) is copied to the <strong>outer IP header</strong> (tunnel header) for IP/IPv6 traffic.</li>
+<li>For non-IP/IPv6 traffic, the default DSCP value (0) is used for the outer IP header.</li>
+<li>Supported only on <strong>overlay-based logical ports</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Untrusted Mode</strong>:</p>
+<ul>
+<li>For <strong>overlay-based logical ports</strong>, the configured DSCP value is applied to the outer IP header, regardless of the inner packet type.</li>
+<li>For <strong>VLAN-based logical ports</strong>, the configured DSCP value is applied to the IP/IPv6 packets&rsquo; outer IP header.</li>
+<li>DSCP values can range from 0 to 63.</li>
+</ul>
+</li>
+</ul>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">DSCP settings affect only tunneled traffic and do not apply to traffic within the same hypervisor.</div>
+    </aside>
+<h3 id="priority"><strong>Priority</strong></h3>
+<p>Specifies the <strong>DSCP priority value</strong>, which determines the level of importance for packets. The DSCP priority values range from <strong>0 to 63</strong>, with higher values indicating higher priority traffic.</p>
+<h3 id="class-of-service-cos"><strong>Class of Service (CoS)</strong></h3>
+<p>Defines the <strong>CoS value</strong>, applicable to VLAN-based logical ports.</p>
+<ul>
+<li>CoS groups similar traffic types and assigns a service priority level for each type.</li>
+<li>Lower-priority traffic may experience reduced throughput or be dropped to ensure better performance for higher-priority traffic.</li>
+<li>CoS can also be configured for VLAN ID 0 packets.</li>
+<li>The CoS value ranges from <strong>0 to 7</strong>, where <strong>0</strong> indicates best-effort service.</li>
+</ul>
+<h3 id="ingress">Ingress</h3>
+<p>Configures traffic shaping for <strong>outbound traffic</strong> from the VM to the logical network.</p>
+<ul>
+<li><strong>Average Bandwidth</strong>: The average rate of outbound traffic to prevent network congestion.</li>
+<li><strong>Peak Bandwidth</strong>: The maximum traffic rate allowed to support bursts.</li>
+<li><strong>Burst Size</strong>: Defines the maximum data size for a traffic burst, calculated as:</li>
+</ul>
+$$
+\frac{\text{Peak Bandwidth (in bits per second)} \times \text{Burst Duration (in seconds)}}{8} = \text{Burst Size (in Bytes)}
+$$<p>For example, with an average bandwidth of 30 Mbps, a peak of 60 Mbps, and a burst duration of 0.1 seconds, the burst size would be:</p>
+$$
+\frac{{60000000} \text{(bits per second)} \times {0.1} \text{(seconds)}}{8} = 750000 \text{ bytes}
+$$<p>Default value is 0, which disables rate limiting.</p>
+<h3 id="ingress-broadcast">Ingress Broadcast</h3>
+<p>Configures traffic shaping for broadcast traffic sent from the VM to the logical network.
+Works similarly to the general ingress settings, allowing custom limits for average bandwidth, peak bandwidth, and burst size for broadcast traffic.
+Default value is 0, which disables rate limiting for ingress broadcast traffic.</p>
+<h3 id="egress">Egress</h3>
+<p>Configures traffic shaping for inbound traffic from the logical network to the VM.
+Allows setting limits on the average bandwidth, peak bandwidth, and burst size for inbound traffic.
+Default value is 0, which disables rate limiting on egress traffic.
+By configuring these parameters effectively, you can ensure traffic prioritization, manage congestion, and optimize bandwidth usage for both overlay-based and VLAN-based logical ports in NSX environments.</p>
+<h2 id="test-scenario-evaluating-qos-at-the-segment-level">Test Scenario: Evaluating QoS at the segment level</h2>
+<p>To demonstrate the differences between a setup with and without QoS, I have created a test environment consisting of two T1 routers, each connected to its own segment and hosting VMs for testing. Both T1 routers are connected to the same Tier-0 (T0) router, providing a shared Internet connection for testing north-south traffic scenarios.</p>
+
+<figure><a href="topo.png"><picture>
+          <source srcset="/nsx-qos/topo_hu6475854221281022681.webp" type="image/webp">
+          <source srcset="/nsx-qos/topo_hu2349874414644969993.jpg" type="image/jpeg">
+          <img src="/nsx-qos/topo_hu6475854221281022681.webp"alt="NSX Enviroment"  width="912"  height="936" />
+        </picture></a><figcaption>
+            <p>NSX Test Enviroment</p>
+          </figcaption></figure>
+<p>This test specifically focuses on <strong>QoS at the segment level</strong>, with the primary goal of limiting the VMs on the segment <code>LS-10.10.20.1</code> to a maximum bandwidth of <strong>30 Mbps</strong> using a QoS profile.</p>
+<h3 id="t1-router-1-t1-bgp-no-qos"><strong>T1 Router 1: T1-BGP No QoS</strong></h3>
+<ul>
+<li><strong>Segment</strong>: <code>LS-10.10.10.1</code></li>
+<li><strong>QoS Policy</strong>: None applied</li>
+<li><strong>VM</strong>: <code>Alpine01</code> IP Adress <code>10.10.10.10</code>
+<ul>
+<li>Running an instance of iPerf to act as a traffic generator and receiver.</li>
+</ul>
+</li>
+</ul>
+<p>This router and segment represent a baseline configuration without any QoS policies, allowing for a comparison of unshaped and unprioritized traffic.</p>
+<h3 id="t1-router-2-t1-bgp-qos"><strong>T1 Router 2: T1-BGP QoS</strong></h3>
+<ul>
+<li><strong>Segment</strong>: <code>LS-10.10.20.1</code></li>
+<li><strong>QoS Policy</strong>: A custom QoS profile is applied to this segment, specifically configured to limit bandwidth to 30 Mbps for all associated VMs.</li>
+<li><strong>VM</strong>: <code>Alpine02</code> IP Adresse <code>10.10.20.10</code>
+<ul>
+<li>Equipped with iPerf for traffic generation and reception.</li>
+<li>Includes a browser for additional testing and validation purposes.</li>
+</ul>
+</li>
+</ul>
+<h3 id="purpose-of-the-test"><strong>Purpose of the Test</strong></h3>
+<p>The primary goal of this test is to validate <strong>QoS at the segment level</strong>, focusing on the following:</p>
+<ul>
+<li>Verifying that VMs connected to <code>LS-10.10.20.1</code> are effectively limited to a bandwidth of 30 Mbps for egress traffic.</li>
+<li>Demonstrating that the QoS profile, configured as ingress-only, limits traffic originating from <code>Alpine02</code> to other VMs or the Internet, while traffic from <code>Alpine01</code> to <code>Alpine02</code> remains unrestricted.</li>
+<li>Comparing traffic behavior between a segment with and without an applied QoS profile.</li>
+<li>Assessing performance consistency under traffic shaping policies.</li>
+<li>Measuring the impact of the 30 Mbps limit on both east-west and north-south traffic.</li>
+</ul>
+<p>These behaviors will be demonstrated using iPerf measurements, highlighting the effectiveness and boundaries of the configured QoS profile.
+By analyzing the test results, we can confirm the effectiveness of the QoS profile in limiting segment-level bandwidth and understand its implications for overall network performance.</p>
+<h3 id="first-test-iperf-test-from-alpine02-to-alpine03">First Test: iPerf Test from Alpine02 to Alpine03</h3>
+<h4 id="test-configuration"><strong>Test Configuration</strong></h4>
+<ul>
+<li><strong>Source</strong>: Alpine02 (<code>10.10.20.10</code>) connected to the segment <code>LS-10.10.20.1</code> with the QoS profile applied (ingress limited to 30 Mbps).</li>
+<li><strong>Destination</strong>: Alpine03 (<code>10.10.10.10</code>) connected to the segment <code>LS-10.10.10.1</code> with no QoS policy applied.</li>
+<li><strong>Tool</strong>: iPerf3</li>
+<li><strong>Command</strong>: <code>iperf3 -c 10.10.10.10</code></li>
+</ul>
+<h4 id="result-summary"><strong>Result Summary</strong></h4>
+<ul>
+<li><strong>Average Sender Bitrate</strong>: 32.6 Mbps</li>
+<li><strong>Average Receiver Bitrate</strong>: 30.2 Mbps</li>
+<li><strong>Key Observation</strong>: The sender&rsquo;s bitrate fluctuates around the 30 Mbps mark, as expected due to the QoS ingress limitation applied to the LS-10.10.20.1 segment. Receiver bitrate is consistent with the QoS configuration, confirming that the profile effectively limits traffic from Alpine02 to Alpine03.</li>
+</ul>
+<pre tabindex="0"><code>alpine02:~# iperf3 -c 10.10.10.10
+Connecting to host 10.10.10.10, port 5201
+[  5] local 10.10.20.10 port 40468 connected to 10.10.10.10 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  6.12 MBytes  51.3 Mbits/sec    0    522 KBytes       
+[  5]   1.00-2.00   sec  4.25 MBytes  35.7 Mbits/sec    0    522 KBytes       
+[  5]   2.00-3.00   sec  3.25 MBytes  27.3 Mbits/sec    0    522 KBytes       
+[  5]   3.00-4.00   sec  3.12 MBytes  26.2 Mbits/sec    0    522 KBytes       
+[  5]   4.00-5.00   sec  4.25 MBytes  35.7 Mbits/sec    0    522 KBytes       
+[  5]   5.00-6.00   sec  3.12 MBytes  26.2 Mbits/sec    0    522 KBytes       
+[  5]   6.00-7.00   sec  4.25 MBytes  35.6 Mbits/sec    0    522 KBytes       
+[  5]   7.00-8.00   sec  3.12 MBytes  26.2 Mbits/sec    2    365 KBytes       
+[  5]   8.00-9.00   sec  3.25 MBytes  27.3 Mbits/sec    0    365 KBytes       
+[  5]   9.00-10.00  sec  4.12 MBytes  34.6 Mbits/sec    0    365 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  38.9 MBytes  32.6 Mbits/sec    2        sender
+[  5]   0.00-10.00  sec  36.0 MBytes  30.2 Mbits/sec             receiver
+</code></pre><h3 id="second-test-iperf-test-from-alpine01-to-alpine02">Second Test: iPerf Test from Alpine01 to Alpine02</h3>
+<h4 id="test-configuration-1"><strong>Test Configuration</strong></h4>
+<ul>
+<li><strong>Source</strong>: Alpine01 (<code>10.10.10.10</code>) connected to the segment <code>LS-10.10.10.1</code> with no QoS policy applied.</li>
+<li><strong>Destination</strong>: Alpine02 (<code>10.10.20.10</code>) connected to the segment <code>LS-10.10.20.1</code> with the QoS profile applied (ingress limited to 30 Mbps).</li>
+<li><strong>Tool</strong>: iPerf3</li>
+<li><strong>Command</strong>: <code>iperf3 -c 10.10.20.10</code></li>
+</ul>
+<h4 id="result-summary-1"><strong>Result Summary</strong></h4>
+<ul>
+<li><strong>Average Sender Bitrate</strong>: 2.25 Gbps</li>
+<li><strong>Average Receiver Bitrate</strong>: 2.25 Gbps</li>
+<li><strong>Key Observation</strong>: The traffic from Alpine01 to Alpine02 is not limited by the QoS profile, as expected. This confirms the QoS profile applies only to ingress traffic on the <code>LS-10.10.20.1</code> segment.</li>
+</ul>
+<pre tabindex="0"><code>alpine01:~# iperf3 -c 10.10.20.10
+Connecting to host 10.10.20.10, port 5201
+[  5] local 10.10.10.10 port 50482 connected to 10.10.20.10 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   269 MBytes  2.25 Gbits/sec  150   2.08 MBytes       
+[  5]   1.00-2.00   sec   268 MBytes  2.25 Gbits/sec    0   2.19 MBytes       
+[  5]   2.00-3.00   sec   268 MBytes  2.25 Gbits/sec  172   1.21 MBytes       
+[  5]   3.00-4.00   sec   267 MBytes  2.24 Gbits/sec  150    997 KBytes       
+[  5]   4.00-5.00   sec   267 MBytes  2.24 Gbits/sec   11    673 KBytes       
+[  5]   5.00-6.00   sec   268 MBytes  2.24 Gbits/sec    0    928 KBytes       
+[  5]   6.00-7.00   sec   268 MBytes  2.25 Gbits/sec    0   1.10 MBytes       
+[  5]   7.00-8.00   sec   268 MBytes  2.25 Gbits/sec    0   1.27 MBytes       
+[  5]   8.00-9.00   sec   269 MBytes  2.25 Gbits/sec    0   1.42 MBytes       
+[  5]   9.00-10.00  sec   268 MBytes  2.25 Gbits/sec    6   1.11 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  2.62 GBytes  2.25 Gbits/sec  489             sender
+[  5]   0.00-10.01  sec  2.62 GBytes  2.25 Gbits/sec                  receiver
+
+iperf Done.
+</code></pre>
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Note on QoS Profiles and Perspective</b>
+        </div>
+        <div class="admonition-content"><p>When working with QoS profiles on a segment, it is important to understand that the traffic shaping perspective is always <strong>from the segment&rsquo;s point of view</strong>. For example:</p>
+<ul>
+<li>A profile that shapes <strong>ingress traffic</strong> is applied to traffic <strong>entering the segment</strong>.</li>
+<li>From the VM&rsquo;s perspective, this same traffic is considered <strong>egress traffic</strong> (leaving the VM).
+This distinction can initially be confusing but is crucial for correctly interpreting and configuring QoS policies in NSX environments.</li>
+</ul></div>
+    </aside>
+<h4 id="qos-profiles-apply-to-all-vms-on-the-segment"><strong>QoS Profiles Apply to All VMs on the Segment</strong></h4>
+<p>QoS profiles applied at the segment level are effective for <strong>all VMs connected to that segment</strong>. In our example, this means:</p>
+<ul>
+<li>Every VM connected to the segment <code>LS-10.10.20.1</code> is limited to a maximum <strong>outgoing traffic rate of 30 Mbps</strong>.</li>
+<li>The QoS profile ensures this bandwidth limit is enforced uniformly, regardless of the specific VM or traffic destination.</li>
+</ul>
+<p>This behavior highlights the segment-wide scope of QoS policies, making them a powerful tool for managing traffic flow consistently across all connected VMs.</p>
+<h2 id="qos-on-t1-gateway-level">QoS on T1 Gateway Level</h2>
+<p>To evaluate QoS at the Tier-1 Gateway level, the test conditions remain the same as in the segment-level QoS tests. However, the QoS profile will now be applied directly to the T1 Gateway. Before proceeding, the QoS profile is removed from the segment <code>LS-10.10.20.1</code>.</p>
+<h2 id="qos-profile-configuration-on-t1-gateway"><strong>QoS Profile Configuration on T1 Gateway</strong></h2>
+<p>For the T1 Gateway, the QoS profile is applied with the following characteristics:</p>
+<ul>
+<li><strong>Type</strong>: Ingress</li>
+<li><strong>Committed Bandwidth</strong>: 30 Mbps</li>
+<li><strong>Burst Size</strong>: Configured based on constraints (explained below).</li>
+</ul>
+<p>Unlike segment-level QoS, the T1 Gateway QoS profile allows only the configuration of <strong>Committed Bandwidth</strong> and <strong>Burst Size</strong> in bytes. The direction (Ingress or Egress) is explicitly specified when applying the profile to the gateway.</p>
+<h3 id="limitations-of-gateway-qos-profiles"><strong>Limitations of Gateway QoS Profiles</strong></h3>
+<ul>
+<li><strong>Supported only on Tier-1 Gateways</strong>:
+<ul>
+<li>QoS profiles can only be applied to T1 Gateways, not to Tier-0 Gateways or any other components.</li>
+</ul>
+</li>
+<li><strong>Applies only to North-South Traffic</strong>:
+<ul>
+<li>QoS policies on Tier-1 Gateways are limited to north-south traffic and do not affect overlay segments or service interfaces connected to the gateway.</li>
+</ul>
+</li>
+<li><strong>Requires Active-Standby Mode</strong>:
+<ul>
+<li>The T1 Gateway must be in active-standby mode with an NSX Edge cluster for the QoS profile to function.</li>
+</ul>
+</li>
+<li><strong>Not Supported for Distributed Routing</strong>:
+<ul>
+<li>Gateways configured for distributed routing cannot have QoS profiles applied.</li>
+</ul>
+</li>
+</ul>
+<h3 id="burst-size-calculation"><strong>Burst Size Calculation</strong></h3>
+<p>The calculation of the <strong>Burst Size</strong> for a T1 Gateway is more complex due to additional constraints. The Burst Size must satisfy the following:</p>
+<ol>
+<li>
+<p><strong>Token Refill per Interval</strong>:</p>
+\[B \geq \frac{R \times 1000000 \times I}{1000 \times 8} \]<p>
+Where:</p>
+</li>
+</ol>
+<ul>
+<li>\( B \): Burst Size in Bytes</li>
+<li>\( R \): Committed Bandwidth in Mbps</li>
+<li>\( I \): Refill Interval in milliseconds (e.g., 1 ms)</li>
+</ul>
+<ol start="2">
+<li><strong>Minimum Refill Interval</strong>:
+\[ B \geq \frac{R \times 1000000 \times 1}{1,000 \times 8} \]</li>
+</ol>
+<ul>
+<li>The minimum interval \( I \) is 1 ms to account for dataplane CPU usage.</li>
+</ul>
+<ol start="3">
+<li><strong>MTU Constraint</strong>:
+\[ B \geq MTU \] of the Service Router (SR) port.</li>
+</ol>
+<ul>
+<li>The Burst Size must accommodate at least one full MTU-size packet.</li>
+</ul>
+<p>The effective Burst Size must satisfy all three constraints. Therefore, the configured Burst Size is determined as:</p>
+\[
+B = \text{Max} \left( \frac{R \times 1000000 \times I}{1000 \times 8}, \frac{R \times 1000000 \times 1}{1000 \times 8}, MTU \right)
+\]<h3 id="burst-size-calculation-example">Burst Size Calculation Example</h3>
+<h4 id="parameters"><strong>Parameters</strong></h4>
+<ul>
+<li>\( R \): <strong>Committed Bandwidth</strong> = 30 Mbps</li>
+<li>\( I \): <strong>Refill Interval</strong> = 1000 ms (1 second)</li>
+<li>\( MTU \): <strong>Maximum Transmission Unit</strong> = 1500 bytes</li>
+</ul>
+<p>The Burst Size \( B \) must satisfy the following constraints:</p>
+<h4 id="1-token-refill-per-interval"><strong>1. Token Refill per Interval</strong></h4>
+\[
+B \geq \frac{R \times 1000000 \times I}{1000 \times 8}
+\]<p>
+Substitute the values:
+</p>
+\[
+B \geq \frac{30 \times 1000000 \times 1000}{1000 \times 8}
+\]\[
+B \geq \frac{30000000000}{8000}
+\]\[
+B \geq 3750000 \, \text{bytes}
+\]<h4 id="2-minimum-refill-interval"><strong>2. Minimum Refill Interval</strong></h4>
+\[
+B \geq \frac{R \times 1000000 \times 1000}{1000 \times 8}
+\]<p>
+This calculation remains the same as in the previous case since \( I = 1000 \, \text{ms} \):
+</p>
+\[
+B \geq 3750000 \, \text{bytes}
+\]<h4 id="3-mtu-constraint"><strong>3. MTU Constraint</strong></h4>
+\[
+B \geq MTU
+\]\[
+B \geq 1500 \, \text{bytes}
+\]<h4 id="final-burst-size"><strong>Final Burst Size</strong></h4>
+<p>The Burst Size \( B \) must satisfy <strong>all three constraints</strong>, so:
+</p>
+\[
+B = \text{Max}(3750000, 3750000, 1500)
+\]\[
+B = 3750000 \, \text{bytes}
+\]<h3 id="result"><strong>Result</strong></h3>
+<p>The minimum Burst Size required is <strong>3750000 bytes</strong> to satisfy all constraints with the given parameters.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Minimum Refill Interval</b>
+        </div>
+        <div class="admonition-content">Use the <code>get dataplane</code> command from the NSX Edge CLI to retrieve the time interval, Qos_wakeup_interval_ms. The default value for Qos_wakeup_interval_ms is 50ms. However, this value is automatically adjusted by the dataplane based on the QoS configuration. In my lab, the QoS_wakeup_interval is relatively high, which is partly due to my hardware and the fact that it is a nested lab. In production environments, this value is typically lower.</div>
+    </aside>
+<h3 id="implementation-for-this-test"><strong>Implementation for This Test</strong></h3>
+<ul>
+<li>The T1 Gateway is configured with a 30 Mbps Committed Bandwidth and a Burst Size that satisfies the constraints above.</li>
+<li>The profile is applied in <strong>Ingress</strong> mode to test incoming north-south traffic through the T1 Gateway.</li>
+</ul>
+
+<figure><a href="t1qos.png"><picture>
+          <source srcset="/nsx-qos/t1qos_hu14467825683727384270.webp" type="image/webp">
+          <source srcset="/nsx-qos/t1qos_hu5352979924153472324.jpg" type="image/jpeg">
+          <img src="/nsx-qos/t1qos_hu14467825683727384270.webp"alt="T1 Qos Profile"  width="1433"  height="821" />
+        </picture></a><figcaption>
+            <p>T1 Qos Profile</p>
+          </figcaption></figure>
+<p>This setup will help analyze how traffic shaping and rate limiting function at the T1 Gateway level compared to the segment-level QoS.</p>
+<h2 id="first-test-iperf-test-from-alpine01-to-alpine02-t1-gateway-qos">First Test: iPerf Test from Alpine01 to Alpine02 (T1 Gateway QoS)</h2>
+<h3 id="test-configuration-2"><strong>Test Configuration</strong></h3>
+<ul>
+<li><strong>Source</strong>: Alpine01 (<code>10.10.10.10</code>) connected to the segment <code>LS-10.10.10.1</code> with no QoS profile applied.</li>
+<li><strong>Destination</strong>: Alpine02 (<code>10.10.20.10</code>) connected to the segment <code>LS-10.10.20.1</code>.</li>
+<li><strong>QoS Profile</strong>: Applied to the T1 Gateway with:
+<ul>
+<li><strong>Type</strong>: Ingress</li>
+<li><strong>Committed Bandwidth</strong>: 30 Mbps</li>
+<li><strong>Burst Size</strong>: Configured according to the calculated constraints.</li>
+</ul>
+</li>
+<li><strong>Tool</strong>: iPerf3</li>
+<li><strong>Command</strong>: <code>iperf3 -c 10.10.20.10</code></li>
+</ul>
+<pre tabindex="0"><code>alpine01:~# iperf3 -c 10.10.20.10 
+Connecting to host 10.10.20.10, port 5201
+[  5] local 10.10.10.10 port 33292 connected to 10.10.20.10 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  7.25 MBytes  60.8 Mbits/sec  283   5.66 KBytes       
+[  5]   1.00-2.00   sec  3.25 MBytes  27.3 Mbits/sec  369   5.66 KBytes       
+[  5]   2.00-3.00   sec  3.00 MBytes  25.2 Mbits/sec  233   52.3 KBytes       
+[  5]   3.00-4.00   sec  3.75 MBytes  31.5 Mbits/sec  392   7.07 KBytes       
+[  5]   4.00-5.00   sec  3.12 MBytes  26.2 Mbits/sec  284   41.0 KBytes       
+[  5]   5.00-6.00   sec  3.88 MBytes  32.5 Mbits/sec  356   8.48 KBytes       
+[  5]   6.00-7.00   sec  3.25 MBytes  27.3 Mbits/sec  270   7.07 KBytes       
+[  5]   7.00-8.00   sec  3.62 MBytes  30.4 Mbits/sec  315    110 KBytes       
+[  5]   8.00-9.00   sec  3.50 MBytes  29.4 Mbits/sec  407   7.07 KBytes       
+[  5]   9.00-10.00  sec  3.00 MBytes  25.2 Mbits/sec  245   12.7 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  37.6 MBytes  31.6 Mbits/sec  3154             sender
+[  5]   0.00-10.00  sec  37.1 MBytes  31.1 Mbits/sec                  receiver
+
+iperf Done.
+</code></pre><h3 id="result-summary-2">Result Summary</h3>
+<ul>
+<li>Average Sender Bitrate: 31.6 Mbps</li>
+<li>Average Receiver Bitrate: 31.1 Mbps</li>
+<li>Total Retransmissions: 3154</li>
+</ul>
+<h2 id="second-test-iperf-test-from-alpine02-to-alpine03-t1-gateway-qos">Second Test: iPerf Test from Alpine02 to Alpine03 (T1 Gateway QoS)</h2>
+<h3 id="test-configuration-3"><strong>Test Configuration</strong></h3>
+<ul>
+<li><strong>Source</strong>: Alpine02 (<code>10.10.20.10</code>) connected to the segment <code>LS-10.10.20.1</code> with no QoS profile applied.</li>
+<li><strong>Destination</strong>: Alpine03 (<code>10.10.10.10</code>) connected to the segment <code>LS-10.10.10.1</code> with no QoS profile applied.</li>
+<li><strong>QoS Profile</strong>: Applied to the T1 Gateway in <strong>Ingress</strong> mode, limiting traffic to 30 Mbps for ingress traffic  from T0 to the T1 gateway.</li>
+<li><strong>Tool</strong>: iPerf3</li>
+<li><strong>Command</strong>: <code>iperf3 -c 10.10.10.10</code></li>
+</ul>
+<pre tabindex="0"><code>alpine02:~# iperf3 -c 10.10.10.10
+Connecting to host 10.10.10.10, port 5201
+[  5] local 10.10.20.10 port 50200 connected to 10.10.10.10 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   249 MBytes  2.09 Gbits/sec    5    615 KBytes       
+[  5]   1.00-2.00   sec   267 MBytes  2.24 Gbits/sec    0    885 KBytes       
+[  5]   2.00-3.00   sec   159 MBytes  1.34 Gbits/sec   73    290 KBytes       
+[  5]   3.00-4.00   sec   248 MBytes  2.08 Gbits/sec    0    677 KBytes       
+[  5]   4.00-5.00   sec   261 MBytes  2.19 Gbits/sec    0    928 KBytes       
+[  5]   5.00-6.00   sec   264 MBytes  2.22 Gbits/sec    1    792 KBytes       
+[  5]   6.00-7.00   sec   260 MBytes  2.18 Gbits/sec   26    441 KBytes       
+[  5]   7.00-8.00   sec   257 MBytes  2.16 Gbits/sec    0    766 KBytes       
+[  5]   8.00-9.00   sec   262 MBytes  2.20 Gbits/sec    7    585 KBytes       
+[  5]   9.00-10.00  sec   262 MBytes  2.19 Gbits/sec    0    858 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  2.43 GBytes  2.09 Gbits/sec  112             sender
+[  5]   0.00-10.00  sec  2.43 GBytes  2.09 Gbits/sec                  receiver
+</code></pre><h3 id="result-summary-3">Result Summary</h3>
+<ul>
+<li>Average Sender Bitrate: 2.09 Gbps</li>
+<li>Average Receiver Bitrate: 2.09 Gbps</li>
+<li>Total Retransmissions: 112</li>
+</ul>
+<h2 id="third-test-iperf-test-from-alpine01-to-alpine02-concurrent-traffic">Third Test: iPerf Test from Alpine01 to Alpine02 (Concurrent Traffic)</h2>
+<h3 id="test-configuration-4"><strong>Test Configuration</strong></h3>
+<ul>
+<li><strong>Source</strong>: Alpine01 (<code>10.10.10.10</code>) connected to the segment <code>LS-10.10.10.1</code> with no QoS profile applied.</li>
+<li><strong>Destination</strong>: Alpine02 (<code>10.10.20.10</code>) connected to the segment <code>LS-10.10.20.1</code>.</li>
+<li><strong>Additional Traffic</strong>: A second VM, connected to the same T1 Gateway as Alpine02, is concurrently receiving data to simulate shared bandwidth conditions.</li>
+<li><strong>QoS Profile</strong>: Applied to the T1 Gateway in <strong>Ingress</strong> mode, limiting traffic to 30 Mbps for ingress traffic to the gateway.</li>
+<li><strong>Tool</strong>: iPerf3</li>
+<li><strong>Command</strong>: <code>iperf3 -c 10.10.20.10</code></li>
+</ul>
+<pre tabindex="0"><code>alpine01:~# iperf3 -c 10.10.20.10 
+Connecting to host 10.10.20.10, port 5201
+[  5] local 10.10.10.10 port 40898 connected to 10.10.20.10 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  2.88 MBytes  24.1 Mbits/sec  475   8.48 KBytes       
+[  5]   1.00-2.00   sec  2.50 MBytes  21.0 Mbits/sec  212   53.7 KBytes       
+[  5]   2.00-3.00   sec  2.12 MBytes  17.8 Mbits/sec  233   9.90 KBytes       
+[  5]   3.00-4.00   sec  2.12 MBytes  17.8 Mbits/sec  145   1.41 KBytes       
+[  5]   4.00-5.00   sec  2.50 MBytes  21.0 Mbits/sec  237   14.1 KBytes       
+[  5]   5.00-6.00   sec  1.62 MBytes  13.6 Mbits/sec  145   22.6 KBytes       
+[  5]   6.00-7.00   sec  3.12 MBytes  26.2 Mbits/sec  331   5.66 KBytes       
+[  5]   7.00-8.00   sec  1.00 MBytes  8.39 Mbits/sec  155   7.07 KBytes       
+[  5]   8.00-9.00   sec  2.62 MBytes  22.0 Mbits/sec  142   86.3 KBytes       
+[  5]   9.00-10.00  sec  3.12 MBytes  26.2 Mbits/sec  349   22.6 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  23.6 MBytes  19.8 Mbits/sec  2424             sender
+[  5]   0.00-10.00  sec  22.4 MBytes  18.8 Mbits/sec                  receiver
+</code></pre><h3 id="result-summary-4">Result Summary</h3>
+<ul>
+<li>Average Sender Bitrate: 19.8 Mbps</li>
+<li>Average Receiver Bitrate: 18.8 Mbps</li>
+<li>Total Retransmissions: 2424</li>
+<li>The QoS profile at the T1 Gateway effectively limits total ingress bandwidth to 30 Mbps. However, the concurrent traffic from the second VM reduces the available bandwidth for Alpine01.</li>
+</ul>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Note on QoS Profiles and Perspective</b>
+        </div>
+        <div class="admonition-content"><p>For a QoS profile applied at the gateway level, the <strong>Ingress</strong> direction refers to traffic entering the Tier-1 (T1) Gateway from the Tier-0 (T0) Gateway. This means:</p>
+<ul>
+<li>From the perspective of a VM, this is indeed <strong>ingress traffic</strong>, as it refers to traffic arriving at the VM via the T1 Gateway.</li>
+<li>The <strong>egress traffic</strong> of a VM (traffic leaving the VM) is not affected by an ingress QoS profile applied at the T1 Gateway.
+This distinction ensures that the QoS profile at the gateway level is only applied to traffic coming from the T0 to the T1, without influencing outgoing traffic generated by the VM.</li>
+</ul></div>
+    </aside>
+<h2 id="summary">Summary</h2>
+<p>When working with QoS profiles in NSX, it is important to understand the key differences and use cases for <strong>Gateway QoS Profiles</strong> and <strong>Segment QoS Profiles</strong>:</p>
+<h3 id="gateway-qos-profiles"><strong>Gateway QoS Profiles</strong></h3>
+<ul>
+<li><strong>Shared Bandwidth</strong>: The configured bandwidth applies to the <strong>total traffic</strong> for all VMs connected to the same T1 Gateway. This includes all segments attached to that gateway.</li>
+<li><strong>Practical Use Case</strong>: Gateway QoS profiles are ideal for scenarios like test environments, where you want to limit the total available bandwidth across all VMs and segments.</li>
+<li><strong>Traffic Direction</strong>: The QoS direction is critical:
+<ul>
+<li><strong>Ingress QoS</strong>: Limits traffic entering the T1 Gateway (from T0 to T1), affecting ingress traffic from the VM&rsquo;s perspective.</li>
+<li><strong>Egress QoS</strong>: Limits traffic leaving the T1 Gateway (from T1 to T0), affecting egress traffic from the VM&rsquo;s perspective.</li>
+</ul>
+</li>
+</ul>
+<h3 id="segment-qos-profiles"><strong>Segment QoS Profiles</strong></h3>
+<ul>
+<li><strong>Individual Bandwidth Allocation</strong>: Each VM connected to the segment receives the bandwidth specified in the profile. VMs do <strong>not share</strong> the bandwidth; they each receive the assigned limit (assuming the total environment can provide the required bandwidth).</li>
+<li><strong>Flexibility</strong>: Segment QoS profiles offer more granular control and can be used for more than just rate limiting. For example, they can prioritize or shape specific types of traffic.</li>
+<li><strong>Traffic Direction</strong>: The direction in the profile (Ingress or Egress) must be carefully considered based on what you want to achieve.</li>
+</ul>
+<h3 id="key-considerations"><strong>Key Considerations</strong></h3>
+<ul>
+<li><strong>Shared vs. Dedicated Bandwidth</strong>: Use Gateway QoS Profiles when you want to manage total bandwidth collectively for all VMs. Use Segment QoS Profiles when you need to allocate specific bandwidth to individual VMs.</li>
+<li><strong>Performance Impact</strong>: Avoid using Gateway QoS Profiles in scenarios requiring high performance and scalability. The active/standby limitation can create bottlenecks, making distributed T1 Gateways the better choice for performance-critical environments.</li>
+</ul>
+<p>By understanding these differences, you can effectively apply QoS profiles to achieve desired traffic shaping and bandwidth management goals in your NSX environment.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
