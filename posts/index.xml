@@ -144,15 +144,15 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
       </tr>
       <tr>
           <td>4</td>
-          <td>Minisforum MS-01</td>
+          <td>Minisforum MS-01 i9 13.Gen</td>
       </tr>
       <tr>
           <td>3</td>
-          <td>Asus NUC Pro</td>
+          <td>Asus NUC Pro i7 13.Gen</td>
       </tr>
       <tr>
           <td>1</td>
-          <td>Asus NUC Pro</td>
+          <td>Asus NUC Pro i3 13.Gen</td>
       </tr>
       <tr>
           <td><strong>Network</strong></td>
@@ -180,7 +180,7 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
       </tr>
       <tr>
           <td>1</td>
-          <td>Intel NUC Extreme 11</td>
+          <td>Intel NUC Extreme i7 11.Gen</td>
       </tr>
       <tr>
           <td><strong>USV</strong></td>
