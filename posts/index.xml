@@ -6,8 +6,268 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 10 Dec 2024 02:00:40 +0100</lastBuildDate>
+		<lastBuildDate>Sat, 14 Dec 2024 02:00:26 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Homelab V5</title>
+			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
+			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
+			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
+			<content type="html"><![CDATA[<h2 id="my-homelab-journey-from-unraid-beginnings-to-version-5">My Homelab Journey: From Unraid Beginnings to Version 5</h2>
+<p>Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.</p>
+<h2 id="the-beginning-unraid-with-custom-hardware">The Beginning: Unraid with Custom Hardware</h2>
+<p>My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.</p>
+
+<figure><picture>
+          <source srcset="/labv5/unraid_hu12871636074369548549.webp" type="image/webp">
+          <source srcset="/labv5/unraid_hu3133507235213664422.jpeg" type="image/jpeg">
+          <img src="/labv5/unraid_hu12871636074369548549.webp"alt="Homelab v1"  width="960"  height="1280" />
+        </picture><figcaption>
+            <p>My first Homelab</p>
+          </figcaption></figure>
+<p>The rack that I used from Version 1 through Version 4 of my homelab housed only 2 switches, a Pi3 and an old HP Elitedesk Client in V1, but it had to be replaced to accommodate the changes in Version 5.</p>
+<h2 id="evolution-to-version-5">Evolution to Version 5</h2>
+<p>Over the years, I continuously refined and upgraded the homelab. With my role at Evoila GmbH, my expectations for both myself and my homelab grew significantly. It quickly became clear that I needed different hardware to meet these new demands, especially as I aimed to conduct more extensive labs with NSX.</p>
+<p>To start, I added a simple 3-node NUC cluster using 11th Generation Intel i5 processors. Additionally, I replaced the switches in my setup with multiple multispeed switches from Zyxel and QNAP. At the time, there were limited options on the market for 2.5 Gbps switches with management capabilities, resulting in a somewhat heterogeneous configuration.</p>
+<p>Each iteration brought new hardware, better software configurations, and more ambitious goals. Over time, more technologies found their way into my lab, including a Fortinet FortiGate F40, BGP routing, and 10G switches. These advancements eventually culminated in Version 4 of my lab. However, as the lab grew, the rack ran out of space for further development, prompting the need for a complete rebuild, which led to the creation of Version 5. Now, in its fifth version, the lab has transformed into a powerful and efficient setup comprising.</p>
+<h2 id="my-lab-philosophy">My Lab Philosophy</h2>
+<p>My primary goal has always been to achieve the best possible performance with minimal power consumption, noise, and space requirements. To this end, I have standardized my homelab on Intel’s 13th Generation CPUs, which strike a great balance between power efficiency and computational capability.</p>
+<h2 id="lab-overview">Lab Overview</h2>
+<p>In Lab Version 5, I have three clusters:</p>
+<h3 id="management-cluster">Management Cluster:</h3>
+<p>This cluster is powered by an Intel NUC i3 13th Generation, which serves as the always-on management node. The ESXi server in this cluster hosts several key VMs:</p>
+<ul>
+<li>A Windows 11 VM with tools like Hugo, Go, and GitHub for managing this blog.</li>
+<li>LogInsight and FortiAnalyzer.</li>
+<li>A vCenter server.</li>
+<li>An mDNS Repeater for Smart Home integration.</li>
+<li>Homebridge for managing smart devices.</li>
+<li>NetBox for network documentation.</li>
+<li>A Veeam server for backups.</li>
+</ul>
+<p>Additionally, two VMs on my Unraid server contribute to the management cluster:</p>
+<ul>
+<li>A Root CA.</li>
+<li>A Domain Controller, which primarily supports the labs.</li>
+</ul>
+<p>The Unraid server also runs several containers, including:</p>
+<ul>
+<li>DNS servers.</li>
+<li>An Excalidraw instance.</li>
+<li>Various other tools.</li>
+</ul>
+<p>For redundancy, I run a backup DNS server on a Raspberry Pi 3 to ensure DNS functionality during storage maintenance. I use AdGuard Home as my primary DNS server, which blocks ads and forwards DNS queries to my lab.home domain managed by the Active Directory server.</p>
+<h3 id="compute-cluster">Compute Cluster:</h3>
+<p>My compute cluster consists of three Intel NUCs of the 13th Generation, each equipped with 64 GB of RAM and a 2TB NVMe drive. Due to the P/E core architecture, these NUCs do not support Hyperthreading but offer 12 cores (4P + 8E). Based on my experience, the performance with E cores enabled is better than using 4 P cores with Hyperthreading. Each NUC features dual 2.5G network interfaces and is connected to my iSCSI storage. This cluster runs standard nested labs, such as my NSX lab and AVI load balancer labs. The performance is sufficient for many labs, making it a reliable and frequently used part of my setup.</p>
+<p>The Compute Cluster in Lab Version 5 has the following total resources:</p>
+<ul>
+<li>192 GB RAM across 3 NUCs</li>
+<li>6 TB NVMe storage (2 TB per NUC)</li>
+<li>8 TB shared storage</li>
+<li>36 CPU cores (12 cores per NUC)</li>
+</ul>
+<h3 id="performance-cluster">Performance Cluster:</h3>
+<p>My performance cluster consists of four MinisForum MS-01 units, each featuring an Intel i9 processor with 14 cores (6P + 8E), 64 GB of physical RAM, and a 400% memory tiering configuration. Each MS-01 includes 2 TB of local NVMe storage and an additional 1 TB PCIe4 NVMe drive for memory tiering. With onboard dual 10GbE networking, the MS-01 units are ideal for demanding labs, such as a complete VCF deployment including an HCX proof of concept where I live-migrated VMs between my NSX lab and the VCF lab. The MS-01 units are also used for vSAN labs. Additionally, Intel vPro support allows for efficient remote management. This cluster provides:</p>
+<ul>
+<li>56 CPU cores (14 cores per MS-01).</li>
+<li>1280 GB of RAM (64 GB physical per unit with memory tiering).</li>
+<li>8 TB of local NVMe storage (2 TB per unit).</li>
+<li>4 TB of NVMe storage for memory tiering (1 TB per unit).</li>
+<li>8 TB shared Storage</li>
+</ul>
+<h3 id="network">Network</h3>
+<p>My network consists of multiple MikroTik switches. The centerpiece is my ToR (Top of Rack) switch, the MikroTik CRS309, which can route at line speed thanks to hardware offloading. This switch hosts all lab-relevant gateways and networks, ensuring they don&rsquo;t need to be routed through my Fortinet FortiGate F40. The servers themselves are connected to two access switches: the NUCs via dual 2.5Gbps connections, and the MS-01 units via 10Gbps connections per switch.
+I also have a service router (RB5009) that establishes a VPN tunnel to a fellow homelabber. Through this connection, I can utilize his Kubernetes resources, and we&rsquo;ve even tested the NSX Application Platform (NAPP) together. <a href="https://marschall.systems/">Visit marschall.systems</a></p>
+
+<figure><a href="plan.png"><picture>
+          <source srcset="/labv5/plan_hu4235498138432559503.webp" type="image/webp">
+          <source srcset="/labv5/plan_hu7818108223675192909.jpg" type="image/jpeg">
+          <img src="/labv5/plan_hu4235498138432559503.webp"alt="Network setup"  width="6206"  height="3968" />
+        </picture></a><figcaption>
+            <p>Network setup (click to enlarge)</p>
+          </figcaption></figure>
+<p>My network employs dynamic routing, with eBGP as the primary protocol peering all critical components. My BGP NSX lab peers directly with my ToR switch, ensuring high efficiency and seamless integration with the rest of the network. For my labs, I utilize both OSPF and BGP. My OSPF lab runs on two virtual ArubaCX switches and a VyOS router, which has an IP in my standard client network and provides internet access to the OSPF lab via NAT.</p>
+
+<figure><a href="bgp.png"><picture>
+          <source srcset="/labv5/bgp_hu13323852698658684218.webp" type="image/webp">
+          <source srcset="/labv5/bgp_hu5788182371385841057.jpg" type="image/jpeg">
+          <img src="/labv5/bgp_hu13323852698658684218.webp"alt="Network bgp setup"  width="3111"  height="2917" />
+        </picture></a><figcaption>
+            <p>BGP setup (click to enlarge)</p>
+          </figcaption></figure>
+<h3 id="storage">Storage</h3>
+<p>As my primary storage solution, I use my Unraid server. After implementing several iSCSI optimizations <a href="https://sdn-warrior.org/posts/iscsi-tuning/">(my iSCSI Blog post)</a> and installing the iSCSI Target plugin <a href="https://sdn-warrior.org/posts/unraid-storage/">(my Unraid Blog post)</a>, the server provides a performant iSCSI storage capable of achieving around 2000 MB/s for both read and write operations.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">An iSCSI Target in Linux refers to a service or daemon that enables a Linux server to present storage devices over the network using the iSCSI protocol. This allows other machines, known as iSCSI Initiators, to connect to and use these storage devices as if they were local drives.</div>
+    </aside>
+<h2 id="firewall">Firewall</h2>
+<p>As my firewall, I use a Fortinet FortiGate F40, which I’ve had for two years. I am fortunate to have access to an NFR/LAB license through my employer at an affordable price. The FortiGate F40 handles both firewalling and IDS/IPS functionality. Additionally, I operate it in a dual-stack configuration and leverage its SD-WAN feature to load balance two WAN connections: 5G and DSL.</p>
+<h2 id="lessons-learned-and-future-goals">Lessons Learned and Future Goals</h2>
+<ul>
+<li>
+<p>Performance vs. Efficiency: Achieving the right balance between performance and efficiency requires meticulous planning and experimentation. Each hardware choice and configuration tweak contributes to the overall success of the setup.</p>
+</li>
+<li>
+<p>Automation: In the future, I plan to incorporate more automation into my homelab. To achieve this, I have started experimenting with Terraform to streamline deployments and configurations.</p>
+</li>
+<li>
+<p>Scaling Smartly: As my lab has grown, managing power, cooling, and network configurations has become increasingly important.</p>
+</li>
+<li>
+<p>Continuous Improvement: My homelab is a perpetual work in progress. With each iteration, I discover new ways to optimize and expand its capabilities.</p>
+</li>
+</ul>
+<h2 id="current-setup-bill-of-materials-bom">Current Setup: Bill of Materials (BOM)</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Quantity</th>
+          <th>Component</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Server</strong></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>Minisforum MS-01</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>Asus NUC Pro</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>Asus NUC Pro</td>
+      </tr>
+      <tr>
+          <td><strong>Network</strong></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>Mikrotik CRS309-1G-8S+IN</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>MikroTik L009UiGS-RM</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>Mikrotik CRS326-4C +20G+2Q</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>Mikrotik RB5009UG+S+IN</td>
+      </tr>
+      <tr>
+          <td><strong>Storage</strong></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>Intel NUC Extreme 11</td>
+      </tr>
+      <tr>
+          <td><strong>USV</strong></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>APC Back-UPS Pro 1300VA BR1300MI</td>
+      </tr>
+      <tr>
+          <td><strong>Firewall</strong></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>Fortinet Fortigate F40</td>
+      </tr>
+      <tr>
+          <td><strong>Other</strong></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>21U Rack</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>DAC Cable / Ethernet Cable</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>Cable Management</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>Rack Mount MS-01</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>Rack Mount NUC</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>Air Vent</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>Rack PSU</td>
+      </tr>
+  </tbody>
+</table>
+<p>You can also find the detailed BOM with prices <a href="https://docs.google.com/spreadsheets/d/1XK32KJWiLBMlKLlPSKNDwBaX2mg4fmGFN2aEA3SIsEc/edit?pli=1&amp;gid=0#gid=0">here</a>, which I update regularly to reflect any changes in my setup.</p>
+<h2 id="final-result">Final result</h2>
+<p>
+<figure><picture>
+          <source srcset="/labv5/rackmount_hu1092622698464279345.webp" type="image/webp">
+          <source srcset="/labv5/rackmount_hu15529659375378009796.jpg" type="image/jpeg">
+          <img src="/labv5/rackmount_hu1092622698464279345.webp"alt="Rackmount"  width="1600"  height="1200" />
+        </picture><figcaption>
+            <p>Rackmount MS-01</p>
+          </figcaption></figure>
+
+<figure><picture>
+          <source srcset="/labv5/rackmount2_hu12242692340557408737.webp" type="image/webp">
+          <source srcset="/labv5/rackmount2_hu16189033617681113906.jpg" type="image/jpeg">
+          <img src="/labv5/rackmount2_hu12242692340557408737.webp"alt="Rackmount2"  width="2250"  height="1500" />
+        </picture><figcaption>
+            <p>Rackmount MS-01</p>
+          </figcaption></figure>
+
+<figure><picture>
+          <source srcset="/labv5/cable_hu10763548189357929237.webp" type="image/webp">
+          <source srcset="/labv5/cable_hu12300581878864859744.jpg" type="image/jpeg">
+          <img src="/labv5/cable_hu10763548189357929237.webp"alt="Rack"  width="1500"  height="1000" />
+        </picture><figcaption>
+            <p>Rack view top</p>
+          </figcaption></figure>
+
+<figure><picture>
+          <source srcset="/labv5/rack_hu9852508572301551615.webp" type="image/webp">
+          <source srcset="/labv5/rack_hu10464460824911337438.jpg" type="image/jpeg">
+          <img src="/labv5/rack_hu9852508572301551615.webp"alt="Rack"  width="1200"  height="1600" />
+        </picture><figcaption>
+            <p>Rack view</p>
+          </figcaption></figure></p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>How to use QoS in NSX</title>

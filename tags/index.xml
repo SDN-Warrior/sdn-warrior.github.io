@@ -7,8 +7,43 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 10 Dec 2024 02:00:40 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 14 Dec 2024 02:00:26 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Esxi</title>
+      <link>https://sdn-warrior.org/tags/esxi/</link>
+      <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/esxi/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Homelab</title>
+      <link>https://sdn-warrior.org/tags/homelab/</link>
+      <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Unraid</title>
+      <link>https://sdn-warrior.org/tags/unraid/</link>
+      <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/unraid/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf</title>
+      <link>https://sdn-warrior.org/tags/vcf/</link>
+      <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Networking</title>
       <link>https://sdn-warrior.org/tags/networking/</link>
@@ -31,13 +66,6 @@
       <description></description>
     </item>
     <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Update</title>
       <link>https://sdn-warrior.org/tags/update/</link>
       <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
@@ -45,38 +73,10 @@
       <description></description>
     </item>
     <item>
-      <title>Esxi</title>
-      <link>https://sdn-warrior.org/tags/esxi/</link>
-      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/esxi/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Iscsi</title>
       <link>https://sdn-warrior.org/tags/iscsi/</link>
       <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/iscsi/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Unraid</title>
-      <link>https://sdn-warrior.org/tags/unraid/</link>
-      <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/unraid/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nested Lab</title>
-      <link>https://sdn-warrior.org/tags/nested-lab/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/nested-lab/</guid>
       <description></description>
     </item>
   </channel>

@@ -7,13 +7,13 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 09 Dec 2024 19:41:40 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 12 Dec 2024 18:43:26 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Nsx Qos</title>
-      <link>http://localhost:1313/posts/nsx-qos/</link>
-      <pubDate>Mon, 09 Dec 2024 19:41:40 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-qos/</guid>
+      <title>Homelab V5</title>
+      <link>http://localhost:1313/posts/homelab-v5/</link>
+      <pubDate>Thu, 12 Dec 2024 18:43:26 +0100</pubDate>
+      <guid>http://localhost:1313/posts/homelab-v5/</guid>
       <description></description>
     </item>
   </channel>
