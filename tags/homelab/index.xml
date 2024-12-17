@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 14 Dec 2024 02:00:26 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 17 Dec 2024 22:36:18 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
+      <link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
+      <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-chatgpt&#34;&gt;Why ChatGPT?&lt;/h2&gt;&#xA;&lt;p&gt;Let’s be honest: starting with Ansible can feel overwhelming, especially if you&amp;rsquo;re new to it. My last experience with something remotely similar was years ago, working with PowerShell scripts or even earlier with .NET 3 (yes, I’m &amp;ldquo;that old&amp;rdquo;).&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Homelab V5</title>
       <link>https://sdn-warrior.org/posts/homelab-v5/</link>
