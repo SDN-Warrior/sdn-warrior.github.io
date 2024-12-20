@@ -7,13 +7,34 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 17 Dec 2024 22:36:18 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 20 Dec 2024 02:00:04 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ansible</title>
       <link>https://sdn-warrior.org/tags/ansible/</link>
-      <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
+      <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/ansible/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Automation</title>
+      <link>https://sdn-warrior.org/tags/automation/</link>
+      <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/automation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Homelab</title>
+      <link>https://sdn-warrior.org/tags/homelab/</link>
+      <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Netbox</title>
+      <link>https://sdn-warrior.org/tags/netbox/</link>
+      <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/netbox/</guid>
       <description></description>
     </item>
     <item>
@@ -21,13 +42,6 @@
       <link>https://sdn-warrior.org/tags/chatgpt/</link>
       <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/chatgpt/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
@@ -63,20 +77,6 @@
       <link>https://sdn-warrior.org/tags/networking/</link>
       <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/networking/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nsx</title>
-      <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/nsx/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Qos</title>
-      <link>https://sdn-warrior.org/tags/qos/</link>
-      <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/qos/</guid>
       <description></description>
     </item>
   </channel>

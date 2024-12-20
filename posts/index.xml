@@ -6,8 +6,270 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 17 Dec 2024 22:36:18 +0100</lastBuildDate>
+		<lastBuildDate>Fri, 20 Dec 2024 02:00:04 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Serve</title>
+			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
+			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
+			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.</p>
+<h2 id="why-automate-ipam-and-dns">Why Automate IPAM and DNS?</h2>
+<ul>
+<li>Consistency: Automation minimizes human errors and ensures uniformity.</li>
+<li>Efficiency: Automating repetitive tasks saves time and allows teams to focus on strategic activities.</li>
+<li>Scalability: As networks grow, automated solutions adapt more easily than manual processes.</li>
+</ul>
+<h2 id="my-goal">My goal</h2>
+<ul>
+<li>Get a free IP address is dynamically fetched from a defined subnet in NetBox.</li>
+<li>The IP address is immediately assigned to the specified FQDN in NetBox.</li>
+<li>A corresponding Host A record is created in your Windows DNS Server.</li>
+</ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before diving into the implementation, ensure the following:</p>
+<ul>
+<li>A functional NetBox instance configured with appropriate IPAM data.</li>
+<li>A Microsoft Windows DNS Server with administrative access.</li>
+<li>Ansible installed and configured on a control node.</li>
+<li>API access credentials for NetBox.</li>
+<li>pywinrm Python module</li>
+<li>PowerShell Remoting</li>
+</ul>
+<h2 id="ansible-project">Ansible Project</h2>
+<p>For this automation project, I structured my workflow into multiple steps to keep it organized and modular. I use an ansible.cfg file to integrate and manage my inventory. At the core of the setup is a master playbook, which orchestrates the entire automation process.</p>
+<p>To simplify and separate concerns, I divided the tasks into two sub-playbooks:</p>
+<p>NetBox playbook: Handles all interactions with NetBox, such as fetching available IPs or updating DNS-related metadata.
+DNS playbook: Focuses on managing DNS records on my Microsoft Windows DNS Server.
+This approach not only makes the automation workflow easier to manage but also allows me to test and modify individual components independently while maintaining a clear overview of the entire process through the master playbook.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>To begin, I will list the files and their roles in this automation project. While these files are currently stored in my local Gitea instance, I’m considering creating a public Git repository for future projects to make them more accessible and easier to share.</p>
+<h3 id="inventoryyml">inventory.yml</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">all</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dnsserver.lab.home</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l">dc.lab.home </span><span class="w"> </span><span class="c"># IP-Adresse or Hostname of Windows-DNS-Servers</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_user</span><span class="p">:</span><span class="w"> </span><span class="l">administrator </span><span class="w"> </span><span class="c"># Username </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_password</span><span class="p">:</span><span class="w"> </span><span class="l">xxx </span><span class="w"> </span><span class="c"># Password</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_connection</span><span class="p">:</span><span class="w"> </span><span class="l">winrm </span><span class="w"> </span><span class="c"># connection</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_winrm_transport</span><span class="p">:</span><span class="w"> </span><span class="l">basic </span><span class="w"> </span><span class="c"># auth</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_winr_server_cert_validation</span><span class="p">:</span><span class="w"> </span><span class="l">ignore</span><span class="w"> </span><span class="c">#don&#39;t check the certificate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ansible_port</span><span class="p">:</span><span class="w"> </span><span class="m">5986</span><span class="w"> </span><span class="c">#winrm https port</span><span class="w">
+</span></span></span></code></pre></div><h3 id="ansiblecfg">ansible.cfg</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="cl"><span class="k">[defaults]</span>
+</span></span><span class="line"><span class="cl"><span class="na">inventory</span> <span class="o">=</span> <span class="s">inventory.yml</span>
+</span></span></code></pre></div><h3 id="register_ipyml">register_ip.yml</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Validate input variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">fail</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;You must provide &#39;netbox_token&#39;, &#39;prefix&#39;, and &#39;dns_name&#39; as extra-vars.&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">netbox_token == &#34;&#34; or prefix == &#34;&#34; or dns_name == &#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Get the prefix ID from NetBox</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ netbox_url }}/api/ipam/prefixes/?prefix={{ prefix }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l">GET</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">headers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Authorization</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Token {{ netbox_token }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Accept</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;application/json&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">return_content</span><span class="p">:</span><span class="w"> </span><span class="kc">yes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l">prefix_data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Fail if the prefix does not exist</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">fail</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Prefix {{ prefix }} does not exist in NetBox.&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">prefix_data.json.results | length == 0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Get available IPs in the prefix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ netbox_url }}/api/ipam/prefixes/{{ prefix_data.json.results[0].id }}/available-ips/&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l">GET</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">headers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Authorization</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Token {{ netbox_token }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Accept</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;application/json&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">return_content</span><span class="p">:</span><span class="w"> </span><span class="kc">yes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l">available_ips</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Fail if no available IPs are found</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">fail</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;No available IPs found in prefix {{ prefix }}.&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">available_ips.json | length == 0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Assign the first available IP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ netbox_url }}/api/ipam/ip-addresses/&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l">POST</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">headers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Authorization</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Token {{ netbox_token }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Accept</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;application/json&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;application/json&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="p">&gt;</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">      {
+</span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;address&#34;: &#34;{{ available_ips.json[0].address }}&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;status&#34;: &#34;active&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;description&#34;: &#34;Created by Ansible&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;dns_name&#34;: &#34;{{ dns_name }}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">      }</span><span class="w">      
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">body_format</span><span class="p">:</span><span class="w"> </span><span class="l">json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">status_code</span><span class="p">:</span><span class="w"> </span><span class="m">201</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">return_content</span><span class="p">:</span><span class="w"> </span><span class="kc">yes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l">ip_assignment</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Extract host and zone from DNS name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">set_fact</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dns_host</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ dns_name.split(&#39;.&#39;)[0] }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dns_zone</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ dns_name.split(&#39;.&#39;, 1)[1] }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">assigned_ip</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ ip_assignment.json.address.split(&#39;/&#39;)[0] }}&#34;</span><span class="w">
+</span></span></span></code></pre></div><h3 id="add_dns_recordyml">add_dns_record.yml</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Add DNS A Record</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">win_shell</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
+</span></span></span></code></pre></div><h3 id="mp_dnsyml-my-masterplaybook">mp_dns.yml (my masterplaybook)</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Register IP in NetBox</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l">localhost</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="kc">no</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ prefix }}&#34;</span><span class="w">  </span><span class="c"># variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dns_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ dns_name }}&#34;</span><span class="w">  </span><span class="c"># variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">netbox_url</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;http://netbox.lab.home&#34;</span><span class="w">  </span><span class="c">#NetBox-URL</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">netbox_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;xxx&#34;</span><span class="w">  </span><span class="c"># Ntebox API token</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Run NetBox IP Registration Playbook</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">include_tasks</span><span class="p">:</span><span class="w"> </span><span class="l">register_ip.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">vars</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ prefix }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">dns_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ dns_name }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Add DNS A Record</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l">dnsserver.lab.home</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="kc">no</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ansible_winrm_server_cert_validation</span><span class="p">:</span><span class="w"> </span><span class="l">ignore</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">zassigned_ip</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ hostvars[&#39;localhost&#39;][&#39;sip&#39;] }}&#34;</span><span class="w"> </span><span class="c"># variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">zdns_host</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ hostvars[&#39;localhost&#39;][&#39;sdns&#39;] }}&#34;</span><span class="w">   </span><span class="c"># variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">zdns_zone</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ hostvars[&#39;localhost&#39;][&#39;szone&#39;] }}&#34;</span><span class="w">  </span><span class="c"># variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Include DNS Record Playbook</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">include_tasks</span><span class="p">:</span><span class="w"> </span><span class="l">add_dns_record.yml</span><span class="w">
+</span></span></span></code></pre></div><h2 id="how-the-playbooks-work">How the Playbooks Work</h2>
+<p>The process is coordinated by a master playbook (mp_dns.yml) and relies on sub-playbooks for discrete tasks.</p>
+<h3 id="master-playbook-mp_dnsyml">Master Playbook (mp_dns.yml)</h3>
+<p>The master playbook serves as the central control file. It performs the following steps:</p>
+<p>Registers an IP Address in NetBox: This step invokes the register_ip.yml sub-playbook to allocate an available IP address within a specified prefix and associate it with the given DNS name in NetBox.</p>
+<ul>
+<li>
+<p>Sets Facts:
+After obtaining the IP address and DNS details from NetBox, it uses set_fact to store these values in variables (sip, sdns, szone) for use in the next task.</p>
+</li>
+<li>
+<p>Adds a DNS A Record:
+The second phase connects to the DNS server and calls the add_dns_record.yml sub-playbook to create a DNS A record using the information retrieved from NetBox.</p>
+</li>
+</ul>
+<h3 id="sub-playbook-register_ipyml">Sub-Playbook: register_ip.yml</h3>
+<p>This playbook interacts with NetBox&rsquo;s API to:</p>
+<ul>
+<li>Validate input variables like the NetBox token, prefix, and DNS name.</li>
+<li>Retrieve the prefix and find available IPs.</li>
+<li>Assign the first available IP to the provided DNS name and register it in NetBox.</li>
+</ul>
+<p>The playbook sends a POST request to the NetBox API to assign an available IP address to the provided DNS name. The response is returned in JSON format and parsed to extract the necessary variables for the DNS record creation.</p>
+<p>The JSON response is parsed to extract key values:</p>
+<ul>
+<li>dns_host and dns_zone are derived by splitting the FQDN.</li>
+<li>assigned_ip captures the raw IP address, omitting the CIDR notation.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="w">  </span><span class="nt">dns_host</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ dns_name.split(&#39;.&#39;)[0] }}&#34;</span><span class="w">  </span><span class="c"># Extracts the hostname (e.g., &#34;myhost&#34; from &#34;myhost.lab.local&#34;)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">dns_zone</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ dns_name.split(&#39;.&#39;, 1)[1] }}&#34;</span><span class="w">  </span><span class="c"># Extracts the zone (e.g., &#34;lab.local&#34;)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">assigned_ip</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ ip_assignment.json.address.split(&#39;/&#39;)[0] }}&#34;</span><span class="w">  </span><span class="c"># Removes the subnet mask (e.g., &#34;192.168.1.10/24&#34; to &#34;192.168.1.10&#34;)</span><span class="w">
+</span></span></span></code></pre></div><p>This parsing ensures the required details are extracted for creating the DNS record in subsequent tasks, linking NetBox&rsquo;s IP allocation to the DNS configuration seamlessly.</p>
+<h3 id="sub-playbook-add_dns_recordyml">Sub-Playbook: add_dns_record.yml</h3>
+<p>This playbook uses PowerShell (win_shell) to execute the Add-DnsServerResourceRecordA cmdlet on the Windows DNS server. It creates a DNS A record with the assigned IP, host, and zone.</p>
+<h3 id="why-use-host_vars">Why Use host_vars?</h3>
+<p>hostvars is a built-in Ansible variable that provides access to variables from other hosts in the inventory. This is particularly useful when you need to share or reference facts or variables gathered from one host on another host.
+The NetBox-related tasks (e.g., registering IP addresses and extracting DNS details) are performed on localhost since they interact with external APIs and don’t require remote server execution.
+Variables like sip, sdns, and szone are set as facts on localhost during the first phase of the playbook execution.
+The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is used to retrieve these facts and make them available to the subsequent tasks running on the DNS server (dnsserver.lab.home).</p>
+<h3 id="variable-assignments">Variable Assignments:</h3>
+<ul>
+<li>zassigned_ip: This retrieves the IP address (sip) assigned to the host from the NetBox interaction on localhost.</li>
+<li>zdns_host: This extracts the host portion of the DNS name (sdns) derived from the FQDN split.</li>
+<li>zdns_zone: This fetches the DNS zone (szone), also derived from the FQDN split.</li>
+</ul>
+<p>This approach ensures that:</p>
+<ul>
+<li>Data derived or computed in one phase (NetBox-related tasks) is seamlessly passed to the next phase (DNS-related tasks).</li>
+<li>sThe DNS playbook (add_dns_record.yml) running on the DNS server has access to the correct IP, host, and zone information without redundant processing.</li>
+</ul>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content"><p>One of the biggest challenges I faced in this project was understanding why I couldn’t directly use the variables returned from NetBox in the DNS-related tasks. I initially tried to pass these variables directly, but the playbook failed because the DNS tasks were executed on a different host (dnsserver.lab.home) than the one that retrieved the data (localhost).</p>
+<p>The solution involved using hostvars to reference the facts set on localhost. This took the most time to figure out, as I didn’t immediately realize that variables gathered on one host are not automatically accessible on another. Once I understood how hostvars works, everything started to fall into place.</p>
+</div>
+    </aside>
+<h2 id="ok-enough-code-and-explanations-lets-see-it-in-action">Ok, Enough Code and Explanations, Let’s See It in Action</h2>
+<p>Starting the playbook:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ansible-playbook mp_dns.yml -e &#34;prefix=192.168.2.0/24 dns_name=hello-world.lab.home&#34;
+</span></span></code></pre></div>
+<figure><a href="output.png"><picture>
+          <source srcset="/ipam-automation/output_hu17735082299749069346.webp" type="image/webp">
+          <source srcset="/ipam-automation/output_hu2134898282273478624.jpg" type="image/jpeg">
+          <img src="/ipam-automation/output_hu17735082299749069346.webp"alt="Ansible output"  width="1003"  height="610" />
+        </picture></a><figcaption>
+            <p>Ansible output (click to enlarge)</p>
+          </figcaption></figure>
+
+<figure><a href="netbox.png"><picture>
+          <source srcset="/ipam-automation/netbox_hu16384549009619117197.webp" type="image/webp">
+          <source srcset="/ipam-automation/netbox_hu10090990778334734330.jpg" type="image/jpeg">
+          <img src="/ipam-automation/netbox_hu16384549009619117197.webp"alt="Netbox"  width="1447"  height="489" />
+        </picture></a><figcaption>
+            <p>Netbox (click to enlarge)</p>
+          </figcaption></figure>
+
+<figure><a href="dns.png"><picture>
+          <source srcset="/ipam-automation/dns_hu12209689906728532248.webp" type="image/webp">
+          <source srcset="/ipam-automation/dns_hu11255499409238053450.jpg" type="image/jpeg">
+          <img src="/ipam-automation/dns_hu12209689906728532248.webp"alt="DNS"  width="404"  height="455" />
+        </picture></a><figcaption>
+            <p>DNS (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="conclusion">Conclusion</h2>
+<p>This project represents just the first step toward a fully automated IPAM and DNS management workflow. While the current solution works well in my lab environment, there is plenty of room for improvement and expansion.</p>
+<p>Key Takeaways:</p>
+<ul>
+<li>
+<p>Modular Design: Starting with a modular playbook structure ensures flexibility for future enhancements and easier debugging.</p>
+</li>
+<li>
+<p>Lab vs. Production: This setup is tailored for a lab environment. For production systems, avoid using highly privileged accounts like the local administrator on the DNS server. A more secure approach with role-based access control (RBAC) should be implemented in future iterations.</p>
+</li>
+<li>
+<p>Continuous Improvement: I acknowledge that the playbook is not perfect. Over time, I plan to refine and optimize it, addressing any current shortcomings and making it more robust for complex workflows.</p>
+</li>
+</ul>
+<p><em><strong>Automation is a journey</strong></em>, and I’m excited to see how this project evolves. Stay tuned for updates and new features in future versions!</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
