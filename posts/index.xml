@@ -268,7 +268,19 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 </li>
 </ul>
 <p><em><strong>Automation is a journey</strong></em>, and I’m excited to see how this project evolves. Stay tuned for updates and new features in future versions!</p>
-]]></content>
+<h2 id="update--automatic-ptr-creation">Update:  automatic PTR creation</h2>
+<p>Here’s a quick update to my blog: With the adjusted code, you can automatically create a PTR record when adding a Host A record. Note: The Reverse Lookup Zone must already exist.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Add DNS A Record</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">win_shell</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    $ip = &#34;{{ zassigned_ip }}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    $hostname = &#34;{{ zdns_host }}.{{ zdns_zone }}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    $reverseZone = (&#34;{0}.{1}.{2}.in-addr.arpa&#34; -f $ip.Split(&#34;.&#34;)[2], $ip.Split(&#34;.&#34;)[1], $ip.Split(&#34;.&#34;)[0])
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordPtr -ZoneName $reverseZone -Name ($ip.Split(&#34;.&#34;)[3]) -PtrDomainName &#34;$hostname.$zoneName&#34; </span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
+</span></span></span></code></pre></div>]]></content>
 		</item>
 		
 		<item>
