@@ -7,13 +7,27 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 20 Dec 2024 02:00:04 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 24 Dec 2024 13:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ansible</title>
       <link>https://sdn-warrior.org/tags/ansible/</link>
-      <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
+      <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/ansible/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Homelab</title>
+      <link>https://sdn-warrior.org/tags/homelab/</link>
+      <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mikrotik</title>
+      <link>https://sdn-warrior.org/tags/mikrotik/</link>
+      <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/mikrotik/</guid>
       <description></description>
     </item>
     <item>
@@ -21,13 +35,6 @@
       <link>https://sdn-warrior.org/tags/automation/</link>
       <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/automation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
@@ -140,13 +147,6 @@
       <link>https://sdn-warrior.org/tags/memory-tiering/</link>
       <pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/memory-tiering/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nuc</title>
-      <link>https://sdn-warrior.org/tags/nuc/</link>
-      <pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/nuc/</guid>
       <description></description>
     </item>
   </channel>

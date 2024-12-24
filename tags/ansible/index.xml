@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 20 Dec 2024 02:00:04 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 24 Dec 2024 13:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/ansible/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ansible VLAN deployment with MikroTik</title>
+      <link>https://sdn-warrior.org/posts/vlan-automation/</link>
+      <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
+      <description>&lt;h2 id=&#34;yet-another-ansible-post&#34;&gt;Yet Another Ansible Post&lt;/h2&gt;&#xA;&lt;p&gt;As the year comes to a close, I can&amp;rsquo;t help but reflect on the progress I&amp;rsquo;ve made with Ansible in the past few weeks. Looking back, there&amp;rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.&lt;/p&gt;&#xA;&lt;h2 id=&#34;goals&#34;&gt;Goals&lt;/h2&gt;&#xA;&lt;p&gt;The main goal is to have a single file that describes all the required VLANs. This file should also allow me to delete or reuse VLANs as needed. Each VLAN must be deployed across three switches and configured as a tagged VLAN on specific ports.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
       <link>https://sdn-warrior.org/posts/ipam-automation/</link>

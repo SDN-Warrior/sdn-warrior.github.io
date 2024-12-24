@@ -6,8 +6,272 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Fri, 20 Dec 2024 02:00:04 +0100</lastBuildDate>
+		<lastBuildDate>Tue, 24 Dec 2024 13:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Ansible VLAN deployment with MikroTik</title>
+			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
+			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
+			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
+			<content type="html"><![CDATA[<h2 id="yet-another-ansible-post">Yet Another Ansible Post</h2>
+<p>As the year comes to a close, I can&rsquo;t help but reflect on the progress I&rsquo;ve made with Ansible in the past few weeks. Looking back, there&rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.</p>
+<h2 id="goals">Goals</h2>
+<p>The main goal is to have a single file that describes all the required VLANs. This file should also allow me to delete or reuse VLANs as needed. Each VLAN must be deployed across three switches and configured as a tagged VLAN on specific ports.</p>
+<p>Additionally, there are the peculiarities of MikroTik hardware to consider. When creating new VLANs on my Top-of-Rack (ToR) switch, MikroTik recommends disabling the L3 Hardware Offloading feature beforehand. In the past, I’ve encountered strange issues when this wasn’t done prior to creating new networks. Therefore, the automation should also handle disabling and re-enabling this feature as part of the process.</p>
+<h2 id="future-goals">Future Goals</h2>
+<p>In the future, I plan to expand this setup further, integrating it with Ansible Tower or ArgoCD to enable management through pipelines.</p>
+<p>A pipeline is essentially an automated workflow that takes a defined input—such as a configuration file or a code repository—and processes it through several steps to achieve a desired outcome. For example, in this context, a pipeline could validate my VLAN configuration, deploy it to the target switches, and handle any post-deployment tasks automatically.</p>
+<p>My locally hosted Gitea instance will serve as the <strong>Source of Truth</strong>, housing the configuration files and acting as the central repository for all changes. This ensures consistency, version control, and a clear audit trail for every modification.</p>
+<h2 id="what-ive-done">What I&rsquo;ve Done</h2>
+<p>For this implementation, I approached things a bit differently compared to my last two Ansible projects—after all, learning is part of the process!</p>
+<h3 id="project-structure">Project Structure</h3>
+<p>I structured the project as follows:</p>
+<ul>
+<li><strong>INI File</strong>: Stores the credentials for the three switches.</li>
+<li><strong>ansible.cfg</strong>: Manages the inventory file and SSH settings.</li>
+<li><strong>Playbook</strong>: A YAML file that runs without additional parameters.</li>
+<li><strong>Directories</strong>:
+<ul>
+<li><code>group_vars/</code>: Contains global variables shared across all devices.
+<ul>
+<li><code>all.yml</code>: Includes all VLANs that should exist, along with descriptions.</li>
+</ul>
+</li>
+<li><code>host_vars/</code>: Contains per-device variables.
+<ul>
+<li>Each switch has its own YAML file defining interfaces and bridges.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Here’s the project structure visualized:</p>
+<pre tabindex="0"><code>mikrotik/
+├── ansible.cfg          # Configuration file for project Ansible settings
+├── inventory.ini        # Inventory file with switch credentials
+├── vlan_esx.yml         # Main playbook
+├── group_vars/
+│   └── all.yml          # Global VLAN definitions and descriptions
+└── host_vars/
+    ├── 192.168.0.1.yml      # Variables for Switch 1 (interfaces, bridges)
+    ├── 192.168.0.5.yml      # Variables for Switch 2 (interfaces, bridges)
+    └── 192.168.0.7.yml      # Variables for Switch 3 (interfaces, bridges)
+</code></pre><h3 id="advantages-of-this-structure">Advantages of This Structure</h3>
+<p>One major advantage of this structure is its scalability. Adding another MikroTik switch is straightforward: I only need to create a new <code>host_var</code> file for the switch and update the <code>inventory.ini</code> file with its credentials.</p>
+<p>Additionally, since the playbook runs without requiring extra parameters, it simplifies the GitOps approach I plan to implement later. This means the entire process becomes more streamlined and easily automatable through pipelines, reducing complexity and potential for errors.</p>
+<h2 id="project-files">Project Files</h2>
+<p>Here are the files I created as part of this project:</p>
+<h3 id="ansiblecfg">ansible.cfg</h3>
+<p>This file configures Ansible with the necessary inventory and SSH settings.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="cl"><span class="k">[defaults]</span>
+</span></span><span class="line"><span class="cl"><span class="na">host_key_checking</span> <span class="o">=</span> <span class="s">False</span>
+</span></span><span class="line"><span class="cl"><span class="na">transport</span> <span class="o">=</span> <span class="s">ssh</span>
+</span></span><span class="line"><span class="cl"><span class="na">inventory</span> <span class="o">=</span> <span class="s">mikrotik.ini</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">[ssh_connection]</span>
+</span></span><span class="line"><span class="cl"><span class="na">ssh_type</span> <span class="o">=</span> <span class="s">libssh</span>
+</span></span><span class="line"><span class="cl"><span class="na">timeout</span> <span class="o">=</span> <span class="s">60</span>
+</span></span></code></pre></div><h3 id="inventoryini">inventory.ini</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="cl"><span class="k">[mikrotik]</span>
+</span></span><span class="line"><span class="cl"><span class="na">192.168.0.1 ansible_user</span><span class="o">=</span><span class="s">admin ansible_password=&#34;xxx&#34; ansible_connection=network_cli ansible_network_os=community.network.routeros</span>
+</span></span><span class="line"><span class="cl"><span class="na">192.168.0.5 ansible_user</span><span class="o">=</span><span class="s">admin ansible_password=&#34;xxx&#34; ansible_connection=network_cli ansible_network_os=community.network.routeros </span>
+</span></span><span class="line"><span class="cl"><span class="na">192.168.0.7 ansible_user</span><span class="o">=</span><span class="s">admin ansible_password=&#34;xxx&#34; ansible_connection=network_cli ansible_network_os=community.network.routeros</span>
+</span></span></code></pre></div><h3 id="vlan_esxyml">vlan_esx.yml</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Manage VLANs with delete option</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l">mikrotik</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="kc">no</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">collections</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">community.network</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Disable L3 HW Offloading</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">community.network.routeros_command</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;/interface ethernet switch set [find name=switch1] l3-hw-offloading=no&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">ansible_host == &#39;192.168.0.1&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l">hw_offload_result</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Delete VLANs marked for deletion</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">community.network.routeros_command</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;/interface bridge vlan remove [find vlan-ids={{ item.id }}]&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with_items</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ vlans }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">item.delete | bool</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Configure VLANs on the bridge</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">community.network.routeros_command</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;/interface bridge vlan remove [find vlan-ids={{ item.id }}]&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;/interface bridge vlan add bridge={{ bridge }} vlan-ids={{ item.id }} tagged={{ interfaces | join(&#39;,&#39;) }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with_items</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ vlans }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">not item.delete | bool</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Set description for each VLAN</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">community.network.routeros_command</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;/interface bridge vlan comment [find vlan-ids={{ item.id }}] comment=\&#34;{{ item.description }}\&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with_items</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ vlans }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">not item.delete | bool</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Enable L3 HW Offloading</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">community.network.routeros_command</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">commands</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;/interface ethernet switch set [find name=switch1] l3-hw-offloading=yes&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l">ansible_host == &#39;192.168.0.1&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l">hw_offload_result</span><span class="w">
+</span></span></span></code></pre></div><h3 id="group_varsallyml">group_vars/all.yml</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">vlans</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;vMotion&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">12</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ESXi MGMT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">14</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;NSXB Host Tep&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">15</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;NSXB Edge Tep&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">20</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;K3s&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">31</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;NSXB Uplink1&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">41</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;NSXB Uplink2&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">50</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;RTEP NSX Federation&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">69</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;vSAN&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">200</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;VCF VM MGMT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">201</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;VCF MGMT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">202</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;VCF vSAN&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">203</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;VCF vSAN&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">204</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;VCF HostTEP&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">205</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;VCF EdgeTEP&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">206</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34; &#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">207</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34; &#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">208</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34; &#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">209</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34; &#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">211</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34; &#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="m">212</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34; &#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">delete</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span></code></pre></div><h3 id="host_varsswitch1yml">host_vars/switch1.yml</h3>
+<p>Each file defines the specific interfaces and bridges for a switch. Example for 192.168.0.5.yml</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">interfaces</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">10_bonding_SWA02</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">00_bonding_CoreRouter</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">01_ether1_ESX01_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">01_ether2_ESX01_2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">02_qsfpplus1-1_ESX02_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">03_qsfpplus1-2_ESX03_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">04_qsfpplus1-3_ESX04_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">05_qsfpplus1-4_ESX05_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">07_ether3_ESX07_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">07_ether4_ESX07_2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">08_ether5_ESX08_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">08_ether6_ESX08_2 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">09_ether7_ESX09_1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">09_ether8_ESX09_2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">bridge</span><span class="p">:</span><span class="w"> </span><span class="l">bridge</span><span class="w">
+</span></span></span></code></pre></div><h2 id="what-does-the-playbook-do">What Does the Playbook Do?</h2>
+<p>This playbook is designed to manage VLANs on MikroTik switches, including the ability to delete or configure VLANs. It uses the <code>community.network</code> collection and skips fact-gathering since it only executes specific commands on the devices.</p>
+<h3 id="step-by-step-breakdown">Step-by-Step Breakdown</h3>
+<ol>
+<li>
+<p><strong>Disable L3 Hardware Offloading</strong><br>
+The playbook begins by disabling the L3 Hardware Offloading feature on the switch named <code>Tor Switch</code>. This step is necessary because MikroTik recommends turning off this feature before making VLAN configuration changes. The command is executed only if the host IP is <code>192.168.0.1</code>. The result is stored in the variable <code>hw_offload_result</code>.</p>
+</li>
+<li>
+<p><strong>Delete VLANs Marked for Deletion</strong><br>
+VLANs that are marked for deletion in the <code>vlans</code> variable (<code>delete: true</code>) are removed. The playbook iterates through the list of VLANs and executes the removal command for each VLAN marked as deleted.</p>
+</li>
+<li>
+<p><strong>Configure VLANs</strong><br>
+For VLANs that are not marked for deletion, the playbook configures them as follows:</p>
+<ul>
+<li>Removes any existing VLAN with the same ID to avoid conflicts.</li>
+<li>Adds the VLAN to the specified bridge and assigns it to the interfaces defined as <code>tagged</code>. This ensures a clean and consistent configuration.</li>
+</ul>
+</li>
+<li>
+<p><strong>Set VLAN Descriptions</strong><br>
+The playbook adds a description to each VLAN that is not marked for deletion. It uses the <code>comment</code> function in MikroTik and sets the description based on the variables provided.</p>
+</li>
+<li>
+<p><strong>Enable L3 Hardware Offloading</strong><br>
+Finally, the playbook re-enables the L3 Hardware Offloading feature on <code>ToR Switch</code>, but only if the host IP is <code>192.168.0.1</code>. The result of this step is also stored in the <code>hw_offload_result</code> variable.</p>
+</li>
+</ol>
+<h2 id="summary">Summary</h2>
+<p>This playbook automates the entire VLAN management process:</p>
+<ul>
+<li>Disables the L3 offloading feature when required.</li>
+<li>Deletes VLANs marked for removal.</li>
+<li>Configures new VLANs, ensuring no conflicts.</li>
+<li>Sets descriptions for the VLANs.</li>
+<li>Re-enables the L3 offloading feature after the configuration.</li>
+</ul>
+<p>The structure ensures reliability and consistency, handling edge cases such as existing VLANs and hardware offloading quirks automatically.</p>
+<h2 id="whats-left-to-do">What&rsquo;s Left to Do</h2>
+<p>There are several improvements I plan to make to this playbook in the future:</p>
+<ol>
+<li>
+<p><strong>Clean Up Variables</strong><br>
+Currently, there are some unused variables in the playbook that I need to clean up to keep the codebase tidy and maintainable.</p>
+</li>
+<li>
+<p><strong>Enhanced Logic for VLAN Checks</strong><br>
+I want to extend the logic to verify if a VLAN already matches the desired target configuration. This would prevent unnecessary deletion and re-creation of VLANs, reducing downtime and ensuring a smoother operation.</p>
+</li>
+<li>
+<p><strong>Improved Error Handling</strong><br>
+Better error handling is a priority to ensure the playbook gracefully recovers from unexpected issues, such as failed commands or unreachable devices.</p>
+</li>
+<li>
+<p><strong>Pipeline Integration</strong><br>
+The ultimate goal is to integrate the playbook into a pipeline, enabling automated execution through tools like Ansible Tower or ArgoCD. This would streamline the entire process and align it with a GitOps approach.</p>
+</li>
+<li>
+<p><strong>Distributed Switch Integration</strong><br>
+It’s also conceivable to extend the functionality by adding new VLANs directly to the distributed switch in my vSphere environment. However, this would be handled in a separate playbook to maintain modularity. The pipeline would then orchestrate both playbooks to ensure a seamless configuration process.</p>
+</li>
+</ol>
+<p>By addressing these points, the project will become more robust, scalable, and aligned with modern automation practices.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
