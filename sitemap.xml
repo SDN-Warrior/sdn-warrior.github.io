@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2024-12-30T17:00:46+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2024-12-30T17:00:46+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/ansible/</loc>
     <lastmod>2024-12-24T13:00:00+01:00</lastmod>
   </url><url>
@@ -12,12 +18,6 @@
     <lastmod>2024-12-24T13:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/mikrotik/</loc>
-    <lastmod>2024-12-24T13:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2024-12-24T13:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
     <lastmod>2024-12-24T13:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/</loc>
