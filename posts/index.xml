@@ -6,8 +6,277 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Mon, 30 Dec 2024 17:00:46 +0100</lastBuildDate>
+		<lastBuildDate>Mon, 30 Dec 2024 15:00:46 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Redeploy an NSX Edge VM Appliance</title>
+			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
+			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
+			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.</p>
+<p>It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before redeploying an NSX Edge node, keep the following in mind:</p>
+<ul>
+<li>
+<p>While certain configurations of the NSX Edge transport node payload can be changed, <strong>do not modify</strong> the following settings on the existing NSX Edge node being replaced:</p>
+<ul>
+<li>Failure domain</li>
+<li>Transport node connectivity</li>
+<li>Physical NIC configuration</li>
+<li>Logical routers</li>
+<li>Load balancer allocations</li>
+</ul>
+</li>
+<li>
+<p>If the existing NSX Edge node is a physical server or was manually deployed via the vSphere Client, ensure that its connectivity to NSX Manager is down. If connectivity remains active, NSX will prevent the replacement of the existing node with a new one.</p>
+</li>
+<li>
+<p><strong>Autodeployed NSX Edge nodes</strong> will retain hardware version 13. However, starting with NSX 4.0.1.1, redeploying an NSX Edge VM automatically upgrades the new VM to a hardware version compatible with the ESXi host version. For a list of compatible VM hardware versions, refer to VMware KB article <a href="https://kb.vmware.com/s/article/2007240">2007240</a>.</p>
+</li>
+</ul>
+<h2 id="procedure">Procedure</h2>
+<p>To redeploy an NSX Edge node, follow these steps:</p>
+<ol>
+<li>
+<p><strong>Check the NSX Edge node</strong></p>
+<ul>
+<li>Open an SSH session and connect to the NSX Edge console.</li>
+<li>Verify the logical routers configured on the NSX Edge node by running the following command in the CLI console:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">get logical-routers
+</span></span></code></pre></div></li>
+<li>Power off the NSX Edge node.</li>
+</ul>
+</li>
+<li>
+<p><strong>Verify disconnection from NSX Manager:</strong></p>
+<ul>
+<li>
+<p>Use the API to confirm the NSX Edge node is disconnected:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">GET /api/v1/transport-nodes/&lt;edgenode&gt;/state
+</span></span></code></pre></div><p>The <code>node_deployment_state</code> should display:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">&#34;node_deployment_state&#34;: {
+</span></span><span class="line"><span class="cl">    &#34;state&#34;: &#34;MPA_Disconnected&#34;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>A state of <code>MPA_Disconnected</code> indicates that you can proceed with redeployment.</p>
+</li>
+<li>
+<p><strong>Important:</strong> If the <code>node_deployment_state</code> is <code>Node Ready</code>, NSX Manager will block the redeployment and display error <strong>78006</strong>: <em>Manager connectivity to Edge node must be down</em>.</p>
+</li>
+<li>
+<p>Alternatively, check the connectivity state from the Edge Transport Node page in the NSX UI. A disconnected NSX Edge node will show the system message:</p>
+<pre tabindex="0"><code>Configuration Error: Edge VM MPA Connectivity is down
+</code></pre></li>
+</ul>
+</li>
+<li>
+<p><strong>For an auto-deployed NSX Edge node:</strong></p>
+<ul>
+<li>Use the following API command to retrieve the payload of the transport node:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">GET /&lt;NSX-Manager-IPaddress&gt;/api/v1/transport-nodes/&lt;edgenode&gt;
+</span></span></code></pre></div></li>
+<li>Save the output payload for later use. (Output example)</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;node_id&#34;</span><span class="p">:</span> <span class="s2">&#34;607064c6-dd8d-4576-a2d9-2a73abff38aa&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;host_switch_spec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;host_switches&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">			<span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;host_switch_name&#34;</span><span class="p">:</span> <span class="s2">&#34;nsxHostSwitch&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;host_switch_id&#34;</span><span class="p">:</span> <span class="s2">&#34;c8e3cfaf-9837-4ee2-8a6f-9055927e6009&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;host_switch_type&#34;</span><span class="p">:</span> <span class="s2">&#34;NVDS&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;host_switch_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;STANDARD&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;ecmp_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;L3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;host_switch_profile_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">					<span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;UplinkHostSwitchProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;1c653cda-9c95-414f-9b97-3d8f7cb192d6&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;pnics&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">					<span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;device_name&#34;</span><span class="p">:</span> <span class="s2">&#34;fp-eth0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;uplink_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Uplink1&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="p">},</span>
+</span></span><span class="line"><span class="cl">					<span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;device_name&#34;</span><span class="p">:</span> <span class="s2">&#34;fp-eth1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;uplink_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;is_migrate_pnics&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;ip_assignment_spec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nt">&#34;ip_pool_id&#34;</span><span class="p">:</span> <span class="s2">&#34;00743a1f-a1a8-46b8-96a7-e0ebe58d7feb&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">					<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;StaticIpPoolSpec&#34;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">},</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;cpu_config&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;transport_zone_endpoints&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">					<span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;transport_zone_id&#34;</span><span class="p">:</span> <span class="s2">&#34;1b3a2f36-bfd1-443e-a0f6-4de01abc963e&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;transport_zone_profile_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">							<span class="p">{</span>
+</span></span><span class="line"><span class="cl">								<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;BfdHealthMonitoringProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">								<span class="nt">&#34;profile_id&#34;</span><span class="p">:</span> <span class="s2">&#34;52035bb3-ab02-4a08-9884-18631312e50a&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="p">}</span>
+</span></span><span class="line"><span class="cl">						<span class="p">]</span>
+</span></span><span class="line"><span class="cl">					<span class="p">},</span>
+</span></span><span class="line"><span class="cl">					<span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;transport_zone_id&#34;</span><span class="p">:</span> <span class="s2">&#34;a95c914d-748d-497c-94ab-10d4647daeba&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;transport_zone_profile_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">							<span class="p">{</span>
+</span></span><span class="line"><span class="cl">								<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;BfdHealthMonitoringProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">								<span class="nt">&#34;profile_id&#34;</span><span class="p">:</span> <span class="s2">&#34;52035bb3-ab02-4a08-9884-18631312e50a&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="p">}</span>
+</span></span><span class="line"><span class="cl">						<span class="p">]</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;pnics_uninstall_migration&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;vmk_uninstall_migration&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;not_ready&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">],</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;StandardHostSwitchSpec&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;maintenance_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;DISABLED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;node_deployment_info&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;deployment_type&#34;</span><span class="p">:</span> <span class="s2">&#34;VIRTUAL_MACHINE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;deployment_config&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;vm_deployment_config&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;vc_id&#34;</span><span class="p">:</span> <span class="s2">&#34;0adeeac2-42dc-4d5a-a4c4-1890b1174a4e&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;compute_id&#34;</span><span class="p">:</span> <span class="s2">&#34;domain-c18&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;storage_id&#34;</span><span class="p">:</span> <span class="s2">&#34;datastore-30&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;management_network_id&#34;</span><span class="p">:</span> <span class="s2">&#34;dvportgroup-29&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;ipv4_assignment_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;ipv4_assignment_disabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;management_port_subnets&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">					<span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;ip_addresses&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">							<span class="s2">&#34;192.168.12.13&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">],</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;prefix_length&#34;</span><span class="p">:</span> <span class="mi">24</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;default_gateway_addresses&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">					<span class="s2">&#34;192.168.12.1&#34;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;data_network_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">					<span class="s2">&#34;dvportgroup-1001&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">					<span class="s2">&#34;dvportgroup-1002&#34;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">],</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;reservation_info&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nt">&#34;memory_reservation&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;reservation_percentage&#34;</span><span class="p">:</span> <span class="mi">100</span>
+</span></span><span class="line"><span class="cl">					<span class="p">},</span>
+</span></span><span class="line"><span class="cl">					<span class="nt">&#34;cpu_reservation&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;reservation_in_shares&#34;</span><span class="p">:</span> <span class="s2">&#34;HIGH_PRIORITY&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">						<span class="nt">&#34;reservation_in_mhz&#34;</span><span class="p">:</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="p">},</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;resource_allocation&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nt">&#34;cpu_count&#34;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">					<span class="nt">&#34;memory_allocation_in_mb&#34;</span><span class="p">:</span> <span class="mi">8192</span>
+</span></span><span class="line"><span class="cl">				<span class="p">},</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;placement_type&#34;</span><span class="p">:</span> <span class="s2">&#34;VsphereDeploymentConfig&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">},</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;form_factor&#34;</span><span class="p">:</span> <span class="s2">&#34;MEDIUM&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;node_user_settings&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&#34;cli_username&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;node_settings&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;edge01-nsx.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;search_domains&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">				<span class="s2">&#34;lab.home&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">],</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;ntp_servers&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">				<span class="s2">&#34;192.168.12.1&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">],</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;dns_servers&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">				<span class="s2">&#34;192.168.11.2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="s2">&#34;192.168.100.254&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">],</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;enable_ssh&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;allow_ssh_root_login&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;enable_upt_mode&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;EdgeNode&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;external_id&#34;</span><span class="p">:</span> <span class="s2">&#34;607064c6-dd8d-4576-a2d9-2a73abff38aa&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;ip_addresses&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">			<span class="s2">&#34;192.168.12.13&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">],</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;607064c6-dd8d-4576-a2d9-2a73abff38aa&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;display_name&#34;</span><span class="p">:</span> <span class="s2">&#34;edge01-nsx.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">		<span class="p">],</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;_revision&#34;</span><span class="p">:</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;is_overridden&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;failure_domain_id&#34;</span><span class="p">:</span> <span class="s2">&#34;4fc1e3b0-1cd4-4339-86c8-f76baddbaafb&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;TransportNode&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;607064c6-dd8d-4576-a2d9-2a73abff38aa&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;display_name&#34;</span><span class="p">:</span> <span class="s2">&#34;edge01-nsx.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">	<span class="p">],</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_system_owned&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_protection&#34;</span><span class="p">:</span> <span class="s2">&#34;NOT_PROTECTED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_create_time&#34;</span><span class="p">:</span> <span class="mi">1735544264171</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_create_user&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_last_modified_time&#34;</span><span class="p">:</span> <span class="mi">1735546418835</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_last_modified_user&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_revision&#34;</span><span class="p">:</span> <span class="mi">2</span> 
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></div><ol start="4">
+<li><strong>Run the redeploy API command:</strong></li>
+</ol>
+<p>Prepare the payload:</p>
+<p>Paste the payload retrieved earlier in the body of the redeploy API.
+Verify the deployment_config section contains details about the target:
+Compute manager
+Datastore
+Network
+Ensure these values align with those defined in the node_settings section.</p>
+<p>NSX Manager will use the information in the deployment_config section to redeploy the NSX Edge node to the specified location and resources.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">   POST /api/v1/transport-nodes/&lt;transport-node-id&gt;?action=redeploy
+</span></span></code></pre></div><h2 id="verifying-redeployment">Verifying Redeployment</h2>
+<p>After successfully executing the POST command, the <code>revision_id</code> will increment by one. This indicates that the command was successfully sent to the NSX Manager.</p>
+<ol>
+<li>
+<p><strong>Confirm the redeployment status in vCenter:</strong></p>
+<ul>
+<li>Log in to vCenter and navigate to the relevant cluster or host where the NSX Edge node is being redeployed.</li>
+<li>Check the task and events log for deployment activity related to the NSX Edge VM.</li>
+</ul>
+</li>
+<li>
+<p><strong>Validate the NSX Edge node redeployment:</strong></p>
+<ul>
+<li>Verify that the NSX Edge VM is being newly deployed in the specified location, as defined in the <code>deployment_config</code> section of the API payload.</li>
+</ul>
+</li>
+</ol>
+<p>Once the redeployment process is complete, ensure the NSX Edge node is functioning correctly in your NSX environment.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">After the NSX Manager successfully deploys the new NSX Edge node, it <strong>power on the Edge VM automatically</strong>.</div>
+    </aside>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>

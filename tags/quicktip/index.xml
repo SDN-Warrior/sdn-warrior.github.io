@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Quicktip on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/quicktip/</link>
+    <link>https://sdn-warrior.org/tags/quicktip/</link>
     <description>Recent content in Quicktip on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 30 Dec 2024 17:00:46 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/quicktip/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Dec 2024 15:00:46 +0100</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/quicktip/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Redeploy an NSX Edge VM Appliance</title>
-      <link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
-      <pubDate>Mon, 30 Dec 2024 17:00:46 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
+      <link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
+      <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
     </item>
   </channel>

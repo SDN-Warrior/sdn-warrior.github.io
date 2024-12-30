@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
       <script>
         var doNotTrack = false;
@@ -30,26 +30,26 @@
 
   <meta itemprop="name" content="Redeploy an NSX Edge VM Appliance">
   <meta itemprop="description" content="Quicktip: Redeploy NSX Edge with API">
-  <meta itemprop="datePublished" content="2024-12-30T17:00:46+01:00">
-  <meta itemprop="dateModified" content="2024-12-30T17:00:46+01:00">
+  <meta itemprop="datePublished" content="2024-12-30T15:00:46+01:00">
+  <meta itemprop="dateModified" content="2024-12-30T15:00:46+01:00">
   <meta itemprop="wordCount" content="853">
-  <meta itemprop="image" content="http://localhost:1313/images/logo.jpg">
-  <meta itemprop="keywords" content="Nsx,Vmware,Quicktip"><meta property="og:url" content="http://localhost:1313/posts/nsx-edge-redeploy/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta itemprop="keywords" content="Nsx,Vmware,Quicktip"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-edge-redeploy/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Redeploy an NSX Edge VM Appliance">
   <meta property="og:description" content="Quicktip: Redeploy NSX Edge with API">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2024-12-30T17:00:46+01:00">
-    <meta property="article:modified_time" content="2024-12-30T17:00:46+01:00">
+    <meta property="article:published_time" content="2024-12-30T15:00:46+01:00">
+    <meta property="article:modified_time" content="2024-12-30T15:00:46+01:00">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Quicktip">
-    <meta property="og:image" content="http://localhost:1313/images/logo.jpg">
+    <meta property="og:image" content="https://sdn-warrior.org/images/logo.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/logo.jpg">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/logo.jpg">
   <meta name="twitter:title" content="Redeploy an NSX Edge VM Appliance">
   <meta name="twitter:description" content="Quicktip: Redeploy NSX Edge with API">
 
@@ -64,16 +64,16 @@
     "articleBody": "Introduction There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.\nIt’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.\nPrerequisites Before redeploying an NSX Edge node, keep the following in mind:\nWhile certain configurations of the NSX Edge transport node payload can be changed, do not modify the following settings on the existing NSX Edge node being replaced:\nFailure domain Transport node connectivity Physical NIC configuration Logical routers Load balancer allocations If the existing NSX Edge node is a physical server or was manually deployed via the vSphere Client, ensure that its connectivity to NSX Manager is down. If connectivity remains active, NSX will prevent the replacement of the existing node with a new one.\nAutodeployed NSX Edge nodes will retain hardware version 13. However, starting with NSX 4.0.1.1, redeploying an NSX Edge VM automatically upgrades the new VM to a hardware version compatible with the ESXi host version. For a list of compatible VM hardware versions, refer to VMware KB article 2007240.\nProcedure To redeploy an NSX Edge node, follow these steps:\nCheck the NSX Edge node\nOpen an SSH session and connect to the NSX Edge console. Verify the logical routers configured on the NSX Edge node by running the following command in the CLI console: get logical-routers Power off the NSX Edge node. Verify disconnection from NSX Manager:\nUse the API to confirm the NSX Edge node is disconnected:\nGET /api/v1/transport-nodes//state The node_deployment_state should display:\n\"node_deployment_state\": { \"state\": \"MPA_Disconnected\" } A state of MPA_Disconnected indicates that you can proceed with redeployment.\nImportant: If the node_deployment_state is Node Ready, NSX Manager will block the redeployment and display error 78006: Manager connectivity to Edge node must be down.\nAlternatively, check the connectivity state from the Edge Transport Node page in the NSX UI. A disconnected NSX Edge node will show the system message:\nConfiguration Error: Edge VM MPA Connectivity is down For an auto-deployed NSX Edge node:\nUse the following API command to retrieve the payload of the transport node: GET //api/v1/transport-nodes/ Save the output payload for later use. (Output example) { \"node_id\": \"607064c6-dd8d-4576-a2d9-2a73abff38aa\", \"host_switch_spec\": { \"host_switches\": [ { \"host_switch_name\": \"nsxHostSwitch\", \"host_switch_id\": \"c8e3cfaf-9837-4ee2-8a6f-9055927e6009\", \"host_switch_type\": \"NVDS\", \"host_switch_mode\": \"STANDARD\", \"ecmp_mode\": \"L3\", \"host_switch_profile_ids\": [ { \"key\": \"UplinkHostSwitchProfile\", \"value\": \"1c653cda-9c95-414f-9b97-3d8f7cb192d6\" } ], \"pnics\": [ { \"device_name\": \"fp-eth0\", \"uplink_name\": \"Uplink1\" }, { \"device_name\": \"fp-eth1\", \"uplink_name\": \"Uplink2\" } ], \"is_migrate_pnics\": false, \"ip_assignment_spec\": { \"ip_pool_id\": \"00743a1f-a1a8-46b8-96a7-e0ebe58d7feb\", \"resource_type\": \"StaticIpPoolSpec\" }, \"cpu_config\": [ ], \"transport_zone_endpoints\": [ { \"transport_zone_id\": \"1b3a2f36-bfd1-443e-a0f6-4de01abc963e\", \"transport_zone_profile_ids\": [ { \"resource_type\": \"BfdHealthMonitoringProfile\", \"profile_id\": \"52035bb3-ab02-4a08-9884-18631312e50a\" } ] }, { \"transport_zone_id\": \"a95c914d-748d-497c-94ab-10d4647daeba\", \"transport_zone_profile_ids\": [ { \"resource_type\": \"BfdHealthMonitoringProfile\", \"profile_id\": \"52035bb3-ab02-4a08-9884-18631312e50a\" } ] } ], \"pnics_uninstall_migration\": [ ], \"vmk_uninstall_migration\": [ ], \"not_ready\": false } ], \"resource_type\": \"StandardHostSwitchSpec\" }, \"maintenance_mode\": \"DISABLED\", \"node_deployment_info\": { \"deployment_type\": \"VIRTUAL_MACHINE\", \"deployment_config\": { \"vm_deployment_config\": { \"vc_id\": \"0adeeac2-42dc-4d5a-a4c4-1890b1174a4e\", \"compute_id\": \"domain-c18\", \"storage_id\": \"datastore-30\", \"management_network_id\": \"dvportgroup-29\", \"ipv4_assignment_enabled\": true, \"ipv4_assignment_disabled\": false, \"management_port_subnets\": [ { \"ip_addresses\": [ \"192.168.12.13\" ], \"prefix_length\": 24 } ], \"default_gateway_addresses\": [ \"192.168.12.1\" ], \"data_network_ids\": [ \"dvportgroup-1001\", \"dvportgroup-1002\" ], \"reservation_info\": { \"memory_reservation\": { \"reservation_percentage\": 100 }, \"cpu_reservation\": { \"reservation_in_shares\": \"HIGH_PRIORITY\", \"reservation_in_mhz\": 0 } }, \"resource_allocation\": { \"cpu_count\": 4, \"memory_allocation_in_mb\": 8192 }, \"placement_type\": \"VsphereDeploymentConfig\" }, \"form_factor\": \"MEDIUM\", \"node_user_settings\": { \"cli_username\": \"admin\" } }, \"node_settings\": { \"hostname\": \"edge01-nsx.lab.home\", \"search_domains\": [ \"lab.home\" ], \"ntp_servers\": [ \"192.168.12.1\" ], \"dns_servers\": [ \"192.168.11.2\", \"192.168.100.254\" ], \"enable_ssh\": true, \"allow_ssh_root_login\": true, \"enable_upt_mode\": false }, \"resource_type\": \"EdgeNode\", \"external_id\": \"607064c6-dd8d-4576-a2d9-2a73abff38aa\", \"ip_addresses\": [ \"192.168.12.13\" ], \"id\": \"607064c6-dd8d-4576-a2d9-2a73abff38aa\", \"display_name\": \"edge01-nsx.lab.home\", \"tags\": [ ], \"_revision\": 2 }, \"is_overridden\": false, \"failure_domain_id\": \"4fc1e3b0-1cd4-4339-86c8-f76baddbaafb\", \"resource_type\": \"TransportNode\", \"id\": \"607064c6-dd8d-4576-a2d9-2a73abff38aa\", \"display_name\": \"edge01-nsx.lab.home\", \"tags\": [ ], \"_system_owned\": false, \"_protection\": \"NOT_PROTECTED\", \"_create_time\": 1735544264171, \"_create_user\": \"admin\", \"_last_modified_time\": 1735546418835, \"_last_modified_user\": \"admin\", \"_revision\": 2 } Run the redeploy API command: Prepare the payload:\nPaste the payload retrieved earlier in the body of the redeploy API. Verify the deployment_config section contains details about the target: Compute manager Datastore Network Ensure these values align with those defined in the node_settings section.\nNSX Manager will use the information in the deployment_config section to redeploy the NSX Edge node to the specified location and resources.\nPOST /api/v1/transport-nodes/?action=redeploy Verifying Redeployment After successfully executing the POST command, the revision_id will increment by one. This indicates that the command was successfully sent to the NSX Manager.\nConfirm the redeployment status in vCenter:\nLog in to vCenter and navigate to the relevant cluster or host where the NSX Edge node is being redeployed. Check the task and events log for deployment activity related to the NSX Edge VM. Validate the NSX Edge node redeployment:\nVerify that the NSX Edge VM is being newly deployed in the specified location, as defined in the deployment_config section of the API payload. Once the redeployment process is complete, ensure the NSX Edge node is functioning correctly in your NSX environment.\nInfo\rAfter the NSX Manager successfully deploys the new NSX Edge node, it power on the Edge VM automatically.\r",
     "wordCount" : "853",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/disc.jpg","datePublished": "2024-12-30T17:00:46+01:00",
-    "dateModified": "2024-12-30T17:00:46+01:00",
+    "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2024-12-30T15:00:46+01:00",
+    "dateModified": "2024-12-30T15:00:46+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/nsx-edge-redeploy/"
+      "@id": "https://sdn-warrior.org/posts/nsx-edge-redeploy/"
     },
     "publisher": {
       "@type": "Organization",
@@ -81,21 +81,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>Redeploy an NSX Edge VM Appliance</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.eb98efc18cb9c6a86651dce801c60b6d61ad5a37f7a6c35512028a9050e32033.css" integrity="sha256-65jvwYy5xqhmUdzoAcYLbWGtWjf3psNVEgKKkFDjIDM=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eb98efc18cb9c6a86651dce801c60b6d61ad5a37f7a6c35512028a9050e32033.css" integrity="sha256-65jvwYy5xqhmUdzoAcYLbWGtWjf3psNVEgKKkFDjIDM=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -124,26 +124,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-edge-redeploy%2f&amp;text=Redeploy%20an%20NSX%20Edge%20VM%20Appliance" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-edge-redeploy%2f&amp;text=Redeploy%20an%20NSX%20Edge%20VM%20Appliance" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-edge-redeploy%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-edge-redeploy%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=Redeploy%20an%20NSX%20Edge%20VM%20Appliance&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-edge-redeploy%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=Redeploy%20an%20NSX%20Edge%20VM%20Appliance&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-edge-redeploy%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-edge-redeploy%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=Redeploy%20an%20NSX%20Edge%20VM%20Appliance&amp;summary=Redeploy%20an%20NSX%20Edge%20VM%20Appliance%2c%20by%20SDN-Warrior%0a%0aQuicktip%3a%20Redeploy%20NSX%20Edge%20with%20API%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-edge-redeploy%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Redeploy%20an%20NSX%20Edge%20VM%20Appliance&amp;summary=Redeploy%20an%20NSX%20Edge%20VM%20Appliance%2c%20by%20SDN-Warrior%0a%0aQuicktip%3a%20Redeploy%20NSX%20Edge%20with%20API%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -151,7 +151,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;Redeploy an NSX Edge VM Appliance&#34;,&#34;http://localhost:1313/posts/nsx-edge-redeploy/&#34;,&#34;Redeploy an NSX Edge VM Appliance, by SDN-Warrior\n\nQuicktip: Redeploy NSX Edge with API\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;Redeploy an NSX Edge VM Appliance&#34;,&#34;https://sdn-warrior.org/posts/nsx-edge-redeploy/&#34;,&#34;Redeploy an NSX Edge VM Appliance, by SDN-Warrior\n\nQuicktip: Redeploy NSX Edge with API\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -169,8 +169,8 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -191,7 +191,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vmware">vmware</a></span><span class="tag"><a href="http://localhost:1313/tags/quicktip">quicktip</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/quicktip">quicktip</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -211,7 +211,7 @@
       <line x1="16" y1="2" x2="16" y2="6"></line>
       <line x1="8" y1="2" x2="8" y2="6"></line>
       <line x1="3" y1="10" x2="21" y2="10"></line>
-   </svg>2024-12-30 17:00 &#43;0100</p></div>
+   </svg>2024-12-30 15:00 &#43;0100</p></div>
 			<hr class="post-end">
 			<div class="content">
 				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
@@ -496,7 +496,7 @@ Ensure these values align with those defined in the node_settings section.</p>
 
 		</article>
 		<div class="post-nav thin">
-			<a class="prev-post" href="http://localhost:1313/posts/vlan-automation/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vlan-automation/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -509,11 +509,17 @@ Ensure these values align with those defined in the node_settings section.</p>
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2024 <a href="http://localhost:1313/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger</p>
+		&copy; 2024 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
 
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

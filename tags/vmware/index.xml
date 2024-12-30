@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 17 Dec 2024 22:36:18 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 30 Dec 2024 15:00:46 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Redeploy an NSX Edge VM Appliance</title>
+      <link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
+      <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
       <link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
