@@ -17,7 +17,7 @@
 			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
-<p>My esteemed colleague, Steven Schramm, recently published an excellent article titled <em><a href="https://sdn-techtalk.com/posts/multitep-ha/#what-is-multi-tep-and-tep-group-ha">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></em>. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.</p>
+<p>My esteemed colleague, Steven Schramm, recently published an excellent article titled <em><a href="https://sdn-techtalk.com/posts/multitep-ha/">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></em>. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.</p>
 <h2 id="what-are-tep-groups-and-why-are-they-interesting">What Are TEP Groups and Why Are They Interesting?</h2>
 <p>With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.</p>
 <p>Before NSX 4.2.1, each segment was bound to a single TEP interface. This limitation meant that North/South traffic could only utilize the maximum throughput of one physical adapter (ESXi where the Edge VM is realized). With TEP HA and the introduction of TEP Groups, this behavior has changed significantly.</p>
