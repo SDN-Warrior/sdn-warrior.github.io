@@ -34,7 +34,7 @@
 <li><strong>Alpine4</strong>: <code>10.10.20.40</code></li>
 </ul>
 <p>These VMs are distributed across two ESXi servers to simulate North/South traffic under real-world conditions. A third ESXi server hosts the <strong>NSX Edge VM</strong>, responsible for North/South traffic.</p>
-<p>To evaluate performance, my iPerf target is located on a separate server with a <strong>10 Gb/s connection</strong>, ensuring that the network backbone does not introduce any bottlenecks. This setup provides a robust environment to test TEP HA and its impact on East/West traffic.</p>
+<p>To evaluate performance, my iPerf target is located on a separate server with a <strong>10 Gb/s connection</strong>, ensuring that the network backbone does not introduce any bottlenecks. This setup provides a robust environment to test TEP HA and its impact on North/South traffic.</p>
 <h2 id="baseline-tests-northsouth-capacity">Baseline Tests: North/South Capacity</h2>
 <p>To measure the maximum North/South capacity of the setup, I ran iPerf tests simultaneously on all four Alpine VMs. Each VM generated traffic towards the iPerf target server with a 10 Gb/s connection. Below are the individual results:</p>
 <ul>
