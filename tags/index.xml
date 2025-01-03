@@ -7,13 +7,27 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 30 Dec 2024 15:00:46 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 03 Jan 2025 12:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Network</title>
+      <link>https://sdn-warrior.org/tags/network/</link>
+      <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/network/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Nsx</title>
       <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
+      <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -21,13 +35,6 @@
       <link>https://sdn-warrior.org/tags/quicktip/</link>
       <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/quicktip/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -126,13 +133,6 @@
       <link>https://sdn-warrior.org/tags/nested-lab/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/nested-lab/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Network</title>
-      <link>https://sdn-warrior.org/tags/network/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/network/</guid>
       <description></description>
     </item>
     <item>

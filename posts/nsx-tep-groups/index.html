@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="How to use Edge TEP groups in NSX">
+
+  <meta itemprop="name" content="More performance trough NSX Edge TEP groups?">
+  <meta itemprop="description" content="How to use Edge TEP groups in NSX">
+  <meta itemprop="datePublished" content="2025-01-03T12:00:00+01:00">
+  <meta itemprop="dateModified" content="2025-01-03T12:00:00+01:00">
+  <meta itemprop="wordCount" content="1977">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta itemprop="keywords" content="Nsx,Vmware,Network"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-tep-groups/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="More performance trough NSX Edge TEP groups?">
+  <meta property="og:description" content="How to use Edge TEP groups in NSX">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-03T12:00:00+01:00">
+    <meta property="article:modified_time" content="2025-01-03T12:00:00+01:00">
+    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="Network">
+    <meta property="og:image" content="https://sdn-warrior.org/images/logo.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta name="twitter:title" content="More performance trough NSX Edge TEP groups?">
+  <meta name="twitter:description" content="How to use Edge TEP groups in NSX">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "More performance trough NSX Edge TEP groups?",
+    "name": "More performance trough NSX Edge TEP groups?",
+    "description": "How to use Edge TEP groups in NSX",
+    "keywords": ["nsx", "vmware", "network"],
+    "articleBody": "Introduction My esteemed colleague, Steven Schramm, recently published an excellent article titled Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.\nWhat Are TEP Groups and Why Are They Interesting? With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.\nBefore NSX 4.2.1, each segment was bound to a single TEP interface. This limitation meant that North/South traffic could only utilize the maximum throughput of one physical adapter (ESXi where the Edge VM is realized). With TEP HA and the introduction of TEP Groups, this behavior has changed significantly.\nIt is worth noting that prior to TEP HA, a Multi-TEP implementation was already available. While this allowed for failover within the TEP network if a physical adapter lost its link, it did not address Layer 2 or Layer 3 issues. For more details on this topic, I recommend reading Steven’s article.\nHowever, TEP HA is not enabled by default and, as of today, can only be activated via the API.\nLAB Setup For this exploration, I am running NSX 4.2.1 on three Intel NUC Pro devices, each equipped with dual 2.5 Gigabit LAN adapters. My test VMs are pinned to different hosts using DRS rules to ensure separation and accurate testing conditions.\nMulti-TEP is configured in the setup, but TEP HA has not yet been enabled.\nThe test environment includes four Alpine Linux VMs, each connected to the same segment.\nAlpine1: 10.10.20.10 Alpine2: 10.10.20.20 Alpine3: 10.10.20.30 Alpine4: 10.10.20.40 These VMs are distributed across two ESXi servers to simulate North/South traffic under real-world conditions. A third ESXi server hosts the NSX Edge VM, responsible for North/South traffic.\nTo evaluate performance, my iPerf target is located on a separate server with a 10 Gb/s connection, ensuring that the network backbone does not introduce any bottlenecks. This setup provides a robust environment to test TEP HA and its impact on East/West traffic.\nBaseline Tests: North/South Capacity To measure the maximum North/South capacity of the setup, I ran iPerf tests simultaneously on all four Alpine VMs. Each VM generated traffic towards the iPerf target server with a 10 Gb/s connection. Below are the individual results:\nAlpine1: 554 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 6.45 GBytes 554 Mbits/sec 727 sender [ 5] 0.00-100.00 sec 6.45 GBytes 554 Mbits/sec receiver Alpine2: 807 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 9.40 GBytes 807 Mbits/sec 1713 sender [ 5] 0.00-100.00 sec 9.39 GBytes 807 Mbits/sec receiver Alpine3: 465 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 5.42 GBytes 465 Mbits/sec 1196 sender [ 5] 0.00-100.00 sec 5.41 GBytes 466 Mbits/sec receiver Alpine4: 529 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 6.16 GBytes 529 Mbits/sec 1010 sender [ 5] 0.00-100.01 sec 6.16 GBytes 529 Mbits/sec receiver Total Throughput The combined total throughput across all four VMs was 2.355 Gbps, indicating the maximum North/South capacity under the current configuration.\nValidating Physical NIC Utilization To monitor the utilization of the Edge VM, we can use esxtop on the ESXi server. By pressing “N”, we can examine the network statistics for the physical NICs (vmnic0 and vmnic1) as well as the interfaces of the Edge VM.\nMy Edge VM is configured with four Fastpath interfaces:\nfp0-fp1: Used for TEP traffic. fp2-fp3: Used for BGP uplinks. Additionally, esxtop displays the mapping of the Edge VM’s interfaces to the respective physical NICs (vmnic). This allows us to verify how traffic is distributed across the available resources and ensures that both TEP and BGP traffic are leveraging the correct network paths.\n67108895 1054173:edge04.lab.home.eth3 vmnic0 DvsPortset-0 \u003c--(fp2) 67108897 1054173:edge04.lab.home.eth1 vmnic0 DvsPortset-0 \u003c--(fp0) 67108898 1054173:edge04.lab.home.eth0 vmnic1 DvsPortset-0 \u003c--(MGMT) 67108899 1054173:edge04.lab.home.eth2 vmnic1 DvsPortset-0 \u003c--(fp1) 67108900 1054173:edge04.lab.home.eth4 vmnic1 DvsPortset-0 \u003c--(fp3) In addition to monitoring this in esxtop, I can observe the activity on my switches. By checking the switch port bandwith statistics, I can determine which physical adapter is actively handling the iPerf traffic and which one is idle. This provides an additional layer of validation for the distribution of traffic across the available pNICs.\nConfiguring Multi-TEP HA The process of enabling Multi-TEP High Availability (HA) is straightforward. It begins with creating a TEP HA Host Switch Profile. This is done through a simple API call using the PUT method to the following endpoint:\nPUT https:///policy/api/v1/infra/host-switch-profiles/nsxvtepha JSON Payload The following JSON payload needs to be provided in the API request:\n{ \"enabled\": \"true\", \"failover_timeout\": \"5\", \"auto_recovery\": \"true\", \"auto_recovery_initial_wait\": \"300\", \"auto_recovery_max_backoff\": \"86400\", \"resource_type\": \"PolicyVtepHAHostSwitchProfile\", \"display_name\": \"nsxvtepha\" } Key Parameters:\nenabled: Enables TEP HA functionality (true or false). failover_timeout: Specifies the timeout (in seconds) for failover to occur. auto_recovery: Enables automatic recovery of TEPs after a failure. auto_recovery_initial_wait: Time (in seconds) before initiating the first recovery attempt. auto_recovery_max_backoff: Maximum backoff time (in seconds) for recovery attempts. display_name: A human-readable name for the profile. This API call creates the TEP HA Host Switch Profile, which can then be applied to the desired transport nodes to enable Multi-TEP HA functionality.\nAssigning the TEP HA Profile To enable the Multi-TEP HA feature, the created TEP HA profile must be assigned to a Transport Node Profile. This assignment ensures that the specified hosts will have the Multi-TEP HA feature enabled.\nSteps to Assign the TEP HA Profile:\nGather the Transport Node Profile ID: Retrieve the ID of the transport node profile that you want to map the TEP HA profile to. Without this ID, you cannot complete the assignment. GET https:///policy/api/v1/infra/host-transport-node-profiles/ Assign the TEP HA Profile: Use the API to update the transport node profile by linking it with the TEP HA profile. The request must specify the IDs of both the transport node profile and the TEP HA profile. PUT https:///policy/api/v1/infra/host-transport-node-profiles/ Add the following entry to the transport node profile to link it with the TEP HA profile:\n{ \"key\": \"VtepHAHostSwitchProfile\", \"value\": \"/infra/host-switch-profiles/nsxvtepha\" } The full transport node profile looks like this:\n{ \"host_switch_spec\": { \"host_switches\": [ { \"host_switch_name\": \"NSX_vCompute3\", \"host_switch_id\": \"50 27 cc 64 fe fc 4b 00-b1 af 91 5d 11 78 b9 06\", \"host_switch_type\": \"VDS\", \"host_switch_mode\": \"STANDARD\", \"ecmp_mode\": \"L3\", \"host_switch_profile_ids\": [ { \"key\": \"UplinkHostSwitchProfile\", \"value\": \"/infra/host-switch-profiles/HostUplink\" }, { \"key\": \"VtepHAHostSwitchProfile\", \"value\": \"/infra/host-switch-profiles/nsxvtepha\" } ], \"uplinks\": [ { \"vds_uplink_name\": \"Uplink 1\", \"uplink_name\": \"Uplink1\" }, { \"vds_uplink_name\": \"Uplink 2\", \"uplink_name\": \"Uplink2\" } ], \"is_migrate_pnics\": false, \"ip_assignment_spec\": { \"ip_pool_id\": \"/infra/ip-pools/tep\", \"resource_type\": \"StaticIpPoolSpec\" }, \"cpu_config\": [ ], \"transport_zone_endpoints\": [ { \"transport_zone_id\": \"/infra/sites/default/enforcement-points/default/transport-zones/OVERLAYTZ\", \"transport_zone_profile_ids\": [ ] }, { \"transport_zone_id\": \"/infra/sites/default/enforcement-points/default/transport-zones/MVLAN\", \"transport_zone_profile_ids\": [ ] } ], \"not_ready\": false, \"portgroup_transport_zone_id\": \"/infra/sites/default/enforcement-points/default/transport-zones/eb370bd3-db11-319c-98ec-585e402bf98c\" } ], \"resource_type\": \"StandardHostSwitchSpec\" }, \"ignore_overridden_hosts\": false, \"resource_type\": \"PolicyHostTransportNodeProfile\", \"id\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"display_name\": \"HostTNP\", \"path\": \"/infra/host-transport-node-profiles/45104efd-72bf-4d69-bc24-87d45b03b402\", \"relative_path\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"parent_path\": \"/infra\", \"remote_path\": \"\", \"unique_id\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"realization_id\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"owner_id\": \"1ec3eeb1-8da7-457d-bebe-a8b2b47df7de\", \"marked_for_delete\": false, \"overridden\": false, \"_system_owned\": false, \"_protection\": \"NOT_PROTECTED\", \"_create_time\": 1723569644857, \"_create_user\": \"admin\", \"_last_modified_time\": 1732706346575, \"_last_modified_user\": \"admin\", \"_revision\": 3 } Important Notes Ensure the transport node profile is correctly assigned to the desired hosts to enable Multi-TEP HA. Any misconfiguration or omission of the “key”: “VtepHAHostSwitchProfile” entry will result in the inability to activate the TEP HA functionality. The value field must match the path of the created TEP HA profile. This process is crucial for leveraging the full capabilities of Multi-TEP HA in NSX environments.\nEnabling Edge TEP Groups To enable the TEP Group feature on Edge nodes, the global connectivity configuration must be updated. This is achieved by modifying the tep_group_config parameter via an API call.\nUse the following API request to enable the TEP Group feature on Edge nodes:\nPUT https:///policy/api/v1/infra/connectivity-global-config JSON Payload\n{ // ... \"tep_group_config\": { \"enable_tep_grouping_on_edge\": true }, \"resource_type\": \"GlobalConfig\", // ... } The full global config looks like this:\n{ \"fips\": { \"lb_fips_enabled\": true, \"tls_fips_enabled\": false }, \"l3_forwarding_mode\": \"IPV4_ONLY\", \"uplink_mtu_threshold\": 9000, \"vdr_mac\": \"02:50:56:56:44:52\", \"vdr_mac_nested\": \"02:50:56:56:44:53\", \"allow_changing_vdr_mac_in_use\": false, \"arp_limit_per_gateway\": 50000, \"external_gateway_bfd\": { \"bfd_profile_path\": \"/infra/bfd-profiles/default-external-gw-bfd-profile\", \"enable\": true }, \"lb_ecmp\": false, \"remote_tunnel_physical_mtu\": 1700, \"physical_uplink_mtu\": 9000, \"global_replication_mode_enabled\": false, \"is_inherited\": false, \"site_infos\": [ ], \"tep_group_config\": { \"enable_tep_grouping_on_edge\": true }, \"resource_type\": \"GlobalConfig\", \"id\": \"global-config\", \"display_name\": \"default\", \"path\": \"/infra/global-config\", \"relative_path\": \"global-config\", \"parent_path\": \"/infra\", \"remote_path\": \"\", \"unique_id\": \"071c1408-8d73-42ea-b2ad-b85cc43c96b2\", \"realization_id\": \"071c1408-8d73-42ea-b2ad-b85cc43c96b2\", \"owner_id\": \"1ec3eeb1-8da7-457d-bebe-a8b2b47df7de\", \"marked_for_delete\": false, \"overridden\": false, \"_system_owned\": false, \"_protection\": \"NOT_PROTECTED\", \"_create_time\": 1723479213559, \"_create_user\": \"system\", \"_last_modified_time\": 1735854980053, \"_last_modified_user\": \"admin\", \"_revision\": 5 } Verifying Changes: Checking Edge Node TEP Groups To ensure that the changes to enable TEP Groups are effective, you can verify the configuration directly on an Edge Node using SSH. The following command provides an overview of logical switches and their associated TEP Groups:\nCommand Log in to the Edge Node via SSH and execute:\nget logical-switches Sample Output:\nUUID VNI ENCAP TEP_GROUP NAME GLOBAL_VNI(FED) 7f7e8af0-299e-4354-a143-a6a3689db228 74753 GENEVE 293888 transit-rl-aa5420e0-3d2b-4ff7-b00e-5f234c2f7413 0abeab93-66ef-4b41-87b6-64164b450e8d 67587 GENEVE 293888 transit-bp-T1 09243099-ebb7-41ae-bcf4-10e0b833cc24 68609 GENEVE 293888 inter-sr-routing-bp-T0-ECMP 6261cda0-558f-4a57-838c-d47c95945c31 71680 GENEVE 293888 T1-dhcp-ls Key Parameters to Verify:\nTEP_GROUP: The column should display a valid TEP Group ID (e.g., 293888) for all logical switches. Logical Switch Details: Ensure that all expected logical switches are listed, along with their VNI and encapsulation type (e.g., GENEVE). If the TEP_GROUP column shows values for the logical switches, it confirms that the TEP Group feature is active and functioning as expected. This verification ensures that your configuration changes are effective across the Edge Nodes.\nPerformance Tests with TEP Groups To evaluate the impact of TEP Groups on performance, I ran simultaneous iPerf tests on all four Alpine VMs. Below are the individual results:\nAlpine1: 1.14 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 13.3 GBytes 1.14 Gbits/sec 669 sender [ 5] 0.00-100.00 sec 13.3 GBytes 1.14 Gbits/sec receiver Alpine2: 1.08 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 12.6 GBytes 1.08 Gbits/sec 774 sender [ 5] 0.00-100.00 sec 12.6 GBytes 1.08 Gbits/sec receiver Alpine3: 1.10 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 12.8 GBytes 1.10 Gbits/sec 1002 sender [ 5] 0.00-100.00 sec 12.8 GBytes 1.10 Gbits/sec receiver Alpine4: 1.11 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 12.9 GBytes 1.11 Gbits/sec 990 sender [ 5] 0.00-100.00 sec 12.9 GBytes 1.11 Gbits/sec receiver Total Throughput The combined total throughput across all four VMs was 4.43 Gbps, showing a significant improvement over the baseline tests without TEP Groups. This demonstrates the enhanced traffic distribution and performance benefits enabled by the Multi-TEP HA feature.\nCross-Verification on the Switch To further validate the results, I checked the physical interfaces of the ESXi server hosting the Edge VM directly on the switch. The switch statistics confirm that both physical interfaces are actively utilized during the iPerf tests.\nObservations Both physical interfaces (vmnic0 and vmnic1) show significant traffic, indicating effective utilization and load balancing. This behavior aligns with the expected performance of the TEP Groups feature, ensuring that traffic is distributed across multiple interfaces for maximum throughput. Switch port view\nThe screenshot demonstrates how the Multi-TEP HA configuration efficiently balances the load across both physical NICs, validating the setup and confirming the improvements in traffic handling.\nFinal Thoughts TEP Groups can be easily integrated into any environment with a Multi-TEP setup without requiring significant modifications. The adjustments are minimal and pose a low risk to production environments.\nIn addition to the noticeable performance improvements, TEP Groups also provide significantly better High Availability (HA) handling. The performance gains are particularly impactful in environments with fewer NSX segments, where the previous load distribution method was less effective.\nMoreover, TEP Groups can deliver higher performance for segments with high traffic loads, especially those previously constrained by the physical uplink’s capacity. This makes TEP Groups a valuable enhancement for optimizing both performance and reliability in NSX deployments.\nFurther Resources For more details and in-depth explanations about Multi-TEP High Availability and TEP Groups, refer to the following resources:\nImproving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability VMware NSX Administration Guide: Multi-TEP High Availability ",
+    "wordCount" : "1977",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2025-01-03T12:00:00+01:00",
+    "dateModified": "2025-01-03T12:00:00+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/nsx-tep-groups/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>More performance trough NSX Edge TEP groups?</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eb98efc18cb9c6a86651dce801c60b6d61ad5a37f7a6c35512028a9050e32033.css" integrity="sha256-65jvwYy5xqhmUdzoAcYLbWGtWjf3psNVEgKKkFDjIDM=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f&amp;text=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f&amp;summary=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f%2c%20by%20SDN-Warrior%0a%0aHow%20to%20use%20Edge%20TEP%20groups%20in%20NSX%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;More performance trough NSX Edge TEP groups?&#34;,&#34;https://sdn-warrior.org/posts/nsx-tep-groups/&#34;,&#34;More performance trough NSX Edge TEP groups?, by SDN-Warrior\n\nHow to use Edge TEP groups in NSX\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jan 3, 2025</span></div>
+				<h1>More performance trough NSX Edge TEP groups?</h1>
+			</header>
+			<div class="post-info"><p>How to use Edge TEP groups in NSX</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/network">network</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>1977 Words
+     Words // ReadTime
+    
+    
+    
+    8 Minutes, 59 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2025-01-03 12:00 &#43;0100</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>My esteemed colleague, Steven Schramm, recently published an excellent article titled <em><a href="https://sdn-techtalk.com/posts/multitep-ha/#what-is-multi-tep-and-tep-group-ha">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></em>. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.</p>
+<h2 id="what-are-tep-groups-and-why-are-they-interesting">What Are TEP Groups and Why Are They Interesting?<a href="#what-are-tep-groups-and-why-are-they-interesting" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.</p>
+<p>Before NSX 4.2.1, each segment was bound to a single TEP interface. This limitation meant that North/South traffic could only utilize the maximum throughput of one physical adapter (ESXi where the Edge VM is realized). With TEP HA and the introduction of TEP Groups, this behavior has changed significantly.</p>
+<p>It is worth noting that prior to TEP HA, a Multi-TEP implementation was already available. While this allowed for failover within the TEP network if a physical adapter lost its link, it did not address Layer 2 or Layer 3 issues. For more details on this topic, I recommend reading Steven’s article.</p>
+<p>However, TEP HA is not enabled by default and, as of today, can only be activated via the API.</p>
+<h2 id="lab-setup">LAB Setup<a href="#lab-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>For this exploration, I am running NSX 4.2.1 on three Intel NUC Pro devices, each equipped with dual 2.5 Gigabit LAN adapters. My test VMs are pinned to different hosts using DRS rules to ensure separation and accurate testing conditions.</p>
+<p>Multi-TEP is configured in the setup, but TEP HA has not yet been enabled.</p>
+<p>The test environment includes four Alpine Linux VMs, each connected to the same segment.</p>
+<ul>
+<li><strong>Alpine1</strong>: <code>10.10.20.10</code></li>
+<li><strong>Alpine2</strong>: <code>10.10.20.20</code></li>
+<li><strong>Alpine3</strong>: <code>10.10.20.30</code></li>
+<li><strong>Alpine4</strong>: <code>10.10.20.40</code></li>
+</ul>
+<p>These VMs are distributed across two ESXi servers to simulate North/South traffic under real-world conditions. A third ESXi server hosts the <strong>NSX Edge VM</strong>, responsible for North/South traffic.</p>
+<p>To evaluate performance, my iPerf target is located on a separate server with a <strong>10 Gb/s connection</strong>, ensuring that the network backbone does not introduce any bottlenecks. This setup provides a robust environment to test TEP HA and its impact on East/West traffic.</p>
+<h2 id="baseline-tests-northsouth-capacity">Baseline Tests: North/South Capacity<a href="#baseline-tests-northsouth-capacity" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To measure the maximum North/South capacity of the setup, I ran iPerf tests simultaneously on all four Alpine VMs. Each VM generated traffic towards the iPerf target server with a 10 Gb/s connection. Below are the individual results:</p>
+<ul>
+<li><strong>Alpine1</strong>: 554 Mbps</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 6.45 GBytes 554 Mbits/sec 727 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 6.45 GBytes 554 Mbits/sec receiver
+</span></span></code></pre></div><ul>
+<li><strong>Alpine2</strong>: 807 Mbps</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 9.40 GBytes 807 Mbits/sec 1713 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 9.39 GBytes 807 Mbits/sec receiver
+</span></span></code></pre></div><ul>
+<li><strong>Alpine3</strong>: 465 Mbps</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 5.42 GBytes 465 Mbits/sec 1196 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 5.41 GBytes 466 Mbits/sec receiver
+</span></span></code></pre></div><ul>
+<li><strong>Alpine4</strong>: 529 Mbps</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 6.16 GBytes 529 Mbits/sec 1010 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.01 sec 6.16 GBytes 529 Mbits/sec receiver
+</span></span></code></pre></div><h3 id="total-throughput">Total Throughput<a href="#total-throughput" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The combined total throughput across all four VMs was <strong>2.355 Gbps</strong>, indicating the maximum North/South capacity under the current configuration.</p>
+<h2 id="validating-physical-nic-utilization">Validating Physical NIC Utilization<a href="#validating-physical-nic-utilization" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To monitor the utilization of the Edge VM, we can use <code>esxtop</code> on the ESXi server. By pressing <strong>&ldquo;N&rdquo;</strong>, we can examine the network statistics for the physical NICs (<code>vmnic0</code> and <code>vmnic1</code>) as well as the interfaces of the Edge VM.</p>
+<p>My Edge VM is configured with four Fastpath interfaces:</p>
+<ul>
+<li><strong>fp0-fp1</strong>: Used for TEP traffic.</li>
+<li><strong>fp2-fp3</strong>: Used for BGP uplinks.</li>
+</ul>
+<p>Additionally, <code>esxtop</code> displays the mapping of the Edge VM&rsquo;s interfaces to the respective physical NICs (<code>vmnic</code>). This allows us to verify how traffic is distributed across the available resources and ensures that both TEP and BGP traffic are leveraging the correct network paths.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">  67108895 1054173:edge04.lab.home.eth3       vmnic0 DvsPortset-0 &lt;--(fp2)         
+</span></span><span class="line"><span class="cl">  67108897 1054173:edge04.lab.home.eth1       vmnic0 DvsPortset-0 &lt;--(fp0)
+</span></span><span class="line"><span class="cl">  67108898 1054173:edge04.lab.home.eth0       vmnic1 DvsPortset-0 &lt;--(MGMT)
+</span></span><span class="line"><span class="cl">  67108899 1054173:edge04.lab.home.eth2       vmnic1 DvsPortset-0 &lt;--(fp1)
+</span></span><span class="line"><span class="cl">  67108900 1054173:edge04.lab.home.eth4       vmnic1 DvsPortset-0 &lt;--(fp3)   
+</span></span></code></pre></div><p>In addition to monitoring this in <code>esxtop</code>, I can observe the activity on my switches. By checking the switch port bandwith statistics, I can determine which physical adapter is actively handling the iPerf traffic and which one is idle. This provides an additional layer of validation for the distribution of traffic across the available pNICs.</p>
+<h2 id="configuring-multi-tep-ha">Configuring Multi-TEP HA<a href="#configuring-multi-tep-ha" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The process of enabling Multi-TEP High Availability (HA) is straightforward. It begins with creating a TEP HA Host Switch Profile. This is done through a simple API call using the <code>PUT</code> method to the following endpoint:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">PUT https://&lt;nsx-policy-manager&gt;/policy/api/v1/infra/host-switch-profiles/nsxvtepha
+</span></span></code></pre></div><h3 id="json-payload">JSON Payload<a href="#json-payload" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The following JSON payload needs to be provided in the API request:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;enabled&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;failover_timeout&#34;</span><span class="p">:</span> <span class="s2">&#34;5&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;auto_recovery&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;auto_recovery_initial_wait&#34;</span><span class="p">:</span> <span class="s2">&#34;300&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;auto_recovery_max_backoff&#34;</span><span class="p">:</span> <span class="s2">&#34;86400&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;PolicyVtepHAHostSwitchProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;display_name&#34;</span><span class="p">:</span> <span class="s2">&#34;nsxvtepha&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Key Parameters:</p>
+<ul>
+<li>enabled: Enables TEP HA functionality (true or false).</li>
+<li>failover_timeout: Specifies the timeout (in seconds) for failover to occur.</li>
+<li>auto_recovery: Enables automatic recovery of TEPs after a failure.</li>
+<li>auto_recovery_initial_wait: Time (in seconds) before initiating the first recovery attempt.</li>
+<li>auto_recovery_max_backoff: Maximum backoff time (in seconds) for recovery attempts.</li>
+<li>display_name: A human-readable name for the profile.</li>
+</ul>
+<p>This API call creates the TEP HA Host Switch Profile, which can then be applied to the desired transport nodes to enable Multi-TEP HA functionality.</p>
+<h2 id="assigning-the-tep-ha-profile">Assigning the TEP HA Profile<a href="#assigning-the-tep-ha-profile" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To enable the Multi-TEP HA feature, the created TEP HA profile must be assigned to a <strong>Transport Node Profile</strong>. This assignment ensures that the specified hosts will have the Multi-TEP HA feature enabled.</p>
+<p>Steps to Assign the TEP HA Profile:</p>
+<ol>
+<li><strong>Gather the Transport Node Profile ID</strong>:
+Retrieve the ID of the transport node profile that you want to map the TEP HA profile to. Without this ID, you cannot complete the assignment.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">GET https://&lt;nsx-policy-manager&gt;/policy/api/v1/infra/host-transport-node-profiles/
+</span></span></code></pre></div><ol start="2">
+<li><strong>Assign the TEP HA Profile</strong>:
+Use the API to update the transport node profile by linking it with the TEP HA profile. The request must specify the IDs of both the transport node profile and the TEP HA profile.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">PUT https://&lt;nsx-policy-manager&gt;/policy/api/v1/infra/host-transport-node-profiles/&lt;tnp-id&gt; 
+</span></span></code></pre></div><p>Add the following entry to the transport node profile to link it with the TEP HA profile:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;VtepHAHostSwitchProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/host-switch-profiles/nsxvtepha&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The full transport node profile looks like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;host_switch_spec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;host_switches&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;host_switch_name&#34;</span><span class="p">:</span> <span class="s2">&#34;NSX_vCompute3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;host_switch_id&#34;</span><span class="p">:</span> <span class="s2">&#34;50 27 cc 64 fe fc 4b 00-b1 af 91 5d 11 78 b9 06&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;host_switch_type&#34;</span><span class="p">:</span> <span class="s2">&#34;VDS&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;host_switch_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;STANDARD&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;ecmp_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;L3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;host_switch_profile_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;UplinkHostSwitchProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/host-switch-profiles/HostUplink&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;VtepHAHostSwitchProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/host-switch-profiles/nsxvtepha&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">          <span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;uplinks&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;vds_uplink_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Uplink 1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;uplink_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Uplink1&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;vds_uplink_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Uplink 2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;uplink_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">          <span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;is_migrate_pnics&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;ip_assignment_spec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;ip_pool_id&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/ip-pools/tep&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;StaticIpPoolSpec&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">},</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;cpu_config&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">          <span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;transport_zone_endpoints&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;transport_zone_id&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/sites/default/enforcement-points/default/transport-zones/OVERLAYTZ&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;transport_zone_profile_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">              <span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;transport_zone_id&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/sites/default/enforcement-points/default/transport-zones/MVLAN&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;transport_zone_profile_ids&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">              <span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">          <span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;not_ready&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;portgroup_transport_zone_id&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/sites/default/enforcement-points/default/transport-zones/eb370bd3-db11-319c-98ec-585e402bf98c&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;StandardHostSwitchSpec&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ignore_overridden_hosts&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;PolicyHostTransportNodeProfile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;45104efd-72bf-4d69-bc24-87d45b03b402&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;display_name&#34;</span><span class="p">:</span> <span class="s2">&#34;HostTNP&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/host-transport-node-profiles/45104efd-72bf-4d69-bc24-87d45b03b402&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;relative_path&#34;</span><span class="p">:</span> <span class="s2">&#34;45104efd-72bf-4d69-bc24-87d45b03b402&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;parent_path&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;remote_path&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;unique_id&#34;</span><span class="p">:</span> <span class="s2">&#34;45104efd-72bf-4d69-bc24-87d45b03b402&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;realization_id&#34;</span><span class="p">:</span> <span class="s2">&#34;45104efd-72bf-4d69-bc24-87d45b03b402&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;owner_id&#34;</span><span class="p">:</span> <span class="s2">&#34;1ec3eeb1-8da7-457d-bebe-a8b2b47df7de&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;marked_for_delete&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;overridden&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_system_owned&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_protection&#34;</span><span class="p">:</span> <span class="s2">&#34;NOT_PROTECTED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_create_time&#34;</span><span class="p">:</span> <span class="mi">1723569644857</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_create_user&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_last_modified_time&#34;</span><span class="p">:</span> <span class="mi">1732706346575</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_last_modified_user&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;_revision&#34;</span><span class="p">:</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></div><h3 id="important-notes">Important Notes<a href="#important-notes" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>Ensure the transport node profile is correctly assigned to the desired hosts to enable Multi-TEP HA.</li>
+<li>Any misconfiguration or omission of the &ldquo;key&rdquo;: &ldquo;VtepHAHostSwitchProfile&rdquo; entry will result in the inability to activate the TEP HA functionality.</li>
+<li>The value field must match the path of the created TEP HA profile.</li>
+</ul>
+<p>This process is crucial for leveraging the full capabilities of Multi-TEP HA in NSX environments.</p>
+<h2 id="enabling-edge-tep-groups">Enabling Edge TEP Groups<a href="#enabling-edge-tep-groups" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To enable the TEP Group feature on Edge nodes, the global connectivity configuration must be updated. This is achieved by modifying the <code>tep_group_config</code> parameter via an API call.</p>
+<p>Use the following API request to enable the TEP Group feature on Edge nodes:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">PUT https://&lt;NSX manager&gt;/policy/api/v1/infra/connectivity-global-config
+</span></span></code></pre></div><p>JSON Payload</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nt">&#34;tep_group_config&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;enable_tep_grouping_on_edge&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;GlobalConfig&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>The full global config looks like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;fips&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;lb_fips_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;tls_fips_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;l3_forwarding_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;IPV4_ONLY&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;uplink_mtu_threshold&#34;</span><span class="p">:</span> <span class="mi">9000</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;vdr_mac&#34;</span><span class="p">:</span> <span class="s2">&#34;02:50:56:56:44:52&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;vdr_mac_nested&#34;</span><span class="p">:</span> <span class="s2">&#34;02:50:56:56:44:53&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;allow_changing_vdr_mac_in_use&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;arp_limit_per_gateway&#34;</span><span class="p">:</span> <span class="mi">50000</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;external_gateway_bfd&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;bfd_profile_path&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/bfd-profiles/default-external-gw-bfd-profile&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;enable&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;lb_ecmp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;remote_tunnel_physical_mtu&#34;</span><span class="p">:</span> <span class="mi">1700</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;physical_uplink_mtu&#34;</span><span class="p">:</span> <span class="mi">9000</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;global_replication_mode_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;is_inherited&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;site_infos&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">	<span class="p">],</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;tep_group_config&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;enable_tep_grouping_on_edge&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;GlobalConfig&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;global-config&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;display_name&#34;</span><span class="p">:</span> <span class="s2">&#34;default&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra/global-config&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;relative_path&#34;</span><span class="p">:</span> <span class="s2">&#34;global-config&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;parent_path&#34;</span><span class="p">:</span> <span class="s2">&#34;/infra&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;remote_path&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;unique_id&#34;</span><span class="p">:</span> <span class="s2">&#34;071c1408-8d73-42ea-b2ad-b85cc43c96b2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;realization_id&#34;</span><span class="p">:</span> <span class="s2">&#34;071c1408-8d73-42ea-b2ad-b85cc43c96b2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;owner_id&#34;</span><span class="p">:</span> <span class="s2">&#34;1ec3eeb1-8da7-457d-bebe-a8b2b47df7de&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;marked_for_delete&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;overridden&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_system_owned&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_protection&#34;</span><span class="p">:</span> <span class="s2">&#34;NOT_PROTECTED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_create_time&#34;</span><span class="p">:</span> <span class="mi">1723479213559</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_create_user&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_last_modified_time&#34;</span><span class="p">:</span> <span class="mi">1735854980053</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_last_modified_user&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;_revision&#34;</span><span class="p">:</span> <span class="mi">5</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="verifying-changes-checking-edge-node-tep-groups">Verifying Changes: Checking Edge Node TEP Groups<a href="#verifying-changes-checking-edge-node-tep-groups" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To ensure that the changes to enable TEP Groups are effective, you can verify the configuration directly on an Edge Node using SSH. The following command provides an overview of logical switches and their associated TEP Groups:</p>
+<h3 id="command">Command<a href="#command" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Log in to the Edge Node via SSH and execute:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">get logical-switches
+</span></span></code></pre></div><p>Sample Output:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">UUID                                   VNI          ENCAP    TEP_GROUP    NAME                                               GLOBAL_VNI(FED)
+</span></span><span class="line"><span class="cl">7f7e8af0-299e-4354-a143-a6a3689db228   74753        GENEVE   293888       transit-rl-aa5420e0-3d2b-4ff7-b00e-5f234c2f7413                
+</span></span><span class="line"><span class="cl">0abeab93-66ef-4b41-87b6-64164b450e8d   67587        GENEVE   293888       transit-bp-T1                                                  
+</span></span><span class="line"><span class="cl">09243099-ebb7-41ae-bcf4-10e0b833cc24   68609        GENEVE   293888       inter-sr-routing-bp-T0-ECMP                                    
+</span></span><span class="line"><span class="cl">6261cda0-558f-4a57-838c-d47c95945c31   71680        GENEVE   293888       T1-dhcp-ls
+</span></span></code></pre></div><p>Key Parameters to Verify:</p>
+<ul>
+<li>TEP_GROUP: The column should display a valid TEP Group ID (e.g., 293888) for all logical switches.</li>
+<li>Logical Switch Details: Ensure that all expected logical switches are listed, along with their VNI and encapsulation type (e.g., GENEVE).</li>
+</ul>
+<p>If the TEP_GROUP column shows values for the logical switches, it confirms that the TEP Group feature is active and functioning as expected. This verification ensures that your configuration changes are effective across the Edge Nodes.</p>
+<h2 id="performance-tests-with-tep-groups">Performance Tests with TEP Groups<a href="#performance-tests-with-tep-groups" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To evaluate the impact of TEP Groups on performance, I ran simultaneous iPerf tests on all four Alpine VMs. Below are the individual results:</p>
+<ul>
+<li><strong>Alpine1</strong>: 1.14 Gbits/sec</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 13.3 GBytes 1.14 Gbits/sec 669 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 13.3 GBytes 1.14 Gbits/sec receiver
+</span></span></code></pre></div><ul>
+<li><strong>Alpine2</strong>: 1.08 Gbits/sec</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 12.6 GBytes 1.08 Gbits/sec 774 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 12.6 GBytes 1.08 Gbits/sec receiver
+</span></span></code></pre></div><ul>
+<li><strong>Alpine3</strong>: 1.10 Gbits/sec</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 12.8 GBytes 1.10 Gbits/sec 1002 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 12.8 GBytes 1.10 Gbits/sec receiver
+</span></span></code></pre></div><ul>
+<li><strong>Alpine4</strong>: 1.11 Gbits/sec</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval Transfer Bitrate Retr 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 12.9 GBytes 1.11 Gbits/sec 990 sender 
+</span></span><span class="line"><span class="cl">[ 5] 0.00-100.00 sec 12.9 GBytes 1.11 Gbits/sec receiver
+</span></span></code></pre></div><h3 id="total-throughput-1">Total Throughput<a href="#total-throughput-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The combined total throughput across all four VMs was <strong>4.43 Gbps</strong>, showing a significant improvement over the baseline tests without TEP Groups. This demonstrates the enhanced traffic distribution and performance benefits enabled by the Multi-TEP HA feature.</p>
+<h2 id="cross-verification-on-the-switch">Cross-Verification on the Switch<a href="#cross-verification-on-the-switch" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To further validate the results, I checked the physical interfaces of the ESXi server hosting the Edge VM directly on the switch. The switch statistics confirm that both physical interfaces are actively utilized during the iPerf tests.</p>
+<h3 id="observations">Observations<a href="#observations" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>Both physical interfaces (<code>vmnic0</code> and <code>vmnic1</code>) show significant traffic, indicating effective utilization and load balancing.</li>
+<li>This behavior aligns with the expected performance of the TEP Groups feature, ensuring that traffic is distributed across multiple interfaces for maximum throughput.</li>
+</ul>
+
+<figure><picture>
+          <source srcset="/nsx-tep-groups/switch_hu15845385026729381105.webp" type="image/webp">
+          <source srcset="/nsx-tep-groups/switch_hu11297771637104314496.jpg" type="image/jpeg">
+          <img src="/nsx-tep-groups/switch_hu15845385026729381105.webp"alt="Switch Port View"  width="1958"  height="184" />
+        </picture><figcaption>
+            <p>Switch port view</p>
+          </figcaption></figure>
+<p>The screenshot demonstrates how the Multi-TEP HA configuration efficiently balances the load across both physical NICs, validating the setup and confirming the improvements in traffic handling.</p>
+<h2 id="final-thoughts">Final Thoughts<a href="#final-thoughts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>TEP Groups can be easily integrated into any environment with a Multi-TEP setup without requiring significant modifications. The adjustments are minimal and pose a low risk to production environments.</p>
+<p>In addition to the noticeable performance improvements, TEP Groups also provide significantly better High Availability (HA) handling. The performance gains are particularly impactful in environments with fewer NSX segments, where the previous load distribution method was less effective.</p>
+<p>Moreover, TEP Groups can deliver higher performance for segments with high traffic loads, especially those previously constrained by the physical uplink&rsquo;s capacity. This makes TEP Groups a valuable enhancement for optimizing both performance and reliability in NSX deployments.</p>
+<h2 id="further-resources">Further Resources<a href="#further-resources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>For more details and in-depth explanations about Multi-TEP High Availability and TEP Groups, refer to the following resources:</p>
+<ul>
+<li><a href="https://sdn-techtalk.com/posts/multitep-ha/">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></li>
+<li><a href="https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-2/administration-guide/host-switches/multi-tep-high-availability.html">VMware NSX Administration Guide: Multi-TEP High Availability</a></li>
+</ul>
+
+			</div>
+			
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/nsx-edge-redeploy/">Redeploy an NSX Edge VM Appliance</a></li>
+	
+	<li><a href="/posts/nsx-qos/">How to use QoS in NSX</a></li>
+	
+	<li><a href="/posts/nsx4_2_1_1/">NSX 4.2.1.1 Hotfix Update</a></li>
+	
+	<li><a href="/posts/mac-learning/">MAC Learning is your friend</a></li>
+	
+	<li><a href="/posts/nsx-cert-exchange/">NSX 4.X Certificate exchange of the NSX Manager</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/nsx-edge-redeploy/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>Redeploy an NSX Edge VM Appliance</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

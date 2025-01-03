@@ -2,25 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/posts/nsx-tep-groups/</loc>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/network/</loc>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2024-12-30T15:00:46+01:00</lastmod>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2024-12-30T15:00:46+01:00</lastmod>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vmware/</loc>
+    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/quicktip/</loc>
     <lastmod>2024-12-30T15:00:46+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-edge-redeploy/</loc>
-    <lastmod>2024-12-30T15:00:46+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2024-12-30T15:00:46+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2024-12-30T15:00:46+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vmware/</loc>
     <lastmod>2024-12-30T15:00:46+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/ansible/</loc>
@@ -87,9 +93,6 @@
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/nested-lab/</loc>
-    <lastmod>2024-11-27T19:54:18+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/network/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/performance/</loc>

@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 30 Dec 2024 15:00:46 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 03 Jan 2025 12:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>More performance trough NSX Edge TEP groups?</title>
+      <link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
+      <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My esteemed colleague, Steven Schramm, recently published an excellent article titled &lt;em&gt;&lt;a href=&#34;https://sdn-techtalk.com/posts/multitep-ha/#what-is-multi-tep-and-tep-group-ha&#34;&gt;Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability&lt;/a&gt;&lt;/em&gt;. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-tep-groups-and-why-are-they-interesting&#34;&gt;What Are TEP Groups and Why Are They Interesting?&lt;/h2&gt;&#xA;&lt;p&gt;With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Redeploy an NSX Edge VM Appliance</title>
       <link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
