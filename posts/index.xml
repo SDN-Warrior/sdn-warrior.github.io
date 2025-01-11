@@ -6,8 +6,411 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Fri, 03 Jan 2025 12:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Sat, 11 Jan 2025 02:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>How Apply To works in NSX DFW</title>
+			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
+			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
+			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>When working with the <strong>NSX Distributed Firewall (DFW)</strong>, one feature that often goes unnoticed or misunderstood is <strong>&lsquo;Apply To&rsquo;</strong>. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as <strong>&lsquo;Apply To&rsquo;</strong> is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.</p>
+<p>In many VMware training courses, <strong>&lsquo;Apply To&rsquo;</strong> is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.</p>
+<p>In this post, I aim to demystify the <strong>&lsquo;Apply To&rsquo;</strong> feature. I will explore its functionality, demonstrate its practical use cases, and analyze how it impacts the behavior of firewall rules. By the end, you should have a solid understanding of how and when to use <strong>&lsquo;Apply To&rsquo;</strong> effectively in your NSX environment.</p>
+<h2 id="questions-to-address">Questions to Address</h2>
+<p>To fully understand the <strong>&lsquo;Apply To&rsquo;</strong> feature in the NSX Distributed Firewall, it is essential to examine its behavior under various scenarios. In this post, I will address the following questions:</p>
+<ol>
+<li>
+<p><strong>What happens if we use the <code>&lt;Applied To&gt;</code> field on the policy and set the <code>&lt;Applied To&gt;</code> rule as DFW?</strong><br>
+How does this configuration affect the scope and enforcement of firewall rules?</p>
+</li>
+<li>
+<p><strong>What will happen if we use a Security Group in the <code>&lt;Applied To&gt;</code> field in the rule, while the <code>&lt;Applied To&gt;</code> field in the policy is set as DFW?</strong><br>
+What interactions or overlaps should be expected between these configurations?</p>
+</li>
+<li>
+<p><strong>What happens if we use <code>security group1</code> in the policy <code>&lt;Applied To&gt;</code> field and <code>security group2</code> in the rule <code>&lt;Applied To&gt;</code> field?</strong><br>
+How do these overlapping or conflicting settings impact the rule application?</p>
+</li>
+<li>
+<p><strong>Does the <code>&lt;Applied To&gt;</code> field in the rule or the <code>&lt;Applied To&gt;</code> field in the policy take precedence?</strong><br>
+When both are defined, which one ultimately dictates the scope of rule enforcement?</p>
+</li>
+</ol>
+<p>By exploring these scenarios, I aim to clarify the nuanced behavior of the <strong>&lsquo;Apply To&rsquo;</strong> feature and provide actionable insights for optimizing your NSX DFW configurations.</p>
+<h2 id="practical-demonstrations-with-cli">Practical Demonstrations with CLI</h2>
+<p>In addition to exploring the theoretical aspects of the <strong>&lsquo;Apply To&rsquo;</strong> feature, I will use practical CLI commands to demonstrate where the rules are actually enforced within the NSX infrastructure. This hands-on approach will help you visualize and verify how <strong>&lsquo;Apply To&rsquo;</strong> configurations are realized in practice.</p>
+<p>By combining both conceptual explanations and practical examples, you will gain a deeper understanding of how to effectively use the <strong>&lsquo;Apply To&rsquo;</strong> feature in real-world scenarios.</p>
+<h2 id="test-setup">Test Setup</h2>
+<p>For this blog, I am using <strong>NSX version 4.2.2.1</strong> to demonstrate the behavior of the <strong>&lsquo;Apply To&rsquo;</strong> feature in the Distributed Firewall. The goal is to keep the setup simple yet effective for understanding how different configurations influence the enforcement of firewall rules.</p>
+<h3 id="environment-overview">Environment Overview</h3>
+<p>The test environment consists of three lightweight Linux virtual machines running Alpine:</p>
+<ul>
+<li><strong>Alpine01</strong>: <code>10.10.20.10</code></li>
+<li><strong>Alpine02</strong>: <code>10.10.20.20</code></li>
+<li><strong>Alpine03</strong>: <code>10.10.20.30</code> (Control VM)</li>
+</ul>
+<p>All VMs reside on the <strong>same NSX segment</strong>, simplifying the network to focus on rule behavior and ensuring consistent connectivity between VMs. Notably, <strong>Alpine03</strong> serves as a control VM and is not part of any NSX Security Group. This ensures it remains unaffected by specific <strong>&lsquo;Apply To&rsquo;</strong> configurations, providing a baseline for comparison.</p>
+<h3 id="security-groups">Security Groups</h3>
+<p>To organize and manage the test VMs, I have created the following NSX Security Groups:</p>
+<ol>
+<li>
+<p><strong>dFG_all_Alpine</strong><br>
+This group includes <strong>Alpine01</strong> and <strong>Alpine02</strong>. It represents all Alpine VMs involved in the main testing scenarios.</p>
+</li>
+<li>
+<p><strong>dFG_Alpine01</strong><br>
+A dedicated Security Group for <strong>Alpine01</strong>, enabling granular control over rules specific to this VM.</p>
+</li>
+<li>
+<p><strong>dFG_Alpine02</strong><br>
+A separate Security Group for <strong>Alpine02</strong>, allowing isolated configurations tailored to this VM.</p>
+</li>
+</ol>
+<p><strong>Alpine03</strong> does not belong to any Security Group, making it a neutral VM for verifying how rules or configurations behave when no specific policies are applied. This provides a clear reference point to validate the impact of <strong>&lsquo;Apply To&rsquo;</strong> settings.</p>
+<h3 id="why-alpine03-as-a-control-vm">Why Alpine03 as a Control VM?</h3>
+<p>Having a control VM like <strong>Alpine03</strong> ensures we have a clean baseline to compare against during the tests. By keeping it outside of any Security Group, we can confirm that any observed effects are solely due to the configurations applied to <strong>Alpine01</strong> and <strong>Alpine02</strong>. This approach eliminates ambiguity and helps highlight the true behavior of the <strong>&lsquo;Apply To&rsquo;</strong> feature.</p>
+<h3 id="additional-tools-for-validation">Additional Tools for Validation</h3>
+<p>To analyze the behavior further, I will use CLI commands such as <strong><code>summarize-dvfilter</code></strong> and <strong><code>vsipioctl getrules</code></strong>, as well as the NSX <strong>Traceflow</strong> tool. This combination ensures an in-depth understanding of where and how rules are enforced, both at the hypervisor and the network level.</p>
+<h3 id="naming-convention-a-recommended-best-practice">Naming Convention: A Recommended Best Practice</h3>
+<p>As a personal convention, I prefix all custom Security Groups with <strong>dFG</strong>, which stands for Distributed Firewall Group. This prefix helps me quickly identify and differentiate groups used for NSX Distributed Firewall purposes from other objects in the environment.</p>
+<p>I strongly recommend adopting a consistent and meaningful naming scheme for your NSX environment. A clear structure not only improves day-to-day management but also prevents confusion in larger setups with potentially hundreds of objects. Whether you use prefixes like <code>dFG</code> or other naming conventions, the key is consistency.</p>
+<h3 id="why-use-a-single-esxi-host">Why Use a Single ESXi Host?</h3>
+<p>Running both Alpine VMs on a single ESXi host is intentional. It allows me to leverage the <strong>ESXi CLI</strong> to show where and how the Distributed Firewall rules are realized during the tests. This provides deeper insights into the inner workings of the NSX DFW, bridging the gap between configuration in the NSX Manager and actual enforcement at the hypervisor level.</p>
+<p>This setup offers a practical foundation to explore and analyze the <strong>&lsquo;Apply To&rsquo;</strong> feature in detail, combining theoretical explanations with real-world CLI examples.</p>
+<h3 id="verification-with-cli-tools">Verification with CLI Tools</h3>
+<p>To complement the theoretical understanding of the <strong>&lsquo;Apply To&rsquo;</strong> feature, I will use practical CLI tools during the tests to demonstrate where and how firewall rules are enforced. This includes inspecting the ESXi host to see how the Distributed Firewall implements the configurations. Below are the CLI commands and tools I will use:</p>
+<ol>
+<li>
+<p><strong><code>summarize-dvfilter | grep -A16 &lt;VMName&gt;</code></strong><br>
+This command retrieves detailed information about the virtual NIC (vNIC) associated with a specific VM. By identifying the correct vNIC name (e.g., <code>&lt;nic-XXXXXXX-eth0-vmware-sfw.2&gt;</code>), we can pinpoint the interface where the firewall rules are applied.</p>
+</li>
+<li>
+<p><strong><code>vsipioctl getrules -f &lt;name from the vNIC&gt;</code></strong><br>
+Once the vNIC name is identified, this command provides the complete list of firewall rules applied to that specific VM. This is a powerful way to verify the exact rules enforced at the hypervisor level.</p>
+</li>
+<li>
+<p><strong>NSX Traceflow Tool</strong><br>
+In addition to ESXi CLI commands, the NSX <strong>Traceflow</strong> tool can be used to simulate and trace packet flow through the network. This tool helps visualize the path packets take and how firewall rules affect traffic between VMs.</p>
+</li>
+</ol>
+<h3 id="practical-workflow">Practical Workflow</h3>
+<p>During the tests, the workflow will involve the following steps:</p>
+<ol>
+<li>Use the <strong><code>summarize-dvfilter</code></strong> command to locate the vNIC name for the VM being tested (e.g., Alpine01 or Alpine02).</li>
+<li>Retrieve the enforced firewall rules using <strong><code>vsipioctl getrules</code></strong> with the vNIC name as input.</li>
+<li>Validate the observed behavior using the NSX Traceflow tool to ensure that the rules are applied as expected and to simulate specific traffic flows for further analysis.</li>
+</ol>
+<p>These tools provide a hands-on approach to understanding how the <strong>&lsquo;Apply To&rsquo;</strong> feature works, bridging the gap between configuration and real-world enforcement.</p>
+<h2 id="test-1-what-happens-if-we-use-the-applied-to-field-on-the-policy-and-set-the-applied-to-rule-as-dfw">Test 1: What Happens If We Use the <code>&lt;Applied To&gt;</code> Field on the Policy and Set the <code>&lt;Applied To&gt;</code> Rule as DFW?</h2>
+<p>To begin our exploration of the <strong>&lsquo;Apply To&rsquo;</strong> feature, we start with a simple scenario. In this test, I create a policy that allows <strong>ICMP traffic</strong> from <strong>any</strong> source to the Security Group <strong>dFG_all_Alpine</strong>. The <strong>&lsquo;Apply To&rsquo;</strong> configuration is as follows:</p>
+<ul>
+<li>The <strong>rule&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW (Distributed Firewall)</strong>.</li>
+<li>The <strong>policy&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to the Security Group <strong>dFG_all_Alpine</strong>.</li>
+</ul>
+<h3 id="configuration-details">Configuration Details</h3>
+<ol>
+<li>
+<p><strong>Policy</strong>:</p>
+<ul>
+<li>Name: <strong>ICMP Allow Test</strong></li>
+<li>Source: <strong>Any</strong></li>
+<li>Destination: <strong>dFG_all_Alpine</strong></li>
+<li>Service: <strong>ICMP</strong></li>
+<li>Action: <strong>Allow</strong></li>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_all_Alpine</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><code>&lt;Applied To&gt;</code>: <strong>DFW</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="expected-behavior">Expected Behavior</h3>
+<p>In this configuration, the <strong>policy&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> limits the scope of the policy to the members of the <strong>dFG_all_Alpine</strong> group. However, because the <strong>rule&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW</strong>, the rule is distributed across all ESXi hosts in the cluster and evaluated for every packet that traverses the Distributed Firewall, regardless of whether the traffic involves the VMs in the <strong>dFG_all_Alpine</strong> group.</p>
+<p>The expected result is that the rule is <strong>evaluated globally</strong> (due to DFW in the rule) but <strong>only enforced</strong> for traffic destined to the <strong>dFG_all_Alpine</strong> group (as defined in the policy&rsquo;s <code>&lt;Applied To&gt;</code>).</p>
+<h3 id="test-results">Test Results</h3>
+<p>Using the ESXi CLI, I collected the following details for the vNICs associated with each VM:</p>
+<ul>
+<li>
+<p><strong>Alpine01</strong>:</p>
+<ul>
+<li>Port: <code>67108887</code></li>
+<li>vNIC name: <code>nic-533240-eth0-vmware-sfw.2</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Alpine02</strong>:</p>
+<ul>
+<li>Port: <code>67108888</code></li>
+<li>vNIC name: <code>nic-533279-eth0-vmware-sfw.2</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Alpine03 (Control VM)</strong>:</p>
+<ul>
+<li>Port: <code>67108889</code></li>
+<li>vNIC name: <code>nic-544799-eth0-vmware-sfw.2</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="firewall-rules-observed">Firewall Rules Observed</h4>
+<ol>
+<li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong> and <strong>Alpine02 (nic-533279-eth0-vmware-sfw.2)</strong>:<br>
+Both VMs have the following rules applied:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>ICMP traffic is explicitly allowed (rule 10217) for both IPv4 and IPv6 from any source to the address set associated with dFG_all_Alpine.
+All other traffic is rejected (rule 2), demonstrating that the rules are scoped correctly to the policy&rsquo;s <!-- raw HTML omitted --> field.
+Alpine02 (nic-533279-eth0-vmware-sfw.2):
+The rules applied to Alpine02 are identical to those observed for Alpine01</p>
+<ol start="2">
+<li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2)</strong>:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# FILTER (APP Category) rules
+rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>Only the default reject rule is applied. Since Alpine03 is not a member of dFG_all_Alpine, the policy does not apply to this VM, confirming that the <!-- raw HTML omitted --> field in the policy limits enforcement to the intended scope.</p>
+<p>Conclusion for Test 1
+The results confirm the expected behavior:</p>
+<p>The policy&rsquo;s <!-- raw HTML omitted --> field effectively limits the scope of enforcement to the Security Group dFG_all_Alpine.
+Although the rule&rsquo;s <!-- raw HTML omitted --> field is set to DFW, rules are only applied to the VMs within the policy&rsquo;s scope.
+The Control VM (Alpine03), which is outside the Security Group, does not have the ICMP allow rule applied, demonstrating the precision of the <!-- raw HTML omitted --> field.
+This test highlights that the policy-level <!-- raw HTML omitted --> field takes precedence in determining the enforcement scope, even when the rule is distributed globally across the cluster (via DFW).</p>
+<h2 id="test-2-what-will-happen-if-we-use-a-security-group-in-the-applied-to-field-in-the-rule-and-the-applied-to-field-in-the-policy-is-set-as-dfw">Test 2: What Will Happen If We Use a Security Group in the <code>&lt;Applied To&gt;</code> Field in the Rule and the <code>&lt;Applied To&gt;</code> Field in the Policy Is Set as DFW?</h2>
+<p>In this scenario, I configure a policy to allow <strong>ICMP traffic</strong> from <strong>any</strong> source to the <strong>dFG_all_Alpine</strong> Security Group. However, this time I modify the <strong><code>&lt;Applied To&gt;</code> field</strong> as follows:</p>
+<ul>
+<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW (Distributed Firewall)</strong>.</li>
+<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> is set to the Security Group <strong>dFG_Alpine01</strong>.</li>
+</ul>
+<h3 id="configuration-details-1">Configuration Details</h3>
+<ol>
+<li>
+<p><strong>Policy</strong>:</p>
+<ul>
+<li>Name: <strong>ICMP Allow Test 2</strong></li>
+<li>Source: <strong>Any</strong></li>
+<li>Destination: <strong>dFG_all_Alpine</strong></li>
+<li>Service: <strong>ICMP</strong></li>
+<li>Action: <strong>Allow</strong></li>
+<li><code>&lt;Applied To&gt;</code>: <strong>DFW</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_Alpine01</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="expected-behavior-1">Expected Behavior</h3>
+<p>This configuration introduces a more restrictive scope at the <strong>rule</strong> level:</p>
+<ul>
+<li>Since the rule’s <code>&lt;Applied To&gt;</code> field is set to <strong>dFG_Alpine01</strong>, it should only be <strong>enforced on the VMs in this group</strong>.</li>
+<li>The policy’s broader <code>&lt;Applied To&gt;</code> field (set to <strong>DFW</strong>) might still propagate the rule across all hosts, but actual enforcement should be limited to <strong>dFG_Alpine01</strong> due to the rule-level restriction.</li>
+</ul>
+<h3 id="results">Results</h3>
+<h4 id="firewall-rules-observed-1">Firewall Rules Observed</h4>
+<ol>
+<li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong>:<br>
+The following rules were observed:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>The ICMP allow rule is enforced as expected, scoped to Alpine01, which is part of dFG_Alpine01.</p>
+<ol start="2">
+<li><strong>Alpine02 (nic-533279-eth0-vmware-sfw.2):</strong>
+The following rules were observed:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# FILTER (APP Category) rules
+ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>The ICMP allow rule is not applied to Alpine02, as it is not part of dFG_Alpine01.</p>
+<ol start="3">
+<li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2):</strong>
+The following rules were observed:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+ # FILTER (APP Category) rules
+ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>As expected, no ICMP allow rule is applied since Alpine03 is not part of any relevant Security Group.</p>
+<h2 id="test-3-what-happens-if-we-use-security-group1-in-the-policy-applied-to-field-and-group2-in-the-rule-applied-to-field">Test 3: What Happens If We Use Security <code>&lt;group1&gt;</code> in the Policy <code>&lt;Applied To&gt;</code> Field and <code>&lt;group2&gt;</code> in the Rule <code>&lt;Applied To&gt;</code> Field?</h2>
+<p>In this test, I explore the interaction between the <code>&lt;Applied To&gt;</code> fields at the policy and rule levels when they reference different Security Groups. The configuration is as follows:</p>
+<ul>
+<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>dFG_Alpine01</strong>.</li>
+<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>dFG_Alpine02</strong>.</li>
+<li>The rule allows <strong>ICMP traffic</strong> from <strong>any</strong> source to the <strong>dFG_all_Alpine</strong> Security Group.</li>
+</ul>
+<h3 id="configuration-details-2">Configuration Details</h3>
+<ol>
+<li>
+<p><strong>Policy</strong>:</p>
+<ul>
+<li>Name: <strong>ICMP Allow Test 3</strong></li>
+<li>Source: <strong>Any</strong></li>
+<li>Destination: <strong>dFG_all_Alpine</strong></li>
+<li>Service: <strong>ICMP</strong></li>
+<li>Action: <strong>Allow</strong></li>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_Alpine01</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_Alpine02</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="expected-behavior-2">Expected Behavior</h3>
+<p>In this configuration, the <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> restricts the scope of the policy to <strong>dFG_Alpine01</strong>, which includes only <strong>Alpine01</strong>. However, the <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>dFG_Alpine02</strong>, which includes only <strong>Alpine02</strong>.</p>
+<p>The expected behavior is:</p>
+<ol>
+<li>The policy’s <code>&lt;Applied To&gt;</code> field should dictate the overall scope, meaning the rule will only be <strong>enforced for members of dFG_Alpine01</strong>.</li>
+<li>Since the rule’s <code>&lt;Applied To&gt;</code> field is set to <strong>dFG_Alpine02</strong>, the rule will not be applied to <strong>Alpine02</strong>, as it is outside the policy’s scope.</li>
+<li>ICMP traffic from <strong>any source</strong> to <strong>dFG_all_Alpine</strong> will only be allowed for VMs within <strong>dFG_Alpine01</strong>.</li>
+</ol>
+<h3 id="test-results-1">Test Results</h3>
+<h4 id="firewall-rules-observed-2">Firewall Rules Observed</h4>
+<ol>
+<li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong>:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+ruleset mainrs_L2 {
+# FILTER rules
+rule 1 at 1 inout ethertype any stateless from any to any accept;
+}
+</code></pre><p>Key Observations:</p>
+<p>ICMP traffic (IPv4 and IPv6) is explicitly allowed (rule 10217) for Alpine01.
+This behavior aligns with the policy&rsquo;s <!-- raw HTML omitted --> field, as Alpine01 is part of dFG_Alpine01.</p>
+<ol start="2">
+<li><strong>Alpine02 (nic-533279-eth0-vmware-sfw.2):</strong></li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:
+No ICMP allow rule is present for Alpine02, as it is not part of dFG_Alpine01, which is referenced in the policy&rsquo;s <!-- raw HTML omitted --> field.
+All traffic is rejected at the main ruleset level (rule 2), confirming that the rule-level <!-- raw HTML omitted --> field (set to dFG_Alpine02) does not enforce the rule here.</p>
+<ol start="3">
+<li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2)</strong>:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# FILTER (APP Category) rules
+rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>The only rule applied at the main ruleset level is a default reject rule (rule 2), which blocks all traffic. This confirms that no ICMP allow rule from the policy or rule is applied to Alpine03, as it is not part of dFG_Alpine01.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Important Note: Double Enforcement in NSX Distributed Firewall</b>
+        </div>
+        <div class="admonition-content"><p>Even though traffic to <strong>Alpine01</strong> is allowed from <strong>any</strong> source, <strong>Alpine02</strong> cannot ping <strong>Alpine01</strong>. This is because <strong>Alpine02</strong> does not have a corresponding firewall rule permitting ICMP traffic for outbound communication.</p>
+<p>In <strong>NSX Distributed Firewall</strong>, firewall rules are evaluated <strong>twice</strong> for traffic between VMs managed by NSX:</p>
+<ol>
+<li><strong>At the source VM</strong>: Outbound traffic must match a rule that permits it to leave the VM.</li>
+<li><strong>At the destination VM</strong>: Inbound traffic must match a rule that permits it to reach the VM.</li>
+</ol>
+<p>This double-enforcement model ensures precise control over traffic flow but requires careful consideration when designing firewall policies. Both source and destination rules must be configured to allow traffic for successful communication.</p>
+<h3 id="using-the-nsx-traceflow-tool">Using the NSX Traceflow Tool</h3>
+<p>The <strong>Traceflow Tool</strong> in NSX provides an excellent way to visualize this behavior. By tracing packets, you can observe how traffic is evaluated and where it is blocked or allowed. In this scenario, Traceflow clearly demonstrates that traffic originating from <strong>Alpine02</strong> is blocked at the source due to the absence of an ICMP allow rule, even though the destination (<strong>Alpine01</strong>) has an allow rule.</p>
+<p>Understanding this double-enforcement logic is crucial for troubleshooting and optimizing NSX Distributed Firewall configurations.</p>
+</div>
+    </aside>
+
+<figure><a href="traceflow.png"><picture>
+          <source srcset="/nsx-apply-to/traceflow_hu6341709273789521671.webp" type="image/webp">
+          <source srcset="/nsx-apply-to/traceflow_hu1870482407599317965.jpg" type="image/jpeg">
+          <img src="/nsx-apply-to/traceflow_hu6341709273789521671.webp"alt="Traceflow"  width="1335"  height="849" />
+        </picture></a><figcaption>
+            <p>NSX Traceflow (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="answering-question-4-does-the-rule-applied-to-field-or-the-policy-applied-to-field-take-precedence">Answering Question 4: Does the Rule <code>&lt;Applied To&gt;</code> Field or the Policy <code>&lt;Applied To&gt;</code> Field Take Precedence?</h2>
+<p>Through our tests, we can confidently answer this question: <strong>The policy <code>&lt;Applied To&gt;</code> field takes precedence over the rule <code>&lt;Applied To&gt;</code> field</strong>.</p>
+<h3 id="key-findings">Key Findings:</h3>
+<ul>
+<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> defines the overall scope of enforcement. This means that if a VM or Security Group is excluded by the policy <code>&lt;Applied To&gt;</code> field, no rules from that policy will apply to it, regardless of the rule <code>&lt;Applied To&gt;</code> field.</li>
+<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> can further restrict enforcement within the scope defined by the policy, but it cannot expand the policy’s scope.</li>
+</ul>
+<h3 id="evidence">Evidence:</h3>
+<ul>
+<li>In <strong>Test 3</strong>, we demonstrated that even though the rule <code>&lt;Applied To&gt;</code> field was set to <strong>dFG_Alpine02</strong>, the rule was not applied to <strong>Alpine02</strong> because the policy <code>&lt;Applied To&gt;</code> field limited enforcement to <strong>dFG_Alpine01</strong>.</li>
+<li>This behavior clearly shows that the policy <code>&lt;Applied To&gt;</code> field is the deciding factor in scoping firewall rule enforcement.</li>
+</ul>
+<p>By understanding this precedence, administrators can better design their NSX firewall policies to avoid conflicts or unintended behavior.</p>
+<h2 id="why-use-applied-to-in-nsx">Why Use <code>&lt;Applied To&gt;</code> in NSX?</h2>
+<p>The <strong><code>&lt;Applied To&gt;</code></strong> field in NSX Distributed Firewall is a powerful tool that enables administrators to optimize rule enforcement and improve overall performance in their environments. While it might seem optional at first glance, there are several key reasons to leverage this feature:</p>
+<h3 id="1-optimizing-resource-usage">1. <strong>Optimizing Resource Usage</strong></h3>
+<p>By default, Distributed Firewall rules are applied to all ESXi hosts in the cluster, even if they are irrelevant to some workloads. Using the <code>&lt;Applied To&gt;</code> field allows you to:</p>
+<ul>
+<li><strong>Restrict rule enforcement</strong> to specific VMs, Security Groups, or segments.</li>
+<li>Reduce unnecessary rule propagation across unrelated hosts.</li>
+<li>Minimize the overhead of processing firewall rules.</li>
+</ul>
+<h3 id="2-enhancing-rule-clarity-and-management">2. <strong>Enhancing Rule Clarity and Management</strong></h3>
+<p>When <code>&lt;Applied To&gt;</code> is used correctly, it provides clear boundaries for where rules are enforced:</p>
+<ul>
+<li>It helps avoid confusion about which VMs are affected by specific rules.</li>
+<li>It simplifies troubleshooting by narrowing down the scope of rule application.</li>
+<li>It prevents accidental rule application to unintended workloads.</li>
+</ul>
+<h3 id="3-improving-security-posture">3. <strong>Improving Security Posture</strong></h3>
+<p>Restricting the scope of firewall rules reduces the attack surface:</p>
+<ul>
+<li>Only the VMs, segments, or groups explicitly defined in the <code>&lt;Applied To&gt;</code> field will be impacted by the rule.</li>
+<li>This minimizes the risk of unintentionally exposing unrelated workloads to less restrictive rules.</li>
+</ul>
+<h3 id="4-avoiding-overlap-and-rule-conflicts">4. <strong>Avoiding Overlap and Rule Conflicts</strong></h3>
+<p>In complex environments, rules can overlap or conflict, leading to unexpected behavior. By carefully defining <code>&lt;Applied To&gt;</code> fields:</p>
+<ul>
+<li>You ensure that rules are scoped to their intended targets, reducing the risk of conflicts.</li>
+<li>You can isolate specific rule sets for testing or special cases without affecting unrelated traffic.</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>While the <strong><code>&lt;Applied To&gt;</code></strong> field might add an extra layer of configuration, it plays a vital role in optimizing NSX Distributed Firewall performance, clarity, and security. By carefully designing and applying <code>&lt;Applied To&gt;</code> settings at both the policy and rule levels, administrators can achieve a more efficient, secure, and manageable firewall implementation.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>

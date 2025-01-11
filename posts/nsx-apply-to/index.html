@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="How Apply To works in NSX DFW and you can use it.">
+
+  <meta itemprop="name" content="How Apply To works in NSX DFW">
+  <meta itemprop="description" content="How Apply To works in NSX DFW and you can use it.">
+  <meta itemprop="datePublished" content="2025-01-11T02:00:00+01:00">
+  <meta itemprop="dateModified" content="2025-01-11T02:00:00+01:00">
+  <meta itemprop="wordCount" content="3342">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta itemprop="keywords" content="Nsx,Security,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-apply-to/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="How Apply To works in NSX DFW">
+  <meta property="og:description" content="How Apply To works in NSX DFW and you can use it.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-11T02:00:00+01:00">
+    <meta property="article:modified_time" content="2025-01-11T02:00:00+01:00">
+    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Security">
+    <meta property="article:tag" content="Vmware">
+    <meta property="og:image" content="https://sdn-warrior.org/images/logo.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta name="twitter:title" content="How Apply To works in NSX DFW">
+  <meta name="twitter:description" content="How Apply To works in NSX DFW and you can use it.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How Apply To works in NSX DFW",
+    "name": "How Apply To works in NSX DFW",
+    "description": "How Apply To works in NSX DFW and you can use it.",
+    "keywords": ["nsx", "security", "vmware"],
+    "articleBody": "Introduction When working with the NSX Distributed Firewall (DFW), one feature that often goes unnoticed or misunderstood is ‘Apply To’. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as ‘Apply To’ is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.\nIn many VMware training courses, ‘Apply To’ is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.\nIn this post, I aim to demystify the ‘Apply To’ feature. I will explore its functionality, demonstrate its practical use cases, and analyze how it impacts the behavior of firewall rules. By the end, you should have a solid understanding of how and when to use ‘Apply To’ effectively in your NSX environment.\nQuestions to Address To fully understand the ‘Apply To’ feature in the NSX Distributed Firewall, it is essential to examine its behavior under various scenarios. In this post, I will address the following questions:\nWhat happens if we use the field on the policy and set the rule as DFW?\nHow does this configuration affect the scope and enforcement of firewall rules?\nWhat will happen if we use a Security Group in the field in the rule, while the field in the policy is set as DFW?\nWhat interactions or overlaps should be expected between these configurations?\nWhat happens if we use security group1 in the policy field and security group2 in the rule field?\nHow do these overlapping or conflicting settings impact the rule application?\nDoes the field in the rule or the field in the policy take precedence?\nWhen both are defined, which one ultimately dictates the scope of rule enforcement?\nBy exploring these scenarios, I aim to clarify the nuanced behavior of the ‘Apply To’ feature and provide actionable insights for optimizing your NSX DFW configurations.\nPractical Demonstrations with CLI In addition to exploring the theoretical aspects of the ‘Apply To’ feature, I will use practical CLI commands to demonstrate where the rules are actually enforced within the NSX infrastructure. This hands-on approach will help you visualize and verify how ‘Apply To’ configurations are realized in practice.\nBy combining both conceptual explanations and practical examples, you will gain a deeper understanding of how to effectively use the ‘Apply To’ feature in real-world scenarios.\nTest Setup For this blog, I am using NSX version 4.2.2.1 to demonstrate the behavior of the ‘Apply To’ feature in the Distributed Firewall. The goal is to keep the setup simple yet effective for understanding how different configurations influence the enforcement of firewall rules.\nEnvironment Overview The test environment consists of three lightweight Linux virtual machines running Alpine:\nAlpine01: 10.10.20.10 Alpine02: 10.10.20.20 Alpine03: 10.10.20.30 (Control VM) All VMs reside on the same NSX segment, simplifying the network to focus on rule behavior and ensuring consistent connectivity between VMs. Notably, Alpine03 serves as a control VM and is not part of any NSX Security Group. This ensures it remains unaffected by specific ‘Apply To’ configurations, providing a baseline for comparison.\nSecurity Groups To organize and manage the test VMs, I have created the following NSX Security Groups:\ndFG_all_Alpine\nThis group includes Alpine01 and Alpine02. It represents all Alpine VMs involved in the main testing scenarios.\ndFG_Alpine01\nA dedicated Security Group for Alpine01, enabling granular control over rules specific to this VM.\ndFG_Alpine02\nA separate Security Group for Alpine02, allowing isolated configurations tailored to this VM.\nAlpine03 does not belong to any Security Group, making it a neutral VM for verifying how rules or configurations behave when no specific policies are applied. This provides a clear reference point to validate the impact of ‘Apply To’ settings.\nWhy Alpine03 as a Control VM? Having a control VM like Alpine03 ensures we have a clean baseline to compare against during the tests. By keeping it outside of any Security Group, we can confirm that any observed effects are solely due to the configurations applied to Alpine01 and Alpine02. This approach eliminates ambiguity and helps highlight the true behavior of the ‘Apply To’ feature.\nAdditional Tools for Validation To analyze the behavior further, I will use CLI commands such as summarize-dvfilter and vsipioctl getrules, as well as the NSX Traceflow tool. This combination ensures an in-depth understanding of where and how rules are enforced, both at the hypervisor and the network level.\nNaming Convention: A Recommended Best Practice As a personal convention, I prefix all custom Security Groups with dFG, which stands for Distributed Firewall Group. This prefix helps me quickly identify and differentiate groups used for NSX Distributed Firewall purposes from other objects in the environment.\nI strongly recommend adopting a consistent and meaningful naming scheme for your NSX environment. A clear structure not only improves day-to-day management but also prevents confusion in larger setups with potentially hundreds of objects. Whether you use prefixes like dFG or other naming conventions, the key is consistency.\nWhy Use a Single ESXi Host? Running both Alpine VMs on a single ESXi host is intentional. It allows me to leverage the ESXi CLI to show where and how the Distributed Firewall rules are realized during the tests. This provides deeper insights into the inner workings of the NSX DFW, bridging the gap between configuration in the NSX Manager and actual enforcement at the hypervisor level.\nThis setup offers a practical foundation to explore and analyze the ‘Apply To’ feature in detail, combining theoretical explanations with real-world CLI examples.\nVerification with CLI Tools To complement the theoretical understanding of the ‘Apply To’ feature, I will use practical CLI tools during the tests to demonstrate where and how firewall rules are enforced. This includes inspecting the ESXi host to see how the Distributed Firewall implements the configurations. Below are the CLI commands and tools I will use:\nsummarize-dvfilter | grep -A16 This command retrieves detailed information about the virtual NIC (vNIC) associated with a specific VM. By identifying the correct vNIC name (e.g., ), we can pinpoint the interface where the firewall rules are applied.\nvsipioctl getrules -f Once the vNIC name is identified, this command provides the complete list of firewall rules applied to that specific VM. This is a powerful way to verify the exact rules enforced at the hypervisor level.\nNSX Traceflow Tool\nIn addition to ESXi CLI commands, the NSX Traceflow tool can be used to simulate and trace packet flow through the network. This tool helps visualize the path packets take and how firewall rules affect traffic between VMs.\nPractical Workflow During the tests, the workflow will involve the following steps:\nUse the summarize-dvfilter command to locate the vNIC name for the VM being tested (e.g., Alpine01 or Alpine02). Retrieve the enforced firewall rules using vsipioctl getrules with the vNIC name as input. Validate the observed behavior using the NSX Traceflow tool to ensure that the rules are applied as expected and to simulate specific traffic flows for further analysis. These tools provide a hands-on approach to understanding how the ‘Apply To’ feature works, bridging the gap between configuration and real-world enforcement.\nTest 1: What Happens If We Use the Field on the Policy and Set the Rule as DFW? To begin our exploration of the ‘Apply To’ feature, we start with a simple scenario. In this test, I create a policy that allows ICMP traffic from any source to the Security Group dFG_all_Alpine. The ‘Apply To’ configuration is as follows:\nThe rule’s field is set to DFW (Distributed Firewall). The policy’s field is set to the Security Group dFG_all_Alpine. Configuration Details Policy:\nName: ICMP Allow Test Source: Any Destination: dFG_all_Alpine Service: ICMP Action: Allow : dFG_all_Alpine Rule:\n: DFW Expected Behavior In this configuration, the policy’s field limits the scope of the policy to the members of the dFG_all_Alpine group. However, because the rule’s field is set to DFW, the rule is distributed across all ESXi hosts in the cluster and evaluated for every packet that traverses the Distributed Firewall, regardless of whether the traffic involves the VMs in the dFG_all_Alpine group.\nThe expected result is that the rule is evaluated globally (due to DFW in the rule) but only enforced for traffic destined to the dFG_all_Alpine group (as defined in the policy’s ).\nTest Results Using the ESXi CLI, I collected the following details for the vNICs associated with each VM:\nAlpine01:\nPort: 67108887 vNIC name: nic-533240-eth0-vmware-sfw.2 Alpine02:\nPort: 67108888 vNIC name: nic-533279-eth0-vmware-sfw.2 Alpine03 (Control VM):\nPort: 67108889 vNIC name: nic-544799-eth0-vmware-sfw.2 Firewall Rules Observed Alpine01 (nic-533240-eth0-vmware-sfw.2) and Alpine02 (nic-533279-eth0-vmware-sfw.2):\nBoth VMs have the following rules applied: ruleset mainrs {\r# PRE_FILTER rules\rrule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;\r# FILTER (APP Category) rules\rrule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;\rrule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;\rrule 2 at 3 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations:\nICMP traffic is explicitly allowed (rule 10217) for both IPv4 and IPv6 from any source to the address set associated with dFG_all_Alpine. All other traffic is rejected (rule 2), demonstrating that the rules are scoped correctly to the policy’s field. Alpine02 (nic-533279-eth0-vmware-sfw.2): The rules applied to Alpine02 are identical to those observed for Alpine01\nAlpine03 (Control VM, nic-544799-eth0-vmware-sfw.2): ruleset mainrs {\r# FILTER (APP Category) rules\rrule 2 at 1 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations:\nOnly the default reject rule is applied. Since Alpine03 is not a member of dFG_all_Alpine, the policy does not apply to this VM, confirming that the field in the policy limits enforcement to the intended scope.\nConclusion for Test 1 The results confirm the expected behavior:\nThe policy’s field effectively limits the scope of enforcement to the Security Group dFG_all_Alpine. Although the rule’s field is set to DFW, rules are only applied to the VMs within the policy’s scope. The Control VM (Alpine03), which is outside the Security Group, does not have the ICMP allow rule applied, demonstrating the precision of the field. This test highlights that the policy-level field takes precedence in determining the enforcement scope, even when the rule is distributed globally across the cluster (via DFW).\nTest 2: What Will Happen If We Use a Security Group in the Field in the Rule and the Field in the Policy Is Set as DFW? In this scenario, I configure a policy to allow ICMP traffic from any source to the dFG_all_Alpine Security Group. However, this time I modify the field as follows:\nThe policy’s field is set to DFW (Distributed Firewall). The rule’s field is set to the Security Group dFG_Alpine01. Configuration Details Policy:\nName: ICMP Allow Test 2 Source: Any Destination: dFG_all_Alpine Service: ICMP Action: Allow : DFW Rule:\n: dFG_Alpine01 Expected Behavior This configuration introduces a more restrictive scope at the rule level:\nSince the rule’s field is set to dFG_Alpine01, it should only be enforced on the VMs in this group. The policy’s broader field (set to DFW) might still propagate the rule across all hosts, but actual enforcement should be limited to dFG_Alpine01 due to the rule-level restriction. Results Firewall Rules Observed Alpine01 (nic-533240-eth0-vmware-sfw.2):\nThe following rules were observed: ruleset mainrs {\r# PRE_FILTER rules\rrule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;\r# FILTER (APP Category) rules\rrule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;\rrule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;\rrule 2 at 3 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations:\nThe ICMP allow rule is enforced as expected, scoped to Alpine01, which is part of dFG_Alpine01.\nAlpine02 (nic-533279-eth0-vmware-sfw.2): The following rules were observed: ruleset mainrs {\r# FILTER (APP Category) rules\rrule 2 at 1 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations:\nThe ICMP allow rule is not applied to Alpine02, as it is not part of dFG_Alpine01.\nAlpine03 (Control VM, nic-544799-eth0-vmware-sfw.2): The following rules were observed: ruleset mainrs {\r# FILTER (APP Category) rules\rrule 2 at 1 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations:\nAs expected, no ICMP allow rule is applied since Alpine03 is not part of any relevant Security Group.\nTest 3: What Happens If We Use Security in the Policy Field and in the Rule Field? In this test, I explore the interaction between the fields at the policy and rule levels when they reference different Security Groups. The configuration is as follows:\nThe policy’s field is set to dFG_Alpine01. The rule’s field is set to dFG_Alpine02. The rule allows ICMP traffic from any source to the dFG_all_Alpine Security Group. Configuration Details Policy:\nName: ICMP Allow Test 3 Source: Any Destination: dFG_all_Alpine Service: ICMP Action: Allow : dFG_Alpine01 Rule:\n: dFG_Alpine02 Expected Behavior In this configuration, the policy’s field restricts the scope of the policy to dFG_Alpine01, which includes only Alpine01. However, the rule’s field is set to dFG_Alpine02, which includes only Alpine02.\nThe expected behavior is:\nThe policy’s field should dictate the overall scope, meaning the rule will only be enforced for members of dFG_Alpine01. Since the rule’s field is set to dFG_Alpine02, the rule will not be applied to Alpine02, as it is outside the policy’s scope. ICMP traffic from any source to dFG_all_Alpine will only be allowed for VMs within dFG_Alpine01. Test Results Firewall Rules Observed Alpine01 (nic-533240-eth0-vmware-sfw.2): ruleset mainrs {\r# PRE_FILTER rules\rrule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;\r# FILTER (APP Category) rules\rrule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;\rrule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;\rrule 2 at 3 inout protocol any from any to any reject with log tag 'debug';\r}\rruleset mainrs_L2 {\r# FILTER rules\rrule 1 at 1 inout ethertype any stateless from any to any accept;\r} Key Observations:\nICMP traffic (IPv4 and IPv6) is explicitly allowed (rule 10217) for Alpine01. This behavior aligns with the policy’s field, as Alpine01 is part of dFG_Alpine01.\nAlpine02 (nic-533279-eth0-vmware-sfw.2): ruleset mainrs {\r# PRE_FILTER rules\rrule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;\r# FILTER (APP Category) rules\rrule 2 at 1 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations: No ICMP allow rule is present for Alpine02, as it is not part of dFG_Alpine01, which is referenced in the policy’s field. All traffic is rejected at the main ruleset level (rule 2), confirming that the rule-level field (set to dFG_Alpine02) does not enforce the rule here.\nAlpine03 (Control VM, nic-544799-eth0-vmware-sfw.2): ruleset mainrs {\r# FILTER (APP Category) rules\rrule 2 at 1 inout protocol any from any to any reject with log tag 'debug';\r} Key Observations:\nThe only rule applied at the main ruleset level is a default reject rule (rule 2), which blocks all traffic. This confirms that no ICMP allow rule from the policy or rule is applied to Alpine03, as it is not part of dFG_Alpine01.\nImportant Note: Double Enforcement in NSX Distributed Firewall\rEven though traffic to Alpine01 is allowed from any source, Alpine02 cannot ping Alpine01. This is because Alpine02 does not have a corresponding firewall rule permitting ICMP traffic for outbound communication.\nIn NSX Distributed Firewall, firewall rules are evaluated twice for traffic between VMs managed by NSX:\nAt the source VM: Outbound traffic must match a rule that permits it to leave the VM. At the destination VM: Inbound traffic must match a rule that permits it to reach the VM. This double-enforcement model ensures precise control over traffic flow but requires careful consideration when designing firewall policies. Both source and destination rules must be configured to allow traffic for successful communication.\nUsing the NSX Traceflow Tool The Traceflow Tool in NSX provides an excellent way to visualize this behavior. By tracing packets, you can observe how traffic is evaluated and where it is blocked or allowed. In this scenario, Traceflow clearly demonstrates that traffic originating from Alpine02 is blocked at the source due to the absence of an ICMP allow rule, even though the destination (Alpine01) has an allow rule.\nUnderstanding this double-enforcement logic is crucial for troubleshooting and optimizing NSX Distributed Firewall configurations.\nNSX Traceflow (click to enlarge)\nAnswering Question 4: Does the Rule Field or the Policy Field Take Precedence? Through our tests, we can confidently answer this question: The policy field takes precedence over the rule field.\nKey Findings: The policy’s field defines the overall scope of enforcement. This means that if a VM or Security Group is excluded by the policy field, no rules from that policy will apply to it, regardless of the rule field. The rule’s field can further restrict enforcement within the scope defined by the policy, but it cannot expand the policy’s scope. Evidence: In Test 3, we demonstrated that even though the rule field was set to dFG_Alpine02, the rule was not applied to Alpine02 because the policy field limited enforcement to dFG_Alpine01. This behavior clearly shows that the policy field is the deciding factor in scoping firewall rule enforcement. By understanding this precedence, administrators can better design their NSX firewall policies to avoid conflicts or unintended behavior.\nWhy Use in NSX? The field in NSX Distributed Firewall is a powerful tool that enables administrators to optimize rule enforcement and improve overall performance in their environments. While it might seem optional at first glance, there are several key reasons to leverage this feature:\n1. Optimizing Resource Usage By default, Distributed Firewall rules are applied to all ESXi hosts in the cluster, even if they are irrelevant to some workloads. Using the field allows you to:\nRestrict rule enforcement to specific VMs, Security Groups, or segments. Reduce unnecessary rule propagation across unrelated hosts. Minimize the overhead of processing firewall rules. 2. Enhancing Rule Clarity and Management When is used correctly, it provides clear boundaries for where rules are enforced:\nIt helps avoid confusion about which VMs are affected by specific rules. It simplifies troubleshooting by narrowing down the scope of rule application. It prevents accidental rule application to unintended workloads. 3. Improving Security Posture Restricting the scope of firewall rules reduces the attack surface:\nOnly the VMs, segments, or groups explicitly defined in the field will be impacted by the rule. This minimizes the risk of unintentionally exposing unrelated workloads to less restrictive rules. 4. Avoiding Overlap and Rule Conflicts In complex environments, rules can overlap or conflict, leading to unexpected behavior. By carefully defining fields:\nYou ensure that rules are scoped to their intended targets, reducing the risk of conflicts. You can isolate specific rule sets for testing or special cases without affecting unrelated traffic. Conclusion While the field might add an extra layer of configuration, it plays a vital role in optimizing NSX Distributed Firewall performance, clarity, and security. By carefully designing and applying settings at both the policy and rule levels, administrators can achieve a more efficient, secure, and manageable firewall implementation.\n",
+    "wordCount" : "3342",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2025-01-11T02:00:00+01:00",
+    "dateModified": "2025-01-11T02:00:00+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/nsx-apply-to/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>How Apply To works in NSX DFW</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eb98efc18cb9c6a86651dce801c60b6d61ad5a37f7a6c35512028a9050e32033.css" integrity="sha256-65jvwYy5xqhmUdzoAcYLbWGtWjf3psNVEgKKkFDjIDM=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-apply-to%2f&amp;text=How%20Apply%20To%20works%20in%20NSX%20DFW" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-apply-to%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=How%20Apply%20To%20works%20in%20NSX%20DFW&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-apply-to%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-apply-to%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=How%20Apply%20To%20works%20in%20NSX%20DFW&amp;summary=How%20Apply%20To%20works%20in%20NSX%20DFW%2c%20by%20SDN-Warrior%0a%0aHow%20Apply%20To%20works%20in%20NSX%20DFW%20and%20you%20can%20use%20it.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;How Apply To works in NSX DFW&#34;,&#34;https://sdn-warrior.org/posts/nsx-apply-to/&#34;,&#34;How Apply To works in NSX DFW, by SDN-Warrior\n\nHow Apply To works in NSX DFW and you can use it.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jan 11, 2025</span></div>
+				<h1>How Apply To works in NSX DFW</h1>
+			</header>
+			<div class="post-info"><p>How Apply To works in NSX DFW and you can use it.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/security">security</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>3342 Words
+     Words // ReadTime
+    
+    
+    
+    15 Minutes, 11 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2025-01-11 02:00 &#43;0100</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>When working with the <strong>NSX Distributed Firewall (DFW)</strong>, one feature that often goes unnoticed or misunderstood is <strong>&lsquo;Apply To&rsquo;</strong>. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as <strong>&lsquo;Apply To&rsquo;</strong> is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.</p>
+<p>In many VMware training courses, <strong>&lsquo;Apply To&rsquo;</strong> is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.</p>
+<p>In this post, I aim to demystify the <strong>&lsquo;Apply To&rsquo;</strong> feature. I will explore its functionality, demonstrate its practical use cases, and analyze how it impacts the behavior of firewall rules. By the end, you should have a solid understanding of how and when to use <strong>&lsquo;Apply To&rsquo;</strong> effectively in your NSX environment.</p>
+<h2 id="questions-to-address">Questions to Address<a href="#questions-to-address" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To fully understand the <strong>&lsquo;Apply To&rsquo;</strong> feature in the NSX Distributed Firewall, it is essential to examine its behavior under various scenarios. In this post, I will address the following questions:</p>
+<ol>
+<li>
+<p><strong>What happens if we use the <code>&lt;Applied To&gt;</code> field on the policy and set the <code>&lt;Applied To&gt;</code> rule as DFW?</strong><br>
+How does this configuration affect the scope and enforcement of firewall rules?</p>
+</li>
+<li>
+<p><strong>What will happen if we use a Security Group in the <code>&lt;Applied To&gt;</code> field in the rule, while the <code>&lt;Applied To&gt;</code> field in the policy is set as DFW?</strong><br>
+What interactions or overlaps should be expected between these configurations?</p>
+</li>
+<li>
+<p><strong>What happens if we use <code>security group1</code> in the policy <code>&lt;Applied To&gt;</code> field and <code>security group2</code> in the rule <code>&lt;Applied To&gt;</code> field?</strong><br>
+How do these overlapping or conflicting settings impact the rule application?</p>
+</li>
+<li>
+<p><strong>Does the <code>&lt;Applied To&gt;</code> field in the rule or the <code>&lt;Applied To&gt;</code> field in the policy take precedence?</strong><br>
+When both are defined, which one ultimately dictates the scope of rule enforcement?</p>
+</li>
+</ol>
+<p>By exploring these scenarios, I aim to clarify the nuanced behavior of the <strong>&lsquo;Apply To&rsquo;</strong> feature and provide actionable insights for optimizing your NSX DFW configurations.</p>
+<h2 id="practical-demonstrations-with-cli">Practical Demonstrations with CLI<a href="#practical-demonstrations-with-cli" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In addition to exploring the theoretical aspects of the <strong>&lsquo;Apply To&rsquo;</strong> feature, I will use practical CLI commands to demonstrate where the rules are actually enforced within the NSX infrastructure. This hands-on approach will help you visualize and verify how <strong>&lsquo;Apply To&rsquo;</strong> configurations are realized in practice.</p>
+<p>By combining both conceptual explanations and practical examples, you will gain a deeper understanding of how to effectively use the <strong>&lsquo;Apply To&rsquo;</strong> feature in real-world scenarios.</p>
+<h2 id="test-setup">Test Setup<a href="#test-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>For this blog, I am using <strong>NSX version 4.2.2.1</strong> to demonstrate the behavior of the <strong>&lsquo;Apply To&rsquo;</strong> feature in the Distributed Firewall. The goal is to keep the setup simple yet effective for understanding how different configurations influence the enforcement of firewall rules.</p>
+<h3 id="environment-overview">Environment Overview<a href="#environment-overview" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The test environment consists of three lightweight Linux virtual machines running Alpine:</p>
+<ul>
+<li><strong>Alpine01</strong>: <code>10.10.20.10</code></li>
+<li><strong>Alpine02</strong>: <code>10.10.20.20</code></li>
+<li><strong>Alpine03</strong>: <code>10.10.20.30</code> (Control VM)</li>
+</ul>
+<p>All VMs reside on the <strong>same NSX segment</strong>, simplifying the network to focus on rule behavior and ensuring consistent connectivity between VMs. Notably, <strong>Alpine03</strong> serves as a control VM and is not part of any NSX Security Group. This ensures it remains unaffected by specific <strong>&lsquo;Apply To&rsquo;</strong> configurations, providing a baseline for comparison.</p>
+<h3 id="security-groups">Security Groups<a href="#security-groups" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To organize and manage the test VMs, I have created the following NSX Security Groups:</p>
+<ol>
+<li>
+<p><strong>dFG_all_Alpine</strong><br>
+This group includes <strong>Alpine01</strong> and <strong>Alpine02</strong>. It represents all Alpine VMs involved in the main testing scenarios.</p>
+</li>
+<li>
+<p><strong>dFG_Alpine01</strong><br>
+A dedicated Security Group for <strong>Alpine01</strong>, enabling granular control over rules specific to this VM.</p>
+</li>
+<li>
+<p><strong>dFG_Alpine02</strong><br>
+A separate Security Group for <strong>Alpine02</strong>, allowing isolated configurations tailored to this VM.</p>
+</li>
+</ol>
+<p><strong>Alpine03</strong> does not belong to any Security Group, making it a neutral VM for verifying how rules or configurations behave when no specific policies are applied. This provides a clear reference point to validate the impact of <strong>&lsquo;Apply To&rsquo;</strong> settings.</p>
+<h3 id="why-alpine03-as-a-control-vm">Why Alpine03 as a Control VM?<a href="#why-alpine03-as-a-control-vm" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Having a control VM like <strong>Alpine03</strong> ensures we have a clean baseline to compare against during the tests. By keeping it outside of any Security Group, we can confirm that any observed effects are solely due to the configurations applied to <strong>Alpine01</strong> and <strong>Alpine02</strong>. This approach eliminates ambiguity and helps highlight the true behavior of the <strong>&lsquo;Apply To&rsquo;</strong> feature.</p>
+<h3 id="additional-tools-for-validation">Additional Tools for Validation<a href="#additional-tools-for-validation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To analyze the behavior further, I will use CLI commands such as <strong><code>summarize-dvfilter</code></strong> and <strong><code>vsipioctl getrules</code></strong>, as well as the NSX <strong>Traceflow</strong> tool. This combination ensures an in-depth understanding of where and how rules are enforced, both at the hypervisor and the network level.</p>
+<h3 id="naming-convention-a-recommended-best-practice">Naming Convention: A Recommended Best Practice<a href="#naming-convention-a-recommended-best-practice" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>As a personal convention, I prefix all custom Security Groups with <strong>dFG</strong>, which stands for Distributed Firewall Group. This prefix helps me quickly identify and differentiate groups used for NSX Distributed Firewall purposes from other objects in the environment.</p>
+<p>I strongly recommend adopting a consistent and meaningful naming scheme for your NSX environment. A clear structure not only improves day-to-day management but also prevents confusion in larger setups with potentially hundreds of objects. Whether you use prefixes like <code>dFG</code> or other naming conventions, the key is consistency.</p>
+<h3 id="why-use-a-single-esxi-host">Why Use a Single ESXi Host?<a href="#why-use-a-single-esxi-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Running both Alpine VMs on a single ESXi host is intentional. It allows me to leverage the <strong>ESXi CLI</strong> to show where and how the Distributed Firewall rules are realized during the tests. This provides deeper insights into the inner workings of the NSX DFW, bridging the gap between configuration in the NSX Manager and actual enforcement at the hypervisor level.</p>
+<p>This setup offers a practical foundation to explore and analyze the <strong>&lsquo;Apply To&rsquo;</strong> feature in detail, combining theoretical explanations with real-world CLI examples.</p>
+<h3 id="verification-with-cli-tools">Verification with CLI Tools<a href="#verification-with-cli-tools" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To complement the theoretical understanding of the <strong>&lsquo;Apply To&rsquo;</strong> feature, I will use practical CLI tools during the tests to demonstrate where and how firewall rules are enforced. This includes inspecting the ESXi host to see how the Distributed Firewall implements the configurations. Below are the CLI commands and tools I will use:</p>
+<ol>
+<li>
+<p><strong><code>summarize-dvfilter | grep -A16 &lt;VMName&gt;</code></strong><br>
+This command retrieves detailed information about the virtual NIC (vNIC) associated with a specific VM. By identifying the correct vNIC name (e.g., <code>&lt;nic-XXXXXXX-eth0-vmware-sfw.2&gt;</code>), we can pinpoint the interface where the firewall rules are applied.</p>
+</li>
+<li>
+<p><strong><code>vsipioctl getrules -f &lt;name from the vNIC&gt;</code></strong><br>
+Once the vNIC name is identified, this command provides the complete list of firewall rules applied to that specific VM. This is a powerful way to verify the exact rules enforced at the hypervisor level.</p>
+</li>
+<li>
+<p><strong>NSX Traceflow Tool</strong><br>
+In addition to ESXi CLI commands, the NSX <strong>Traceflow</strong> tool can be used to simulate and trace packet flow through the network. This tool helps visualize the path packets take and how firewall rules affect traffic between VMs.</p>
+</li>
+</ol>
+<h3 id="practical-workflow">Practical Workflow<a href="#practical-workflow" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>During the tests, the workflow will involve the following steps:</p>
+<ol>
+<li>Use the <strong><code>summarize-dvfilter</code></strong> command to locate the vNIC name for the VM being tested (e.g., Alpine01 or Alpine02).</li>
+<li>Retrieve the enforced firewall rules using <strong><code>vsipioctl getrules</code></strong> with the vNIC name as input.</li>
+<li>Validate the observed behavior using the NSX Traceflow tool to ensure that the rules are applied as expected and to simulate specific traffic flows for further analysis.</li>
+</ol>
+<p>These tools provide a hands-on approach to understanding how the <strong>&lsquo;Apply To&rsquo;</strong> feature works, bridging the gap between configuration and real-world enforcement.</p>
+<h2 id="test-1-what-happens-if-we-use-the-applied-to-field-on-the-policy-and-set-the-applied-to-rule-as-dfw">Test 1: What Happens If We Use the <code>&lt;Applied To&gt;</code> Field on the Policy and Set the <code>&lt;Applied To&gt;</code> Rule as DFW?<a href="#test-1-what-happens-if-we-use-the-applied-to-field-on-the-policy-and-set-the-applied-to-rule-as-dfw" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To begin our exploration of the <strong>&lsquo;Apply To&rsquo;</strong> feature, we start with a simple scenario. In this test, I create a policy that allows <strong>ICMP traffic</strong> from <strong>any</strong> source to the Security Group <strong>dFG_all_Alpine</strong>. The <strong>&lsquo;Apply To&rsquo;</strong> configuration is as follows:</p>
+<ul>
+<li>The <strong>rule&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW (Distributed Firewall)</strong>.</li>
+<li>The <strong>policy&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to the Security Group <strong>dFG_all_Alpine</strong>.</li>
+</ul>
+<h3 id="configuration-details">Configuration Details<a href="#configuration-details" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>
+<p><strong>Policy</strong>:</p>
+<ul>
+<li>Name: <strong>ICMP Allow Test</strong></li>
+<li>Source: <strong>Any</strong></li>
+<li>Destination: <strong>dFG_all_Alpine</strong></li>
+<li>Service: <strong>ICMP</strong></li>
+<li>Action: <strong>Allow</strong></li>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_all_Alpine</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><code>&lt;Applied To&gt;</code>: <strong>DFW</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="expected-behavior">Expected Behavior<a href="#expected-behavior" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>In this configuration, the <strong>policy&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> limits the scope of the policy to the members of the <strong>dFG_all_Alpine</strong> group. However, because the <strong>rule&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW</strong>, the rule is distributed across all ESXi hosts in the cluster and evaluated for every packet that traverses the Distributed Firewall, regardless of whether the traffic involves the VMs in the <strong>dFG_all_Alpine</strong> group.</p>
+<p>The expected result is that the rule is <strong>evaluated globally</strong> (due to DFW in the rule) but <strong>only enforced</strong> for traffic destined to the <strong>dFG_all_Alpine</strong> group (as defined in the policy&rsquo;s <code>&lt;Applied To&gt;</code>).</p>
+<h3 id="test-results">Test Results<a href="#test-results" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Using the ESXi CLI, I collected the following details for the vNICs associated with each VM:</p>
+<ul>
+<li>
+<p><strong>Alpine01</strong>:</p>
+<ul>
+<li>Port: <code>67108887</code></li>
+<li>vNIC name: <code>nic-533240-eth0-vmware-sfw.2</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Alpine02</strong>:</p>
+<ul>
+<li>Port: <code>67108888</code></li>
+<li>vNIC name: <code>nic-533279-eth0-vmware-sfw.2</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Alpine03 (Control VM)</strong>:</p>
+<ul>
+<li>Port: <code>67108889</code></li>
+<li>vNIC name: <code>nic-544799-eth0-vmware-sfw.2</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="firewall-rules-observed">Firewall Rules Observed<a href="#firewall-rules-observed" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong> and <strong>Alpine02 (nic-533279-eth0-vmware-sfw.2)</strong>:<br>
+Both VMs have the following rules applied:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>ICMP traffic is explicitly allowed (rule 10217) for both IPv4 and IPv6 from any source to the address set associated with dFG_all_Alpine.
+All other traffic is rejected (rule 2), demonstrating that the rules are scoped correctly to the policy&rsquo;s <!-- raw HTML omitted --> field.
+Alpine02 (nic-533279-eth0-vmware-sfw.2):
+The rules applied to Alpine02 are identical to those observed for Alpine01</p>
+<ol start="2">
+<li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2)</strong>:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# FILTER (APP Category) rules
+rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>Only the default reject rule is applied. Since Alpine03 is not a member of dFG_all_Alpine, the policy does not apply to this VM, confirming that the <!-- raw HTML omitted --> field in the policy limits enforcement to the intended scope.</p>
+<p>Conclusion for Test 1
+The results confirm the expected behavior:</p>
+<p>The policy&rsquo;s <!-- raw HTML omitted --> field effectively limits the scope of enforcement to the Security Group dFG_all_Alpine.
+Although the rule&rsquo;s <!-- raw HTML omitted --> field is set to DFW, rules are only applied to the VMs within the policy&rsquo;s scope.
+The Control VM (Alpine03), which is outside the Security Group, does not have the ICMP allow rule applied, demonstrating the precision of the <!-- raw HTML omitted --> field.
+This test highlights that the policy-level <!-- raw HTML omitted --> field takes precedence in determining the enforcement scope, even when the rule is distributed globally across the cluster (via DFW).</p>
+<h2 id="test-2-what-will-happen-if-we-use-a-security-group-in-the-applied-to-field-in-the-rule-and-the-applied-to-field-in-the-policy-is-set-as-dfw">Test 2: What Will Happen If We Use a Security Group in the <code>&lt;Applied To&gt;</code> Field in the Rule and the <code>&lt;Applied To&gt;</code> Field in the Policy Is Set as DFW?<a href="#test-2-what-will-happen-if-we-use-a-security-group-in-the-applied-to-field-in-the-rule-and-the-applied-to-field-in-the-policy-is-set-as-dfw" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In this scenario, I configure a policy to allow <strong>ICMP traffic</strong> from <strong>any</strong> source to the <strong>dFG_all_Alpine</strong> Security Group. However, this time I modify the <strong><code>&lt;Applied To&gt;</code> field</strong> as follows:</p>
+<ul>
+<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW (Distributed Firewall)</strong>.</li>
+<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> is set to the Security Group <strong>dFG_Alpine01</strong>.</li>
+</ul>
+<h3 id="configuration-details-1">Configuration Details<a href="#configuration-details-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>
+<p><strong>Policy</strong>:</p>
+<ul>
+<li>Name: <strong>ICMP Allow Test 2</strong></li>
+<li>Source: <strong>Any</strong></li>
+<li>Destination: <strong>dFG_all_Alpine</strong></li>
+<li>Service: <strong>ICMP</strong></li>
+<li>Action: <strong>Allow</strong></li>
+<li><code>&lt;Applied To&gt;</code>: <strong>DFW</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_Alpine01</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="expected-behavior-1">Expected Behavior<a href="#expected-behavior-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>This configuration introduces a more restrictive scope at the <strong>rule</strong> level:</p>
+<ul>
+<li>Since the rule’s <code>&lt;Applied To&gt;</code> field is set to <strong>dFG_Alpine01</strong>, it should only be <strong>enforced on the VMs in this group</strong>.</li>
+<li>The policy’s broader <code>&lt;Applied To&gt;</code> field (set to <strong>DFW</strong>) might still propagate the rule across all hosts, but actual enforcement should be limited to <strong>dFG_Alpine01</strong> due to the rule-level restriction.</li>
+</ul>
+<h3 id="results">Results<a href="#results" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<h4 id="firewall-rules-observed-1">Firewall Rules Observed<a href="#firewall-rules-observed-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong>:<br>
+The following rules were observed:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>The ICMP allow rule is enforced as expected, scoped to Alpine01, which is part of dFG_Alpine01.</p>
+<ol start="2">
+<li><strong>Alpine02 (nic-533279-eth0-vmware-sfw.2):</strong>
+The following rules were observed:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# FILTER (APP Category) rules
+ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>The ICMP allow rule is not applied to Alpine02, as it is not part of dFG_Alpine01.</p>
+<ol start="3">
+<li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2):</strong>
+The following rules were observed:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+ # FILTER (APP Category) rules
+ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>As expected, no ICMP allow rule is applied since Alpine03 is not part of any relevant Security Group.</p>
+<h2 id="test-3-what-happens-if-we-use-security-group1-in-the-policy-applied-to-field-and-group2-in-the-rule-applied-to-field">Test 3: What Happens If We Use Security <code>&lt;group1&gt;</code> in the Policy <code>&lt;Applied To&gt;</code> Field and <code>&lt;group2&gt;</code> in the Rule <code>&lt;Applied To&gt;</code> Field?<a href="#test-3-what-happens-if-we-use-security-group1-in-the-policy-applied-to-field-and-group2-in-the-rule-applied-to-field" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In this test, I explore the interaction between the <code>&lt;Applied To&gt;</code> fields at the policy and rule levels when they reference different Security Groups. The configuration is as follows:</p>
+<ul>
+<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>dFG_Alpine01</strong>.</li>
+<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>dFG_Alpine02</strong>.</li>
+<li>The rule allows <strong>ICMP traffic</strong> from <strong>any</strong> source to the <strong>dFG_all_Alpine</strong> Security Group.</li>
+</ul>
+<h3 id="configuration-details-2">Configuration Details<a href="#configuration-details-2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>
+<p><strong>Policy</strong>:</p>
+<ul>
+<li>Name: <strong>ICMP Allow Test 3</strong></li>
+<li>Source: <strong>Any</strong></li>
+<li>Destination: <strong>dFG_all_Alpine</strong></li>
+<li>Service: <strong>ICMP</strong></li>
+<li>Action: <strong>Allow</strong></li>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_Alpine01</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><code>&lt;Applied To&gt;</code>: <strong>dFG_Alpine02</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="expected-behavior-2">Expected Behavior<a href="#expected-behavior-2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>In this configuration, the <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> restricts the scope of the policy to <strong>dFG_Alpine01</strong>, which includes only <strong>Alpine01</strong>. However, the <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>dFG_Alpine02</strong>, which includes only <strong>Alpine02</strong>.</p>
+<p>The expected behavior is:</p>
+<ol>
+<li>The policy’s <code>&lt;Applied To&gt;</code> field should dictate the overall scope, meaning the rule will only be <strong>enforced for members of dFG_Alpine01</strong>.</li>
+<li>Since the rule’s <code>&lt;Applied To&gt;</code> field is set to <strong>dFG_Alpine02</strong>, the rule will not be applied to <strong>Alpine02</strong>, as it is outside the policy’s scope.</li>
+<li>ICMP traffic from <strong>any source</strong> to <strong>dFG_all_Alpine</strong> will only be allowed for VMs within <strong>dFG_Alpine01</strong>.</li>
+</ol>
+<h3 id="test-results-1">Test Results<a href="#test-results-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<h4 id="firewall-rules-observed-2">Firewall Rules Observed<a href="#firewall-rules-observed-2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong>:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+ruleset mainrs_L2 {
+# FILTER rules
+rule 1 at 1 inout ethertype any stateless from any to any accept;
+}
+</code></pre><p>Key Observations:</p>
+<p>ICMP traffic (IPv4 and IPv6) is explicitly allowed (rule 10217) for Alpine01.
+This behavior aligns with the policy&rsquo;s <!-- raw HTML omitted --> field, as Alpine01 is part of dFG_Alpine01.</p>
+<ol start="2">
+<li><strong>Alpine02 (nic-533279-eth0-vmware-sfw.2):</strong></li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# PRE_FILTER rules
+rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+# FILTER (APP Category) rules
+rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:
+No ICMP allow rule is present for Alpine02, as it is not part of dFG_Alpine01, which is referenced in the policy&rsquo;s <!-- raw HTML omitted --> field.
+All traffic is rejected at the main ruleset level (rule 2), confirming that the rule-level <!-- raw HTML omitted --> field (set to dFG_Alpine02) does not enforce the rule here.</p>
+<ol start="3">
+<li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2)</strong>:</li>
+</ol>
+<pre tabindex="0"><code>ruleset mainrs {
+# FILTER (APP Category) rules
+rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+}
+</code></pre><p>Key Observations:</p>
+<p>The only rule applied at the main ruleset level is a default reject rule (rule 2), which blocks all traffic. This confirms that no ICMP allow rule from the policy or rule is applied to Alpine03, as it is not part of dFG_Alpine01.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Important Note: Double Enforcement in NSX Distributed Firewall</b>
+        </div>
+        <div class="admonition-content"><p>Even though traffic to <strong>Alpine01</strong> is allowed from <strong>any</strong> source, <strong>Alpine02</strong> cannot ping <strong>Alpine01</strong>. This is because <strong>Alpine02</strong> does not have a corresponding firewall rule permitting ICMP traffic for outbound communication.</p>
+<p>In <strong>NSX Distributed Firewall</strong>, firewall rules are evaluated <strong>twice</strong> for traffic between VMs managed by NSX:</p>
+<ol>
+<li><strong>At the source VM</strong>: Outbound traffic must match a rule that permits it to leave the VM.</li>
+<li><strong>At the destination VM</strong>: Inbound traffic must match a rule that permits it to reach the VM.</li>
+</ol>
+<p>This double-enforcement model ensures precise control over traffic flow but requires careful consideration when designing firewall policies. Both source and destination rules must be configured to allow traffic for successful communication.</p>
+<h3 id="using-the-nsx-traceflow-tool">Using the NSX Traceflow Tool<a href="#using-the-nsx-traceflow-tool" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The <strong>Traceflow Tool</strong> in NSX provides an excellent way to visualize this behavior. By tracing packets, you can observe how traffic is evaluated and where it is blocked or allowed. In this scenario, Traceflow clearly demonstrates that traffic originating from <strong>Alpine02</strong> is blocked at the source due to the absence of an ICMP allow rule, even though the destination (<strong>Alpine01</strong>) has an allow rule.</p>
+<p>Understanding this double-enforcement logic is crucial for troubleshooting and optimizing NSX Distributed Firewall configurations.</p>
+</div>
+    </aside>
+
+<figure><a href="traceflow.png"><picture>
+          <source srcset="/nsx-apply-to/traceflow_hu6341709273789521671.webp" type="image/webp">
+          <source srcset="/nsx-apply-to/traceflow_hu1870482407599317965.jpg" type="image/jpeg">
+          <img src="/nsx-apply-to/traceflow_hu6341709273789521671.webp"alt="Traceflow"  width="1335"  height="849" />
+        </picture></a><figcaption>
+            <p>NSX Traceflow (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="answering-question-4-does-the-rule-applied-to-field-or-the-policy-applied-to-field-take-precedence">Answering Question 4: Does the Rule <code>&lt;Applied To&gt;</code> Field or the Policy <code>&lt;Applied To&gt;</code> Field Take Precedence?<a href="#answering-question-4-does-the-rule-applied-to-field-or-the-policy-applied-to-field-take-precedence" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Through our tests, we can confidently answer this question: <strong>The policy <code>&lt;Applied To&gt;</code> field takes precedence over the rule <code>&lt;Applied To&gt;</code> field</strong>.</p>
+<h3 id="key-findings">Key Findings:<a href="#key-findings" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> defines the overall scope of enforcement. This means that if a VM or Security Group is excluded by the policy <code>&lt;Applied To&gt;</code> field, no rules from that policy will apply to it, regardless of the rule <code>&lt;Applied To&gt;</code> field.</li>
+<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> can further restrict enforcement within the scope defined by the policy, but it cannot expand the policy’s scope.</li>
+</ul>
+<h3 id="evidence">Evidence:<a href="#evidence" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>In <strong>Test 3</strong>, we demonstrated that even though the rule <code>&lt;Applied To&gt;</code> field was set to <strong>dFG_Alpine02</strong>, the rule was not applied to <strong>Alpine02</strong> because the policy <code>&lt;Applied To&gt;</code> field limited enforcement to <strong>dFG_Alpine01</strong>.</li>
+<li>This behavior clearly shows that the policy <code>&lt;Applied To&gt;</code> field is the deciding factor in scoping firewall rule enforcement.</li>
+</ul>
+<p>By understanding this precedence, administrators can better design their NSX firewall policies to avoid conflicts or unintended behavior.</p>
+<h2 id="why-use-applied-to-in-nsx">Why Use <code>&lt;Applied To&gt;</code> in NSX?<a href="#why-use-applied-to-in-nsx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The <strong><code>&lt;Applied To&gt;</code></strong> field in NSX Distributed Firewall is a powerful tool that enables administrators to optimize rule enforcement and improve overall performance in their environments. While it might seem optional at first glance, there are several key reasons to leverage this feature:</p>
+<h3 id="1-optimizing-resource-usage">1. <strong>Optimizing Resource Usage</strong><a href="#1-optimizing-resource-usage" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>By default, Distributed Firewall rules are applied to all ESXi hosts in the cluster, even if they are irrelevant to some workloads. Using the <code>&lt;Applied To&gt;</code> field allows you to:</p>
+<ul>
+<li><strong>Restrict rule enforcement</strong> to specific VMs, Security Groups, or segments.</li>
+<li>Reduce unnecessary rule propagation across unrelated hosts.</li>
+<li>Minimize the overhead of processing firewall rules.</li>
+</ul>
+<h3 id="2-enhancing-rule-clarity-and-management">2. <strong>Enhancing Rule Clarity and Management</strong><a href="#2-enhancing-rule-clarity-and-management" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>When <code>&lt;Applied To&gt;</code> is used correctly, it provides clear boundaries for where rules are enforced:</p>
+<ul>
+<li>It helps avoid confusion about which VMs are affected by specific rules.</li>
+<li>It simplifies troubleshooting by narrowing down the scope of rule application.</li>
+<li>It prevents accidental rule application to unintended workloads.</li>
+</ul>
+<h3 id="3-improving-security-posture">3. <strong>Improving Security Posture</strong><a href="#3-improving-security-posture" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Restricting the scope of firewall rules reduces the attack surface:</p>
+<ul>
+<li>Only the VMs, segments, or groups explicitly defined in the <code>&lt;Applied To&gt;</code> field will be impacted by the rule.</li>
+<li>This minimizes the risk of unintentionally exposing unrelated workloads to less restrictive rules.</li>
+</ul>
+<h3 id="4-avoiding-overlap-and-rule-conflicts">4. <strong>Avoiding Overlap and Rule Conflicts</strong><a href="#4-avoiding-overlap-and-rule-conflicts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>In complex environments, rules can overlap or conflict, leading to unexpected behavior. By carefully defining <code>&lt;Applied To&gt;</code> fields:</p>
+<ul>
+<li>You ensure that rules are scoped to their intended targets, reducing the risk of conflicts.</li>
+<li>You can isolate specific rule sets for testing or special cases without affecting unrelated traffic.</li>
+</ul>
+<h3 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>While the <strong><code>&lt;Applied To&gt;</code></strong> field might add an extra layer of configuration, it plays a vital role in optimizing NSX Distributed Firewall performance, clarity, and security. By carefully designing and applying <code>&lt;Applied To&gt;</code> settings at both the policy and rule levels, administrators can achieve a more efficient, secure, and manageable firewall implementation.</p>
+
+			</div>
+			
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/nsx-tep-groups/">More performance trough NSX Edge TEP groups?</a></li>
+	
+	<li><a href="/posts/nsx-edge-redeploy/">Redeploy an NSX Edge VM Appliance</a></li>
+	
+	<li><a href="/posts/nsx-qos/">How to use QoS in NSX</a></li>
+	
+	<li><a href="/posts/nsx4_2_1_1/">NSX 4.2.1.1 Hotfix Update</a></li>
+	
+	<li><a href="/posts/nsx-integration-fortigate/">NSX Integration Fortigate</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/nsx-tep-groups/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>More performance trough NSX Edge TEP groups?</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

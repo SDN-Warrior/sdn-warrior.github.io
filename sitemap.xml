@@ -2,25 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/posts/nsx-apply-to/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/nsx/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/security/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vmware/</loc>
+    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-tep-groups/</loc>
     <lastmod>2025-01-03T12:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/network/</loc>
-    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2025-01-03T12:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vmware/</loc>
     <lastmod>2025-01-03T12:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/quicktip/</loc>
@@ -123,9 +129,6 @@
     <lastmod>2024-08-26T19:49:23+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-integration-fortigate/</loc>
-    <lastmod>2024-08-26T19:49:23+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/security/</loc>
     <lastmod>2024-08-26T19:49:23+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-idfw-vdi/</loc>

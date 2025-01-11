@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 03 Jan 2025 12:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 11 Jan 2025 02:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How Apply To works in NSX DFW</title>
+      <link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
+      <pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;When working with the &lt;strong&gt;NSX Distributed Firewall (DFW)&lt;/strong&gt;, one feature that often goes unnoticed or misunderstood is &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt;. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.&lt;/p&gt;&#xA;&lt;p&gt;In many VMware training courses, &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>More performance trough NSX Edge TEP groups?</title>
       <link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
