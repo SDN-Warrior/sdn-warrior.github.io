@@ -370,8 +370,12 @@ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#3
 <p>Through our tests, we can confidently answer this question: <strong>The policy <code>&lt;Applied To&gt;</code> field takes precedence over the rule <code>&lt;Applied To&gt;</code> field</strong>.</p>
 <h3 id="key-findings">Key Findings:</h3>
 <ul>
-<li>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> defines the overall scope of enforcement. This means that if a VM or Security Group is excluded by the policy <code>&lt;Applied To&gt;</code> field, no rules from that policy will apply to it, regardless of the rule <code>&lt;Applied To&gt;</code> field.</li>
-<li>The <strong>rule’s <code>&lt;Applied To&gt;</code> field</strong> can further restrict enforcement within the scope defined by the policy, but it cannot expand the policy’s scope.</li>
+<li>
+<p>The <strong>policy’s <code>&lt;Applied To&gt;</code> field</strong> defines the overall scope of enforcement. This means that if a VM or Security Group is excluded by the policy <code>&lt;Applied To&gt;</code> field, no rules from that policy will apply to it, regardless of the rule <code>&lt;Applied To&gt;</code> field.</p>
+</li>
+<li>
+<p>The rule&rsquo;s “<!-- raw HTML omitted -->” field cannot further restrict or extend enforcement within the scope defined by the policy. It simply ignored.</p>
+</li>
 </ul>
 <h3 id="evidence">Evidence:</h3>
 <ul>
