@@ -132,8 +132,8 @@ In addition to ESXi CLI commands, the NSX <strong>Traceflow</strong> tool can be
 </li>
 </ol>
 <h3 id="expected-behavior">Expected Behavior</h3>
-<p>In this configuration, the <strong>policy&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> limits the scope of the policy to the members of the <strong>dFG_all_Alpine</strong> group. However, because the <strong>rule&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> is set to <strong>DFW</strong>, the rule is distributed across all ESXi hosts in the cluster and evaluated for every packet that traverses the Distributed Firewall, regardless of whether the traffic involves the VMs in the <strong>dFG_all_Alpine</strong> group.</p>
-<p>The expected result is that the rule is <strong>evaluated globally</strong> (due to DFW in the rule) but <strong>only enforced</strong> for traffic destined to the <strong>dFG_all_Alpine</strong> group (as defined in the policy&rsquo;s <code>&lt;Applied To&gt;</code>).</p>
+<p>In this configuration, the <strong>policy&rsquo;s <code>&lt;Applied To&gt;</code> field</strong> limits the scope of the policy to the members of the <strong>dFG_all_Alpine</strong> group.</p>
+<p>The expected result is that the rule is <strong>only enforced</strong> for traffic destined to the <strong>dFG_all_Alpine</strong> group (as defined in the policy&rsquo;s <code>&lt;Applied To&gt;</code>) even if the rule is set do <strong>DFW</strong>.</p>
 <h3 id="test-results">Test Results</h3>
 <p>Using the ESXi CLI, I collected the following details for the vNICs associated with each VM:</p>
 <ul>
@@ -190,8 +190,7 @@ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#3
 The results confirm the expected behavior:</p>
 <p>The policy&rsquo;s <!-- raw HTML omitted --> field effectively limits the scope of enforcement to the Security Group dFG_all_Alpine.
 Although the rule&rsquo;s <!-- raw HTML omitted --> field is set to DFW, rules are only applied to the VMs within the policy&rsquo;s scope.
-The Control VM (Alpine03), which is outside the Security Group, does not have the ICMP allow rule applied, demonstrating the precision of the <!-- raw HTML omitted --> field.
-This test highlights that the policy-level <!-- raw HTML omitted --> field takes precedence in determining the enforcement scope, even when the rule is distributed globally across the cluster (via DFW).</p>
+The Control VM (Alpine03), which is outside the Security Group, does not have the ICMP allow rule applied, demonstrating the precision of the <!-- raw HTML omitted --> field.</p>
 <h2 id="test-2-what-will-happen-if-we-use-a-security-group-in-the-applied-to-field-in-the-rule-and-the-applied-to-field-in-the-policy-is-set-as-dfw">Test 2: What Will Happen If We Use a Security Group in the <code>&lt;Applied To&gt;</code> Field in the Rule and the <code>&lt;Applied To&gt;</code> Field in the Policy Is Set as DFW?</h2>
 <p>In this scenario, I configure a policy to allow <strong>ICMP traffic</strong> from <strong>any</strong> source to the <strong>dFG_all_Alpine</strong> Security Group. However, this time I modify the <strong><code>&lt;Applied To&gt;</code> field</strong> as follows:</p>
 <ul>
@@ -222,7 +221,7 @@ This test highlights that the policy-level <!-- raw HTML omitted --> field takes
 <p>This configuration introduces a more restrictive scope at the <strong>rule</strong> level:</p>
 <ul>
 <li>Since the rule’s <code>&lt;Applied To&gt;</code> field is set to <strong>dFG_Alpine01</strong>, it should only be <strong>enforced on the VMs in this group</strong>.</li>
-<li>The policy’s broader <code>&lt;Applied To&gt;</code> field (set to <strong>DFW</strong>) might still propagate the rule across all hosts, but actual enforcement should be limited to <strong>dFG_Alpine01</strong> due to the rule-level restriction.</li>
+<li>The policy’s broader <code>&lt;Applied To&gt;</code> field (set to <strong>DFW</strong>) may lead you to assume that the policy and its rules are applied everywhere, but actual enforcement should be limited to <strong>dFG_Alpine01</strong> due to the rule-level restriction.</li>
 </ul>
 <h3 id="results">Results</h3>
 <h4 id="firewall-rules-observed-1">Firewall Rules Observed</h4>
@@ -412,7 +411,8 @@ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#3
 <li>You can isolate specific rule sets for testing or special cases without affecting unrelated traffic.</li>
 </ul>
 <h3 id="conclusion">Conclusion</h3>
-<p>While the <strong><code>&lt;Applied To&gt;</code></strong> field might add an extra layer of configuration, it plays a vital role in optimizing NSX Distributed Firewall performance, clarity, and security. By carefully designing and applying <code>&lt;Applied To&gt;</code> settings at both the policy and rule levels, administrators can achieve a more efficient, secure, and manageable firewall implementation.</p>
+<p>While the <strong><code>&lt;Applied To&gt;</code></strong> field might add an extra layer of configuration, it plays a vital role in optimizing NSX Distributed Firewall performance, clarity, and security. By carefully designing and applying <code>&lt;Applied To&gt;</code> settings at both the policy and rule levels, administrators can achieve a more efficient, secure, and manageable firewall implementation.
+In addition, there is a limit to the number of firewall rules that can be applied to an ESX host and to a virtual NIC. The current limits may change with the NSX version and can be looked up in the Configmax tool from Broadcom.</p>
 ]]></content>
 		</item>
 		
