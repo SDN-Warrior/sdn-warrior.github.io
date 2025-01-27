@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 14 Dec 2024 02:00:26 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jan 2025 23:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migration with HCX</title>
+      <link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
+      <pubDate>Mon, 27 Jan 2025 23:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved fixing a VCF project. Essential design errors had been made and the management domain and the workload domains were in a state not supported by VMware. The only solution was a redeployment with design adjustments. The challenges of this project lay in the requirement to adopt the existing networks without change while simultaneously reducing the downtime of the workloads to an absolute minimum. The solution was HCX and network extension.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Homelab V5</title>
       <link>https://sdn-warrior.org/posts/homelab-v5/</link>

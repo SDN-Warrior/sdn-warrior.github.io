@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hcx on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/hcx/</link>
+    <link>https://sdn-warrior.org/tags/hcx/</link>
     <description>Recent content in Hcx on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 19 Jan 2025 12:06:51 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/hcx/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Jan 2025 23:00:00 +0100</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/hcx/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Migration with HCX</title>
-      <link>http://localhost:1313/posts/migration-with-hcx/</link>
-      <pubDate>Sun, 19 Jan 2025 12:06:51 +0100</pubDate>
-      <guid>http://localhost:1313/posts/migration-with-hcx/</guid>
+      <link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
+      <pubDate>Mon, 27 Jan 2025 23:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved fixing a VCF project. Essential design errors had been made and the management domain and the workload domains were in a state not supported by VMware. The only solution was a redeployment with design adjustments. The challenges of this project lay in the requirement to adopt the existing networks without change while simultaneously reducing the downtime of the workloads to an absolute minimum. The solution was HCX and network extension.&lt;/p&gt;</description>
     </item>
   </channel>
