@@ -23,10 +23,6 @@
 <p>HCX covers several use cases:</p>
 <ul>
 <li>
-<p>Plan and install HCX, and the Multi-Site Service Mesh
-Build the initial secure pipeline between two connected VMware HCX sites, including connections between associated HCX services.</p>
-</li>
-<li>
 <p>Extend Networks with HCX
 Seamlessly extend vSphere and NSX network segments and retain the IP and MAC addresses of migrated VMs to accelerate consumption of modernized resources. Network Extension minimizes the need for complicated networking changes.</p>
 </li>
@@ -59,7 +55,7 @@ Protect data center applications and workloads through asynchronous replication 
 <p>For environments requiring NSX virtual networking, you must install and configure NSX, including integration with the vCenter Server, before deploying HCX Manager.</p>
 </li>
 <li>
-<p>In the destination environment, the NSX Manager must be installed and integrated with the vCenter Server.</p>
+<p>In the destination environment, the NSX Manager must be installed and connected to the vCenter Server.</p>
 </li>
 <li>
 <p>The NSX Manager must be registered during the HCX Manager install with the admin user.</p>
@@ -77,6 +73,57 @@ Protect data center applications and workloads through asynchronous replication 
 <p>In NSX-T deployments, the HCX supports integration with networking objects created with the NSX Simplified UI/API only.</p>
 </li>
 </ul>
+<h3 id="hcx-connector-and-hcx-cloud-installations">HCX Connector and HCX Cloud Installations</h3>
+<p>In HCX, there is a notion of an HCX source and an HCX destination environment. Depending on the environment, HCX provides a separate installer.</p>
+<ul>
+<li>
+<p><strong>HCX Connector:</strong>
+Use the HCX Connector with the vCenter Server containing the virtual machines that will be migrated.
+The HCX Connector is always an HCX source that connects to an HCX Cloud.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Note</b>
+        </div>
+        <div class="admonition-content">If the environment is also used as a destination for site pairing and Network Extension, use the HCX Cloud instead.
+Installations using OS Assisted Migration require HCX Connector at the source.</div>
+    </aside></p>
+</li>
+<li>
+<p><strong>HCX Cloud:</strong>
+Use the HCX Cloud installer with the vCenter Server that is the target of site pairing requests, network extensions, and virtual machine migrations. <br>
+The HCX Cloud can also serve as the source of a site pair in HCX cloud-to-cloud installations.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Note</b>
+        </div>
+        <div class="admonition-content">OS Assisted Migration does not support cloud-to-cloud installations. For OS Assisted Migration, you must have HCX Connector installed as the source.</div>
+    </aside></p>
+</li>
+</ul>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">If the HCX Cloud Manager is used at the source, NSX is required at the source.
+The HCX Cloud Manager installation carries higher requirements, but it can be both the source and the target for Site Pairing, HCX Network Extension operations and Service Mesh deployments.</div>
+    </aside>
 <h3 id="compute-ressources">Compute Ressources</h3>
 <table>
   <thead>
@@ -165,7 +212,7 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
    </svg></div><b>Free Ip Adresses</b>
         </div>
-        <div class="admonition-content">Note: I need one free IP in the MGMT network for each of the following: Pro Network Extension, HCX Appliane and Servicemesh (3 IPs). In the vMotion network, 1 IP is required per service mesh (if the vMotion network is not routed) and at least 1 uplink IP is required per service mesh. The HCX interface offers a calculator for the calculation.</div>
+        <div class="admonition-content">Note: I need one free IP in the MGMT network for each of the following: Pro Network Extension, HCX Appliane and Servicemesh (3 IPs). In the vMotion network, 1 IP is required per service mesh (if the vMotion network is not routed) and at least 1 uplink IP is required per service mesh. The HCX interface offers a calculator for the IP planning.</div>
     </aside>
 <h3 id="compute-profiles">Compute Profiles</h3>
 <p>The compute profiles in HCX are used to specify which HCX services, compute resources such as clusters or resource pools or networks are connected. You can also set CPU and memory reservations for the interconnect appliance. Depending on the HCX service, you have to assign several networks, e.g. management network, uplink networks, vMotion network and the network container. In my case, the network container is the overlay transport zone from my source NSX, as I want to migrate machines from one NSX environment to another NSX environment.</p>
