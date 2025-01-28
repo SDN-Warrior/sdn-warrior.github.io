@@ -7,14 +7,14 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 27 Jan 2025 23:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 28 Jan 2025 20:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Migration with HCX</title>
       <link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
-      <pubDate>Mon, 27 Jan 2025 23:00:00 +0100</pubDate>
+      <pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved fixing a VCF project. Essential design errors had been made and the management domain and the workload domains were in a state not supported by VMware. The only solution was a redeployment with design adjustments. The challenges of this project lay in the requirement to adopt the existing networks without change while simultaneously reducing the downtime of the workloads to an absolute minimum. The solution was HCX and network extension.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-hcx&#34;&gt;What is HCX?&lt;/h2&gt;&#xA;&lt;p&gt;VMware HCX is an application mobility platform designed to simplify application migration, workload redeployment, and disaster recovery in data centers and clouds.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How Apply To works in NSX DFW</title>
