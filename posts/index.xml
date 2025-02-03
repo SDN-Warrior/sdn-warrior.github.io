@@ -6,8 +6,68 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 28 Jan 2025 20:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Mon, 03 Feb 2025 21:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Jetkvm</title>
+			<link>https://sdn-warrior.org/posts/jetkvm/</link>
+			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
+			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
+			<content type="html"><![CDATA[<h2 id="jetkvm-a-kickstarter-project">JetKVM a Kickstarter Project</h2>
+<p>Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&rsquo;m only now getting to my conclusion and test.</p>
+
+<figure><picture>
+          <source srcset="/jetkvm/01_hu3408885197106195885.webp" type="image/webp">
+          <source srcset="/jetkvm/01_hu538479339649129077.jpeg" type="image/jpeg">
+          <img src="/jetkvm/01_hu3408885197106195885.webp"alt="JetKVM"  width="1200"  height="900" />
+        </picture><figcaption>
+            <p>JetKVM</p>
+          </figcaption></figure>
+<p>But first things first: what exactly is a KVM? In short, it stands for keyboard, video and mouse. The KVM allows me to control my computer remotely. This is very practical for my NUCs, as they do not have remote management and are permanently installed in my 19-inch rack. Since it is a network KVM, it can be controlled via the network, quite conveniently via the browser. In addition, JetKVM offers the option of a virtual “CD” drive, enabling remote installation of operating systems or data transfer via ISOs.</p>
+<h2 id="how-to-get-started">How to get started</h2>
+<p>The JetKVM package is relatively small. The slim box contains the JetKVM itself, a very, very short mini HDMI to HDMI cable, a USB A to C cable and a USB C power/data splitter cable. The JetKVM itself has only a small touchscreen display (which cannot be turned off), a mini HDMI port, a USB C port for data and power, a 100 Mbit RJ45 port and an RJ11 extension port for which separate modules will probably be available at a later date, for example to switch on a computer via ATX. That&rsquo;s it.</p>
+<h3 id="power-on-the-jetkvm">Power on the JetKVM</h3>
+<p>The most common way to power the JetKVM is through its USB-C port, which is connected directly to the computer you&rsquo;re controlling. It is also possible to use a USB-C Y-cable splitter that separates the power and data connections. This allows you to connect one cable to your remote host for data transfer, while powering the device from a separate 5V power supply, such as a phone charger. According to the manufacturer, it is also possible to supply the JetKVM with power via the RJ11 socket – however, I was unable to test this. In addition, an ATX extension is planned that would allow the JetKVM to be supplied with 5V directly via pin headers.</p>
+<p>While it looks very good on the power side, it looks rather thin on the network side. You definitely need a network with DHCP. There is currently no way to set a fixed IP address. Perhaps one of the numerous customized firmware versions that can be found on the internet offers such a possibility, but it does not work with the unmodified original software. As is usual with network KVMs, we only have a 100 Mbit port, which I will come back to later.</p>
+<p>After the JetKVM has booted up and obtained an IP address via DHCP, the interface greets us in bright white (no dark mode - put on sunglasses) and prompts us to assign a password. Congratulations – you have successfully set up your JetKVM.</p>
+<h3 id="settings">Settings</h3>
+<p>The settings are still relatively limited at the moment. You can check for updates, hide the mouse cursor (the local machine&rsquo;s cursor, not the one you are controlling), a mouse jiggler that is really super handy and you won&rsquo;t notice negatively, and a few quality settings. It is also relatively practical to adjust the EDID, so you can, for example, specify that you are sitting at a Dell monitor. This can help with incompatibilities. You can also specify a custom EDID. I have not tested the JetKVM Cloud and therefore cannot say anything about it. In principle, the focus was on the essentials. Most annoying is that the Relative Mouse Mode does not yet exist - thus the full screen mode is very unusable, because the mouse is in absolute mode and thus differs between local and remote computer in full screen mode, which makes control unnecessarily difficult.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/jetkvm/02_hu16506931579172957625.webp" type="image/webp">
+          <source srcset="/jetkvm/02_hu4251477325397887199.jpg" type="image/jpeg">
+          <img src="/jetkvm/02_hu16506931579172957625.webp"alt="JetKVM Settings"  width="2526"  height="1283" />
+        </picture></a><figcaption>
+            <p>JetKVM Settings (click to enlarge)</p>
+          </figcaption></figure>
+<p>Apart from the settings listed, you can enable or disable the local password. Enable Dev Channel updates or even unlock SSH to play around with the firmware and system yourself. There is also a small connection status page where you can see the round-trip time, jitter, packet loss and FPS. As expected, all this was great during my tests, even though my computer was on Wi-Fi – but it&rsquo;s not that difficult to transfer 100 Mbit stably over Wifi 6e.</p>
+<h3 id="other-features">Other Features</h3>
+<p>Now let&rsquo;s move on to the other features, and there are a few things to criticize. But let&rsquo;s start with the practical one first. There is a virtual keyboard and it always worked well for me. Especially handy if you need to get into a bios or you&rsquo;re a Mac user and can&rsquo;t just press CTRL+ALT+DEL (because you don&rsquo;t have DEL on your mechanical keyboard :D ). Since the JetKVM unfortunately can&rsquo;t turn on a PC remotely without the extension module, a Wake on Lan function was implemented. This worked well for me as long as the JetKVM was in the same VLAN as the PC. Since my Mikrotik switches can do that too, this is rather uninteresting for me and more of a nice to have. But now we come to the biggest annoyance: the virtual CD drive. Currently, only URL Mount is possible as an experimental feature, or ISOs previously uploaded to the JetKVM&rsquo;s internal storage. Streaming an ISO via the browser, as offered by iDRAC or other network KVM solutions, for example, is not yet possible. Uploading to the internal storage (13 GB free) takes a correspondingly long time over 100 Mbit. With a vCenter ISO, the internal storage is then already quite full.</p>
+
+<figure><picture>
+          <source srcset="/jetkvm/03_hu13962986892812406178.webp" type="image/webp">
+          <source srcset="/jetkvm/03_hu182312424286755608.jpg" type="image/jpeg">
+          <img src="/jetkvm/03_hu13962986892812406178.webp"alt="JetKVM Mount ISO"  width="702"  height="489" />
+        </picture><figcaption>
+            <p>JetKVM ISO mount</p>
+          </figcaption></figure>
+<p>To make matters worse, the whole thing then froze my Mac (the client I control via JetKVM) multiple times. To be fair, I also tested the whole thing with my Windows computer and inserted a Ubuntu Live DVD. Everything worked fine here. You can read from the internal memory at approx. 30 MB/s, which makes installation quite bearable. I hope that this will be improved in the near future and that it will then also work with my Mac at some point. Mounting the drive didn&rsquo;t always work either, and I had to restart the JetKVM once because something got stuck and the ISO was in an undefined state. I&rsquo;ve seen other systems that are more reliable and better.</p>
+<h2 id="the-good-the-bad-and-the-ugly">The good, the bad and the ugly</h2>
+<h3 id="the-good">The good</h3>
+<p>Let&rsquo;s start with the good. The interface is really tidy, very responsive and the latencies are fabulous. The 60 FPS are there and are maintained. The network connection is stable and the boot times are blazingly fast. You can even watch YouTube videos at 60 FPS without judder – crazy. Working is wonderful. If you have several systems that you can&rsquo;t access via RDP or other tools (for reasons 😉), it&rsquo;s great to work with. Writing emails, holding team calls, etc. Everything is easy. Also the price is fantastic. The feel and workmanship are top-notch. I didn&rsquo;t look at the inside. Plus, the software is 100% open source.</p>
+<h3 id="the-bad">The bad</h3>
+<p>That one of two JetKVMs was DOA and that I wasn&rsquo;t the only one on the manufacturer&rsquo;s Discord server I&rsquo;ll chalk up to ‘the bad’. To its credit, JetKVM&rsquo;s support was great, replacements were free, I could have even kept the defective unit - top-notch. However, I have already read from several that there are problems with a capacitor and therefore the JetKVMs can die and probably a few from the first batches were affected. Maybe I was unlucky, we&rsquo;ll see. The replacement delivery took about 4 weeks and came directly from China via a German selling agent. The lack of relative mouse mode is also quite a downer for me, as it makes working properly in full-screen mode (if you don&rsquo;t have a 16:9 format) quite annoying. In addition, the fact that there are no expansion modules yet to switch computers on and off via ATX is a bit annoying, especially in rack operation – ok, I knew that in advance. Hopefully something will come soon.</p>
+<h3 id="the-ugly">The ugly</h3>
+<p>Unfortunately, the biggest point of criticism currently has to do with the implementation of the virtual CD drive. Why it doesn&rsquo;t work properly on Mac is a mystery to me. I can live with the fact that URL Mount is still labelled as experimental. But I can&rsquo;t stream the ISO via the browser, which is a real downer. Uploading is painfully slow (no wonder at 100 Mbit) and space is also very limited. For larger installations, I would always prefer a USB stick or a small SSD. Installing an ESXi with it is not a problem, but it&rsquo;s not really fun. I hope this will be fixed soon.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Do I regret the purchase? Is JetKVM a kickstarter cashcrap? Hell no. The software is of course still in beta status and matures with the customer - if we are honest, we are used to nothing else. The power requirement of 0.6 watts in operation is terrific. Overall, I&rsquo;m satisfied and hope for the community or JetKVM for future software updates.</p>
+<p>I&rsquo;ll definitely write another article if missing features have been added or the JetKVM has stopped working.
+Time will tell whether the saying “all show and no substance” applies.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Migration with HCX</title>
