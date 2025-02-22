@@ -251,9 +251,9 @@
 <p>Identity based groups can only be used as a source for a firewall rule. In addition, the rules only come into effect after a successful logon to the client. Thus, normal dFW rules must be written for all communication that happens before the user logs on. This applies, for example, to Windows AD communication. The NSX Manager synchronises cyclically with the domain controllers. The default interval is 180 minutes. If changes are made to the group membership at short notice, a manual sync can be performed. Alternatively, the sync interval can also be shortened or extended. Using network introspection, the NSX Manager recognises when a user logs on to a client and can perform matching with the AD groups and thus add the client dynamically to the security group of the IDFW firewall rule.</p>
 
 <figure><picture>
-          <source srcset="/idfw/00_idfw_hu13340240812954672917.webp" type="image/webp">
-          <source srcset="/idfw/00_idfw_hu2021098600553032142.jpg" type="image/jpeg">
-          <img src="/idfw/00_idfw_hu13340240812954672917.webp"alt="Idendity Firewall function"  width="1782"  height="1164" />
+          <source srcset="/idfw/00_idfw_hu_bac15068c0d841d3.webp" type="image/webp">
+          <source srcset="/idfw/00_idfw_hu_964b72d338437915.jpg" type="image/jpeg">
+          <img src="/idfw/00_idfw_hu_bac15068c0d841d3.webp"alt="Idendity Firewall function"  width="1782"  height="1164" />
         </picture><figcaption>
             <p>Idendity Firewall function</p>
           </figcaption></figure>
@@ -261,9 +261,9 @@
 <p>Firstly, I start by customising the golden images of the VDI and installing NSX Guest Introspection. These are not installed by default and have to be installed explicitly. You can find them under VMware Device Driver – NSX Network Introspection. File Introspection is installed automatically.</p>
 
 <figure><picture>
-          <source srcset="/idfw/01_vmwaretools_hu10766174744744931261.webp" type="image/webp">
-          <source srcset="/idfw/01_vmwaretools_hu2019103790225014772.jpeg" type="image/jpeg">
-          <img src="/idfw/01_vmwaretools_hu10766174744744931261.webp"alt="VMware Tools"  width="555"  height="417" />
+          <source srcset="/idfw/01_vmwaretools_hu_4ebbf2048f289a20.webp" type="image/webp">
+          <source srcset="/idfw/01_vmwaretools_hu_3e58b2f4b42be85b.jpeg" type="image/jpeg">
+          <img src="/idfw/01_vmwaretools_hu_4ebbf2048f289a20.webp"alt="VMware Tools"  width="555"  height="417" />
         </picture><figcaption>
             <p>VMware Tools</p>
           </figcaption></figure>
@@ -271,18 +271,18 @@
 <p>This is done in the NSX Manager under System -&gt; Identity Firewall AD. Several domains can be entered so that multi-tenant setups can also be realised. The NSX Manager requires firewall activations and must be able to reach the domain controllers via LDAP or LDAPS. I strongly recommend the use of LDAPS. These settings can also be used to perform a manual sync or check the synchronisation status.</p>
 
 <figure><a href="02_nsx_idfw.jpeg"><picture>
-          <source srcset="/idfw/02_nsx_idfw_hu5496888141303419910.webp" type="image/webp">
-          <source srcset="/idfw/02_nsx_idfw_hu10295445750369093658.jpeg" type="image/jpeg">
-          <img src="/idfw/02_nsx_idfw_hu5496888141303419910.webp"alt="Idetity firewall AD settings"  width="1452"  height="465" />
+          <source srcset="/idfw/02_nsx_idfw_hu_b00fd488a8510e1a.webp" type="image/webp">
+          <source srcset="/idfw/02_nsx_idfw_hu_4f4d80bda7c1bf57.jpeg" type="image/jpeg">
+          <img src="/idfw/02_nsx_idfw_hu_b00fd488a8510e1a.webp"alt="Idetity firewall AD settings"  width="1452"  height="465" />
         </picture></a><figcaption>
             <p>Idetity firewall AD settings (click to enlarge)</p>
           </figcaption></figure>
 <p>Under LDAP Server you can set several domain controllers for the previously set up domain. The protocol used is also selected here. I use the Domain Administrator in my lab. In a productive environment, an LDAP bind user should always be used.</p>
 
 <figure><a href="03.jpeg"><picture>
-          <source srcset="/idfw/03_hu16733942988963753118.webp" type="image/webp">
-          <source srcset="/idfw/03_hu2839745583667809871.jpeg" type="image/jpeg">
-          <img src="/idfw/03_hu16733942988963753118.webp"alt="LDAP Server settings"  width="1160"  height="460" />
+          <source srcset="/idfw/03_hu_b4e39e1cee0248fa.webp" type="image/webp">
+          <source srcset="/idfw/03_hu_4ffcb5292d1f2369.jpeg" type="image/jpeg">
+          <img src="/idfw/03_hu_b4e39e1cee0248fa.webp"alt="LDAP Server settings"  width="1160"  height="460" />
         </picture></a><figcaption>
             <p>LDAP Server settings (click to enlarge)</p>
           </figcaption></figure>
@@ -300,9 +300,9 @@
 <p>After we have successfully setup and synchronised our domain, we only need to activate the Identity Firewall. By default, this feature is disabled (it is a free feature that is available with the NSX Firewall VCF add-on). To activate the Identity Firewall, go to Security -&gt; Distributed Firewall -&gt; Settings -&gt; Identity Firewall Settings and activate the identity firewall service button. Then we select the cluster on which we want to activate the service. Now we can get started.</p>
 
 <figure><a href="04.webp"><picture>
-          <source srcset="/idfw/04_hu12560464345806440685.webp" type="image/webp">
-          <source srcset="/idfw/04_hu11069272111777865810.jpg" type="image/jpeg">
-          <img src="/idfw/04_hu12560464345806440685.webp"alt="Distributed Firewall Settings"  width="1699"  height="792" />
+          <source srcset="/idfw/04_hu_dae2156eed25be54.webp" type="image/webp">
+          <source srcset="/idfw/04_hu_6ddab8f8debb026a.jpg" type="image/jpeg">
+          <img src="/idfw/04_hu_dae2156eed25be54.webp"alt="Distributed Firewall Settings"  width="1699"  height="792" />
         </picture></a><figcaption>
             <p>Distributed Firewall Settings (click to enlarge)</p>
           </figcaption></figure>
@@ -312,18 +312,18 @@
 <p>So we create our first LDAP user group. As with any group, we can do this either when creating the rules or in the inventory under Groups. The process is the same as for a normal Distributed Firewall Group, except that we don’t use tags but Distinguished Names, which can be conveniently selected or filtered from the synchronised AD elements.</p>
 
 <figure><a href="05.webp"><picture>
-          <source srcset="/idfw/05_hu16308509706422833611.webp" type="image/webp">
-          <source srcset="/idfw/05_hu13581943069617237554.jpg" type="image/jpeg">
-          <img src="/idfw/05_hu16308509706422833611.webp"alt="Security Groups"  width="1164"  height="977" />
+          <source srcset="/idfw/05_hu_4fb5c5eda755034e.webp" type="image/webp">
+          <source srcset="/idfw/05_hu_e5b4ef1fbf7d287.jpg" type="image/jpeg">
+          <img src="/idfw/05_hu_4fb5c5eda755034e.webp"alt="Security Groups"  width="1164"  height="977" />
         </picture></a><figcaption>
             <p>Security Groups (click to enlarge)</p>
           </figcaption></figure>
 <p>I also need at least one segment group and at least one group containing my target servers. The target servers are assigned to their groups via tags. The same applies to the segment group. To do this, I set one or more tags on the overlay segment and use this tag as a condition for group membership.</p>
 
 <figure><a href="06.webp"><picture>
-          <source srcset="/idfw/06_hu566842021385844307.webp" type="image/webp">
-          <source srcset="/idfw/06_hu1670820342853564742.jpg" type="image/jpeg">
-          <img src="/idfw/06_hu566842021385844307.webp"alt="Member selection"  width="1156"  height="964" />
+          <source srcset="/idfw/06_hu_b53d6b5cdca5a135.webp" type="image/webp">
+          <source srcset="/idfw/06_hu_30cabdd7b0d936cb.jpg" type="image/jpeg">
+          <img src="/idfw/06_hu_b53d6b5cdca5a135.webp"alt="Member selection"  width="1156"  height="964" />
         </picture></a><figcaption>
             <p>Member selection (click to enlarge)</p>
           </figcaption></figure>
@@ -332,9 +332,9 @@
 <p>For each identity firewall rule that allows traffic from a group of users to a destination, there must be a corresponding distributed firewall rule that allows traffic from a group of computers to the same destination specified in the identity firewall rule. We therefore need two firewall rules.</p>
 
 <figure><a href="07.webp"><picture>
-          <source srcset="/idfw/07_hu14371369714500250916.webp" type="image/webp">
-          <source srcset="/idfw/07_hu7421683099691664086.jpg" type="image/jpeg">
-          <img src="/idfw/07_hu14371369714500250916.webp"alt="Firewall Rules"  width="1630"  height="226" />
+          <source srcset="/idfw/07_hu_f45be384524d1b37.webp" type="image/webp">
+          <source srcset="/idfw/07_hu_4c8c3050aa8f549a.jpg" type="image/jpeg">
+          <img src="/idfw/07_hu_f45be384524d1b37.webp"alt="Firewall Rules"  width="1630"  height="226" />
         </picture></a><figcaption>
             <p>Firewall Rules (click to enlarge)</p>
           </figcaption></figure>
@@ -355,18 +355,18 @@
 <p>For testing, I log in to my VDI with the credentials of User1 and perform a TestNetConnection with Powershell. This is a simple and quick way to test TCP connections. I also open a share on the file server.</p>
 
 <figure><a href="08.webp"><picture>
-          <source srcset="/idfw/08_hu11227237490731539297.webp" type="image/webp">
-          <source srcset="/idfw/08_hu11206926558301644657.jpg" type="image/jpeg">
-          <img src="/idfw/08_hu11227237490731539297.webp"alt="Network test user 1"  width="1072"  height="627" />
+          <source srcset="/idfw/08_hu_a864416fe8a04b90.webp" type="image/webp">
+          <source srcset="/idfw/08_hu_a977631a54e3778c.jpg" type="image/jpeg">
+          <img src="/idfw/08_hu_a864416fe8a04b90.webp"alt="Network test user 1"  width="1072"  height="627" />
         </picture></a><figcaption>
             <p>Network test user 1 (click to enlarge)</p>
           </figcaption></figure>
 <p>The test was successful, both the TNC command and the actual opening of the file share worked. Now I’m running the same test on the same VDI (after it was recreated, because non-persistent VDI), only this time I’m using User2, which has no explicit firewall rules and is therefore blocked by my default cleanup rule. As expected, the traffic was successfully blocked.</p>
 
 <figure><a href="09.png"><picture>
-          <source srcset="/idfw/09_hu2338535551923653157.webp" type="image/webp">
-          <source srcset="/idfw/09_hu1977019721799240822.jpg" type="image/jpeg">
-          <img src="/idfw/09_hu2338535551923653157.webp"alt="Network test user 2"  width="993"  height="499" />
+          <source srcset="/idfw/09_hu_e60dd127af9cff83.webp" type="image/webp">
+          <source srcset="/idfw/09_hu_507c94b743a91bb8.jpg" type="image/jpeg">
+          <img src="/idfw/09_hu_e60dd127af9cff83.webp"alt="Network test user 2"  width="993"  height="499" />
         </picture></a><figcaption>
             <p>Network test user 2 (click to enlarge)</p>
           </figcaption></figure>
@@ -375,9 +375,9 @@
 <p>But there is light at the end of the tunnel. In NSX 4.X there is a session view of the active IDFW user session under Security -&gt; Security Overview -&gt; Configuration. All active sessions, UserIDs and VMs are displayed here, as well as the source of the information.</p>
 
 <figure><a href="10.png"><picture>
-          <source srcset="/idfw/10_hu10916967050054961034.webp" type="image/webp">
-          <source srcset="/idfw/10_hu10504170639179592038.jpg" type="image/jpeg">
-          <img src="/idfw/10_hu10916967050054961034.webp"alt="Active Sessions"  width="979"  height="278" />
+          <source srcset="/idfw/10_hu_592c97fbb2453d9a.webp" type="image/webp">
+          <source srcset="/idfw/10_hu_34db9845bce1cec3.jpg" type="image/jpeg">
+          <img src="/idfw/10_hu_592c97fbb2453d9a.webp"alt="Active Sessions"  width="979"  height="278" />
         </picture></a><figcaption>
             <p>Active Sessions (click to enlarge)</p>
           </figcaption></figure>

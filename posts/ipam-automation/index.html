@@ -300,7 +300,7 @@ This approach not only makes the automation workflow easier to manage but also a
 </span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;status&#34;: &#34;active&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;description&#34;: &#34;Created by Ansible&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;dns_name&#34;: &#34;{{ dns_name }}&#34;
-</span></span></span><span class="line"><span class="cl"><span class="sd">      }</span><span class="w">      
+</span></span></span><span class="line"><span class="cl"><span class="sd">      }</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">body_format</span><span class="p">:</span><span class="w"> </span><span class="l">json</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">status_code</span><span class="p">:</span><span class="w"> </span><span class="m">201</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">return_content</span><span class="p">:</span><span class="w"> </span><span class="kc">yes</span><span class="w">
@@ -315,7 +315,7 @@ This approach not only makes the automation workflow easier to manage but also a
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Add DNS A Record</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">win_shell</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
 </span></span></span></code></pre></div><h3 id="mp_dnsyml-my-masterplaybook">mp_dns.yml (my masterplaybook)<a href="#mp_dnsyml-my-masterplaybook" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
@@ -418,25 +418,25 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ansible-playbook mp_dns.yml -e &#34;prefix=192.168.2.0/24 dns_name=hello-world.lab.home&#34;
 </span></span></code></pre></div>
 <figure><a href="output.png"><picture>
-          <source srcset="/ipam-automation/output_hu17735082299749069346.webp" type="image/webp">
-          <source srcset="/ipam-automation/output_hu2134898282273478624.jpg" type="image/jpeg">
-          <img src="/ipam-automation/output_hu17735082299749069346.webp"alt="Ansible output"  width="1003"  height="610" />
+          <source srcset="/ipam-automation/output_hu_7752d8d5f03c91dd.webp" type="image/webp">
+          <source srcset="/ipam-automation/output_hu_ea47df4f16963352.jpg" type="image/jpeg">
+          <img src="/ipam-automation/output_hu_7752d8d5f03c91dd.webp"alt="Ansible output"  width="1003"  height="610" />
         </picture></a><figcaption>
             <p>Ansible output (click to enlarge)</p>
           </figcaption></figure>
 
 <figure><a href="netbox.png"><picture>
-          <source srcset="/ipam-automation/netbox_hu16384549009619117197.webp" type="image/webp">
-          <source srcset="/ipam-automation/netbox_hu10090990778334734330.jpg" type="image/jpeg">
-          <img src="/ipam-automation/netbox_hu16384549009619117197.webp"alt="Netbox"  width="1447"  height="489" />
+          <source srcset="/ipam-automation/netbox_hu_5a9c655f60b501f3.webp" type="image/webp">
+          <source srcset="/ipam-automation/netbox_hu_f33cf96e3a093cc5.jpg" type="image/jpeg">
+          <img src="/ipam-automation/netbox_hu_5a9c655f60b501f3.webp"alt="Netbox"  width="1447"  height="489" />
         </picture></a><figcaption>
             <p>Netbox (click to enlarge)</p>
           </figcaption></figure>
 
 <figure><a href="dns.png"><picture>
-          <source srcset="/ipam-automation/dns_hu12209689906728532248.webp" type="image/webp">
-          <source srcset="/ipam-automation/dns_hu11255499409238053450.jpg" type="image/jpeg">
-          <img src="/ipam-automation/dns_hu12209689906728532248.webp"alt="DNS"  width="404"  height="455" />
+          <source srcset="/ipam-automation/dns_hu_f5c8b68f5084f99d.webp" type="image/webp">
+          <source srcset="/ipam-automation/dns_hu_7952122eb13af7fa.jpg" type="image/jpeg">
+          <img src="/ipam-automation/dns_hu_f5c8b68f5084f99d.webp"alt="DNS"  width="404"  height="455" />
         </picture></a><figcaption>
             <p>DNS (click to enlarge)</p>
           </figcaption></figure>
@@ -464,7 +464,7 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 </span></span></span><span class="line"><span class="cl"><span class="sd">    $hostname = &#34;{{ zdns_host }}.{{ zdns_zone }}&#34;
 </span></span></span><span class="line"><span class="cl"><span class="sd">    $reverseZone = (&#34;{0}.{1}.{2}.in-addr.arpa&#34; -f $ip.Split(&#34;.&#34;)[2], $ip.Split(&#34;.&#34;)[1], $ip.Split(&#34;.&#34;)[0])
 </span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;
-</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordPtr -ZoneName $reverseZone -Name ($ip.Split(&#34;.&#34;)[3]) -PtrDomainName &#34;$hostname.$zoneName&#34; </span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordPtr -ZoneName $reverseZone -Name ($ip.Split(&#34;.&#34;)[3]) -PtrDomainName &#34;$hostname.$zoneName&#34; </span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
 </span></span></span></code></pre></div>

@@ -20,9 +20,9 @@
 <p>Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&rsquo;m only now getting to my conclusion and test.</p>
 
 <figure><picture>
-          <source srcset="/jetkvm/01_hu3408885197106195885.webp" type="image/webp">
-          <source srcset="/jetkvm/01_hu538479339649129077.jpeg" type="image/jpeg">
-          <img src="/jetkvm/01_hu3408885197106195885.webp"alt="JetKVM"  width="1200"  height="900" />
+          <source srcset="/jetkvm/01_hu_7cd1910a4daca412.webp" type="image/webp">
+          <source srcset="/jetkvm/01_hu_78a4d3b8620f7d83.jpeg" type="image/jpeg">
+          <img src="/jetkvm/01_hu_7cd1910a4daca412.webp"alt="JetKVM"  width="1200"  height="900" />
         </picture><figcaption>
             <p>JetKVM</p>
           </figcaption></figure>
@@ -37,9 +37,9 @@
 <p>The settings are still relatively limited at the moment. You can check for updates, hide the mouse cursor (the local machine&rsquo;s cursor, not the one you are controlling), a mouse jiggler that is really super handy and you won&rsquo;t notice negatively, and a few quality settings. It is also relatively practical to adjust the EDID, so you can, for example, specify that you are sitting at a Dell monitor. This can help with incompatibilities. You can also specify a custom EDID. I have not tested the JetKVM Cloud and therefore cannot say anything about it. In principle, the focus was on the essentials. Most annoying is that the Relative Mouse Mode does not yet exist - thus the full screen mode is very unusable, because the mouse is in absolute mode and thus differs between local and remote computer in full screen mode, which makes control unnecessarily difficult.</p>
 
 <figure><a href="02.png"><picture>
-          <source srcset="/jetkvm/02_hu16506931579172957625.webp" type="image/webp">
-          <source srcset="/jetkvm/02_hu4251477325397887199.jpg" type="image/jpeg">
-          <img src="/jetkvm/02_hu16506931579172957625.webp"alt="JetKVM Settings"  width="2526"  height="1283" />
+          <source srcset="/jetkvm/02_hu_6134684836700a5b.webp" type="image/webp">
+          <source srcset="/jetkvm/02_hu_afe0594644ae58dd.jpg" type="image/jpeg">
+          <img src="/jetkvm/02_hu_6134684836700a5b.webp"alt="JetKVM Settings"  width="2526"  height="1283" />
         </picture></a><figcaption>
             <p>JetKVM Settings (click to enlarge)</p>
           </figcaption></figure>
@@ -48,9 +48,9 @@
 <p>Now let&rsquo;s move on to the other features, and there are a few things to criticize. But let&rsquo;s start with the practical one first. There is a virtual keyboard and it always worked well for me. Especially handy if you need to get into a bios or you&rsquo;re a Mac user and can&rsquo;t just press CTRL+ALT+DEL (because you don&rsquo;t have DEL on your mechanical keyboard 😄). Since the JetKVM unfortunately can&rsquo;t turn on a PC remotely without the extension module, a Wake on Lan function was implemented. This worked well for me as long as the JetKVM was in the same VLAN as the PC. Since my Mikrotik switches can do that too, this is rather uninteresting for me and more of a nice to have. But now we come to the biggest annoyance: the virtual CD drive. Currently, only URL Mount is possible as an experimental feature, or ISOs previously uploaded to the JetKVM&rsquo;s internal storage. Streaming an ISO via the browser, as offered by iDRAC or other network KVM solutions, for example, is not yet possible. Uploading to the internal storage (13 GB free) takes a correspondingly long time over 100 Mbit. With a vCenter ISO, the internal storage is then already quite full.</p>
 
 <figure><picture>
-          <source srcset="/jetkvm/03_hu13962986892812406178.webp" type="image/webp">
-          <source srcset="/jetkvm/03_hu182312424286755608.jpg" type="image/jpeg">
-          <img src="/jetkvm/03_hu13962986892812406178.webp"alt="JetKVM Mount ISO"  width="702"  height="489" />
+          <source srcset="/jetkvm/03_hu_21a7357a6b852c04.webp" type="image/webp">
+          <source srcset="/jetkvm/03_hu_89cbd573b20026d2.jpg" type="image/jpeg">
+          <img src="/jetkvm/03_hu_21a7357a6b852c04.webp"alt="JetKVM Mount ISO"  width="702"  height="489" />
         </picture><figcaption>
             <p>JetKVM ISO mount</p>
           </figcaption></figure>
@@ -234,9 +234,9 @@ The HCX Cloud Manager installation carries higher requirements, but it can be bo
 The HCX appliance must have access to the NSX manager, the vCenter must be configured, the public access URL (in my case only internally resolvable) and the SSO domain (vCenter). After successful configuration, you can log in to the HCX appliance with the vCenter credentials. The local admin account only works on the HCX management interface.</p>
 
 <figure><a href="hcx01.png"><picture>
-          <source srcset="/hcx/hcx01_hu3247103954367029356.webp" type="image/webp">
-          <source srcset="/hcx/hcx01_hu14048880874153927098.jpg" type="image/jpeg">
-          <img src="/hcx/hcx01_hu3247103954367029356.webp"alt="HCX settings"  width="1720"  height="804" />
+          <source srcset="/hcx/hcx01_hu_fa9d59191baaf0dd.webp" type="image/webp">
+          <source srcset="/hcx/hcx01_hu_bcdd838100517175.jpg" type="image/jpeg">
+          <img src="/hcx/hcx01_hu_fa9d59191baaf0dd.webp"alt="HCX settings"  width="1720"  height="804" />
         </picture></a><figcaption>
             <p>HCX settings (click to enlarge)</p>
           </figcaption></figure>
@@ -246,9 +246,9 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>A Site Pair establishes the connection needed for management, authentication, and orchestration of HCX services across a source and destination environment. To create a new site pair, we need the remote HCX URL, which was configured when deploying the HCX appliance. This must be resolvable via the management network. You also need a vCenter user in the target environment who has sufficient permissions. In my lab I use the vsphere.local administrator. This is of course not best practice and should be adapted in a productive environment.</p>
 
 <figure><a href="hcx04.png"><picture>
-          <source srcset="/hcx/hcx04_hu8755679497584188714.webp" type="image/webp">
-          <source srcset="/hcx/hcx04_hu15424795913967853680.jpg" type="image/jpeg">
-          <img src="/hcx/hcx04_hu8755679497584188714.webp"alt="HCX Site Pair"  width="1496"  height="641" />
+          <source srcset="/hcx/hcx04_hu_507719aef7a6bb30.webp" type="image/webp">
+          <source srcset="/hcx/hcx04_hu_8dd9fb315ab85b69.jpg" type="image/jpeg">
+          <img src="/hcx/hcx04_hu_507719aef7a6bb30.webp"alt="HCX Site Pair"  width="1496"  height="641" />
         </picture></a><figcaption>
             <p>HCX Site Pair (click to enlarge)</p>
           </figcaption></figure>
@@ -256,9 +256,9 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>After the Site Pair, I set up the network profiles for the interconnect. These profiles allow me to determine the IP addresses and networks. Depending on the setup and service, you need different networks here. In my customer scenario, I can manage with two networks. One profile for management traffic, which I use to access the vCenter and the NSX Manager from environment A. The second network is for the actual uplink connection. In my lab I have 2 uplink networks for testing, so the screenshots may differ slightly. I select the appropriate distributed port group and assign a free IP range. You can define the HCX traffic type, but this is only used as a suggestion in the compute profile. Just because I mark a network profile as an HCX uplink doesn&rsquo;t mean it has to be used as an uplink. It only serves to mark the networks for easier configuration in the compute profile. The vMotion network is routed in my lab. If this is not possible, you can also configure direct access to the vMotion network for the HCX appliance via the network profiles. This is necessary if the vMotion network cannot be routed.</p>
 
 <figure><a href="hcx02.png"><picture>
-          <source srcset="/hcx/hcx02_hu246607691319807964.webp" type="image/webp">
-          <source srcset="/hcx/hcx02_hu11234734732147992267.jpg" type="image/jpeg">
-          <img src="/hcx/hcx02_hu246607691319807964.webp"alt="HCX network profiles settings"  width="1504"  height="821" />
+          <source srcset="/hcx/hcx02_hu_27a68acf699f2ec.webp" type="image/webp">
+          <source srcset="/hcx/hcx02_hu_3291e40e92a3be10.jpg" type="image/jpeg">
+          <img src="/hcx/hcx02_hu_27a68acf699f2ec.webp"alt="HCX network profiles settings"  width="1504"  height="821" />
         </picture></a><figcaption>
             <p>HCX network profiles settings (click to enlarge)</p>
           </figcaption></figure>
@@ -278,9 +278,9 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>The compute profiles in HCX are used to specify which HCX services, compute resources such as clusters or resource pools or networks are connected. You can also set CPU and memory reservations for the interconnect appliance. Depending on the HCX service, you have to assign several networks, e.g. management network, uplink networks, vMotion network and the network container. In my case, the network container is the overlay transport zone from my source NSX, as I want to migrate machines from one NSX environment to another NSX environment.</p>
 
 <figure><a href="hcx03.png"><picture>
-          <source srcset="/hcx/hcx03_hu5755595554046282005.webp" type="image/webp">
-          <source srcset="/hcx/hcx03_hu807890395866389233.jpg" type="image/jpeg">
-          <img src="/hcx/hcx03_hu5755595554046282005.webp"alt="HCX Compute profiles settings"  width="1355"  height="937" />
+          <source srcset="/hcx/hcx03_hu_defde22a62987bc9.webp" type="image/webp">
+          <source srcset="/hcx/hcx03_hu_501be16b5d0f95e8.jpg" type="image/jpeg">
+          <img src="/hcx/hcx03_hu_defde22a62987bc9.webp"alt="HCX Compute profiles settings"  width="1355"  height="937" />
         </picture></a><figcaption>
             <p>HCX Compute profiles settings (click to enlarge)</p>
           </figcaption></figure>
@@ -289,9 +289,9 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>In the service mesh, compute profiles, HCX services and advanced configurations such as MTU for uplink links or the number of appliances for the network extension are defined and assigned. After I have configured the service mesh, the interconnect VMs are automatically deployed at both HCX locations.</p>
 
 <figure><a href="hcx05.png"><picture>
-          <source srcset="/hcx/hcx05_hu477802228980890625.webp" type="image/webp">
-          <source srcset="/hcx/hcx05_hu637616017126372133.jpg" type="image/jpeg">
-          <img src="/hcx/hcx05_hu477802228980890625.webp"alt="HCX Service Mesh"  width="2019"  height="611" />
+          <source srcset="/hcx/hcx05_hu_cec88bd2f0a21050.webp" type="image/webp">
+          <source srcset="/hcx/hcx05_hu_b8c5cb0a35e994d6.jpg" type="image/jpeg">
+          <img src="/hcx/hcx05_hu_cec88bd2f0a21050.webp"alt="HCX Service Mesh"  width="2019"  height="611" />
         </picture></a><figcaption>
             <p>HCX Service Mesh (click to enlarge)</p>
           </figcaption></figure>
@@ -389,9 +389,9 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>With the network extension in HCX, layer-2 networks can be extended between the source and target environments without having to change the IP addressing of the workloads. This allows virtual machines to be seamlessly migrated while maintaining their existing network connection and connectivity, and is a prerequisite for a “zero” downtime migration. To create a layer 2 stretch via the network extension, I just have to click on <strong>Network Extension</strong> &raquo; <strong>Create a Network Extension</strong> and select my network that I want to stretch to the other location via HCX. Here I can only choose from networks in my previously configured network container. In my case, these are the networks from my NSX.</p>
 
 <figure><a href="hcx06.png"><picture>
-          <source srcset="/hcx/hcx06_hu1336655658149488451.webp" type="image/webp">
-          <source srcset="/hcx/hcx06_hu11255365340009955294.jpg" type="image/jpeg">
-          <img src="/hcx/hcx06_hu1336655658149488451.webp"alt="HCX Network Extension"  width="1651"  height="1043" />
+          <source srcset="/hcx/hcx06_hu_875e10bf44e7af5c.webp" type="image/webp">
+          <source srcset="/hcx/hcx06_hu_911668d32bc13d86.jpg" type="image/jpeg">
+          <img src="/hcx/hcx06_hu_875e10bf44e7af5c.webp"alt="HCX Network Extension"  width="1651"  height="1043" />
         </picture></a><figcaption>
             <p>HCX Network Extension (click to enlarge)</p>
           </figcaption></figure>
@@ -412,9 +412,9 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>The sink port on the HCX Network Extension serves as the endpoint for the extended Layer 2 traffic between the source and target environments. It is configured on the source and target sides to receive and send the incoming traffic from the extended network. This can be easily seen on the segment ports in the NSX of the HCX appliance. This is where MAC/IP bindings are exchanged between VMs. If you look at the destination side, you will see (provided that the source VMs are generating traffic) the IP/MAC bindings of the VMs on the source segment on the sink port and vice versa for VMs that have already been migrated to the destination side.</p>
 
 <figure><a href="hcx07.png"><picture>
-          <source srcset="/hcx/hcx07_hu16417725051750624200.webp" type="image/webp">
-          <source srcset="/hcx/hcx07_hu15694494498939258102.jpg" type="image/jpeg">
-          <img src="/hcx/hcx07_hu16417725051750624200.webp"alt="HCX Network Extension Bindings"  width="1024"  height="271" />
+          <source srcset="/hcx/hcx07_hu_64f82414d9d12333.webp" type="image/webp">
+          <source srcset="/hcx/hcx07_hu_e25d22050f838324.jpg" type="image/jpeg">
+          <img src="/hcx/hcx07_hu_64f82414d9d12333.webp"alt="HCX Network Extension Bindings"  width="1024"  height="271" />
         </picture></a><figcaption>
             <p>HCX Network Extension Bindings (click to enlarge)</p>
           </figcaption></figure>
@@ -425,18 +425,18 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 <p>To plan the migration, I go to <strong>Services</strong> &raquo; <strong>Migration</strong> and create a <strong>NEW Mobility Group</strong>. Here I can set all the relevant migration settings.</p>
 
 <figure><a href="hcx08.png"><picture>
-          <source srcset="/hcx/hcx08_hu7678078877074205166.webp" type="image/webp">
-          <source srcset="/hcx/hcx08_hu11718259282990917871.jpg" type="image/jpeg">
-          <img src="/hcx/hcx08_hu7678078877074205166.webp"alt="HCX New Mobility Group"  width="1627"  height="1157" />
+          <source srcset="/hcx/hcx08_hu_a68776fd1f04c796.webp" type="image/webp">
+          <source srcset="/hcx/hcx08_hu_449a60d132e36065.jpg" type="image/jpeg">
+          <img src="/hcx/hcx08_hu_a68776fd1f04c796.webp"alt="HCX New Mobility Group"  width="1627"  height="1157" />
         </picture></a><figcaption>
             <p>HCX New Mobility Group (click to enlarge)</p>
           </figcaption></figure>
 <p>The settings are relatively self-explanatory. I select my VMs, choose the target cluster, storage and switchover time, and select my migration method. If the VM comes from a network stretched with the Network Extension, the target network is already preselected. I just have to perform the validation and the migration can start. It is also possible to perform a reverse migration.</p>
 
 <figure><a href="hcx09.png"><picture>
-          <source srcset="/hcx/hcx09_hu17883344826524882888.webp" type="image/webp">
-          <source srcset="/hcx/hcx09_hu11815756147154765210.jpg" type="image/jpeg">
-          <img src="/hcx/hcx09_hu17883344826524882888.webp"alt="HCX Migration"  width="1445"  height="604" />
+          <source srcset="/hcx/hcx09_hu_b6375f23e4a41374.webp" type="image/webp">
+          <source srcset="/hcx/hcx09_hu_e6a2cfed6dae1a48.jpg" type="image/jpeg">
+          <img src="/hcx/hcx09_hu_b6375f23e4a41374.webp"alt="HCX Migration"  width="1445"  height="604" />
         </picture></a><figcaption>
             <p>HCX New Mobility Group (click to enlarge)</p>
           </figcaption></figure>
@@ -807,9 +807,9 @@ rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#3
     </aside>
 
 <figure><a href="traceflow.png"><picture>
-          <source srcset="/nsx-apply-to/traceflow_hu6341709273789521671.webp" type="image/webp">
-          <source srcset="/nsx-apply-to/traceflow_hu1870482407599317965.jpg" type="image/jpeg">
-          <img src="/nsx-apply-to/traceflow_hu6341709273789521671.webp"alt="Traceflow"  width="1335"  height="849" />
+          <source srcset="/nsx-apply-to/traceflow_hu_b59aaa99da4de8f8.webp" type="image/webp">
+          <source srcset="/nsx-apply-to/traceflow_hu_ba67bca5ba73ad6e.jpg" type="image/jpeg">
+          <img src="/nsx-apply-to/traceflow_hu_b59aaa99da4de8f8.webp"alt="Traceflow"  width="1335"  height="849" />
         </picture></a><figcaption>
             <p>NSX Traceflow (click to enlarge)</p>
           </figcaption></figure>
@@ -1170,9 +1170,9 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 </ul>
 
 <figure><picture>
-          <source srcset="/nsx-tep-groups/switch_hu15845385026729381105.webp" type="image/webp">
-          <source srcset="/nsx-tep-groups/switch_hu11297771637104314496.jpg" type="image/jpeg">
-          <img src="/nsx-tep-groups/switch_hu15845385026729381105.webp"alt="Switch Port View"  width="1958"  height="184" />
+          <source srcset="/nsx-tep-groups/switch_hu_1c77bd0b8863d565.webp" type="image/webp">
+          <source srcset="/nsx-tep-groups/switch_hu_baae85ba4d0da563.jpg" type="image/jpeg">
+          <img src="/nsx-tep-groups/switch_hu_1c77bd0b8863d565.webp"alt="Switch Port View"  width="1958"  height="184" />
         </picture><figcaption>
             <p>Switch port view</p>
           </figcaption></figure>
@@ -1827,7 +1827,7 @@ This approach not only makes the automation workflow easier to manage but also a
 </span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;status&#34;: &#34;active&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;description&#34;: &#34;Created by Ansible&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="sd">        &#34;dns_name&#34;: &#34;{{ dns_name }}&#34;
-</span></span></span><span class="line"><span class="cl"><span class="sd">      }</span><span class="w">      
+</span></span></span><span class="line"><span class="cl"><span class="sd">      }</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">body_format</span><span class="p">:</span><span class="w"> </span><span class="l">json</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">status_code</span><span class="p">:</span><span class="w"> </span><span class="m">201</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">return_content</span><span class="p">:</span><span class="w"> </span><span class="kc">yes</span><span class="w">
@@ -1842,7 +1842,7 @@ This approach not only makes the automation workflow easier to manage but also a
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Add DNS A Record</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">win_shell</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
 </span></span></span></code></pre></div><h3 id="mp_dnsyml-my-masterplaybook">mp_dns.yml (my masterplaybook)</h3>
@@ -1945,25 +1945,25 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ansible-playbook mp_dns.yml -e &#34;prefix=192.168.2.0/24 dns_name=hello-world.lab.home&#34;
 </span></span></code></pre></div>
 <figure><a href="output.png"><picture>
-          <source srcset="/ipam-automation/output_hu17735082299749069346.webp" type="image/webp">
-          <source srcset="/ipam-automation/output_hu2134898282273478624.jpg" type="image/jpeg">
-          <img src="/ipam-automation/output_hu17735082299749069346.webp"alt="Ansible output"  width="1003"  height="610" />
+          <source srcset="/ipam-automation/output_hu_7752d8d5f03c91dd.webp" type="image/webp">
+          <source srcset="/ipam-automation/output_hu_ea47df4f16963352.jpg" type="image/jpeg">
+          <img src="/ipam-automation/output_hu_7752d8d5f03c91dd.webp"alt="Ansible output"  width="1003"  height="610" />
         </picture></a><figcaption>
             <p>Ansible output (click to enlarge)</p>
           </figcaption></figure>
 
 <figure><a href="netbox.png"><picture>
-          <source srcset="/ipam-automation/netbox_hu16384549009619117197.webp" type="image/webp">
-          <source srcset="/ipam-automation/netbox_hu10090990778334734330.jpg" type="image/jpeg">
-          <img src="/ipam-automation/netbox_hu16384549009619117197.webp"alt="Netbox"  width="1447"  height="489" />
+          <source srcset="/ipam-automation/netbox_hu_5a9c655f60b501f3.webp" type="image/webp">
+          <source srcset="/ipam-automation/netbox_hu_f33cf96e3a093cc5.jpg" type="image/jpeg">
+          <img src="/ipam-automation/netbox_hu_5a9c655f60b501f3.webp"alt="Netbox"  width="1447"  height="489" />
         </picture></a><figcaption>
             <p>Netbox (click to enlarge)</p>
           </figcaption></figure>
 
 <figure><a href="dns.png"><picture>
-          <source srcset="/ipam-automation/dns_hu12209689906728532248.webp" type="image/webp">
-          <source srcset="/ipam-automation/dns_hu11255499409238053450.jpg" type="image/jpeg">
-          <img src="/ipam-automation/dns_hu12209689906728532248.webp"alt="DNS"  width="404"  height="455" />
+          <source srcset="/ipam-automation/dns_hu_f5c8b68f5084f99d.webp" type="image/webp">
+          <source srcset="/ipam-automation/dns_hu_7952122eb13af7fa.jpg" type="image/jpeg">
+          <img src="/ipam-automation/dns_hu_f5c8b68f5084f99d.webp"alt="DNS"  width="404"  height="455" />
         </picture></a><figcaption>
             <p>DNS (click to enlarge)</p>
           </figcaption></figure>
@@ -1991,7 +1991,7 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 </span></span></span><span class="line"><span class="cl"><span class="sd">    $hostname = &#34;{{ zdns_host }}.{{ zdns_zone }}&#34;
 </span></span></span><span class="line"><span class="cl"><span class="sd">    $reverseZone = (&#34;{0}.{1}.{2}.in-addr.arpa&#34; -f $ip.Split(&#34;.&#34;)[2], $ip.Split(&#34;.&#34;)[1], $ip.Split(&#34;.&#34;)[0])
 </span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordA -Name &#34;{{ zdns_host }}&#34; -ZoneName &#34;{{ zdns_zone }}&#34; -IPv4Address &#34;{{ zassigned_ip }}&#34;
-</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordPtr -ZoneName $reverseZone -Name ($ip.Split(&#34;.&#34;)[3]) -PtrDomainName &#34;$hostname.$zoneName&#34; </span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordPtr -ZoneName $reverseZone -Name ($ip.Split(&#34;.&#34;)[3]) -PtrDomainName &#34;$hostname.$zoneName&#34; </span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
 </span></span></span></code></pre></div>]]></content>
@@ -2253,9 +2253,9 @@ The core logic remains untouched, making it a scalable and modular solution for 
 This approach not only saves time but also ensures consistency when starting up complex nested labs like my VCF setup.</p>
 
 <figure><a href="ansible.png"><picture>
-          <source srcset="/first-steps-ansible/ansible_hu6172869207777496753.webp" type="image/webp">
-          <source srcset="/first-steps-ansible/ansible_hu10846971240981565405.jpg" type="image/jpeg">
-          <img src="/first-steps-ansible/ansible_hu6172869207777496753.webp"alt="Ansible Log"  width="1718"  height="1056" />
+          <source srcset="/first-steps-ansible/ansible_hu_78fe14230757b772.webp" type="image/webp">
+          <source srcset="/first-steps-ansible/ansible_hu_16a87a118d679d12.jpg" type="image/jpeg">
+          <img src="/first-steps-ansible/ansible_hu_78fe14230757b772.webp"alt="Ansible Log"  width="1718"  height="1056" />
         </picture></a><figcaption>
             <p>Ansible Output (click to enlarge)</p>
           </figcaption></figure>
@@ -2465,9 +2465,9 @@ Efficiency:</p>
 <p>My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.</p>
 
 <figure><picture>
-          <source srcset="/labv5/unraid_hu12871636074369548549.webp" type="image/webp">
-          <source srcset="/labv5/unraid_hu3133507235213664422.jpeg" type="image/jpeg">
-          <img src="/labv5/unraid_hu12871636074369548549.webp"alt="Homelab v1"  width="960"  height="1280" />
+          <source srcset="/labv5/unraid_hu_3b56dc1d373b61c2.webp" type="image/webp">
+          <source srcset="/labv5/unraid_hu_2163339cfc68cf4b.jpeg" type="image/jpeg">
+          <img src="/labv5/unraid_hu_3b56dc1d373b61c2.webp"alt="Homelab v1"  width="960"  height="1280" />
         </picture><figcaption>
             <p>My first Homelab</p>
           </figcaption></figure>
@@ -2526,18 +2526,18 @@ Efficiency:</p>
 I also have a service router (RB5009) that establishes a VPN tunnel to a fellow homelabber. Through this connection, I can utilize his Kubernetes resources, and we&rsquo;ve even tested the NSX Application Platform (NAPP) together. <a href="https://marschall.systems/">Visit marschall.systems</a></p>
 
 <figure><a href="plan.png"><picture>
-          <source srcset="/labv5/plan_hu4235498138432559503.webp" type="image/webp">
-          <source srcset="/labv5/plan_hu7818108223675192909.jpg" type="image/jpeg">
-          <img src="/labv5/plan_hu4235498138432559503.webp"alt="Network setup"  width="6206"  height="3968" />
+          <source srcset="/labv5/plan_hu_a7586a40ccd6bc0f.webp" type="image/webp">
+          <source srcset="/labv5/plan_hu_287211eb00b9e711.jpg" type="image/jpeg">
+          <img src="/labv5/plan_hu_a7586a40ccd6bc0f.webp"alt="Network setup"  width="6206"  height="3968" />
         </picture></a><figcaption>
             <p>Network setup (click to enlarge)</p>
           </figcaption></figure>
 <p>My network employs dynamic routing, with eBGP as the primary protocol peering all critical components. My BGP NSX lab peers directly with my ToR switch, ensuring high efficiency and seamless integration with the rest of the network. For my labs, I utilize both OSPF and BGP. My OSPF lab runs on two virtual ArubaCX switches and a VyOS router, which has an IP in my standard client network and provides internet access to the OSPF lab via NAT.</p>
 
 <figure><a href="bgp.png"><picture>
-          <source srcset="/labv5/bgp_hu13323852698658684218.webp" type="image/webp">
-          <source srcset="/labv5/bgp_hu5788182371385841057.jpg" type="image/jpeg">
-          <img src="/labv5/bgp_hu13323852698658684218.webp"alt="Network bgp setup"  width="3111"  height="2917" />
+          <source srcset="/labv5/bgp_hu_e6ba1cd0bb433346.webp" type="image/webp">
+          <source srcset="/labv5/bgp_hu_4dad477f5cdf1286.jpg" type="image/jpeg">
+          <img src="/labv5/bgp_hu_e6ba1cd0bb433346.webp"alt="Network bgp setup"  width="3111"  height="2917" />
         </picture></a><figcaption>
             <p>BGP setup (click to enlarge)</p>
           </figcaption></figure>
@@ -2679,33 +2679,33 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 <h2 id="final-result">Final result</h2>
 <p>
 <figure><picture>
-          <source srcset="/labv5/rackmount_hu1092622698464279345.webp" type="image/webp">
-          <source srcset="/labv5/rackmount_hu15529659375378009796.jpg" type="image/jpeg">
-          <img src="/labv5/rackmount_hu1092622698464279345.webp"alt="Rackmount"  width="1600"  height="1200" />
+          <source srcset="/labv5/rackmount_hu_49c1b570dcd3bd1c.webp" type="image/webp">
+          <source srcset="/labv5/rackmount_hu_c80f174cbaf8e9e9.jpg" type="image/jpeg">
+          <img src="/labv5/rackmount_hu_49c1b570dcd3bd1c.webp"alt="Rackmount"  width="1600"  height="1200" />
         </picture><figcaption>
             <p>Rackmount MS-01</p>
           </figcaption></figure>
 
 <figure><picture>
-          <source srcset="/labv5/rackmount2_hu12242692340557408737.webp" type="image/webp">
-          <source srcset="/labv5/rackmount2_hu16189033617681113906.jpg" type="image/jpeg">
-          <img src="/labv5/rackmount2_hu12242692340557408737.webp"alt="Rackmount2"  width="2250"  height="1500" />
+          <source srcset="/labv5/rackmount2_hu_4f548a9d2d8e2795.webp" type="image/webp">
+          <source srcset="/labv5/rackmount2_hu_16a627291faaa860.jpg" type="image/jpeg">
+          <img src="/labv5/rackmount2_hu_4f548a9d2d8e2795.webp"alt="Rackmount2"  width="2250"  height="1500" />
         </picture><figcaption>
             <p>Rackmount MS-01</p>
           </figcaption></figure>
 
 <figure><picture>
-          <source srcset="/labv5/cable_hu10763548189357929237.webp" type="image/webp">
-          <source srcset="/labv5/cable_hu12300581878864859744.jpg" type="image/jpeg">
-          <img src="/labv5/cable_hu10763548189357929237.webp"alt="Rack"  width="1500"  height="1000" />
+          <source srcset="/labv5/cable_hu_8ffcc0f1c2200354.webp" type="image/webp">
+          <source srcset="/labv5/cable_hu_eca5e9ae630ffa30.jpg" type="image/jpeg">
+          <img src="/labv5/cable_hu_8ffcc0f1c2200354.webp"alt="Rack"  width="1500"  height="1000" />
         </picture><figcaption>
             <p>Rack view top</p>
           </figcaption></figure>
 
 <figure><picture>
-          <source srcset="/labv5/rack_hu9852508572301551615.webp" type="image/webp">
-          <source srcset="/labv5/rack_hu10464460824911337438.jpg" type="image/jpeg">
-          <img src="/labv5/rack_hu9852508572301551615.webp"alt="Rack"  width="1200"  height="1600" />
+          <source srcset="/labv5/rack_hu_c79dd32b10192ad8.webp" type="image/webp">
+          <source srcset="/labv5/rack_hu_68a7ec6316e9f53.jpg" type="image/jpeg">
+          <img src="/labv5/rack_hu_c79dd32b10192ad8.webp"alt="Rack"  width="1200"  height="1600" />
         </picture><figcaption>
             <p>Rack view</p>
           </figcaption></figure></p>
@@ -2727,9 +2727,9 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 <p>To implement QoS at this level, you must first create a Segment Profile, which defines the QoS policies. This includes settings such as ingress and egress traffic shaping, bandwidth guarantees, and DSCP marking. Once configured, this profile is attached to the segment, ensuring that the specified QoS policies are applied consistently to all VMs on that segment.</p>
 
 <figure><a href="qos1.png"><picture>
-          <source srcset="/nsx-qos/qos1_hu9376800852532490140.webp" type="image/webp">
-          <source srcset="/nsx-qos/qos1_hu16011686681575812025.jpg" type="image/jpeg">
-          <img src="/nsx-qos/qos1_hu9376800852532490140.webp"alt="QoS Profile"  width="1157"  height="466" />
+          <source srcset="/nsx-qos/qos1_hu_5fc90009db4a1cbe.webp" type="image/webp">
+          <source srcset="/nsx-qos/qos1_hu_48d5bbd64918e44c.jpg" type="image/jpeg">
+          <img src="/nsx-qos/qos1_hu_5fc90009db4a1cbe.webp"alt="QoS Profile"  width="1157"  height="466" />
         </picture></a><figcaption>
             <p>QoS Profile</p>
           </figcaption></figure>
@@ -2814,9 +2814,9 @@ By configuring these parameters effectively, you can ensure traffic prioritizati
 <p>To demonstrate the differences between a setup with and without QoS, I have created a test environment consisting of two T1 routers, each connected to its own segment and hosting VMs for testing. Both T1 routers are connected to the same Tier-0 (T0) router, providing a shared Internet connection for testing north-south traffic scenarios.</p>
 
 <figure><a href="topo.png"><picture>
-          <source srcset="/nsx-qos/topo_hu6475854221281022681.webp" type="image/webp">
-          <source srcset="/nsx-qos/topo_hu2349874414644969993.jpg" type="image/jpeg">
-          <img src="/nsx-qos/topo_hu6475854221281022681.webp"alt="NSX Enviroment"  width="912"  height="936" />
+          <source srcset="/nsx-qos/topo_hu_66f9e2e50535e68a.webp" type="image/webp">
+          <source srcset="/nsx-qos/topo_hu_cc2a617033dd4a62.jpg" type="image/jpeg">
+          <img src="/nsx-qos/topo_hu_66f9e2e50535e68a.webp"alt="NSX Enviroment"  width="912"  height="936" />
         </picture></a><figcaption>
             <p>NSX Test Enviroment</p>
           </figcaption></figure>
@@ -3018,10 +3018,7 @@ B = \text{Max} \left( \frac{R \times 1000000 \times I}{1000 \times 8}, \frac{R \
 <h4 id="1-token-refill-per-interval"><strong>1. Token Refill per Interval</strong></h4>
 \[
 B \geq \frac{R \times 1000000 \times I}{1000 \times 8}
-\]<p>
-Substitute the values:
-</p>
-\[
+\]\[
 B \geq \frac{30 \times 1000000 \times 1000}{1000 \times 8}
 \]\[
 B \geq \frac{30000000000}{8000}
@@ -3030,10 +3027,7 @@ B \geq 3750000 \, \text{bytes}
 \]<h4 id="2-minimum-refill-interval"><strong>2. Minimum Refill Interval</strong></h4>
 \[
 B \geq \frac{R \times 1000000 \times 1000}{1000 \times 8}
-\]<p>
-This calculation remains the same as in the previous case since \( I = 1000 \, \text{ms} \):
-</p>
-\[
+\]\[
 B \geq 3750000 \, \text{bytes}
 \]<h4 id="3-mtu-constraint"><strong>3. MTU Constraint</strong></h4>
 \[
@@ -3041,8 +3035,6 @@ B \geq MTU
 \]\[
 B \geq 1500 \, \text{bytes}
 \]<h4 id="final-burst-size"><strong>Final Burst Size</strong></h4>
-<p>The Burst Size \( B \) must satisfy <strong>all three constraints</strong>, so:
-</p>
 \[
 B = \text{Max}(3750000, 3750000, 1500)
 \]\[
@@ -3068,9 +3060,9 @@ B = 3750000 \, \text{bytes}
 </ul>
 
 <figure><a href="t1qos.png"><picture>
-          <source srcset="/nsx-qos/t1qos_hu14467825683727384270.webp" type="image/webp">
-          <source srcset="/nsx-qos/t1qos_hu5352979924153472324.jpg" type="image/jpeg">
-          <img src="/nsx-qos/t1qos_hu14467825683727384270.webp"alt="T1 Qos Profile"  width="1433"  height="821" />
+          <source srcset="/nsx-qos/t1qos_hu_a27ad2036624afc9.webp" type="image/webp">
+          <source srcset="/nsx-qos/t1qos_hu_17dabf25afe7b7f2.jpg" type="image/jpeg">
+          <img src="/nsx-qos/t1qos_hu_a27ad2036624afc9.webp"alt="T1 Qos Profile"  width="1433"  height="821" />
         </picture></a><figcaption>
             <p>T1 Qos Profile</p>
           </figcaption></figure>
@@ -3438,9 +3430,9 @@ done
 <p>By increasing the MaxIoSizeKB to 512 KB, verifying jumbo frame functionality with vmkping, and enabling Round Robin, I optimized my iSCSI setup to leverage the full potential of my 2.5G network.</p>
 
 <figure><picture>
-          <source srcset="/iscsi-tuning/test_hu12020423995241410634.webp" type="image/webp">
-          <source srcset="/iscsi-tuning/test_hu16349894886800222160.jpg" type="image/jpeg">
-          <img src="/iscsi-tuning/test_hu12020423995241410634.webp"alt="CriytalDiskMark Benchmark"  width="479"  height="351" />
+          <source srcset="/iscsi-tuning/test_hu_473aa978cea8695.webp" type="image/webp">
+          <source srcset="/iscsi-tuning/test_hu_2d7abdfcba70dd1.jpg" type="image/jpeg">
+          <img src="/iscsi-tuning/test_hu_473aa978cea8695.webp"alt="CriytalDiskMark Benchmark"  width="479"  height="351" />
         </picture><figcaption>
             <p>CriytalDiskMark Benchmark</p>
           </figcaption></figure>
@@ -3747,9 +3739,9 @@ Unfortunately, these are relatively difficult to get in Germany, but it&rsquo;s 
     </aside></p>
 <p>
 <figure><picture>
-          <source srcset="/NIC_hu6903087498817470336.webp" type="image/webp">
-          <source srcset="/NIC_hu4204005753805133783.jpg" type="image/jpeg">
-          <img src="/NIC_hu6903087498817470336.webp"alt="Image of an IO expansion"  width="1200"  height="800" />
+          <source srcset="/NIC_hu_d82a1db6d2bdb61a.webp" type="image/webp">
+          <source srcset="/NIC_hu_932f4d66f79948b2.jpg" type="image/jpeg">
+          <img src="/NIC_hu_d82a1db6d2bdb61a.webp"alt="Image of an IO expansion"  width="1200"  height="800" />
         </picture><figcaption>
             <p>IO expansion</p>
           </figcaption></figure>
@@ -3852,9 +3844,9 @@ Fortunately, there are a few workarounds here.</p>
 <p>If everything is correct, an ESX NUC of the 13th generation looks like this.
 
 <figure><picture>
-          <source srcset="/nuc_hu16244612542378356649.webp" type="image/webp">
-          <source srcset="/nuc_hu988947436421053682.jpg" type="image/jpeg">
-          <img src="/nuc_hu16244612542378356649.webp"alt="NUC i7"  width="1098"  height="458" />
+          <source srcset="/nuc_hu_5ccbf9c8ebe38803.webp" type="image/webp">
+          <source srcset="/nuc_hu_5ee5fb0e8a02aeca.jpg" type="image/jpeg">
+          <img src="/nuc_hu_5ccbf9c8ebe38803.webp"alt="NUC i7"  width="1098"  height="458" />
         </picture><figcaption>
             <p>NUC i7 13th Gen with Memory Tiering and P/E Cores</p>
           </figcaption></figure></p>
@@ -3877,17 +3869,17 @@ Furthermore, I converted my storage from NFS to iSCSI with multipathing, which g
 I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.</p>
 
 <figure><picture>
-          <source srcset="/bench1_hu2966482509308598586.webp" type="image/webp">
-          <source srcset="/bench1_hu2660173491905647916.jpg" type="image/jpeg">
-          <img src="/bench1_hu2966482509308598586.webp"alt="Disk Performance iSCSI Multipathing"  width="483"  height="351" />
+          <source srcset="/bench1_hu_d9f2ebae7aabcbfb.webp" type="image/webp">
+          <source srcset="/bench1_hu_4a57bd3f94e44ed.jpg" type="image/jpeg">
+          <img src="/bench1_hu_d9f2ebae7aabcbfb.webp"alt="Disk Performance iSCSI Multipathing"  width="483"  height="351" />
         </picture><figcaption>
             <p>Disk Performance iSCSI Multipathing</p>
           </figcaption></figure>
 
 <figure><picture>
-          <source srcset="/bench2_hu3593698816181082095.webp" type="image/webp">
-          <source srcset="/bench2_hu10297252823232288012.jpg" type="image/jpeg">
-          <img src="/bench2_hu3593698816181082095.webp"alt="IOPS iSCSI Multipathing"  width="483"  height="356" />
+          <source srcset="/bench2_hu_fa4b468b3bd2299a.webp" type="image/webp">
+          <source srcset="/bench2_hu_cb94958550bf7aec.jpg" type="image/jpeg">
+          <img src="/bench2_hu_fa4b468b3bd2299a.webp"alt="IOPS iSCSI Multipathing"  width="483"  height="356" />
         </picture><figcaption>
             <p>IOPS iSCSI Multipathing</p>
           </figcaption></figure>
@@ -4026,9 +4018,9 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>Identity based groups can only be used as a source for a firewall rule. In addition, the rules only come into effect after a successful logon to the client. Thus, normal dFW rules must be written for all communication that happens before the user logs on. This applies, for example, to Windows AD communication. The NSX Manager synchronises cyclically with the domain controllers. The default interval is 180 minutes. If changes are made to the group membership at short notice, a manual sync can be performed. Alternatively, the sync interval can also be shortened or extended. Using network introspection, the NSX Manager recognises when a user logs on to a client and can perform matching with the AD groups and thus add the client dynamically to the security group of the IDFW firewall rule.</p>
 
 <figure><picture>
-          <source srcset="/idfw/00_idfw_hu13340240812954672917.webp" type="image/webp">
-          <source srcset="/idfw/00_idfw_hu2021098600553032142.jpg" type="image/jpeg">
-          <img src="/idfw/00_idfw_hu13340240812954672917.webp"alt="Idendity Firewall function"  width="1782"  height="1164" />
+          <source srcset="/idfw/00_idfw_hu_bac15068c0d841d3.webp" type="image/webp">
+          <source srcset="/idfw/00_idfw_hu_964b72d338437915.jpg" type="image/jpeg">
+          <img src="/idfw/00_idfw_hu_bac15068c0d841d3.webp"alt="Idendity Firewall function"  width="1782"  height="1164" />
         </picture><figcaption>
             <p>Idendity Firewall function</p>
           </figcaption></figure>
@@ -4036,9 +4028,9 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>Firstly, I start by customising the golden images of the VDI and installing NSX Guest Introspection. These are not installed by default and have to be installed explicitly. You can find them under VMware Device Driver – NSX Network Introspection. File Introspection is installed automatically.</p>
 
 <figure><picture>
-          <source srcset="/idfw/01_vmwaretools_hu10766174744744931261.webp" type="image/webp">
-          <source srcset="/idfw/01_vmwaretools_hu2019103790225014772.jpeg" type="image/jpeg">
-          <img src="/idfw/01_vmwaretools_hu10766174744744931261.webp"alt="VMware Tools"  width="555"  height="417" />
+          <source srcset="/idfw/01_vmwaretools_hu_4ebbf2048f289a20.webp" type="image/webp">
+          <source srcset="/idfw/01_vmwaretools_hu_3e58b2f4b42be85b.jpeg" type="image/jpeg">
+          <img src="/idfw/01_vmwaretools_hu_4ebbf2048f289a20.webp"alt="VMware Tools"  width="555"  height="417" />
         </picture><figcaption>
             <p>VMware Tools</p>
           </figcaption></figure>
@@ -4046,18 +4038,18 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>This is done in the NSX Manager under System -&gt; Identity Firewall AD. Several domains can be entered so that multi-tenant setups can also be realised. The NSX Manager requires firewall activations and must be able to reach the domain controllers via LDAP or LDAPS. I strongly recommend the use of LDAPS. These settings can also be used to perform a manual sync or check the synchronisation status.</p>
 
 <figure><a href="02_nsx_idfw.jpeg"><picture>
-          <source srcset="/idfw/02_nsx_idfw_hu5496888141303419910.webp" type="image/webp">
-          <source srcset="/idfw/02_nsx_idfw_hu10295445750369093658.jpeg" type="image/jpeg">
-          <img src="/idfw/02_nsx_idfw_hu5496888141303419910.webp"alt="Idetity firewall AD settings"  width="1452"  height="465" />
+          <source srcset="/idfw/02_nsx_idfw_hu_b00fd488a8510e1a.webp" type="image/webp">
+          <source srcset="/idfw/02_nsx_idfw_hu_4f4d80bda7c1bf57.jpeg" type="image/jpeg">
+          <img src="/idfw/02_nsx_idfw_hu_b00fd488a8510e1a.webp"alt="Idetity firewall AD settings"  width="1452"  height="465" />
         </picture></a><figcaption>
             <p>Idetity firewall AD settings (click to enlarge)</p>
           </figcaption></figure>
 <p>Under LDAP Server you can set several domain controllers for the previously set up domain. The protocol used is also selected here. I use the Domain Administrator in my lab. In a productive environment, an LDAP bind user should always be used.</p>
 
 <figure><a href="03.jpeg"><picture>
-          <source srcset="/idfw/03_hu16733942988963753118.webp" type="image/webp">
-          <source srcset="/idfw/03_hu2839745583667809871.jpeg" type="image/jpeg">
-          <img src="/idfw/03_hu16733942988963753118.webp"alt="LDAP Server settings"  width="1160"  height="460" />
+          <source srcset="/idfw/03_hu_b4e39e1cee0248fa.webp" type="image/webp">
+          <source srcset="/idfw/03_hu_4ffcb5292d1f2369.jpeg" type="image/jpeg">
+          <img src="/idfw/03_hu_b4e39e1cee0248fa.webp"alt="LDAP Server settings"  width="1160"  height="460" />
         </picture></a><figcaption>
             <p>LDAP Server settings (click to enlarge)</p>
           </figcaption></figure>
@@ -4075,9 +4067,9 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>After we have successfully setup and synchronised our domain, we only need to activate the Identity Firewall. By default, this feature is disabled (it is a free feature that is available with the NSX Firewall VCF add-on). To activate the Identity Firewall, go to Security -&gt; Distributed Firewall -&gt; Settings -&gt; Identity Firewall Settings and activate the identity firewall service button. Then we select the cluster on which we want to activate the service. Now we can get started.</p>
 
 <figure><a href="04.webp"><picture>
-          <source srcset="/idfw/04_hu12560464345806440685.webp" type="image/webp">
-          <source srcset="/idfw/04_hu11069272111777865810.jpg" type="image/jpeg">
-          <img src="/idfw/04_hu12560464345806440685.webp"alt="Distributed Firewall Settings"  width="1699"  height="792" />
+          <source srcset="/idfw/04_hu_dae2156eed25be54.webp" type="image/webp">
+          <source srcset="/idfw/04_hu_6ddab8f8debb026a.jpg" type="image/jpeg">
+          <img src="/idfw/04_hu_dae2156eed25be54.webp"alt="Distributed Firewall Settings"  width="1699"  height="792" />
         </picture></a><figcaption>
             <p>Distributed Firewall Settings (click to enlarge)</p>
           </figcaption></figure>
@@ -4087,18 +4079,18 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>So we create our first LDAP user group. As with any group, we can do this either when creating the rules or in the inventory under Groups. The process is the same as for a normal Distributed Firewall Group, except that we don’t use tags but Distinguished Names, which can be conveniently selected or filtered from the synchronised AD elements.</p>
 
 <figure><a href="05.webp"><picture>
-          <source srcset="/idfw/05_hu16308509706422833611.webp" type="image/webp">
-          <source srcset="/idfw/05_hu13581943069617237554.jpg" type="image/jpeg">
-          <img src="/idfw/05_hu16308509706422833611.webp"alt="Security Groups"  width="1164"  height="977" />
+          <source srcset="/idfw/05_hu_4fb5c5eda755034e.webp" type="image/webp">
+          <source srcset="/idfw/05_hu_e5b4ef1fbf7d287.jpg" type="image/jpeg">
+          <img src="/idfw/05_hu_4fb5c5eda755034e.webp"alt="Security Groups"  width="1164"  height="977" />
         </picture></a><figcaption>
             <p>Security Groups (click to enlarge)</p>
           </figcaption></figure>
 <p>I also need at least one segment group and at least one group containing my target servers. The target servers are assigned to their groups via tags. The same applies to the segment group. To do this, I set one or more tags on the overlay segment and use this tag as a condition for group membership.</p>
 
 <figure><a href="06.webp"><picture>
-          <source srcset="/idfw/06_hu566842021385844307.webp" type="image/webp">
-          <source srcset="/idfw/06_hu1670820342853564742.jpg" type="image/jpeg">
-          <img src="/idfw/06_hu566842021385844307.webp"alt="Member selection"  width="1156"  height="964" />
+          <source srcset="/idfw/06_hu_b53d6b5cdca5a135.webp" type="image/webp">
+          <source srcset="/idfw/06_hu_30cabdd7b0d936cb.jpg" type="image/jpeg">
+          <img src="/idfw/06_hu_b53d6b5cdca5a135.webp"alt="Member selection"  width="1156"  height="964" />
         </picture></a><figcaption>
             <p>Member selection (click to enlarge)</p>
           </figcaption></figure>
@@ -4107,9 +4099,9 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>For each identity firewall rule that allows traffic from a group of users to a destination, there must be a corresponding distributed firewall rule that allows traffic from a group of computers to the same destination specified in the identity firewall rule. We therefore need two firewall rules.</p>
 
 <figure><a href="07.webp"><picture>
-          <source srcset="/idfw/07_hu14371369714500250916.webp" type="image/webp">
-          <source srcset="/idfw/07_hu7421683099691664086.jpg" type="image/jpeg">
-          <img src="/idfw/07_hu14371369714500250916.webp"alt="Firewall Rules"  width="1630"  height="226" />
+          <source srcset="/idfw/07_hu_f45be384524d1b37.webp" type="image/webp">
+          <source srcset="/idfw/07_hu_4c8c3050aa8f549a.jpg" type="image/jpeg">
+          <img src="/idfw/07_hu_f45be384524d1b37.webp"alt="Firewall Rules"  width="1630"  height="226" />
         </picture></a><figcaption>
             <p>Firewall Rules (click to enlarge)</p>
           </figcaption></figure>
@@ -4130,18 +4122,18 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>For testing, I log in to my VDI with the credentials of User1 and perform a TestNetConnection with Powershell. This is a simple and quick way to test TCP connections. I also open a share on the file server.</p>
 
 <figure><a href="08.webp"><picture>
-          <source srcset="/idfw/08_hu11227237490731539297.webp" type="image/webp">
-          <source srcset="/idfw/08_hu11206926558301644657.jpg" type="image/jpeg">
-          <img src="/idfw/08_hu11227237490731539297.webp"alt="Network test user 1"  width="1072"  height="627" />
+          <source srcset="/idfw/08_hu_a864416fe8a04b90.webp" type="image/webp">
+          <source srcset="/idfw/08_hu_a977631a54e3778c.jpg" type="image/jpeg">
+          <img src="/idfw/08_hu_a864416fe8a04b90.webp"alt="Network test user 1"  width="1072"  height="627" />
         </picture></a><figcaption>
             <p>Network test user 1 (click to enlarge)</p>
           </figcaption></figure>
 <p>The test was successful, both the TNC command and the actual opening of the file share worked. Now I’m running the same test on the same VDI (after it was recreated, because non-persistent VDI), only this time I’m using User2, which has no explicit firewall rules and is therefore blocked by my default cleanup rule. As expected, the traffic was successfully blocked.</p>
 
 <figure><a href="09.png"><picture>
-          <source srcset="/idfw/09_hu2338535551923653157.webp" type="image/webp">
-          <source srcset="/idfw/09_hu1977019721799240822.jpg" type="image/jpeg">
-          <img src="/idfw/09_hu2338535551923653157.webp"alt="Network test user 2"  width="993"  height="499" />
+          <source srcset="/idfw/09_hu_e60dd127af9cff83.webp" type="image/webp">
+          <source srcset="/idfw/09_hu_507c94b743a91bb8.jpg" type="image/jpeg">
+          <img src="/idfw/09_hu_e60dd127af9cff83.webp"alt="Network test user 2"  width="993"  height="499" />
         </picture></a><figcaption>
             <p>Network test user 2 (click to enlarge)</p>
           </figcaption></figure>
@@ -4150,9 +4142,9 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>But there is light at the end of the tunnel. In NSX 4.X there is a session view of the active IDFW user session under Security -&gt; Security Overview -&gt; Configuration. All active sessions, UserIDs and VMs are displayed here, as well as the source of the information.</p>
 
 <figure><a href="10.png"><picture>
-          <source srcset="/idfw/10_hu10916967050054961034.webp" type="image/webp">
-          <source srcset="/idfw/10_hu10504170639179592038.jpg" type="image/jpeg">
-          <img src="/idfw/10_hu10916967050054961034.webp"alt="Active Sessions"  width="979"  height="278" />
+          <source srcset="/idfw/10_hu_592c97fbb2453d9a.webp" type="image/webp">
+          <source srcset="/idfw/10_hu_34db9845bce1cec3.jpg" type="image/jpeg">
+          <img src="/idfw/10_hu_592c97fbb2453d9a.webp"alt="Active Sessions"  width="979"  height="278" />
         </picture></a><figcaption>
             <p>Active Sessions (click to enlarge)</p>
           </figcaption></figure>
@@ -4228,9 +4220,9 @@ IP.4 = 192.168.12.113
 <p>The certificate can be imported in the NSX Manager under System &gt; Certificates &gt; Import. Here it must be ensured that the service certificate slider is set to NO. The complete certificate chain is also required. The certificate chain must be in the industry standard order of ‘certificate – intermediate – root.</p>
 
 <figure><picture>
-          <source srcset="/nsx-cert/01_hu8747713429439574210.webp" type="image/webp">
-          <source srcset="/nsx-cert/01_hu1064617936367254404.jpg" type="image/jpeg">
-          <img src="/nsx-cert/01_hu8747713429439574210.webp"alt="NSX Cert"  width="582"  height="924" />
+          <source srcset="/nsx-cert/01_hu_ff86af9542b83bd8.webp" type="image/webp">
+          <source srcset="/nsx-cert/01_hu_1afaeed124abd485.jpg" type="image/jpeg">
+          <img src="/nsx-cert/01_hu_ff86af9542b83bd8.webp"alt="NSX Cert"  width="582"  height="924" />
         </picture><figcaption>
             <p>Import NSX Cert</p>
           </figcaption></figure>
