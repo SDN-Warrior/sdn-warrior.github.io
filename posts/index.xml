@@ -6,8 +6,349 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Wed, 19 Feb 2025 18:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Sun, 23 Feb 2025 16:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF Import Tool - Run VCF with NFS as pricipal Storage </title>
+			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
+			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
+			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.
+This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.
+In addition, not every customer starts on a greenfield site.
+Another point is the need for resources, which affects us home labbers in particular.
+Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.
+There are already many solutions for this, such as the Holodeck or the Automated Lab Deployment Scrip from the great <a href="https://github.com/lamw/vcf-automated-lab-deployment">William Lam</a>, but in my view this is too far removed from the kind of deployment that a customer will experience.
+Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.
+In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.</p>
+<h2 id="why-use-the-import-tool">Why use the import tool?</h2>
+<p>As indicated in the title, the import tool allows a VCF deployment with NFS as principal storage, which means that we do not need vSAN.
+As much as I like vSAN, vSAN in Homelab always means additional resource consumption.
+I need fast networking, local NVMes and the overall performance is still not great as I usually set up my LABs nested in my homelab.
+In addition, the use of vSAN consumer NVMes wears out very quickly.
+Thanks to VCF 5.2 and the VCF Import Tool, we can get around this relatively easily. Of course, there are always a few limitations.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: center">Storage Type</th>
+          <th style="text-align: center">Consolidated Workload Domain</th>
+          <th style="text-align: center">Management Domain</th>
+          <th style="text-align: center">VI Workload Domain</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center"><strong>Principal</strong> Storage</td>
+          <td style="text-align: center">No</td>
+          <td style="text-align: center">Only for a management domain converted from vSphere infrastructure</td>
+          <td style="text-align: center">Yes</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>Supplemental</strong> Storage</td>
+          <td style="text-align: center">Yes</td>
+          <td style="text-align: center">Yes</td>
+          <td style="text-align: center">Yes</td>
+      </tr>
+  </tbody>
+</table>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>NFS Version</b>
+        </div>
+        <div class="admonition-content">Only supports NFS protocol version 3 when used as principal storage. Supplemental storage can use either vSphere supported NFS protocol version 3 or 4.1. Although NFS 3 and NFS 4.1 can coexist on the same host, you cannot use different NFS versions to mount the same datastore on different hosts.</div>
+    </aside>
+<p>What can we take from the table now? It is possible to deploy a standard VCF design with NFS3 and without vSAN, and the best part is that the whole thing is officially supported and is not a homemade solution.</p>
+<h2 id="deployment-and-preparation-of-the-management-domain">Deployment and preparation of the management domain</h2>
+<p>First of all, we need to prepare our future management domain. To do this, I am deploying four virtual ESXi servers. I am using the Flings OVA from William Lam and adapting it for my lab.
+My 4 ESX Nested Servers have the following hardware:</p>
+<ul>
+<li>10 vCPUs</li>
+<li>45 GB RAM</li>
+<li>16 GB Thin Storage</li>
+<li>2 Network Cards</li>
+</ul>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Virtual Hardware</b>
+        </div>
+        <div class="admonition-content">It is possible to carry out the deployment with fewer resources, but I had to deal with timeouts during the deployment and, based on my experience, these are the best sizing with my LAB hardware.</div>
+    </aside>
+<p>NTP service and DNS including reverse lookup must be available and working. In addition, all VLANs, gateways and, if necessary, firewall rules must be in place. To keep this article short, I won&rsquo;t go into this part in detail. The required networks can be found in the VCF Guide.</p>
+<p>Of course, there are a few restrictions and things that we have to consider here as well.</p>
+<ul>
+<li>
+<p>Cluster - Storage:</p>
+<p>Default cluster must be one of vSAN, NFS v3, VMFS-FC, or VMFS-FCoE (only supported with VCF 5.2.1 and later).
+NFS 4.1, VVOLs, and native iSCSI are not supported</p>
+<p>Clusters cannot be stretched vSAN (and we will not be using vSAN either)</p>
+<p>VCF 5.2: All clusters (vSAN, NFS v3, FC) must be 4 nodes minimum.</p>
+<p>VCF 5.2.1.x When using NFS or FC and vLCM images, the default cluster must be 2 nodes minimum. When using NFS or FC and vLCM baselines, the default cluster must be 4 nodes minimum.</p>
+</li>
+<li>
+<p>Cluster - Network:</p>
+<p>vCenter Server must not have an existing NSX instance registered</p>
+<p>LACP - VCF Import Tool 5.2.1.2 with SDDC Manager 5.2.1.1: Supported other Version are Not supported</p>
+<p>Use vSphere Distributed Switches only. Standard or Cisco virtual switches are not supported.</p>
+<p>VMkernel IP addresses must be statically assigned</p>
+<p>Multiple VMkernels for a single traffic type (vSAN , vMotion) are not supported</p>
+<p>VCF Import Tool 5.2.1.2 with SDDC Manager 5.2.1.1: ESXi hosts can have a different number of physical uplinks (minimum 2) assigned to a vSphere distributed switch. Each uplink must be a minimum of 10Gb.</p>
+<p>Ealier versions: ESXi hosts must have the same number of physical uplinks (minimum 2) assigned to a vSphere distributed switch. Each uplink must be a minimum of 10Gb.</p>
+<p>vSphere distributed switch teaming policies must match VMware Cloud Foundation standards</p>
+<p>Dedicated vMotion network must be configured</p>
+</li>
+<li>
+<p>Cluster - Compute:</p>
+<p>Clusters must not be VxRail managed</p>
+<p>Clusters that use vSphere Configuration Profiles are not supported</p>
+<p>All clusters must be running vSphere 8.0U3 or later</p>
+<p>DRS must be fully automated</p>
+</li>
+</ul>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Limitations</b>
+        </div>
+        <div class="admonition-content">There are more limitations, but these should be the most important ones.
+10 Gb/s network is not necessary in a nested environment. The exact requirements can be found in the current <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/considerations-before-converting-or-importing-existing-vsphere-environments-into-vcf-admin.html">VCF 5.2 Administration Guide</a>.</div>
+    </aside>
+<p>So after I have prepared my future management domain, it should look similar to the screenshot below.</p>
+
+<figure><a href="vcf01.png"><picture>
+          <source srcset="/vcf-import/vcf01_hu_c95dd8930db031a9.webp" type="image/webp">
+          <source srcset="/vcf-import/vcf01_hu_63424ee8bc073bac.jpg" type="image/jpeg">
+          <img src="/vcf-import/vcf01_hu_c95dd8930db031a9.webp"alt="ESXi Cluster"  width="1257"  height="550" />
+        </picture></a><figcaption>
+            <p>ESXi Cluster with NFS Storage (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="convert-the-cluster-to-a-management-domain">Convert the cluster to a management domain</h2>
+<p>After I have prepared my cluster, the real fun can begin. To do this, I first need to download the SDDC Manager, the VCF Import Tool and the appropriate NSX bundle.
+In my case, it was the following software versions:</p>
+<ul>
+<li>VCF-SDDC-Manager-Appliance-5.2.1.1-24397777.ova</li>
+<li>VMware Software Install Bundle - NSX_T_MANAGER 4.2.1.0</li>
+<li>VCF Import Tool 5.2.1.2</li>
+</ul>
+<p>The software can be found in the Broadcom support portal under Tools and Drivers in the corresponding VCF 5.2.1 category.
+First, I deploy the SDDC Manager appliance to my cluster. The SDDC Manager will later deploy our NSX managers. The SDDC Manager will deploy NSX to the same network and storage where it is located. Network and storage cannot be customized during the deployment of the NSX managers.
+After that, I create a JSON file for the future NSX cluster. Here is my example file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;license_key&#34;</span><span class="p">:</span> <span class="s2">&#34;XXXX-XXXX-XXXX-XXXX-XXXX&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;form_factor&#34;</span><span class="p">:</span> <span class="s2">&#34;medium&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;admin_password&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;install_bundle_path&#34;</span><span class="p">:</span> <span class="s2">&#34;/nfs/vmware/vcf/nfs-mount/bundle/bundle-133764.zip&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;cluster_ip&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.10&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;cluster_fqdn&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;manager_specs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;fqdn&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01a.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01a&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip_address&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.11&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet_mask&#34;</span><span class="p">:</span> <span class="s2">&#34;255.255.255.0&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;fqdn&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01b.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01b&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip_address&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.14&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet_mask&#34;</span><span class="p">:</span> <span class="s2">&#34;255.255.255.0&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;fqdn&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01c.lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf03-m01-nsx01c&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip_address&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.15&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet_mask&#34;</span><span class="p">:</span> <span class="s2">&#34;255.255.255.0&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>NSX Deployment</b>
+        </div>
+        <div class="admonition-content"><p>The importer tool would like to create a 3 node NSX cluster by default.
+By customizing the actual domainmanager properties, you can reduce this to a single node – however, this is then no longer supported by Broadcom and should not be used in a production environment.
+It is not enough to just customize the JSON file.</p>
+<p>In addition, I tried it first with the small form factor and my convert was not successful because not all services could be started successfully on the NSX cluster. I have experienced this several times in nested environments. Therefore, I always deploy my NSX manager to medium and after a successful deployment, I manually remove the RAM reservation and reduce the manager to 4 vCPUs and 20GB ram. In my environment, this is the best compromise between resource consumption and functionality and performance.</p>
+</div>
+    </aside>
+<h3 id="tipp-customizing-the-nsx-cluster-size">Tipp: Customizing the NSX cluster size</h3>
+<p>First, I log in to my SDDC manager with the VCF user via ssh and switch to the root context. Then I add the
+application-prod.properties file with the following addition.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cat &gt;&gt; /etc/vmware/vcf/domainmanager/application-prod.properties &lt;&lt; EOF
+</span></span><span class="line"><span class="cl">nsxt.manager.cluster.size=1 
+</span></span><span class="line"><span class="cl">EOF
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl restart domainmanager.service
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">watch &#39;systemctl status domainmanager.service&#39;
+</span></span></code></pre></div><p>After restarting the domain manager services, the changes should take effect and it is possible to deploy an NSX single node cluster. In my current test I did not do this, but in the past I have often done single node nsx cluster vcf deployments in the lab.</p>
+<h3 id="upload-software-and-run-precheck">Upload Software and run precheck</h3>
+<p>The next step is relatively simple: I use WinSCP to upload the import tool, the NSX upgrade bundle and the  NSX deployment json to my SDDC Manager.
+The upgrade bundle is placed in the directory specified in the NSX spec. In my case, it is</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/nfs/vmware/vcf/nfs-mount/bundle/bundle-133764.zip
+</span></span></code></pre></div><p>and I upload the NSX spec and the import tool to</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/home/vcf
+</span></span></code></pre></div><p>Next, uncompress the import tool and you&rsquo;re ready to go.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">tar xvf vcf-brownfield-import-5.2.1.2-24494579.tar.gz
+</span></span></code></pre></div><p>To run the precheck, we change to the vcf-browndield-toolset directory and run the precheck with the following command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">python3 vcf_brownfield.py check --vcenter &#39;&lt;my-vcenter-address&gt;&#39; --sso-user &#39;&lt;my-sso-username&gt;&#39;
+</span></span></code></pre></div><p>Should there be any errors in the precheck, the tool generates guardrails files in which you can read about the problem. In my case, the precheck went cleanly and I can now start the actual convert of my management domain.</p>
+<p>The command is more or less the same, only a few parameters have to be changed.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">python3 vcf_brownfield.py convert --vcenter &#39;&lt;vcenter-fqdn&gt;&#39; --sso-user &#39;&lt;sso-user&gt;&#39; --domain-name &#39;&lt;wld-domain-name&gt;&#39; --nsx-deployment-spec-path &#39;&lt;nsx-deployment-json-spec-path&gt;&#39;
+</span></span></code></pre></div><p>Actions:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Action</th>
+          <th>Additional Information</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>-h, --help</code></td>
+          <td>Shows the VCF Import Tool help.</td>
+      </tr>
+      <tr>
+          <td><code>-v, --version</code></td>
+          <td>Displays the VCF Import Tool version.</td>
+      </tr>
+      <tr>
+          <td><code>convert</code></td>
+          <td>Converts existing vSphere infrastructure into the management domain in SDDC Manager.</td>
+      </tr>
+      <tr>
+          <td><code>check</code></td>
+          <td>Checks whether a vCenter is suitable to be imported into SDDC Manager as a workload domain.</td>
+      </tr>
+      <tr>
+          <td><code>import</code></td>
+          <td>Imports a vCenter as a VI workload domain into SDDC Manager.</td>
+      </tr>
+      <tr>
+          <td><code>sync</code></td>
+          <td>Syncs an imported VI workload domain or a VI workload domain deployed from SDDC Manager. See <em>Manage Workload Domain Configuration Drift Between vCenter Server and SDDC Manager</em>.</td>
+      </tr>
+      <tr>
+          <td><code>deploy-nsx</code></td>
+          <td>Deploys NSX Manager as a standalone operation. See <em>Deploy NSX Manager for Workload Domains</em>.</td>
+      </tr>
+      <tr>
+          <td><code>precheck</code></td>
+          <td>Runs prechecks on vCenter.</td>
+      </tr>
+  </tbody>
+</table>
+<p>Parameter:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Parameter</th>
+          <th>Additional Information</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>--vcenter</code></td>
+          <td>Target vCenter Server for the current operation.</td>
+      </tr>
+      <tr>
+          <td><code>--sso-user</code></td>
+          <td>SSO administrator user for the target vCenter Server.</td>
+      </tr>
+      <tr>
+          <td><code>--sso-password</code></td>
+          <td>SSO administrator password for the target vCenter Server. Used for prevalidation only.</td>
+      </tr>
+      <tr>
+          <td><code>--domain-name</code></td>
+          <td>Workload domain name to be assigned to the target environment during convert/import.</td>
+      </tr>
+      <tr>
+          <td><code>--nsx-deployment-spec-path</code></td>
+          <td>Absolute path to the NSX deployment spec JSON file.</td>
+      </tr>
+  </tbody>
+</table>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">The tool took about 80 minutes to complete the process on my system. Of course, it always depends on the performance of the environment.
+You can view the progress at any time in the SDDC or in the vCenter. In between, there are queries, such as whether you have taken a snapshot at the SDDC manager. So it&rsquo;s not easy to run completely unattended. So grab a coffee and enjoy the show.</div>
+    </aside>
+<p>After the convert has hopefully been successful, the whole thing should now look like on my screenshot.</p>
+
+<figure><a href="vcf02.png"><picture>
+          <source srcset="/vcf-import/vcf02_hu_ff8c78de8946466a.webp" type="image/webp">
+          <source srcset="/vcf-import/vcf02_hu_984d7722d590294a.jpg" type="image/jpeg">
+          <img src="/vcf-import/vcf02_hu_ff8c78de8946466a.webp"alt="Convert successfully"  width="2188"  height="773" />
+        </picture></a><figcaption>
+            <p>Convert successfully(click to enlarge)</p>
+          </figcaption></figure>
+
+<figure><a href="vcf03.png"><picture>
+          <source srcset="/vcf-import/vcf03_hu_cc37f997f9abfa79.webp" type="image/webp">
+          <source srcset="/vcf-import/vcf03_hu_11edb348f99072ba.jpg" type="image/jpeg">
+          <img src="/vcf-import/vcf03_hu_cc37f997f9abfa79.webp"alt="MGMT Domain with NFS Storage"  width="1489"  height="534" />
+        </picture></a><figcaption>
+            <p>MGMT Domain with NFS Storage(click to enlarge)</p>
+          </figcaption></figure>
+<p>Congratulations, we now have a supported workload domain with NFS storage.
+Of course, we still have some fine-tuning to do. For example, no NSX Edges have been deployed yet and the ESX servers have been made transport nodes, but they do not yet have TEP addresses.
+This is work that we have to do manually in the NSX Manager.
+We also still need to install licenses in the SDDC manager and setup the software repository so that we can install updates directly via the SDDC if necessary.</p>
+<p>There are now two options for the future workload domains: 1. import via the import tool (the process is analogous to the convert) or 2. normal deployment via the SDDC manager.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Importing or converting existing ESXi clusters enables us to deploy VCF in a resource-efficient way in the lab and also offers the possibility for PoCs for customers who would like to test VCF but do not have vSAN Ready nodes. The import tool in VCF 5.2 extends the possibilities of VCF and gives us a bit more flexibility in deploying VCF. From my point of view, this is the right way to make VCF more widely accepted by customers. It also gives us the opportunity to become familiar with the product with fewer resources.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>A last word</b>
+        </div>
+        <div class="admonition-content">I wouldn&rsquo;t recommend importing or converting an existing workload productively just yet. The feature is still quite new and, although many errors are already caught in the prechecks, it&rsquo;s not yet perfect and bulletproof. For customer PoCs, I would always set up a fresh cluster and then import it so that you don&rsquo;t end up with any legacy issues.</div>
+    </aside>
+]]></content>
+		</item>
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>

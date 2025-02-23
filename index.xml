@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 03 Feb 2025 21:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 23 Feb 2025 16:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF Import Tool - Run VCF with NFS as pricipal Storage </title>
+      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
+      <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck or the Automated Lab Deployment Scrip from the great &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;William Lam&lt;/a&gt;, but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>JetKVM - all show and no substance?</title>
       <link>https://sdn-warrior.org/posts/jetkvm/</link>
@@ -141,13 +148,6 @@
       <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
       <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>About Me</title>
-      <link>https://sdn-warrior.org/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/about/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;me.jpg&#34; alt=&#34;Bild von mir&#34;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;hi-im-daniel&#34;&gt;Hi, I’m Daniel,&lt;/h1&gt;&#xA;&lt;p&gt;a passionate &#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    42&#xD;&#xA;year old homelab enthusiast and Software-Defined Networking Architect based in Germany.&#xA;With a strong focus on VMware technologies, I enjoy exploring the boundaries of virtualization and building innovative solutions in my home lab.&#xA;This blog is my space to share insights, tips, and projects from my journey in the world of software-defined infrastructure.&#xA;Alongside being a homelabber, I’m also a proud vExpert (including NSX) and VCIX NV. My skills are backed by certifications like CCNP Security, CCNP Enterprise, and Checkpoint CCSA R81 and many more.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

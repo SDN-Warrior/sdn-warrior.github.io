@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Broadcom on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/broadcom/</link>
-    <description>Recent content in Broadcom on SDN-Warrior | Daniel Krieger</description>
+    <title>Nfs on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/nfs/</link>
+    <description>Recent content in Nfs on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Sun, 23 Feb 2025 16:00:00 +0100</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/broadcom/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/nfs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VCF Import Tool - Run VCF with NFS as pricipal Storage </title>
       <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
