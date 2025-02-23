@@ -332,6 +332,18 @@ You can view the progress at any time in the SDDC or in the vCenter. In between,
 Of course, we still have some fine-tuning to do. For example, no NSX Edges have been deployed yet and the ESX servers have been made transport nodes, but they do not yet have TEP addresses.
 This is work that we have to do manually in the NSX Manager.
 We also still need to install licenses in the SDDC manager and setup the software repository so that we can install updates directly via the SDDC if necessary.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>NSX Edge Cluster</b>
+        </div>
+        <div class="admonition-content">NSX is deployed on the convert without overlay configuration. After manually adjusting the overlay config in the NSX Manager, you have to perform a sync via the import tool, otherwise you cannot deploy edge clusters via the SDDC and cannot use AVNs, which in turn are needed for the Aria Suite.</div>
+    </aside>
 <p>There are now two options for the future workload domains: 1. import via the import tool (the process is analogous to the convert) or 2. normal deployment via the SDDC manager.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Importing or converting existing ESXi clusters enables us to deploy VCF in a resource-efficient way in the lab and also offers the possibility for PoCs for customers who would like to test VCF but do not have vSAN Ready nodes. The import tool in VCF 5.2 extends the possibilities of VCF and gives us a bit more flexibility in deploying VCF. From my point of view, this is the right way to make VCF more widely accepted by customers. It also gives us the opportunity to become familiar with the product with fewer resources.</p>
