@@ -17,7 +17,7 @@
 			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
-<p>My blog is a follow-up to my article <a href="http://localhost:1313/posts/vcf-import-cluster/">&ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&rdquo;</a> and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.</p>
+<p>My blog is a follow-up to my article <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">&ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&rdquo;</a> and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.</p>
 <p>The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.</p>
 <h2 id="creating-an-ip-pool">Creating an IP pool</h2>
 <p>For our TEP network we can either use a DHCP server or the IP pool variant preferred by VMware. I personally find the DHCP server more flexible and easier for environments that need to grow quickly, but there is no right or wrong at this point. However, when creating the pool, you should make sure that our subnet has a sufficient size, as this can only be changed to a limited extent after successful allocation.</p>
