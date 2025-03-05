@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 23 Feb 2025 16:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 05 Mar 2025 21:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/nfs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
+      <link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
+      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;http://localhost:1313/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
       <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>

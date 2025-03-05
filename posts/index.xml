@@ -6,8 +6,166 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sun, 23 Feb 2025 16:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Wed, 05 Mar 2025 21:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
+			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
+			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
+			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>My blog is a follow-up to my article <a href="http://localhost:1313/posts/vcf-import-cluster/">&ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&rdquo;</a> and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.</p>
+<p>The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.</p>
+<h2 id="creating-an-ip-pool">Creating an IP pool</h2>
+<p>For our TEP network we can either use a DHCP server or the IP pool variant preferred by VMware. I personally find the DHCP server more flexible and easier for environments that need to grow quickly, but there is no right or wrong at this point. However, when creating the pool, you should make sure that our subnet has a sufficient size, as this can only be changed to a limited extent after successful allocation.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Best practice</b>
+        </div>
+        <div class="admonition-content">VMware recommends the use of /24 networks in the current NSX Reference Design Guide. This would also be my recommendation, as you need 2 IP addresses per transport node for a dual TEP setup and you want to be prepared for the future. Outside of VCF, setups with 4 TEP IP addresses per transport node are also possible and you never know what will happen in future.</div>
+    </aside>
+<p>To create an IP pool, we go to <strong>IP Address Pools</strong> under <strong>Networking</strong> in the NSX Gui and click the <strong>ADD IP ADDRESS POOL</strong> button.</p>
+<p>Under Subnet we click on the IP RANGES button and configure our IP range, our network CIDR and a gateway. The TEP network must be routed, as the Edge Transport Nodes normally have their TEP IP addresses in a different network and VLAN. While it is possible for the Edge Transport Nodes to be on the same VLAN and network as our Host Transport Nodes, this is a less common scenario and requires the Edge Transport Nodes to either run on non-NSX enabled hosts or use NSX backed VLAN segments. I have already writte a <a href="https://evoila.com/blog/nsx-sharing-overlay-transport-vlan-between-esxi-teps-edge-teps/">blog</a> for Evoila about this.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf-import-overlay/01_hu_75da3c2320055e6f.webp" type="image/webp">
+          <source srcset="/vcf-import-overlay/01_hu_adc7f7f5c384fb52.jpg" type="image/jpeg">
+          <img src="/vcf-import-overlay/01_hu_75da3c2320055e6f.webp"alt="IP Pool"  width="2302"  height="1434" />
+        </picture></a><figcaption>
+            <p>IP Pool configuration (click to enlarge)</p>
+          </figcaption></figure>
+<p>Finally, we define a name for the IP pool and save the configuration.</p>
+<h2 id="update-the-default-transport-zone">Update the default Transport Zone</h2>
+<p>In NSX, a transport zone (TZ for short) is a logical grouping of transport nodes that defines which network segments can exist on these nodes.
+It determines the scope of the overlay and VLAN networks and is not a security feature.
+There are two types of TZ: an overlay and a VLAN transport zone. For the imported or converted VCF environment, we only need to make changes to the overlay TZ. The VLAN TZ is created when the Edge Nodes are deployed via the SDDC Manager and no longer needs to be customized.
+VCF uses the default transport zone <em><strong>nsx-overlay-transportzone</strong></em>.
+This must also be assigned later in the <em><strong>transport node profile</strong></em>.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info Overlay TZ</b>
+        </div>
+        <div class="admonition-content">VCF 5.2.1 currently only supports one overlay transport zone. It is not possible to use multiple overlay transport zones. This can be a crucial point in the NSX design. If I don&rsquo;t want the overlay networks in my workload domains to be visible everywhere, I have to deploy multiple workload domains with their own NSX instance.</div>
+    </aside>
+<p>We first need to add two tags to the TZ. These tags are used internally by the SDDC manager to identify the TZ as being used by VCF.</p>
+
+    <aside class="admonition alert">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>TAGs</b>
+        </div>
+        <div class="admonition-content">Note that the tag consists of two parts, the tag name and the tag scope. Also, tags are case sensitive, so you need to enter them exactly as shown.</div>
+    </aside>
+<p>The transport zones can be found in the NSX GUI under <em><strong>System</strong></em> - <em><strong>Transport Zone</strong></em>. There should be exactly one overlay transport zone that also has the default flag.
+The following TAGs must be attached to the overlay transport zone:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Tag Name</th>
+          <th>Scope</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>VCF</td>
+          <td>Created by</td>
+      </tr>
+      <tr>
+          <td>vcf</td>
+          <td>vcf-orchestration</td>
+      </tr>
+  </tbody>
+</table>
+<p>The transport zone type cannot be changed afterwards. We can and must only add tags here.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf-import-overlay/02_hu_43f1e05bcdc986ff.webp" type="image/webp">
+          <source srcset="/vcf-import-overlay/02_hu_f39a966cbbe70043.jpg" type="image/jpeg">
+          <img src="/vcf-import-overlay/02_hu_43f1e05bcdc986ff.webp"alt="Transport Zone"  width="2870"  height="980" />
+        </picture></a><figcaption>
+            <p>Transport Zone configuration (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="edit-the-transport-node-profiles">Edit the Transport Node Profiles</h2>
+<p>The next step is to customize the transport node profile so that we can use overlay networks and create NSX TEP interfaces on our ESXi servers.</p>
+<p>Since NSX 3.1.x, the Transport Node profile can be found under <em><strong>Fabric</strong></em> - <em><strong>Hosts</strong></em> - <em><strong>Transport Node Profile</strong></em>. The VCF Import Tool has already created a profile for us. As is so often the case with VCF, the profile has a cryptic name that consists of an ID + domain and the text autoconf-tnp. You can safely ignore the name. We need to go to the profile&rsquo;s host switch config and add the overlay transport zone to the profile. As soon as we have added this TZ, additional options for IP assignment will appear. The previously created IP pool is selected here. We save the whole thing and that&rsquo;s it for the changes in the NSX.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf-import-overlay/03_hu_6c14cf5c1e3c757c.webp" type="image/webp">
+          <source srcset="/vcf-import-overlay/03_hu_22a98347318cf0a2.jpg" type="image/jpeg">
+          <img src="/vcf-import-overlay/03_hu_6c14cf5c1e3c757c.webp"alt="TNP"  width="2308"  height="1708" />
+        </picture></a><figcaption>
+            <p>Transport Node Profile configuration (click to enlarge)</p>
+          </figcaption></figure>
+<p>After everything has been saved, NSX starts customizing the cluster and configuring TEP IP addresses for each of our ESXi servers.</p>
+<h2 id="verify-tep-network">Verify TEP Network</h2>
+<p>There are several ways to check the TEP network.
+We can look it up in the vCenter, where each host should now have 2 VMK adapters with IP addresses from our TEP network.
+VKM10 and VMK11 are responsible for processing our TEP traffic in the dual TEP setup. The second option is in NSX itself.
+To do this, go to <em><strong>System</strong></em> - <em><strong>Fabric</strong></em> - <em><strong>Hosts</strong></em> and look at our cluster.
+In the TEP IP Addresses column, each ESXi in the cluster should have two IP addresses.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf-import-overlay/04_hu_da2602b0b4319551.webp" type="image/webp">
+          <source srcset="/vcf-import-overlay/04_hu_80f31889082978ef.jpg" type="image/jpeg">
+          <img src="/vcf-import-overlay/04_hu_da2602b0b4319551.webp"alt="TEP IP"  width="2888"  height="1486" />
+        </picture></a><figcaption>
+            <p>Transport Node TEP IPs (click to enlarge)</p>
+          </figcaption></figure>
+<p>The third option is to ping from one ESXi server to another. To do this, the VMK ping command must be executed as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[</span>root@vcf03-m01-esx01:~<span class="o">]</span> vmkping -I vmk10 -S vxlan 10.28.4.105 -d -s <span class="m">1972</span>
+</span></span><span class="line"><span class="cl">PING 10.28.4.105 <span class="o">(</span>10.28.4.105<span class="o">)</span>: <span class="m">1972</span> data bytes
+</span></span><span class="line"><span class="cl"><span class="m">1980</span> bytes from 10.28.4.105: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">0</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">64</span> <span class="nv">time</span><span class="o">=</span>0.274 ms
+</span></span><span class="line"><span class="cl"><span class="m">1980</span> bytes from 10.28.4.105: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">64</span> <span class="nv">time</span><span class="o">=</span>0.113 ms
+</span></span><span class="line"><span class="cl"><span class="m">1980</span> bytes from 10.28.4.105: <span class="nv">icmp_seq</span><span class="o">=</span><span class="m">2</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">64</span> <span class="nv">time</span><span class="o">=</span>0.267 ms
+</span></span></code></pre></div><p>I use an MTU of 2000 in my lab, so the maximum payload is 1972 bytes.<br>
+<code>-d</code> sets the <strong>don&rsquo;t fragment</strong> bit, and <code>-S vxlan</code> uses the <strong>VXLAN socket interface</strong> for the ping.
+This is used to test the transport over the <strong>NSX Geneve overlay</strong>.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info MTU</b>
+        </div>
+        <div class="admonition-content">NSX 4.X uses a minimum MTU of 1700 bytes. Normally, I also stick to this size in my labs, but I made a typing error when creating the AVN and I didn&rsquo;t want to do it all over again. Happy little excidents ;) In productive environments, an MTU size of 9000 is always preferable.</div>
+    </aside>
+<h2 id="update-the-sddc-manager">Update the SDDC Manager</h2>
+<p>We need to use our VCF import tool again so that our SDDC manager also knows that we now have an overlay transport zone and that we can deploy our AVN for the Aria Suite, for example. To do this, we perform a sync and wait for it to complete.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python3 vcf_brownfield.py sync --vcenter <span class="s1">&#39;vcf03-vcsa.lab.home&#39;</span> --sso-user <span class="s1">&#39;administrator@vsphere.local&#39;</span> --domain-name <span class="s1">&#39;mgmt&#39;</span>
+</span></span></code></pre></div><p>Don&rsquo;t be surprised if you get an error after the sync. However, you can ignore it and it is totally logical that it occurs.</p>
+<pre tabindex="0"><code>Status: VALIDATION_FAILED
+  Check Name: vCenter Server no NSX Manager present
+  Description: Check that the vCenter Server does not have an NSX Manager connected to it
+  Details: Detected an NSX Manager connected to the vCenter Server
+  Remediation: Please ensure that no NSX Manager is connected to the vCenter Server to be imported
+</code></pre><p>So our converted MGMT domain would be ready for use. Next, I deployed my Edge Cluster and then the Aria Suite. But that&rsquo;s not what this article is about.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I really like the VCF Import tool, even though it still needs some fine-tuning here and there.
+The sync function is quite practical and is a good way to bring changes made outside of the SDDC Manager back into the SDDC Manager.
+Hopefully Broadcom will also provide the sync for a regularly deployed VCF, which from NSX&rsquo;s point of view would significantly enrich the VCF in terms of flexibility.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
