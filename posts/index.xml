@@ -52,7 +52,7 @@ This gives us the following requirements:</p>
 <li>Less than 150 ms latency RTT for vMotion connectivity.</li>
 <li>Less than 5 ms latency RTT for VSAN hosts connectivity.</li>
 </ul>
-<p>Latency vSAN</p>
+<p>Latency vSAN Site to Witness</p>
 <ul>
 <li>Less than 200 ms latency RTT for up to 10 hosts per site.</li>
 <li>Less than 100 ms latency RTT for 11-15 hosts per site.</li>
