@@ -7,20 +7,34 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 05 Mar 2025 21:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 13 Mar 2025 23:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Broadcom</title>
       <link>https://sdn-warrior.org/tags/broadcom/</link>
-      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
+      <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/broadcom/</guid>
       <description></description>
     </item>
     <item>
       <title>Homelab</title>
       <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
+      <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf</title>
+      <link>https://sdn-warrior.org/tags/vcf/</link>
+      <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -28,20 +42,6 @@
       <link>https://sdn-warrior.org/tags/nfs/</link>
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/nfs/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf</title>
-      <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
