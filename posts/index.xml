@@ -221,7 +221,7 @@ If, for example, the MGMT domain has been patched with ESXi patches to a differe
         </picture></a><figcaption>
             <p>SDDC Manager (click to enlarge)</p>
           </figcaption></figure>
-<p>After the hosts have been successfully commissioned in the SDDC manager, its not allowed to add them to the existing management domain.
+<p>After the hosts have been successfully put into operation in the SDDC Manager, they must not be added to the management domain, as stretching the cluster is not possible via the GUI.
 Next, the cluster stretch spec must be created – this is the fun part of the deployment.</p>
 <h2 id="stretch-a-vsan-cluster-aka-fun-part">Stretch a vSAN Cluster (aka Fun Part)</h2>
 <p>Unfortunately, the actual stretch of the cluster cannot be conveniently carried out in the SDDC GUI. A JSON cluster stretch spec must be created and then passed to the SDDC manager via an API call.</p>
@@ -245,7 +245,7 @@ Next, the cluster stretch spec must be created – this is the fun part of the d
         </picture></a><figcaption>
             <p>Developer Center (click to enlarge)</p>
           </figcaption></figure>
-<p>The answer contains the IDs of the ESX servers, which can be easily transferred to the Cluster Stretch Spec. My Cluster Stretch Spec looks like this:</p>
+<p>The answer contains the IDs of the ESX servers, which can be easily transferred to the cluster stretch spec. My cluster stretch spec looks like this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl"> <span class="nt">&#34;clusterStretchSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;hostSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
@@ -384,7 +384,7 @@ Next, the cluster stretch spec must be created – this is the fun part of the d
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Next, the cluster stretch spec can be validated.The cluster ID is required for this.</p>
 <p>This is also done as an API call. To do this, I go to the Developer Center, then to the managing clusters section, expand <em><strong>GET /v1/cluster</strong></em> end execute the API call.</p>
-<p>Here is a small excerpt of what the response looks like. The correct ID is “id”: “e04c96fe-263c-4355-bdcf-7464b03e35d2”. The domain ID must not be used.</p>
+<p>Here is a small excerpt of what the response looks like. The correct ID can be found in the “id” field at the top level, in my case its “e04c96fe-263c-4355-bdcf-7464b03e35d2”. The domain ID must not be used.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;elements&#34;</span><span class="p">:</span> <span class="p">[</span>
 </span></span><span class="line"><span class="cl">        <span class="p">{</span>
@@ -418,7 +418,7 @@ In addition, the cluster stretch spec must be copied into the body field.</p>
           <source srcset="/vcf-stretch/05_hu_6261fc54c387e02a.jpg" type="image/jpeg">
           <img src="/vcf-stretch/05_hu_cc56115e897d13c2.webp"alt="Validation"  width="1094"  height="867" />
         </picture></a><figcaption>
-            <p>Cluster Stretch Spec Validation (click to enlarge)</p>
+            <p>cluster stretch spec Validation (click to enlarge)</p>
           </figcaption></figure>
 <p>After the validation has been successfully completed, the cluster can be stretched.
 To start the actual task, another API call must be made. This time <em><strong>PATCH /v1/clusters/{id}</strong></em>. The process is the same as for the validation. I copy the cluster ID into the ID field and copy the cluster stretch spec into the body field. After executing, the cluster stretch begins. This can be followed in the SDDC in the task bar.</p>
@@ -430,7 +430,7 @@ To start the actual task, another API call must be made. This time <em><strong>P
         </picture></a><figcaption>
             <p>Cluster Stretch (click to enlarge)</p>
           </figcaption></figure>
-<p>Depending on the performance of the environment, the process may take some time. For me, it was comparable to the duration of the bring-on of the unstretched management domain. If the task has been completed successfully, the SDDC and the vCenter should look like the following screenshots.</p>
+<p>Depending on the performance of the environment, the process may take some time. For me, it was comparable to the duration of the bring-up of the unstretched management domain. If the task has been completed successfully, the SDDC and the vCenter should look like the following screenshots.</p>
 <p>
 <figure><a href="06.png"><picture>
           <source srcset="/vcf-stretch/06_hu_dd40b1da7bcc41bf.webp" type="image/webp">
@@ -460,8 +460,7 @@ To start the actual task, another API call must be made. This time <em><strong>P
         <div class="admonition-content">When you stretch a cluster, VMware Cloud Foundation modifies the site disaster tolerance setting for storage policy associated with datastore of that cluster from None - standard cluster to Site mirroring - stretched cluster. This affects all VMs using default datastore policy in that cluster.</div>
     </aside>
 <h2 id="notes">Notes</h2>
-<p>Further stretched cluster operations can be carried out via API.
-A cluster expand or a cluster unstretch must currently still be carried out via API.
+<p>Unlike a normal cluster, a cluster that has been stretched must use the API to expand, shrink or unstretch.
 You also need to think about BGP peering. Depending on the setup, each side has its own AS number for BGP and Broadcom recommends working with route maps and local preference to control traffic.
 Personally, I would say: it depends. However, this topic is so extensive that it may get its own blog article at some point.
 In addition, you have to worry about the placement of VMs, storage policies and much more&hellip;</p>
