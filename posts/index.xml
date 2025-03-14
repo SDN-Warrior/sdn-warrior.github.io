@@ -460,8 +460,8 @@ To start the actual task, another API call must be made. This time <em><strong>P
         <div class="admonition-content">When you stretch a cluster, VMware Cloud Foundation modifies the site disaster tolerance setting for storage policy associated with datastore of that cluster from None - standard cluster to Site mirroring - stretched cluster. This affects all VMs using default datastore policy in that cluster.</div>
     </aside>
 <h2 id="notes">Notes</h2>
-<p>Unlike a normal cluster, a cluster that has been stretched must use the API to expand, shrink or unstretch.
-You also need to think about BGP peering. Depending on the setup, each side has its own AS number for BGP and Broadcom recommends working with route maps and local preference to control traffic.
+<p>Further stretched cluster maintenence operations like upgrades can be carried out via GUI. A cluster shrink, expand or a cluster unstretch must currently still be carried out via API.</p>
+<p>You also need to think about BGP peering. Depending on the setup, each side has its own AS number for BGP and Broadcom recommends working with route maps and local preference to control traffic.
 Personally, I would say: it depends. However, this topic is so extensive that it may get its own blog article at some point.
 In addition, you have to worry about the placement of VMs, storage policies and much more&hellip;</p>
 
