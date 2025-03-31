@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.">
+
+  <meta itemprop="name" content="VCF Quick Tip - WLD with single NSX Manager">
+  <meta itemprop="description" content="Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.">
+  <meta itemprop="datePublished" content="2025-04-01T00:42:39+02:00">
+  <meta itemprop="dateModified" content="2025-04-01T00:42:39+02:00">
+  <meta itemprop="wordCount" content="977">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta itemprop="keywords" content="Vcf,Nsx,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-single-nsx/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="VCF Quick Tip - WLD with single NSX Manager">
+  <meta property="og:description" content="Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-04-01T00:42:39+02:00">
+    <meta property="article:modified_time" content="2025-04-01T00:42:39+02:00">
+    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Homelab">
+    <meta property="og:image" content="https://sdn-warrior.org/images/logo.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/logo.jpg">
+  <meta name="twitter:title" content="VCF Quick Tip - WLD with single NSX Manager">
+  <meta name="twitter:description" content="Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF Quick Tip - WLD with single NSX Manager",
+    "name": "VCF Quick Tip - WLD with single NSX Manager",
+    "description": "Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.",
+    "keywords": ["vcf", "nsx", "homelab"],
+    "articleBody": "Introduction Here is a quick VCF tip for anyone who wants to deploy VCF but doesn’t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager. We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.\nWarning\rPlease only use this in the lab. The setup is completely unsupported and should never be carried out in a productive environment.\rManagement Domain To reduce the management domain to 3 vSAN hosts, we have to log in to the Cloud Builder as admin via SSH and switch to root. In the directory /etc/vmware/vcf/bringup/, application.properties must be adapted and the following line must be changed to the value 3.\nbringup.mgmt.cluster.minimum.size=3 After that, the bringup service must be restarted.\nsystemctl restart vcf-bringup.service After the adjustments, we can deploy a management domain with only three hosts – nice. For this to work, the deployment must be done via a JSON. There is a good JSON generator from Martin Gustafsson (great tool) or you can upload the VMware Excel Sheet to the Cloudbuilder and use the built-in json generator.\nUsing the SoS Utility JSON Generator The JSON generator options within the SoS Utility provide a method to execute the creation of the JSON file from a completed deployment parameter workbook. To run the JSON generator, you must provide, as a minimum, a path to the deployment parameter workbook and the design type using the following syntax:\n/opt/vmware/sddc-support/sos --jsongenerator --jsongenerator-input /tmp/vcf-ems-deployment-parameter.xlsx --jsongenerator-design vcf-ems Option Description --jsongenerator Invokes the JSON generator utility. --jsongenerator-input Specify the path to the input file to be used by the JSON generator utility. For example: /tmp/vcf-ems-deployment-parameter.xlsx. --jsongenerator-design vcf-ems Use vcf-ems for VMware Cloud Foundation. --jsongenerator-design vcf-vxrail Use vcf-vxrail for VMware Cloud Foundation on Dell VxRail. --jsongenerator-supress Supress confirmation to force cleanup directory. (optional) --jsongenerator-logs Specify the logs directory path. In order to deploy our management domain with only three ESX Servers and one NSX Manager, all we need to do is adjust the JSON so that it contains only three ESX Servers (the Bringup Excel expects four ESX Servers and three NSX Managers) and only one NSX Manager plus the NSX Manager VIP is available.\nMy sample JSON for my Workload Domain\n{ \"deployWithoutLicenseKeys\": true, \"skipEsxThumbprintValidation\": true, \"managementPoolName\": \"networkpool-001\", \"sddcManagerSpec\": { \"secondUserCredentials\": { \"username\": \"vcf\", \"password\": \"xxx\" }, \"ipAddress\": \"10.28.0.4\", \"hostname\": \"vcf02\", \"rootUserCredentials\": { \"username\": \"root\", \"password\": \"xxx\" }, \"localUserPassword\": \"xxx\" }, \"sddcId\": \"vcf02-m01\", \"esxLicense\": null, \"workflowType\": \"VCF\", \"ceipEnabled\": false, \"fipsEnabled\": false, \"ntpServers\": [\"192.168.12.1\"], \"dnsSpec\": { \"secondaryNameserver\": \"192.168.100.254\", \"subdomain\": \"lab.home\", \"domain\": \"lab.home\", \"nameserver\": \"192.168.11.2\" }, \"networkSpecs\": [ { \"networkType\": \"MANAGEMENT\", \"subnet\": \"10.28.1.0/24\", \"gateway\": \"10.28.1.1\", \"vlanId\": \"1001\", \"mtu\": \"1500\", \"portGroupKey\": \"SDDC-DPortGroup-Mgmt\" }, { \"networkType\": \"VMOTION\", \"subnet\": \"10.28.2.0/24\", \"gateway\": \"10.28.2.1\", \"vlanId\": \"1002\", \"mtu\": \"1700\", \"portGroupKey\": \"SDDC-DPortGroup-vMotion\", \"includeIpAddressRanges\": [ { \"endIpAddress\": \"10.28.2.104\", \"startIpAddress\": \"10.28.2.101\" } ] }, { \"networkType\": \"VSAN\", \"subnet\": \"10.28.3.0/24\", \"gateway\": \"10.28.3.1\", \"vlanId\": \"1003\", \"mtu\": \"1700\", \"portGroupKey\": \"SDDC-DPortGroup-VSAN\", \"includeIpAddressRanges\": [ { \"endIpAddress\": \"10.28.3.104\", \"startIpAddress\": \"10.28.3.101\" } ] }, { \"networkType\": \"VM_MANAGEMENT\", \"subnet\": \"10.28.0.0/24\", \"gateway\": \"10.28.0.1\", \"vlanId\": \"1000\", \"mtu\": \"1700\", \"portGroupKey\": \"SDDC-DPortGroup-VM-Mgmt\" } ], \"nsxtSpec\": { \"nsxtManagerSize\": \"small\", \"nsxtManagers\": [ { \"hostname\": \"vcf02-m01-nsx01a\", \"ip\": \"10.28.0.3\" } ], \"rootNsxtManagerPassword\": \"xxx\", \"nsxtAdminPassword\": \"xxx\", \"nsxtAuditPassword\": \"xxx\", \"vip\": \"10.28.0.2\", \"vipFqdn\": \"vcf02-m01-nsx01\", \"nsxtLicense\": null, \"transportVlanId\": 1004 }, \"vsanSpec\": { \"vsanDedup\": \"false\", \"esaConfig\": { \"enabled\": false }, \"datastoreName\": \"m01-cluster-001-vsan\" }, \"dvsSpecs\": [ { \"dvsName\": \"sfo-m01-vds1\", \"vmnics\": [\"vmnic0\", \"vmnic1\"], \"mtu\": 1700, \"networks\": [\"MANAGEMENT\", \"VMOTION\", \"VSAN\", \"VM_MANAGEMENT\"], \"niocSpecs\": [ { \"trafficType\": \"VSAN\", \"value\": \"HIGH\" }, { \"trafficType\": \"VMOTION\", \"value\": \"LOW\" }, { \"trafficType\": \"VDP\", \"value\": \"LOW\" }, { \"trafficType\": \"VIRTUALMACHINE\", \"value\": \"HIGH\" }, { \"trafficType\": \"MANAGEMENT\", \"value\": \"NORMAL\" }, { \"trafficType\": \"NFS\", \"value\": \"LOW\" }, { \"trafficType\": \"HBR\", \"value\": \"LOW\" }, { \"trafficType\": \"FAULTTOLERANCE\", \"value\": \"LOW\" }, { \"trafficType\": \"ISCSI\", \"value\": \"LOW\" } ], \"nsxtSwitchConfig\": { \"transportZones\": [ { \"name\": \"vcf02-m01-tz-overlay01\", \"transportType\": \"OVERLAY\" }, { \"name\": \"vcf02-m01-tz-vlan01\", \"transportType\": \"VLAN\" } ] } } ], \"clusterSpec\": { \"clusterName\": \"sfo-m01-cluster-001\", \"clusterEvcMode\": null, \"clusterImageEnabled\": true, \"vmFolders\": { \"MANAGEMENT\": \"vcf02-m01-fd-mgmt\", \"NETWORKING\": \"vcf02-m01-fd-nsx\", \"EDGENODES\": \"vcf02-m01-fd-edge\" }, \"resourcePoolSpecs\": [ { \"name\": \"m01-cluster-001-management-001\", \"type\": \"management\", \"cpuReservationPercentage\": 0, \"cpuLimit\": -1, \"cpuReservationExpandable\": true, \"cpuSharesLevel\": \"normal\", \"cpuSharesValue\": 0, \"memoryReservationMb\": 0, \"memoryLimit\": -1, \"memoryReservationExpandable\": true, \"memorySharesLevel\": \"normal\", \"memorySharesValue\": 0 }, { \"name\": \"m01-cluster-001-compute-002\", \"type\": \"compute\", \"cpuReservationPercentage\": 0, \"cpuLimit\": -1, \"cpuReservationExpandable\": true, \"cpuSharesLevel\": \"normal\", \"cpuSharesValue\": 0, \"memoryReservationPercentage\": 0, \"memoryLimit\": -1, \"memoryReservationExpandable\": true, \"memorySharesLevel\": \"normal\", \"memorySharesValue\": 0 }, { \"name\": \"m01-cluster-001-compute-003\", \"type\": \"compute\", \"cpuReservationPercentage\": 0, \"cpuLimit\": -1, \"cpuReservationExpandable\": true, \"cpuSharesLevel\": \"normal\", \"cpuSharesValue\": 0, \"memoryReservationPercentage\": 0, \"memoryLimit\": -1, \"memoryReservationExpandable\": true, \"memorySharesLevel\": \"normal\", \"memorySharesValue\": 0 } ] }, \"pscSpecs\": [ { \"adminUserSsoPassword\": \"xxx\", \"pscSsoSpec\": { \"ssoDomain\": \"vsphere.local\" } } ], \"vcenterSpec\": { \"vcenterIp\": \"10.28.0.5\", \"vcenterHostname\": \"vcf02-vcsa\", \"vmSize\": \"small\", \"storageSize\": null, \"rootVcenterPassword\": \"xxx\" }, \"hostSpecs\": [ { \"association\": \"sfo-m01-datacenter\", \"hostname\": \"vcf02-m01-esx01\", \"credentials\": { \"username\": \"root\", \"password\": \"xxx\" } }, { \"association\": \"sfo-m01-datacenter\", \"hostname\": \"vcf02-m01-esx02\", \"credentials\": { \"username\": \"root\", \"password\": \"xxx\" } }, { \"association\": \"sfo-m01-datacenter\", \"hostname\": \"vcf02-m01-esx03\", \"credentials\": { \"username\": \"root\", \"password\": \"xxx\" } } ] } VI Workload Domain In order to deploy a new workload domain with only one NSX manager, we have to manipulate the SDDC manager. Unfortunately, it is not sufficient to simply generate a JSON with only one NSX manager. However, the process is not particularly complicated.\nWe need to log in to the SDDC Manager via SSH. To do this, we need to use the VCF user. Then we switch to the root context with su and edit the following file:\n/etc/vmware/vcf/domainmanager/application-prod.properties We have to add 3 lines of configuration.\nnsxt.manager.formfactor=medium nsxt.management.resources.validation.skip=true nsxt.manager.cluster.size=1 After that, we restart the domainmanager service and we are good to go.\nsystemctl restart domainmanager.service After the adjustments, we can deploy the workload domain with just one NSX manager via the API and a JSON file. I will describe in detail how exactly this works in a separate article. Happy VCF deployment!\n",
+    "wordCount" : "977",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/fan.jpg","datePublished": "2025-04-01T00:42:39+02:00",
+    "dateModified": "2025-04-01T00:42:39+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/vcf-single-nsx/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>VCF Quick Tip - WLD with single NSX Manager</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eb98efc18cb9c6a86651dce801c60b6d61ad5a37f7a6c35512028a9050e32033.css" integrity="sha256-65jvwYy5xqhmUdzoAcYLbWGtWjf3psNVEgKKkFDjIDM=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/fan.jpg');}</style></head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-single-nsx%2f&amp;text=VCF%20Quick%20Tip%20-%20WLD%20with%20single%20NSX%20Manager" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-single-nsx%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF%20Quick%20Tip%20-%20WLD%20with%20single%20NSX%20Manager&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-single-nsx%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-single-nsx%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%20Quick%20Tip%20-%20WLD%20with%20single%20NSX%20Manager&amp;summary=VCF%20Quick%20Tip%20-%20WLD%20with%20single%20NSX%20Manager%2c%20by%20SDN-Warrior%0a%0aManipulate%20the%20SDDC%20Manager%20and%20Cloud%20Builder%20to%20enable%20deployment%20with%20only%20one%20NSX%20Manager.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF Quick Tip - WLD with single NSX Manager&#34;,&#34;https://sdn-warrior.org/posts/vcf-single-nsx/&#34;,&#34;VCF Quick Tip - WLD with single NSX Manager, by SDN-Warrior\n\nManipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Apr 1, 2025</span></div>
+				<h1>VCF Quick Tip - WLD with single NSX Manager</h1>
+			</header>
+			<div class="post-info"><p>Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>977 Words
+     Words // ReadTime
+    
+    
+    
+    4 Minutes, 26 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2025-04-01 00:42 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.
+We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">Please only use this in the lab. The setup is completely unsupported and should never be carried out in a productive environment.</div>
+    </aside>
+<h2 id="management-domain">Management Domain<a href="#management-domain" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To reduce the management domain to 3 vSAN hosts, we have to log in to the Cloud Builder as admin via SSH and switch to root.
+In the directory <em><strong>/etc/vmware/vcf/bringup/</strong></em>, application.properties must be adapted and the following line must be changed to the value 3.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">bringup.mgmt.cluster.minimum.size=3
+</span></span></code></pre></div><p>After that, the bringup service must be restarted.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">systemctl restart vcf-bringup.service
+</span></span></code></pre></div><p>After the adjustments, we can deploy a management domain with only three hosts – nice.
+For this to work, the deployment must be done via a JSON. There is a good JSON generator from <a href="https://www.martingustafsson.com/vcf-ui-json/">Martin Gustafsson</a> (great tool) or you can upload the VMware Excel Sheet to the Cloudbuilder and use the built-in json generator.</p>
+<h3 id="using-the-sos-utility-json-generator">Using the SoS Utility JSON Generator<a href="#using-the-sos-utility-json-generator" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The JSON generator options within the SoS Utility provide a method to execute the creation of the JSON file from a completed deployment parameter workbook. To run the JSON generator, you must provide, as a minimum, a path to the deployment parameter workbook and the design type using the following syntax:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/opt/vmware/sddc-support/sos --jsongenerator --jsongenerator-input /tmp/vcf-ems-deployment-parameter.xlsx --jsongenerator-design vcf-ems
+</span></span></code></pre></div><table>
+  <thead>
+      <tr>
+          <th>Option</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>--jsongenerator</code></td>
+          <td>Invokes the JSON generator utility.</td>
+      </tr>
+      <tr>
+          <td><code>--jsongenerator-input &lt;JSONGENERATORINPUT&gt;</code></td>
+          <td>Specify the path to the input file to be used by the JSON generator utility. For example: <code>/tmp/vcf-ems-deployment-parameter.xlsx</code>.</td>
+      </tr>
+      <tr>
+          <td><code>--jsongenerator-design vcf-ems</code></td>
+          <td>Use <code>vcf-ems</code> for VMware Cloud Foundation.</td>
+      </tr>
+      <tr>
+          <td><code>--jsongenerator-design vcf-vxrail</code></td>
+          <td>Use <code>vcf-vxrail</code> for VMware Cloud Foundation on Dell VxRail.</td>
+      </tr>
+      <tr>
+          <td><code>--jsongenerator-supress</code></td>
+          <td>Supress confirmation to force cleanup directory. (optional)</td>
+      </tr>
+      <tr>
+          <td><code>--jsongenerator-logs &lt;JSONGENERATORLOGS&gt;</code></td>
+          <td>Specify the logs directory path.</td>
+      </tr>
+  </tbody>
+</table>
+<p>In order to deploy our management domain with only three ESX Servers and one NSX Manager, all we need to do is adjust the JSON so that it contains only three ESX Servers (the Bringup Excel expects four ESX Servers and three NSX Managers) and only one NSX Manager plus the NSX Manager VIP is available.</p>
+<p>My sample JSON for my Workload Domain</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;deployWithoutLicenseKeys&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;skipEsxThumbprintValidation&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;managementPoolName&#34;</span><span class="p">:</span> <span class="s2">&#34;networkpool-001&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;sddcManagerSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;secondUserCredentials&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ipAddress&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.4&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rootUserCredentials&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;localUserPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;sddcId&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;esxLicense&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;workflowType&#34;</span><span class="p">:</span> <span class="s2">&#34;VCF&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;ceipEnabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;fipsEnabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;ntpServers&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;192.168.12.1&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;dnsSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;secondaryNameserver&#34;</span><span class="p">:</span> <span class="s2">&#34;192.168.100.254&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;subdomain&#34;</span><span class="p">:</span> <span class="s2">&#34;lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;domain&#34;</span><span class="p">:</span> <span class="s2">&#34;lab.home&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;nameserver&#34;</span><span class="p">:</span> <span class="s2">&#34;192.168.11.2&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;networkSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;networkType&#34;</span><span class="p">:</span> <span class="s2">&#34;MANAGEMENT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.1.0/24&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.1.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vlanId&#34;</span><span class="p">:</span> <span class="s2">&#34;1001&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="s2">&#34;1500&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;portGroupKey&#34;</span><span class="p">:</span> <span class="s2">&#34;SDDC-DPortGroup-Mgmt&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;networkType&#34;</span><span class="p">:</span> <span class="s2">&#34;VMOTION&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.2.0/24&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.2.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vlanId&#34;</span><span class="p">:</span> <span class="s2">&#34;1002&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="s2">&#34;1700&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;portGroupKey&#34;</span><span class="p">:</span> <span class="s2">&#34;SDDC-DPortGroup-vMotion&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;includeIpAddressRanges&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;endIpAddress&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.2.104&#34;</span><span class="p">,</span> <span class="nt">&#34;startIpAddress&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.2.101&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;networkType&#34;</span><span class="p">:</span> <span class="s2">&#34;VSAN&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.3.0/24&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.3.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vlanId&#34;</span><span class="p">:</span> <span class="s2">&#34;1003&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="s2">&#34;1700&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;portGroupKey&#34;</span><span class="p">:</span> <span class="s2">&#34;SDDC-DPortGroup-VSAN&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;includeIpAddressRanges&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;endIpAddress&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.3.104&#34;</span><span class="p">,</span> <span class="nt">&#34;startIpAddress&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.3.101&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;networkType&#34;</span><span class="p">:</span> <span class="s2">&#34;VM_MANAGEMENT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;subnet&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.0/24&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vlanId&#34;</span><span class="p">:</span> <span class="s2">&#34;1000&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="s2">&#34;1700&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;portGroupKey&#34;</span><span class="p">:</span> <span class="s2">&#34;SDDC-DPortGroup-VM-Mgmt&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;nsxtSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;nsxtManagerSize&#34;</span><span class="p">:</span> <span class="s2">&#34;small&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;nsxtManagers&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span> <span class="nt">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-nsx01a&#34;</span><span class="p">,</span> <span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.3&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rootNsxtManagerPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;nsxtAdminPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;nsxtAuditPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vip&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vipFqdn&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-nsx01&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;nsxtLicense&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;transportVlanId&#34;</span><span class="p">:</span> <span class="mi">1004</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;vsanSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vsanDedup&#34;</span><span class="p">:</span> <span class="s2">&#34;false&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;esaConfig&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;enabled&#34;</span><span class="p">:</span> <span class="kc">false</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;datastoreName&#34;</span><span class="p">:</span> <span class="s2">&#34;m01-cluster-001-vsan&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;dvsSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;dvsName&#34;</span><span class="p">:</span> <span class="s2">&#34;sfo-m01-vds1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vmnics&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;vmnic0&#34;</span><span class="p">,</span> <span class="s2">&#34;vmnic1&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="mi">1700</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;networks&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;MANAGEMENT&#34;</span><span class="p">,</span> <span class="s2">&#34;VMOTION&#34;</span><span class="p">,</span> <span class="s2">&#34;VSAN&#34;</span><span class="p">,</span> <span class="s2">&#34;VM_MANAGEMENT&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;niocSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;VSAN&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;HIGH&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;VMOTION&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;LOW&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;VDP&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;LOW&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;VIRTUALMACHINE&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;HIGH&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;MANAGEMENT&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;NORMAL&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;NFS&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;LOW&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;HBR&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;LOW&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;FAULTTOLERANCE&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;LOW&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="nt">&#34;trafficType&#34;</span><span class="p">:</span> <span class="s2">&#34;ISCSI&#34;</span><span class="p">,</span> <span class="nt">&#34;value&#34;</span><span class="p">:</span> <span class="s2">&#34;LOW&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;nsxtSwitchConfig&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;transportZones&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">          <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-tz-overlay01&#34;</span><span class="p">,</span> <span class="nt">&#34;transportType&#34;</span><span class="p">:</span> <span class="s2">&#34;OVERLAY&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">          <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-tz-vlan01&#34;</span><span class="p">,</span> <span class="nt">&#34;transportType&#34;</span><span class="p">:</span> <span class="s2">&#34;VLAN&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;clusterSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;clusterName&#34;</span><span class="p">:</span> <span class="s2">&#34;sfo-m01-cluster-001&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;clusterEvcMode&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;clusterImageEnabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vmFolders&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;MANAGEMENT&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-fd-mgmt&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;NETWORKING&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-fd-nsx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;EDGENODES&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-fd-edge&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;resourcePoolSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;m01-cluster-001-management-001&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;management&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuReservationPercentage&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuLimit&#34;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuReservationExpandable&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuSharesLevel&#34;</span><span class="p">:</span> <span class="s2">&#34;normal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuSharesValue&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryReservationMb&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryLimit&#34;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryReservationExpandable&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memorySharesLevel&#34;</span><span class="p">:</span> <span class="s2">&#34;normal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memorySharesValue&#34;</span><span class="p">:</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;m01-cluster-001-compute-002&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;compute&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuReservationPercentage&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuLimit&#34;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuReservationExpandable&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuSharesLevel&#34;</span><span class="p">:</span> <span class="s2">&#34;normal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuSharesValue&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryReservationPercentage&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryLimit&#34;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryReservationExpandable&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memorySharesLevel&#34;</span><span class="p">:</span> <span class="s2">&#34;normal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memorySharesValue&#34;</span><span class="p">:</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;m01-cluster-001-compute-003&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;compute&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuReservationPercentage&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuLimit&#34;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuReservationExpandable&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuSharesLevel&#34;</span><span class="p">:</span> <span class="s2">&#34;normal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cpuSharesValue&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryReservationPercentage&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryLimit&#34;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memoryReservationExpandable&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memorySharesLevel&#34;</span><span class="p">:</span> <span class="s2">&#34;normal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;memorySharesValue&#34;</span><span class="p">:</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;pscSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;adminUserSsoPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;pscSsoSpec&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;ssoDomain&#34;</span><span class="p">:</span> <span class="s2">&#34;vsphere.local&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;vcenterSpec&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vcenterIp&#34;</span><span class="p">:</span> <span class="s2">&#34;10.28.0.5&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vcenterHostname&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-vcsa&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vmSize&#34;</span><span class="p">:</span> <span class="s2">&#34;small&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;storageSize&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rootVcenterPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;hostSpecs&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;association&#34;</span><span class="p">:</span> <span class="s2">&#34;sfo-m01-datacenter&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-esx01&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;credentials&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span> <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;association&#34;</span><span class="p">:</span> <span class="s2">&#34;sfo-m01-datacenter&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-esx02&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;credentials&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span> <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;association&#34;</span><span class="p">:</span> <span class="s2">&#34;sfo-m01-datacenter&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf02-m01-esx03&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;credentials&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span> <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="vi-workload-domain">VI Workload Domain<a href="#vi-workload-domain" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In order to deploy a new workload domain with only one NSX manager, we have to manipulate the SDDC manager.
+Unfortunately, it is not sufficient to simply generate a JSON with only one NSX manager.
+However, the process is not particularly complicated.</p>
+<p>We need to log in to the SDDC Manager via SSH. To do this, we need to use the VCF user. Then we switch to the root context with su and edit the following file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/etc/vmware/vcf/domainmanager/application-prod.properties
+</span></span></code></pre></div><p>We have to add 3 lines of configuration.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">nsxt.manager.formfactor=medium
+</span></span><span class="line"><span class="cl">nsxt.management.resources.validation.skip=true
+</span></span><span class="line"><span class="cl">nsxt.manager.cluster.size=1
+</span></span></code></pre></div><p>After that, we restart the domainmanager service and we are good to go.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">systemctl restart domainmanager.service
+</span></span></code></pre></div><p>After the adjustments, we can deploy the workload domain with just one NSX manager via the API and a JSON file. I will describe in detail how exactly this works in a separate article.
+Happy VCF deployment!</p>
+
+			</div>
+			
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf-stretched-cluster/">VCF Stretched Cluster</a></li>
+	
+	<li><a href="/posts/vcf-import-overlay/">VCF Import Tool - Enable Overlay in an imported VCF Domain</a></li>
+	
+	<li><a href="/posts/vcf-import-cluster/">VCF Import Tool - Run VCF with NFS as principal Storage </a></li>
+	
+	<li><a href="/posts/homelab-v5/">Homelab V5</a></li>
+	
+	<li><a href="/posts/mac-learning/">MAC Learning is your friend</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF Stretched Cluster</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>
