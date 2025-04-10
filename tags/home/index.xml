@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Untagged on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/untagged/</link>
-    <description>Recent content in Untagged on SDN-Warrior | Daniel Krieger</description>
+    <title>Home on SDN-Warrior | Daniel Krieger</title>
+    <link>http://localhost:1313/tags/home/</link>
+    <description>Recent content in Home on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Thu, 10 Apr 2025 19:56:35 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/home/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Vcf Token</title>
+      <title>VCF - How to use the Broadcom Download Token</title>
       <link>http://localhost:1313/posts/vcf-token/</link>
       <pubDate>Thu, 10 Apr 2025 19:56:35 +0200</pubDate>
       <guid>http://localhost:1313/posts/vcf-token/</guid>

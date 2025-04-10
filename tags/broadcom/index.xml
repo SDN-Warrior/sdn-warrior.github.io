@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Thu, 13 Mar 2025 23:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 10 Apr 2025 22:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/broadcom/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF - How to use the Broadcom Download Token</title>
+      <link>https://sdn-warrior.org/posts/vcf-token/</link>
+      <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf-token/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF Stretched Cluster</title>
       <link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
