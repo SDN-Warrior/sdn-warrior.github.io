@@ -97,7 +97,7 @@ After customizing the products, the user name and password are ignored.</p>
         </picture><figcaption>
             <p>SDDC Depot settings (click to enlarge)</p>
           </figcaption></figure>
-<h2 id="validation">Validation</h2>
+<h2 id="validation-sddc-manager">Validation SDDC Manager</h2>
 <p>The easiest way to test it is of course to download a bundle. However, if there is no bundle available for download at the moment because everything has already been loaded, you can also check the debug log of the lcm. Since the SDDC searches cyclically for new bundles, calls to the new repo should be in the log.
 The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 
@@ -112,8 +112,8 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
         </div>
         <div class="admonition-content">The log contains the tokenid in plain text.</div>
     </aside>
-<pre tabindex="0"><code>Getting file size for /COMP/SDDC_MANAGER_VCF/manifests/bundle-14555.manifest.sig from URL https://dl.broadcom.com:443/&lt;token&gt;/PROD/COMP/SDDC_MANAGER_VCF/manifests/bundle-14555.manifest.sig
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Plaintext" data-lang="Plaintext"><span class="line"><span class="cl">Getting file size for /COMP/SDDC_MANAGER_VCF/manifests/bundle-14555.manifest.sig from URL https://dl.broadcom.com:443/&lt;token&gt;/PROD/COMP/SDDC_MANAGER_VCF/manifests/bundle-14555.manifest.sig
+</span></span></code></pre></div>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -125,8 +125,14 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
         </div>
         <div class="admonition-content">Broadcom writes that after patching the SDDC Manager, the changes must be made again. I think that there will be an adjustment in the next release of the SDDC and username and password in the GUI will be replaced by download tokens. Before every update of the SDDC manager it is recommended to read the release notes.</div>
     </aside>
-<h2 id="kb-article">KB Article</h2>
+<h2 id="update-vcenter">Update vCenter</h2>
+<p>The vCenter is very easy to setup. To do this, you must log in to vCenter Server Management (via port 5480) and log in with root. Under Update and then Settings you can enter a custom repo URL. Username and Password can be left empty as they are not needed.</p>
+<p>The following URL must be entered:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Plaintext" data-lang="Plaintext"><span class="line"><span class="cl">https://dl.broadcom.com/&lt;downloadToken&gt;/PROD/COMP/VCENTER/vmw/8d167796-34d5-4899-be0a-6daade4005a3/8.0.3.00400
+</span></span></code></pre></div><h2 id="kb-article">KB Article</h2>
 <p>Here is a summary KB article that links to all other KB articles for the other products. For some products, there is currently no scripted method. <a href="https://knowledge.broadcom.com/external/article/390098">Broadcom KB</a></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The manual way is relatively simple and quick if you do not want to execute the Powershell script from Broadcom for certain reasons. I have tested both variants and the Powershell script has the advantage that entries are validated. However, the execution policy must be changed to unrestricted for the Powershell script from Broadcom and there are customers who do not allow this. The manual method may then be preferable.</p>
 ]]></content>
 		</item>
 		
@@ -4423,26 +4429,42 @@ B = \text{Max} \left( \frac{R \times 1000000 \times I}{1000 \times 8}, \frac{R \
 <h4 id="1-token-refill-per-interval"><strong>1. Token Refill per Interval</strong></h4>
 \[
 B \geq \frac{R \times 1000000 \times I}{1000 \times 8}
-\]\[
+\]<p>
+Substitute the values:
+</p>
+\[
 B \geq \frac{30 \times 1000000 \times 1000}{1000 \times 8}
-\]\[
+\]<p>
+</p>
+\[
 B \geq \frac{30000000000}{8000}
-\]\[
+\]<p>
+</p>
+\[
 B \geq 3750000 \, \text{bytes}
 \]<h4 id="2-minimum-refill-interval"><strong>2. Minimum Refill Interval</strong></h4>
 \[
 B \geq \frac{R \times 1000000 \times 1000}{1000 \times 8}
-\]\[
+\]<p>
+This calculation remains the same as in the previous case since \( I = 1000 \, \text{ms} \):
+</p>
+\[
 B \geq 3750000 \, \text{bytes}
 \]<h4 id="3-mtu-constraint"><strong>3. MTU Constraint</strong></h4>
 \[
 B \geq MTU
-\]\[
+\]<p>
+</p>
+\[
 B \geq 1500 \, \text{bytes}
 \]<h4 id="final-burst-size"><strong>Final Burst Size</strong></h4>
+<p>The Burst Size \( B \) must satisfy <strong>all three constraints</strong>, so:
+</p>
 \[
 B = \text{Max}(3750000, 3750000, 1500)
-\]\[
+\]<p>
+</p>
+\[
 B = 3750000 \, \text{bytes}
 \]<h3 id="result"><strong>Result</strong></h3>
 <p>The minimum Burst Size required is <strong>3750000 bytes</strong> to satisfy all constraints with the given parameters.</p>

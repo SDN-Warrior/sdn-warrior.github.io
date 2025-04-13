@@ -29,7 +29,7 @@
   <meta itemprop="description" content="Exchange your NSX Manager certificates">
   <meta itemprop="datePublished" content="2024-04-05T23:22:00+01:00">
   <meta itemprop="dateModified" content="2024-04-05T23:22:00+01:00">
-  <meta itemprop="wordCount" content="439">
+  <meta itemprop="wordCount" content="436">
   <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
   <meta itemprop="keywords" content="Nsx,Tls,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-cert-exchange/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
@@ -58,8 +58,8 @@
     "name": "NSX 4.X Certificate exchange of the NSX Manager",
     "description": "Exchange your NSX Manager certificates",
     "keywords": ["nsx", "tls", "vmware"],
-    "articleBody": "NSX 4.X Certificate exchange of the NSX Manager Certificate creation First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.\n[req]\rdefault_bits = 4096\rdefault_md = sha256\rdays = 365\rdistinguished_name = req_distinguished_name\rreq_extensions = v3_req\rprompt = no\r[req_distinguished_name]\rC = DE\rST = RLP\rL = NW\rO = Land RLP\rOU = sdnwarrior\rCN = nsxm0001.lab.home\remailAddress = mail@lab.home\r[v3_req]\rsubjectAltName = @sans\r[sans]\rDNS.1 = nsxm0001.lab.home\rDNS.2 = nsxm0002.lab.home\rDNS.3 = nsxm0003.lab.home\rDNS.4 = nsxm0004.lab.home\rIP.1 = 192.168.12.110\rIP.2 = 192.168.12.111\rIP.3 = 192.168.12.112\rIP.4 = 192.168.12.113 The CSR is generated with the following command:\nopenssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf Two files are generated, a private key file and the actual request, which must be submitted to the CA.\nAttention\rThe CA must issue the certificate with the extension basicConstraints = cA:FALSE, otherwise the certificate cannot be used. With a Windows CA, this must be explicitly permitted in the template. If the extension is missing, the certificate validation will fail with an error message that the certificate key does not match the certificate.\rImport certificate The certificate can be imported in the NSX Manager under System \u003e Certificates \u003e Import. Here it must be ensured that the service certificate slider is set to NO. The complete certificate chain is also required. The certificate chain must be in the industry standard order of ‘certificate – intermediate – root.\nImport NSX Cert\nAfter the import, the certificate can be validated using an API request. API calls may vary depending on the NSX-T versions, in my example NSX version 4.1.2.3 is used.\nGET https:///api/v1/trust- management/certificates/?action=validate Exchange of certificates An API request must be executed for each manager node and for the VIP. This requires the certificate ID and the manager node ID. Both can be copied from the WebGUI or requested via API Get Requests.\nThe following API call is used to exchange the Manager Node certificate:\nPOST /api/v1/trust-management/certificates/?action=apply_certificate\u0026service_type=API\u0026node_id= The following API call is used to exchange the cluster VIP certificate:\nPOST /api/v1/trust-management/certificates/?action=apply_certificate\u0026service_type=MGMT_CLUSTER After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.\nFurther resources: VMware Administration Handbook\n",
-    "wordCount" : "439",
+    "articleBody": "NSX 4.X Certificate exchange of the NSX Manager Certificate creation First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.\n[req]\rdefault_bits = 4096\rdefault_md = sha256\rdays = 365\rdistinguished_name = req_distinguished_name\rreq_extensions = v3_req\rprompt = no\r[req_distinguished_name]\rC = DE\rST = RLP\rL = NW\rO = Land RLP\rOU = sdnwarrior\rCN = nsxm0001.lab.home\remailAddress = mail@lab.home\r[v3_req]\rsubjectAltName = @sans\r[sans]\rDNS.1 = nsxm0001.lab.home\rDNS.2 = nsxm0002.lab.home\rDNS.3 = nsxm0003.lab.home\rDNS.4 = nsxm0004.lab.home\rIP.1 = 192.168.12.110\rIP.2 = 192.168.12.111\rIP.3 = 192.168.12.112\rIP.4 = 192.168.12.113\rThe CSR is generated with the following command:\nopenssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf\rTwo files are generated, a private key file and the actual request, which must be submitted to the CA.\nAttention\rThe CA must issue the certificate with the extension basicConstraints = cA:FALSE, otherwise the certificate cannot be used. With a Windows CA, this must be explicitly permitted in the template. If the extension is missing, the certificate validation will fail with an error message that the certificate key does not match the certificate.\rImport certificate The certificate can be imported in the NSX Manager under System \u003e Certificates \u003e Import. Here it must be ensured that the service certificate slider is set to NO. The complete certificate chain is also required. The certificate chain must be in the industry standard order of ‘certificate – intermediate – root.\nImport NSX Cert\nAfter the import, the certificate can be validated using an API request. API calls may vary depending on the NSX-T versions, in my example NSX version 4.1.2.3 is used.\nGET https:///api/v1/trust- management/certificates/?action=validate\rExchange of certificates An API request must be executed for each manager node and for the VIP. This requires the certificate ID and the manager node ID. Both can be copied from the WebGUI or requested via API Get Requests.\nThe following API call is used to exchange the Manager Node certificate:\nPOST /api/v1/trust-management/certificates/?action=apply_certificate\u0026service_type=API\u0026node_id=\rThe following API call is used to exchange the cluster VIP certificate:\nPOST /api/v1/trust-management/certificates/?action=apply_certificate\u0026service_type=MGMT_CLUSTER\rAfter replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.\nFurther resources: VMware Administration Handbook\n",
+    "wordCount" : "436",
     "inLanguage": "en",
     "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2024-04-05T23:22:00+01:00",
     "dateModified": "2024-04-05T23:22:00+01:00",
@@ -198,12 +198,12 @@
       <line x1="16" y1="13" x2="8" y2="13"></line>
       <line x1="16" y1="17" x2="8" y2="17"></line>
       <polyline points="10 9 9 9 8 9"></polyline>
-   </svg>439 Words
+   </svg>436 Words
      Words // ReadTime
     
     
     
-    1 Minute, 59 Seconds</p>
+    1 Minute, 58 Seconds</p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -216,7 +216,7 @@
 				<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager<a href="#nsx-4x-certificate-exchange-of-the-nsx-manager" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <h1 id="certificate-creation">Certificate creation<a href="#certificate-creation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.</p>
-<pre tabindex="0"><code>[req]
+<pre class="mermaid">[req]
 default_bits = 4096
 default_md = sha256
 days = 365
@@ -245,9 +245,9 @@ IP.1 = 192.168.12.110
 IP.2 = 192.168.12.111
 IP.3 = 192.168.12.112
 IP.4 = 192.168.12.113
-</code></pre><p>The CSR is generated with the following command:</p>
-<pre tabindex="0"><code>openssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf
-</code></pre><p>Two files are generated, a private key file and the actual request, which must be submitted to the CA.</p>
+</pre><p>The CSR is generated with the following command:</p>
+<pre class="mermaid">openssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf
+</pre><p>Two files are generated, a private key file and the actual request, which must be submitted to the CA.</p>
 
     <aside class="admonition attention">
         <div class="admonition-title">
@@ -271,14 +271,14 @@ IP.4 = 192.168.12.113
           </figcaption></figure>
 <p>After the import, the certificate can be validated using an API request.
 API calls may vary depending on the NSX-T versions, in my example NSX version 4.1.2.3 is used.</p>
-<pre tabindex="0"><code>GET https://&lt;nsx-mgr&gt;/api/v1/trust- management/certificates/&lt;cert-id&gt;?action=validate
-</code></pre><h2 id="exchange-of-certificates">Exchange of certificates<a href="#exchange-of-certificates" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<pre class="mermaid">GET https://<nsx-mgr>/api/v1/trust- management/certificates/<cert-id>?action=validate
+</pre><h2 id="exchange-of-certificates">Exchange of certificates<a href="#exchange-of-certificates" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>An API request must be executed for each manager node and for the VIP. This requires the certificate ID and the manager node ID. Both can be copied from the WebGUI or requested via API Get Requests.</p>
 <p>The following API call is used to exchange the Manager Node certificate:</p>
-<pre tabindex="0"><code>POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=API&amp;node_id=&lt;node- id&gt;
-</code></pre><p>The following API call is used to exchange the cluster VIP certificate:</p>
-<pre tabindex="0"><code>POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=MGMT_CLUSTER
-</code></pre><p>After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.</p>
+<pre class="mermaid">POST /api/v1/trust-management/certificates/<cert- id>?action=apply_certificate&service_type=API&node_id=<node- id>
+</pre><p>The following API call is used to exchange the cluster VIP certificate:</p>
+<pre class="mermaid">POST /api/v1/trust-management/certificates/<cert- id>?action=apply_certificate&service_type=MGMT_CLUSTER
+</pre><p>After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.</p>
 <h2 id="further-resources">Further resources:<a href="#further-resources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p><a href="https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.2/administration/GUID-50C36862-A29D-48FA-8CE7-697E64E10E37.html">VMware Administration Handbook</a></p>
 
@@ -307,7 +307,10 @@ API calls may vary depending on the NSX-T versions, in my example NSX version 4.
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script><script defer async type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true,theme: 'dark' });
+    </script>
 </body>
 
 </html>

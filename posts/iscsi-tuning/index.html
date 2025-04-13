@@ -29,7 +29,7 @@
   <meta itemprop="description" content="Optimizing iSCSI Performance in an Unraid Environment">
   <meta itemprop="datePublished" content="2024-12-08T12:21:20+01:00">
   <meta itemprop="dateModified" content="2024-12-08T12:21:20+01:00">
-  <meta itemprop="wordCount" content="1084">
+  <meta itemprop="wordCount" content="1082">
   <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
   <meta itemprop="keywords" content="Unraid,Vmware,Esxi,Iscsi,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/iscsi-tuning/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
@@ -60,8 +60,8 @@
     "name": "iSCSI Tuning",
     "description": "Optimizing iSCSI Performance in an Unraid Environment",
     "keywords": ["unraid", "vmware", "esxi", "iscsi", "homelab"],
-    "articleBody": "In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.\nFor my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.\nTo further enhance performance, I’ve implemented several optimizations, including fine-tuning settings on my ESXi servers.\nOptimize MaxIoSizeKB One such optimization involves adjusting the maximum I/O size for iSCSI traffic.\nInfo\rBy default, VMware ESXi uses a MaxIoSizeKB value of 128 KB.\rWhile this is sufficient for many setups, it may not be optimal for environments like mine, where jumbo frames are enabled across the network. Larger packets perform better in such a configuration, reducing overhead and increasing throughput.\nTo take advantage of my network’s capabilities, I increased the MaxIoSizeKB parameter to 512 KB\nTo configure this, I ran the following command on my ESXi host:\nesxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512 This change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.\nAttention\rFor this change to take effect, a host reboot is required. After restarting the ESXi server, the new value will be applied, enabling the iSCSI initiator to send larger I/O requests.\rAfter the reboot, you can verify that the change has been successfully applied by running the following command:\nesxcli system settings advanced list -o /ISCSI/MaxIoSizeKB The output should look like this:\n[root@esxnuc1:~] esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB\rPath: /ISCSI/MaxIoSizeKB\rType: integer\rInt Value: 512\rDefault Int Value: 128\rMin Value: 128\rMax Value: 512\rString Value: Default String Value: Valid Characters: Description: Maximum Software iSCSI I/O size (in KB) (REQUIRES REBOOT!)\rHost Specific: false\rImpact: reboot Optimize multipathing To optimize performance, I configured Round Robin as the multipathing policy for my iSCSI volumes on the ESXi server. This ensures better load distribution and failover capabilities. The configuration can be applied via the ESXi CLI as follows:\nList all connected storage devices to identify the target naa or eui identifier: esxcli storage nmp device list Output naa.60014058f1117188efe49cb8b5de2273\rDevice Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)\rStorage Array Type: VMW_SATP_ALUA\rStorage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}\rPath Selection Policy: VMW_PSP_MRU\rPath Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}\rPath Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;\rWorking Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1\rIs USB: false Info\rThe default multipath policy is “Most Recently Used” (VM_PSP_MRU).\rSet the multipathing policy for the desired iSCSI device to RoundRobin: esxcli storage nmp device set --device --psp VMW_PSP_RR Verify that the policy has been successfully applied: esxcli storage nmp device list | grep Info\rReplace with the actual identifier of your iSCSI device (naa.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx).\"\rOutput after chages naa.60014058f1117188efe49cb8b5de2273\rDevice Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)\rStorage Array Type: VMW_SATP_ALUA\rStorage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}\rPath Selection Policy: VMW_PSP_RR\rPath Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}\rPath Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;\rWorking Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1\rIs USB: false Info\rthe multipath policy must now be VMW_PSP_RR\rTo further optimize path usage and load distribution, I adjusted the IOPS parameter for the Round Robin policy. By default, ESXi switches storage paths after 1000 I/O operations, but I used the following command snippet to change this behavior to switch after every single I/O:\nfor i in `esxcfg-scsidevs -c |awk '{print $1}' | grep naa.xxxx`; do esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i\rdone Where .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.\nHowever, when combined with changes like increasing MaxIoSizeKB, the outcome can vary. In some cases, this adjustment may yield better results, while in others it could degrade performance. Therefore, it’s crucial to test these parameters individually for each storage environment to determine the most effective configuration.\nWhy Jumbo Frames Matter (bonus) Jumbo frames allow Ethernet frames larger than the standard 1500 bytes to be transmitted, reducing the total number of frames required to send the same amount of data. This results in lower CPU overhead and better performance, particularly in high-bandwidth and storage-intensive environments. However, it’s essential to ensure that every device in the network path—NICs, switches, and storage systems—supports and is configured for jumbo frames for optimal performance.\nTo verify that jumbo frames are functioning correctly in your environment, you can use the vmkping command on your ESXi host:\nvmkping -I vmk1 -s 8973 -d 192.168.67.250 vmkping parameters\rReplace vmk1 with the VMkernel adapter used for iSCSI. -s 8972 sets the packet size to match the jumbo frame size (8972 bytes, including headers). -d enables the Don’t Fragment flag to ensure the packet isn’t fragmented along the way. If you see the error: sendto() failed (Message too long) this indicates that the packet size is too large to be transmitted without fragmentation. For a setup with an MTU of 9000 configured on the distributed or standard switch, a packet size of 8972 bytes should work correctly. If the error occurs, check your vswitch settings, your physical switches and your iSCSI target.\nConclusion By increasing the MaxIoSizeKB to 512 KB, verifying jumbo frame functionality with vmkping, and enabling Round Robin, I optimized my iSCSI setup to leverage the full potential of my 2.5G network.\nCriytalDiskMark Benchmark\nIn my tests with CrystalDiskMark, I observed that both network adapters showed significant performance improvements as a result of these optimizations. These adjustments allow my Unraid and iSCSI configuration to deliver a robust and high-performance block storage solution tailored to my workloads.\nDisclaimer The settings and configurations described in this article are specific to my environment and were tested extensively within my setup. While these adjustments significantly improved performance for my use case, they may not be universally applicable. It’s essential to test these settings in your environment before implementing them, as results may vary depending on hardware, network, and workload specifics. These optimizations are not intended as a blanket recommendation.\n",
-    "wordCount" : "1084",
+    "articleBody": "In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.\nFor my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.\nTo further enhance performance, I’ve implemented several optimizations, including fine-tuning settings on my ESXi servers.\nOptimize MaxIoSizeKB One such optimization involves adjusting the maximum I/O size for iSCSI traffic.\nInfo\rBy default, VMware ESXi uses a MaxIoSizeKB value of 128 KB.\rWhile this is sufficient for many setups, it may not be optimal for environments like mine, where jumbo frames are enabled across the network. Larger packets perform better in such a configuration, reducing overhead and increasing throughput.\nTo take advantage of my network’s capabilities, I increased the MaxIoSizeKB parameter to 512 KB\nTo configure this, I ran the following command on my ESXi host:\nesxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512\rThis change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.\nAttention\rFor this change to take effect, a host reboot is required. After restarting the ESXi server, the new value will be applied, enabling the iSCSI initiator to send larger I/O requests.\rAfter the reboot, you can verify that the change has been successfully applied by running the following command:\nesxcli system settings advanced list -o /ISCSI/MaxIoSizeKB\rThe output should look like this:\n[root@esxnuc1:~] esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB\rPath: /ISCSI/MaxIoSizeKB\rType: integer\rInt Value: 512\rDefault Int Value: 128\rMin Value: 128\rMax Value: 512\rString Value: Default String Value: Valid Characters: Description: Maximum Software iSCSI I/O size (in KB) (REQUIRES REBOOT!)\rHost Specific: false\rImpact: reboot\rOptimize multipathing To optimize performance, I configured Round Robin as the multipathing policy for my iSCSI volumes on the ESXi server. This ensures better load distribution and failover capabilities. The configuration can be applied via the ESXi CLI as follows:\nList all connected storage devices to identify the target naa or eui identifier: esxcli storage nmp device list\rOutput naa.60014058f1117188efe49cb8b5de2273\rDevice Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)\rStorage Array Type: VMW_SATP_ALUA\rStorage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}\rPath Selection Policy: VMW_PSP_MRU\rPath Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}\rPath Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;\rWorking Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1\rIs USB: false\rInfo\rThe default multipath policy is “Most Recently Used” (VM_PSP_MRU).\rSet the multipathing policy for the desired iSCSI device to RoundRobin: esxcli storage nmp device set --device --psp VMW_PSP_RR\rVerify that the policy has been successfully applied: esxcli storage nmp device list | grep Info\rReplace with the actual identifier of your iSCSI device (naa.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx).\"\rOutput after chages naa.60014058f1117188efe49cb8b5de2273\rDevice Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)\rStorage Array Type: VMW_SATP_ALUA\rStorage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}\rPath Selection Policy: VMW_PSP_RR\rPath Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}\rPath Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;\rWorking Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1\rIs USB: false\rInfo\rthe multipath policy must now be VMW_PSP_RR\rTo further optimize path usage and load distribution, I adjusted the IOPS parameter for the Round Robin policy. By default, ESXi switches storage paths after 1000 I/O operations, but I used the following command snippet to change this behavior to switch after every single I/O:\nfor i in `esxcfg-scsidevs -c |awk '{print $1}' | grep naa.xxxx`; do esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i\rdone\rWhere .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.\nHowever, when combined with changes like increasing MaxIoSizeKB, the outcome can vary. In some cases, this adjustment may yield better results, while in others it could degrade performance. Therefore, it’s crucial to test these parameters individually for each storage environment to determine the most effective configuration.\nWhy Jumbo Frames Matter (bonus) Jumbo frames allow Ethernet frames larger than the standard 1500 bytes to be transmitted, reducing the total number of frames required to send the same amount of data. This results in lower CPU overhead and better performance, particularly in high-bandwidth and storage-intensive environments. However, it’s essential to ensure that every device in the network path—NICs, switches, and storage systems—supports and is configured for jumbo frames for optimal performance.\nTo verify that jumbo frames are functioning correctly in your environment, you can use the vmkping command on your ESXi host:\nvmkping -I vmk1 -s 8973 -d 192.168.67.250\rvmkping parameters\rReplace vmk1 with the VMkernel adapter used for iSCSI. -s 8972 sets the packet size to match the jumbo frame size (8972 bytes, including headers). -d enables the Don’t Fragment flag to ensure the packet isn’t fragmented along the way. If you see the error: sendto() failed (Message too long) this indicates that the packet size is too large to be transmitted without fragmentation. For a setup with an MTU of 9000 configured on the distributed or standard switch, a packet size of 8972 bytes should work correctly. If the error occurs, check your vswitch settings, your physical switches and your iSCSI target.\nConclusion By increasing the MaxIoSizeKB to 512 KB, verifying jumbo frame functionality with vmkping, and enabling Round Robin, I optimized my iSCSI setup to leverage the full potential of my 2.5G network.\nCriytalDiskMark Benchmark\nIn my tests with CrystalDiskMark, I observed that both network adapters showed significant performance improvements as a result of these optimizations. These adjustments allow my Unraid and iSCSI configuration to deliver a robust and high-performance block storage solution tailored to my workloads.\nDisclaimer The settings and configurations described in this article are specific to my environment and were tested extensively within my setup. While these adjustments significantly improved performance for my use case, they may not be universally applicable. It’s essential to test these settings in your environment before implementing them, as results may vary depending on hardware, network, and workload specifics. These optimizations are not intended as a blanket recommendation.\n",
+    "wordCount" : "1082",
     "inLanguage": "en",
     "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2024-12-08T12:21:20+01:00",
     "dateModified": "2024-12-08T12:21:20+01:00",
@@ -200,7 +200,7 @@
       <line x1="16" y1="13" x2="8" y2="13"></line>
       <line x1="16" y1="17" x2="8" y2="17"></line>
       <polyline points="10 9 9 9 8 9"></polyline>
-   </svg>1084 Words
+   </svg>1082 Words
      Words // ReadTime
     
     
@@ -236,8 +236,8 @@
 like mine, where jumbo frames are enabled across the network. Larger packets perform better in such a configuration, reducing overhead and increasing throughput.</p>
 <p>To take advantage of my network&rsquo;s capabilities, I increased the <em><strong>MaxIoSizeKB</strong></em> parameter to 512 KB</p>
 <p>To configure this, I ran the following command on my ESXi host:</p>
-<pre tabindex="0"><code>esxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512
-</code></pre><p>This change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.</p>
+<pre class="mermaid">esxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512
+</pre><p>This change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.</p>
 
     <aside class="admonition attention">
         <div class="admonition-title">
@@ -250,9 +250,9 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
         <div class="admonition-content">For this change to take effect, a host reboot is required. After restarting the ESXi server, the new value will be applied, enabling the iSCSI initiator to send larger I/O requests.</div>
     </aside>
 <p>After the reboot, you can verify that the change has been successfully applied by running the following command:</p>
-<pre tabindex="0"><code>esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
-</code></pre><p>The output should look like this:</p>
-<pre tabindex="0"><code>[root@esxnuc1:~] esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
+<pre class="mermaid">esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
+</pre><p>The output should look like this:</p>
+<pre class="mermaid">[root@esxnuc1:~] esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
    Path: /ISCSI/MaxIoSizeKB
    Type: integer
    Int Value: 512
@@ -265,16 +265,16 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
    Description: Maximum Software iSCSI I/O size (in KB) (REQUIRES REBOOT!)
    Host Specific: false
    Impact: reboot
-</code></pre><h2 id="optimize-multipathing">Optimize multipathing<a href="#optimize-multipathing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+</pre><h2 id="optimize-multipathing">Optimize multipathing<a href="#optimize-multipathing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>To optimize performance, I configured Round Robin as the multipathing policy for my iSCSI volumes on the ESXi server. This ensures better load distribution and failover capabilities. The configuration can be applied via the ESXi CLI as follows:</p>
 <ul>
 <li>List all connected storage devices to identify the target naa or eui identifier:</li>
 </ul>
-<pre tabindex="0"><code>esxcli storage nmp device list
-</code></pre><ul>
+<pre class="mermaid">esxcli storage nmp device list
+</pre><ul>
 <li>Output</li>
 </ul>
-<pre tabindex="0"><code>naa.60014058f1117188efe49cb8b5de2273
+<pre class="mermaid">naa.60014058f1117188efe49cb8b5de2273
    Device Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)
    Storage Array Type: VMW_SATP_ALUA
    Storage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}
@@ -283,7 +283,7 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
    Path Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;
    Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
    Is USB: false
-</code></pre>
+</pre>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -298,12 +298,12 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <ul>
 <li>Set the multipathing policy for the desired iSCSI device to RoundRobin:</li>
 </ul>
-<pre tabindex="0"><code>esxcli storage nmp device set --device &lt;DeviceIdentifier&gt; --psp VMW_PSP_RR
-</code></pre><ul>
+<pre class="mermaid">esxcli storage nmp device set --device <DeviceIdentifier> --psp VMW_PSP_RR
+</pre><ul>
 <li>Verify that the policy has been successfully applied:</li>
 </ul>
-<pre tabindex="0"><code>esxcli storage nmp device list | grep &lt;DeviceIdentifier&gt;
-</code></pre>
+<pre class="mermaid">esxcli storage nmp device list | grep <DeviceIdentifier>
+</pre>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -318,7 +318,7 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <ul>
 <li>Output after chages</li>
 </ul>
-<pre tabindex="0"><code>naa.60014058f1117188efe49cb8b5de2273
+<pre class="mermaid">naa.60014058f1117188efe49cb8b5de2273
    Device Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)
    Storage Array Type: VMW_SATP_ALUA
    Storage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}
@@ -327,7 +327,7 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
    Path Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;
    Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
    Is USB: false
-</code></pre>
+</pre>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -340,16 +340,16 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
         <div class="admonition-content">the multipath policy must now be VMW_PSP_RR</div>
     </aside>
 <p>To further optimize path usage and load distribution, I adjusted the IOPS parameter for the Round Robin policy. By default, ESXi switches storage paths after 1000 I/O operations, but I used the following command snippet to change this behavior to switch after every single I/O:</p>
-<pre tabindex="0"><code>for i in `esxcfg-scsidevs -c |awk &#39;{print $1}&#39; | grep naa.xxxx`; do 
+<pre class="mermaid">for i in `esxcfg-scsidevs -c |awk '{print $1}' | grep naa.xxxx`; do 
    esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i
 done
-</code></pre><p>Where .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.</p>
+</pre><p>Where .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.</p>
 <p>However, when combined with changes like increasing MaxIoSizeKB, the outcome can vary. In some cases, this adjustment may yield better results, while in others it could degrade performance. Therefore, it’s crucial to test these parameters individually for each storage environment to determine the most effective configuration.</p>
 <h2 id="why-jumbo-frames-matter-bonus">Why Jumbo Frames Matter (bonus)<a href="#why-jumbo-frames-matter-bonus" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Jumbo frames allow Ethernet frames larger than the standard 1500 bytes to be transmitted, reducing the total number of frames required to send the same amount of data. This results in lower CPU overhead and better performance, particularly in high-bandwidth and storage-intensive environments. However, it’s essential to ensure that every device in the network path—NICs, switches, and storage systems—supports and is configured for jumbo frames for optimal performance.</p>
 <p>To verify that jumbo frames are functioning correctly in your environment, you can use the <em><strong>vmkping</strong></em> command on your ESXi host:</p>
-<pre tabindex="0"><code>vmkping -I vmk1 -s 8973 -d 192.168.67.250
-</code></pre>
+<pre class="mermaid">vmkping -I vmk1 -s 8973 -d 192.168.67.250
+</pre>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -430,7 +430,10 @@ done
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script><script defer async type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true,theme: 'dark' });
+    </script>
 </body>
 
 </html>
