@@ -1054,12 +1054,12 @@ This is used to test the transport over the <strong>NSX Geneve overlay</strong>.
 <p>We need to use our VCF import tool again so that our SDDC manager also knows that we now have an overlay transport zone and that we can deploy our AVN for the Aria Suite, for example. To do this, we perform a sync and wait for it to complete.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python3 vcf_brownfield.py sync --vcenter <span class="s1">&#39;vcf03-vcsa.lab.home&#39;</span> --sso-user <span class="s1">&#39;administrator@vsphere.local&#39;</span> --domain-name <span class="s1">&#39;mgmt&#39;</span>
 </span></span></code></pre></div><p>Don&rsquo;t be surprised if you get an error after the sync. However, you can ignore it and it is totally logical that it occurs.</p>
-<pre tabindex="0"><code>Status: VALIDATION_FAILED
-  Check Name: vCenter Server no NSX Manager present
-  Description: Check that the vCenter Server does not have an NSX Manager connected to it
-  Details: Detected an NSX Manager connected to the vCenter Server
-  Remediation: Please ensure that no NSX Manager is connected to the vCenter Server to be imported
-</code></pre><p>So our converted MGMT domain would be ready for use. Next, I deployed my Edge Cluster and then the Aria Suite. But that&rsquo;s not what this article is about.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Status: VALIDATION_FAILED
+</span></span><span class="line"><span class="cl">  Check Name: vCenter Server no NSX Manager present
+</span></span><span class="line"><span class="cl">  Description: Check that the vCenter Server does not have an NSX Manager connected to it
+</span></span><span class="line"><span class="cl">  Details: Detected an NSX Manager connected to the vCenter Server
+</span></span><span class="line"><span class="cl">  Remediation: Please ensure that no NSX Manager is connected to the vCenter Server to be imported
+</span></span></code></pre></div><p>So our converted MGMT domain would be ready for use. Next, I deployed my Edge Cluster and then the Aria Suite. But that&rsquo;s not what this article is about.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I really like the VCF Import tool, even though it still needs some fine-tuning here and there.
 The sync function is quite practical and is a good way to bring changes made outside of the SDDC Manager back into the SDDC Manager.
@@ -1852,17 +1852,17 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
             <p>HCX New Mobility Group (click to enlarge)</p>
           </figcaption></figure>
 <p>The migration was successful and there was only one ping interruption during the entire migration. The VM was functional and accessible the whole time. Thanks to the network extension, both east/west and north/south traffic works.</p>
-<pre tabindex="0"><code>64 bytes from 10.10.20.20: icmp_seq=34 ttl=60 time=6.854 ms
-64 bytes from 10.10.20.20: icmp_seq=35 ttl=60 time=2.144 ms
-Request timeout for icmp_seq 36
-64 bytes from 10.10.20.20: icmp_seq=37 ttl=60 time=11.416 ms
-64 bytes from 10.10.20.20: icmp_seq=38 ttl=60 time=4.916 ms
-64 bytes from 10.10.20.20: icmp_seq=39 ttl=60 time=3.661 ms
-64 bytes from 10.10.20.20: icmp_seq=40 ttl=60 time=3.842 ms
-
---- 10.10.20.20 ping statistics ---
-57 packets transmitted, 56 packets received, 1.8% packet loss
-</code></pre><p>After all VMs have been migrated from the source to the target, the network extension for the network via HCX can be removed. If desired, HCX can automatically connect the segments at the target to the T1 router. The segments at the source must then be manually disconnected from the source T1. As long as the same segment subnet is connected to the source and target at the local T1, routing problems may occur. This can be successfully prevented with local preference and AS-Path prepend, by making the segments on the source side less favorable if BGP is used. This only affects north/south connectivity. East/west connectivity is not affected.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=34 ttl=60 time=6.854 ms
+</span></span><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=35 ttl=60 time=2.144 ms
+</span></span><span class="line"><span class="cl">Request timeout for icmp_seq 36
+</span></span><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=37 ttl=60 time=11.416 ms
+</span></span><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=38 ttl=60 time=4.916 ms
+</span></span><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=39 ttl=60 time=3.661 ms
+</span></span><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=40 ttl=60 time=3.842 ms
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">--- 10.10.20.20 ping statistics ---
+</span></span><span class="line"><span class="cl">57 packets transmitted, 56 packets received, 1.8% packet loss
+</span></span></code></pre></div><p>After all VMs have been migrated from the source to the target, the network extension for the network via HCX can be removed. If desired, HCX can automatically connect the segments at the target to the T1 router. The segments at the source must then be manually disconnected from the source T1. As long as the same segment subnet is connected to the source and target at the local T1, routing problems may occur. This can be successfully prevented with local preference and AS-Path prepend, by making the segments on the source side less favorable if BGP is used. This only affects north/south connectivity. East/west connectivity is not affected.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I am aware that I have not even touched on all the functions of HCX. The tool is extremely powerful and you always have to look at the scenario for which you are using the right HCX use case. So I have not addressed the WAN optimization or the MON feature, nor have I gone into detail about the other migration options. The whole thing would go beyond the scope by far and I wanted to write about a scenario that I have already implemented for a customer. I can advise everyone to take a closer look at HCX. With HCX, you have a powerful migration tool that can help you out of unpleasant situations or simply simplifies mass migrations from A to B. Since HCX is now part of the VCF product portfolio, there is no reason not to use the tool.</p>
 ]]></content>
@@ -2023,15 +2023,15 @@ In addition to ESXi CLI commands, the NSX <strong>Traceflow</strong> tool can be
 <li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong> and <strong>Alpine02 (nic-533279-eth0-vmware-sfw.2)</strong>:<br>
 Both VMs have the following rules applied:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# PRE_FILTER rules
-rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
-# FILTER (APP Category) rules
-rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
-rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
-rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># PRE_FILTER rules
+</span></span><span class="line"><span class="cl">rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>ICMP traffic is explicitly allowed (rule 10217) for both IPv4 and IPv6 from any source to the address set associated with dFG_all_Alpine.
 All other traffic is rejected (rule 2), demonstrating that the rules are scoped correctly to the policy&rsquo;s <!-- raw HTML omitted --> field.
 Alpine02 (nic-533279-eth0-vmware-sfw.2):
@@ -2039,11 +2039,11 @@ The rules applied to Alpine02 are identical to those observed for Alpine01</p>
 <ol start="2">
 <li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2)</strong>:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# FILTER (APP Category) rules
-rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>Only the default reject rule is applied. Since Alpine03 is not a member of dFG_all_Alpine, the policy does not apply to this VM, confirming that the <!-- raw HTML omitted --> field in the policy limits enforcement to the intended scope.</p>
 <p>Conclusion for Test 1
 The results confirm the expected behavior:</p>
@@ -2088,35 +2088,35 @@ The Control VM (Alpine03), which is outside the Security Group, does not have th
 <li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong>:<br>
 The following rules were observed:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# PRE_FILTER rules
-rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
-# FILTER (APP Category) rules
-rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
-rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
-rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># PRE_FILTER rules
+</span></span><span class="line"><span class="cl">rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>The ICMP allow rule is enforced as expected, scoped to Alpine01, which is part of dFG_Alpine01.</p>
 <ol start="2">
 <li><strong>Alpine02 (nic-533279-eth0-vmware-sfw.2):</strong>
 The following rules were observed:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# FILTER (APP Category) rules
- rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl"> rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>The ICMP allow rule is not applied to Alpine02, as it is not part of dFG_Alpine01.</p>
 <ol start="3">
 <li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2):</strong>
 The following rules were observed:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
- # FILTER (APP Category) rules
- rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"> # FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl"> rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>As expected, no ICMP allow rule is applied since Alpine03 is not part of any relevant Security Group.</p>
 <h2 id="test-3-what-happens-if-we-use-security-group1-in-the-policy-applied-to-field-and-group2-in-the-rule-applied-to-field">Test 3: What Happens If We Use Security <code>&lt;group1&gt;</code> in the Policy <code>&lt;Applied To&gt;</code> Field and <code>&lt;group2&gt;</code> in the Rule <code>&lt;Applied To&gt;</code> Field?</h2>
 <p>In this test, I explore the interaction between the <code>&lt;Applied To&gt;</code> fields at the policy and rule levels when they reference different Security Groups. The configuration is as follows:</p>
@@ -2158,41 +2158,41 @@ The following rules were observed:</li>
 <ol>
 <li><strong>Alpine01 (nic-533240-eth0-vmware-sfw.2)</strong>:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# PRE_FILTER rules
-rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
-# FILTER (APP Category) rules
-rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
-rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
-rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-ruleset mainrs_L2 {
-# FILTER rules
-rule 1 at 1 inout ethertype any stateless from any to any accept;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># PRE_FILTER rules
+</span></span><span class="line"><span class="cl">rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">rule 10217 at 1 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">rule 10217 at 2 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">rule 2 at 3 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">ruleset mainrs_L2 {
+</span></span><span class="line"><span class="cl"># FILTER rules
+</span></span><span class="line"><span class="cl">rule 1 at 1 inout ethertype any stateless from any to any accept;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>ICMP traffic (IPv4 and IPv6) is explicitly allowed (rule 10217) for Alpine01.
 This behavior aligns with the policy&rsquo;s <!-- raw HTML omitted --> field, as Alpine01 is part of dFG_Alpine01.</p>
 <ol start="2">
 <li><strong>Alpine02 (nic-533279-eth0-vmware-sfw.2):</strong></li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# PRE_FILTER rules
-rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
-# FILTER (APP Category) rules
-rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># PRE_FILTER rules
+</span></span><span class="line"><span class="cl">rule 10216 at 1 inout protocol tcp strict from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 port 22 accept;
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:
 No ICMP allow rule is present for Alpine02, as it is not part of dFG_Alpine01, which is referenced in the policy&rsquo;s <!-- raw HTML omitted --> field.
 All traffic is rejected at the main ruleset level (rule 2), confirming that the rule-level <!-- raw HTML omitted --> field (set to dFG_Alpine02) does not enforce the rule here.</p>
 <ol start="3">
 <li><strong>Alpine03 (Control VM, nic-544799-eth0-vmware-sfw.2)</strong>:</li>
 </ol>
-<pre tabindex="0"><code>ruleset mainrs {
-# FILTER (APP Category) rules
-rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
-}
-</code></pre><p>Key Observations:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl"># FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">rule 2 at 1 inout protocol any from any to any reject with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Key Observations:</p>
 <p>The only rule applied at the main ruleset level is a default reject rule (rule 2), which blocks all traffic. This confirms that no ICMP allow rule from the policy or rule is applied to Alpine03, as it is not part of dFG_Alpine01.</p>
 
     <aside class="admonition info">
@@ -2661,8 +2661,8 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 </li>
 <li>
 <p>Alternatively, check the connectivity state from the Edge Transport Node page in the NSX UI. A disconnected NSX Edge node will show the system message:</p>
-<pre tabindex="0"><code>Configuration Error: Edge VM MPA Connectivity is down
-</code></pre></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Configuration Error: Edge VM MPA Connectivity is down
+</span></span></code></pre></div></li>
 </ul>
 </li>
 <li>
@@ -2910,17 +2910,17 @@ Ensure these values align with those defined in the node_settings section.</p>
 </li>
 </ul>
 <p>Here’s the project structure visualized:</p>
-<pre tabindex="0"><code>mikrotik/
-├── ansible.cfg          # Configuration file for project Ansible settings
-├── inventory.ini        # Inventory file with switch credentials
-├── vlan_esx.yml         # Main playbook
-├── group_vars/
-│   └── all.yml          # Global VLAN definitions and descriptions
-└── host_vars/
-    ├── 192.168.0.1.yml      # Variables for Switch 1 (interfaces, bridges)
-    ├── 192.168.0.5.yml      # Variables for Switch 2 (interfaces, bridges)
-    └── 192.168.0.7.yml      # Variables for Switch 3 (interfaces, bridges)
-</code></pre><h3 id="advantages-of-this-structure">Advantages of This Structure</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">mikrotik/
+</span></span><span class="line"><span class="cl">├── ansible.cfg          # Configuration file for project Ansible settings
+</span></span><span class="line"><span class="cl">├── inventory.ini        # Inventory file with switch credentials
+</span></span><span class="line"><span class="cl">├── vlan_esx.yml         # Main playbook
+</span></span><span class="line"><span class="cl">├── group_vars/
+</span></span><span class="line"><span class="cl">│   └── all.yml          # Global VLAN definitions and descriptions
+</span></span><span class="line"><span class="cl">└── host_vars/
+</span></span><span class="line"><span class="cl">    ├── 192.168.0.1.yml      # Variables for Switch 1 (interfaces, bridges)
+</span></span><span class="line"><span class="cl">    ├── 192.168.0.5.yml      # Variables for Switch 2 (interfaces, bridges)
+</span></span><span class="line"><span class="cl">    └── 192.168.0.7.yml      # Variables for Switch 3 (interfaces, bridges)
+</span></span></code></pre></div><h3 id="advantages-of-this-structure">Advantages of This Structure</h3>
 <p>One major advantage of this structure is its scalability. Adding another MikroTik switch is straightforward: I only need to create a new <code>host_var</code> file for the switch and update the <code>inventory.ini</code> file with its credentials.</p>
 <p>Additionally, since the playbook runs without requiring extra parameters, it simplifies the GitOps approach I plan to implement later. This means the entire process becomes more streamlined and easily automatable through pipelines, reducing complexity and potential for errors.</p>
 <h2 id="project-files">Project Files</h2>
@@ -3656,8 +3656,8 @@ This controlled sequence ensures the nested environment behaves predictably.</p>
 </span></span><span class="line"><span class="cl">  # Variables specific to management VMs are loaded from &#34;vcfvm_vars.yml&#34;.
 </span></span></code></pre></div><h3 id="starting-the-vms-via-the-ansible-master-playbook">Starting the VMs via the Ansible Master Playbook</h3>
 <p>Starting my VCF nested lab has never been easier. With the Ansible Master Playbook, it’s as simple as running a single command on my Ansible server:</p>
-<pre tabindex="0"><code>ansible-playbook mp_poweron_vcf.yml
-</code></pre><p>Within approximately 5-10 minutes (depending on the overall load on my lab), the entire VCF environment is up and ready to use—without any further manual intervention.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ansible-playbook mp_poweron_vcf.yml
+</span></span></code></pre></div><p>Within approximately 5-10 minutes (depending on the overall load on my lab), the entire VCF environment is up and ready to use—without any further manual intervention.</p>
 <p>The beauty of this setup lies in its flexibility:</p>
 <p>New labs can be easily added by simply creating a new inventory file and a customized master playbook.
 The core logic remains untouched, making it a scalable and modular solution for automating additional environments.
@@ -4279,25 +4279,25 @@ By analyzing the test results, we can confirm the effectiveness of the QoS profi
 <li><strong>Average Receiver Bitrate</strong>: 30.2 Mbps</li>
 <li><strong>Key Observation</strong>: The sender&rsquo;s bitrate fluctuates around the 30 Mbps mark, as expected due to the QoS ingress limitation applied to the LS-10.10.20.1 segment. Receiver bitrate is consistent with the QoS configuration, confirming that the profile effectively limits traffic from Alpine02 to Alpine03.</li>
 </ul>
-<pre tabindex="0"><code>alpine02:~# iperf3 -c 10.10.10.10
-Connecting to host 10.10.10.10, port 5201
-[  5] local 10.10.20.10 port 40468 connected to 10.10.10.10 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec  6.12 MBytes  51.3 Mbits/sec    0    522 KBytes       
-[  5]   1.00-2.00   sec  4.25 MBytes  35.7 Mbits/sec    0    522 KBytes       
-[  5]   2.00-3.00   sec  3.25 MBytes  27.3 Mbits/sec    0    522 KBytes       
-[  5]   3.00-4.00   sec  3.12 MBytes  26.2 Mbits/sec    0    522 KBytes       
-[  5]   4.00-5.00   sec  4.25 MBytes  35.7 Mbits/sec    0    522 KBytes       
-[  5]   5.00-6.00   sec  3.12 MBytes  26.2 Mbits/sec    0    522 KBytes       
-[  5]   6.00-7.00   sec  4.25 MBytes  35.6 Mbits/sec    0    522 KBytes       
-[  5]   7.00-8.00   sec  3.12 MBytes  26.2 Mbits/sec    2    365 KBytes       
-[  5]   8.00-9.00   sec  3.25 MBytes  27.3 Mbits/sec    0    365 KBytes       
-[  5]   9.00-10.00  sec  4.12 MBytes  34.6 Mbits/sec    0    365 KBytes       
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  38.9 MBytes  32.6 Mbits/sec    2        sender
-[  5]   0.00-10.00  sec  36.0 MBytes  30.2 Mbits/sec             receiver
-</code></pre><h3 id="second-test-iperf-test-from-alpine01-to-alpine02">Second Test: iPerf Test from Alpine01 to Alpine02</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alpine02:~# iperf3 -c 10.10.10.10
+</span></span><span class="line"><span class="cl">Connecting to host 10.10.10.10, port 5201
+</span></span><span class="line"><span class="cl">[  5] local 10.10.20.10 port 40468 connected to 10.10.10.10 port 5201
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl">[  5]   0.00-1.00   sec  6.12 MBytes  51.3 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   1.00-2.00   sec  4.25 MBytes  35.7 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   2.00-3.00   sec  3.25 MBytes  27.3 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   3.00-4.00   sec  3.12 MBytes  26.2 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   4.00-5.00   sec  4.25 MBytes  35.7 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   5.00-6.00   sec  3.12 MBytes  26.2 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   6.00-7.00   sec  4.25 MBytes  35.6 Mbits/sec    0    522 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   7.00-8.00   sec  3.12 MBytes  26.2 Mbits/sec    2    365 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   8.00-9.00   sec  3.25 MBytes  27.3 Mbits/sec    0    365 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   9.00-10.00  sec  4.12 MBytes  34.6 Mbits/sec    0    365 KBytes       
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  38.9 MBytes  32.6 Mbits/sec    2        sender
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  36.0 MBytes  30.2 Mbits/sec             receiver
+</span></span></code></pre></div><h3 id="second-test-iperf-test-from-alpine01-to-alpine02">Second Test: iPerf Test from Alpine01 to Alpine02</h3>
 <h4 id="test-configuration-1"><strong>Test Configuration</strong></h4>
 <ul>
 <li><strong>Source</strong>: Alpine01 (<code>10.10.10.10</code>) connected to the segment <code>LS-10.10.10.1</code> with no QoS policy applied.</li>
@@ -4311,27 +4311,27 @@ Connecting to host 10.10.10.10, port 5201
 <li><strong>Average Receiver Bitrate</strong>: 2.25 Gbps</li>
 <li><strong>Key Observation</strong>: The traffic from Alpine01 to Alpine02 is not limited by the QoS profile, as expected. This confirms the QoS profile applies only to ingress traffic on the <code>LS-10.10.20.1</code> segment.</li>
 </ul>
-<pre tabindex="0"><code>alpine01:~# iperf3 -c 10.10.20.10
-Connecting to host 10.10.20.10, port 5201
-[  5] local 10.10.10.10 port 50482 connected to 10.10.20.10 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   269 MBytes  2.25 Gbits/sec  150   2.08 MBytes       
-[  5]   1.00-2.00   sec   268 MBytes  2.25 Gbits/sec    0   2.19 MBytes       
-[  5]   2.00-3.00   sec   268 MBytes  2.25 Gbits/sec  172   1.21 MBytes       
-[  5]   3.00-4.00   sec   267 MBytes  2.24 Gbits/sec  150    997 KBytes       
-[  5]   4.00-5.00   sec   267 MBytes  2.24 Gbits/sec   11    673 KBytes       
-[  5]   5.00-6.00   sec   268 MBytes  2.24 Gbits/sec    0    928 KBytes       
-[  5]   6.00-7.00   sec   268 MBytes  2.25 Gbits/sec    0   1.10 MBytes       
-[  5]   7.00-8.00   sec   268 MBytes  2.25 Gbits/sec    0   1.27 MBytes       
-[  5]   8.00-9.00   sec   269 MBytes  2.25 Gbits/sec    0   1.42 MBytes       
-[  5]   9.00-10.00  sec   268 MBytes  2.25 Gbits/sec    6   1.11 MBytes       
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  2.62 GBytes  2.25 Gbits/sec  489             sender
-[  5]   0.00-10.01  sec  2.62 GBytes  2.25 Gbits/sec                  receiver
-
-iperf Done.
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alpine01:~# iperf3 -c 10.10.20.10
+</span></span><span class="line"><span class="cl">Connecting to host 10.10.20.10, port 5201
+</span></span><span class="line"><span class="cl">[  5] local 10.10.10.10 port 50482 connected to 10.10.20.10 port 5201
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl">[  5]   0.00-1.00   sec   269 MBytes  2.25 Gbits/sec  150   2.08 MBytes       
+</span></span><span class="line"><span class="cl">[  5]   1.00-2.00   sec   268 MBytes  2.25 Gbits/sec    0   2.19 MBytes       
+</span></span><span class="line"><span class="cl">[  5]   2.00-3.00   sec   268 MBytes  2.25 Gbits/sec  172   1.21 MBytes       
+</span></span><span class="line"><span class="cl">[  5]   3.00-4.00   sec   267 MBytes  2.24 Gbits/sec  150    997 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   4.00-5.00   sec   267 MBytes  2.24 Gbits/sec   11    673 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   5.00-6.00   sec   268 MBytes  2.24 Gbits/sec    0    928 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   6.00-7.00   sec   268 MBytes  2.25 Gbits/sec    0   1.10 MBytes       
+</span></span><span class="line"><span class="cl">[  5]   7.00-8.00   sec   268 MBytes  2.25 Gbits/sec    0   1.27 MBytes       
+</span></span><span class="line"><span class="cl">[  5]   8.00-9.00   sec   269 MBytes  2.25 Gbits/sec    0   1.42 MBytes       
+</span></span><span class="line"><span class="cl">[  5]   9.00-10.00  sec   268 MBytes  2.25 Gbits/sec    6   1.11 MBytes       
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  2.62 GBytes  2.25 Gbits/sec  489             sender
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.01  sec  2.62 GBytes  2.25 Gbits/sec                  receiver
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">iperf Done.
+</span></span></code></pre></div>
     <aside class="admonition attention">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
@@ -4509,27 +4509,27 @@ B = 3750000 \, \text{bytes}
 <li><strong>Tool</strong>: iPerf3</li>
 <li><strong>Command</strong>: <code>iperf3 -c 10.10.20.10</code></li>
 </ul>
-<pre tabindex="0"><code>alpine01:~# iperf3 -c 10.10.20.10 
-Connecting to host 10.10.20.10, port 5201
-[  5] local 10.10.10.10 port 33292 connected to 10.10.20.10 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec  7.25 MBytes  60.8 Mbits/sec  283   5.66 KBytes       
-[  5]   1.00-2.00   sec  3.25 MBytes  27.3 Mbits/sec  369   5.66 KBytes       
-[  5]   2.00-3.00   sec  3.00 MBytes  25.2 Mbits/sec  233   52.3 KBytes       
-[  5]   3.00-4.00   sec  3.75 MBytes  31.5 Mbits/sec  392   7.07 KBytes       
-[  5]   4.00-5.00   sec  3.12 MBytes  26.2 Mbits/sec  284   41.0 KBytes       
-[  5]   5.00-6.00   sec  3.88 MBytes  32.5 Mbits/sec  356   8.48 KBytes       
-[  5]   6.00-7.00   sec  3.25 MBytes  27.3 Mbits/sec  270   7.07 KBytes       
-[  5]   7.00-8.00   sec  3.62 MBytes  30.4 Mbits/sec  315    110 KBytes       
-[  5]   8.00-9.00   sec  3.50 MBytes  29.4 Mbits/sec  407   7.07 KBytes       
-[  5]   9.00-10.00  sec  3.00 MBytes  25.2 Mbits/sec  245   12.7 KBytes       
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  37.6 MBytes  31.6 Mbits/sec  3154             sender
-[  5]   0.00-10.00  sec  37.1 MBytes  31.1 Mbits/sec                  receiver
-
-iperf Done.
-</code></pre><h3 id="result-summary-2">Result Summary</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alpine01:~# iperf3 -c 10.10.20.10 
+</span></span><span class="line"><span class="cl">Connecting to host 10.10.20.10, port 5201
+</span></span><span class="line"><span class="cl">[  5] local 10.10.10.10 port 33292 connected to 10.10.20.10 port 5201
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl">[  5]   0.00-1.00   sec  7.25 MBytes  60.8 Mbits/sec  283   5.66 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   1.00-2.00   sec  3.25 MBytes  27.3 Mbits/sec  369   5.66 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   2.00-3.00   sec  3.00 MBytes  25.2 Mbits/sec  233   52.3 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   3.00-4.00   sec  3.75 MBytes  31.5 Mbits/sec  392   7.07 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   4.00-5.00   sec  3.12 MBytes  26.2 Mbits/sec  284   41.0 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   5.00-6.00   sec  3.88 MBytes  32.5 Mbits/sec  356   8.48 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   6.00-7.00   sec  3.25 MBytes  27.3 Mbits/sec  270   7.07 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   7.00-8.00   sec  3.62 MBytes  30.4 Mbits/sec  315    110 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   8.00-9.00   sec  3.50 MBytes  29.4 Mbits/sec  407   7.07 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   9.00-10.00  sec  3.00 MBytes  25.2 Mbits/sec  245   12.7 KBytes       
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  37.6 MBytes  31.6 Mbits/sec  3154             sender
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  37.1 MBytes  31.1 Mbits/sec                  receiver
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">iperf Done.
+</span></span></code></pre></div><h3 id="result-summary-2">Result Summary</h3>
 <ul>
 <li>Average Sender Bitrate: 31.6 Mbps</li>
 <li>Average Receiver Bitrate: 31.1 Mbps</li>
@@ -4544,25 +4544,25 @@ iperf Done.
 <li><strong>Tool</strong>: iPerf3</li>
 <li><strong>Command</strong>: <code>iperf3 -c 10.10.10.10</code></li>
 </ul>
-<pre tabindex="0"><code>alpine02:~# iperf3 -c 10.10.10.10
-Connecting to host 10.10.10.10, port 5201
-[  5] local 10.10.20.10 port 50200 connected to 10.10.10.10 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   249 MBytes  2.09 Gbits/sec    5    615 KBytes       
-[  5]   1.00-2.00   sec   267 MBytes  2.24 Gbits/sec    0    885 KBytes       
-[  5]   2.00-3.00   sec   159 MBytes  1.34 Gbits/sec   73    290 KBytes       
-[  5]   3.00-4.00   sec   248 MBytes  2.08 Gbits/sec    0    677 KBytes       
-[  5]   4.00-5.00   sec   261 MBytes  2.19 Gbits/sec    0    928 KBytes       
-[  5]   5.00-6.00   sec   264 MBytes  2.22 Gbits/sec    1    792 KBytes       
-[  5]   6.00-7.00   sec   260 MBytes  2.18 Gbits/sec   26    441 KBytes       
-[  5]   7.00-8.00   sec   257 MBytes  2.16 Gbits/sec    0    766 KBytes       
-[  5]   8.00-9.00   sec   262 MBytes  2.20 Gbits/sec    7    585 KBytes       
-[  5]   9.00-10.00  sec   262 MBytes  2.19 Gbits/sec    0    858 KBytes       
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  2.43 GBytes  2.09 Gbits/sec  112             sender
-[  5]   0.00-10.00  sec  2.43 GBytes  2.09 Gbits/sec                  receiver
-</code></pre><h3 id="result-summary-3">Result Summary</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alpine02:~# iperf3 -c 10.10.10.10
+</span></span><span class="line"><span class="cl">Connecting to host 10.10.10.10, port 5201
+</span></span><span class="line"><span class="cl">[  5] local 10.10.20.10 port 50200 connected to 10.10.10.10 port 5201
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl">[  5]   0.00-1.00   sec   249 MBytes  2.09 Gbits/sec    5    615 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   1.00-2.00   sec   267 MBytes  2.24 Gbits/sec    0    885 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   2.00-3.00   sec   159 MBytes  1.34 Gbits/sec   73    290 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   3.00-4.00   sec   248 MBytes  2.08 Gbits/sec    0    677 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   4.00-5.00   sec   261 MBytes  2.19 Gbits/sec    0    928 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   5.00-6.00   sec   264 MBytes  2.22 Gbits/sec    1    792 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   6.00-7.00   sec   260 MBytes  2.18 Gbits/sec   26    441 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   7.00-8.00   sec   257 MBytes  2.16 Gbits/sec    0    766 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   8.00-9.00   sec   262 MBytes  2.20 Gbits/sec    7    585 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   9.00-10.00  sec   262 MBytes  2.19 Gbits/sec    0    858 KBytes       
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  2.43 GBytes  2.09 Gbits/sec  112             sender
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  2.43 GBytes  2.09 Gbits/sec                  receiver
+</span></span></code></pre></div><h3 id="result-summary-3">Result Summary</h3>
 <ul>
 <li>Average Sender Bitrate: 2.09 Gbps</li>
 <li>Average Receiver Bitrate: 2.09 Gbps</li>
@@ -4578,25 +4578,25 @@ Connecting to host 10.10.10.10, port 5201
 <li><strong>Tool</strong>: iPerf3</li>
 <li><strong>Command</strong>: <code>iperf3 -c 10.10.20.10</code></li>
 </ul>
-<pre tabindex="0"><code>alpine01:~# iperf3 -c 10.10.20.10 
-Connecting to host 10.10.20.10, port 5201
-[  5] local 10.10.10.10 port 40898 connected to 10.10.20.10 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec  2.88 MBytes  24.1 Mbits/sec  475   8.48 KBytes       
-[  5]   1.00-2.00   sec  2.50 MBytes  21.0 Mbits/sec  212   53.7 KBytes       
-[  5]   2.00-3.00   sec  2.12 MBytes  17.8 Mbits/sec  233   9.90 KBytes       
-[  5]   3.00-4.00   sec  2.12 MBytes  17.8 Mbits/sec  145   1.41 KBytes       
-[  5]   4.00-5.00   sec  2.50 MBytes  21.0 Mbits/sec  237   14.1 KBytes       
-[  5]   5.00-6.00   sec  1.62 MBytes  13.6 Mbits/sec  145   22.6 KBytes       
-[  5]   6.00-7.00   sec  3.12 MBytes  26.2 Mbits/sec  331   5.66 KBytes       
-[  5]   7.00-8.00   sec  1.00 MBytes  8.39 Mbits/sec  155   7.07 KBytes       
-[  5]   8.00-9.00   sec  2.62 MBytes  22.0 Mbits/sec  142   86.3 KBytes       
-[  5]   9.00-10.00  sec  3.12 MBytes  26.2 Mbits/sec  349   22.6 KBytes       
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  23.6 MBytes  19.8 Mbits/sec  2424             sender
-[  5]   0.00-10.00  sec  22.4 MBytes  18.8 Mbits/sec                  receiver
-</code></pre><h3 id="result-summary-4">Result Summary</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alpine01:~# iperf3 -c 10.10.20.10 
+</span></span><span class="line"><span class="cl">Connecting to host 10.10.20.10, port 5201
+</span></span><span class="line"><span class="cl">[  5] local 10.10.10.10 port 40898 connected to 10.10.20.10 port 5201
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl">[  5]   0.00-1.00   sec  2.88 MBytes  24.1 Mbits/sec  475   8.48 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   1.00-2.00   sec  2.50 MBytes  21.0 Mbits/sec  212   53.7 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   2.00-3.00   sec  2.12 MBytes  17.8 Mbits/sec  233   9.90 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   3.00-4.00   sec  2.12 MBytes  17.8 Mbits/sec  145   1.41 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   4.00-5.00   sec  2.50 MBytes  21.0 Mbits/sec  237   14.1 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   5.00-6.00   sec  1.62 MBytes  13.6 Mbits/sec  145   22.6 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   6.00-7.00   sec  3.12 MBytes  26.2 Mbits/sec  331   5.66 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   7.00-8.00   sec  1.00 MBytes  8.39 Mbits/sec  155   7.07 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   8.00-9.00   sec  2.62 MBytes  22.0 Mbits/sec  142   86.3 KBytes       
+</span></span><span class="line"><span class="cl">[  5]   9.00-10.00  sec  3.12 MBytes  26.2 Mbits/sec  349   22.6 KBytes       
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  23.6 MBytes  19.8 Mbits/sec  2424             sender
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  22.4 MBytes  18.8 Mbits/sec                  receiver
+</span></span></code></pre></div><h3 id="result-summary-4">Result Summary</h3>
 <ul>
 <li>Average Sender Bitrate: 19.8 Mbps</li>
 <li>Average Receiver Bitrate: 18.8 Mbps</li>
@@ -4722,8 +4722,8 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 like mine, where jumbo frames are enabled across the network. Larger packets perform better in such a configuration, reducing overhead and increasing throughput.</p>
 <p>To take advantage of my network&rsquo;s capabilities, I increased the <em><strong>MaxIoSizeKB</strong></em> parameter to 512 KB</p>
 <p>To configure this, I ran the following command on my ESXi host:</p>
-<pre tabindex="0"><code>esxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512
-</code></pre><p>This change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512
+</span></span></code></pre></div><p>This change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.</p>
 
     <aside class="admonition attention">
         <div class="admonition-title">
@@ -4736,40 +4736,40 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
         <div class="admonition-content">For this change to take effect, a host reboot is required. After restarting the ESXi server, the new value will be applied, enabling the iSCSI initiator to send larger I/O requests.</div>
     </aside>
 <p>After the reboot, you can verify that the change has been successfully applied by running the following command:</p>
-<pre tabindex="0"><code>esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
-</code></pre><p>The output should look like this:</p>
-<pre tabindex="0"><code>[root@esxnuc1:~] esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
-   Path: /ISCSI/MaxIoSizeKB
-   Type: integer
-   Int Value: 512
-   Default Int Value: 128
-   Min Value: 128
-   Max Value: 512
-   String Value: 
-   Default String Value: 
-   Valid Characters: 
-   Description: Maximum Software iSCSI I/O size (in KB) (REQUIRES REBOOT!)
-   Host Specific: false
-   Impact: reboot
-</code></pre><h2 id="optimize-multipathing">Optimize multipathing</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
+</span></span></code></pre></div><p>The output should look like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@esxnuc1:~] esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
+</span></span><span class="line"><span class="cl">   Path: /ISCSI/MaxIoSizeKB
+</span></span><span class="line"><span class="cl">   Type: integer
+</span></span><span class="line"><span class="cl">   Int Value: 512
+</span></span><span class="line"><span class="cl">   Default Int Value: 128
+</span></span><span class="line"><span class="cl">   Min Value: 128
+</span></span><span class="line"><span class="cl">   Max Value: 512
+</span></span><span class="line"><span class="cl">   String Value: 
+</span></span><span class="line"><span class="cl">   Default String Value: 
+</span></span><span class="line"><span class="cl">   Valid Characters: 
+</span></span><span class="line"><span class="cl">   Description: Maximum Software iSCSI I/O size (in KB) (REQUIRES REBOOT!)
+</span></span><span class="line"><span class="cl">   Host Specific: false
+</span></span><span class="line"><span class="cl">   Impact: reboot
+</span></span></code></pre></div><h2 id="optimize-multipathing">Optimize multipathing</h2>
 <p>To optimize performance, I configured Round Robin as the multipathing policy for my iSCSI volumes on the ESXi server. This ensures better load distribution and failover capabilities. The configuration can be applied via the ESXi CLI as follows:</p>
 <ul>
 <li>List all connected storage devices to identify the target naa or eui identifier:</li>
 </ul>
-<pre tabindex="0"><code>esxcli storage nmp device list
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli storage nmp device list
+</span></span></code></pre></div><ul>
 <li>Output</li>
 </ul>
-<pre tabindex="0"><code>naa.60014058f1117188efe49cb8b5de2273
-   Device Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)
-   Storage Array Type: VMW_SATP_ALUA
-   Storage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}
-   Path Selection Policy: VMW_PSP_MRU
-   Path Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}
-   Path Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;
-   Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
-   Is USB: false
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">naa.60014058f1117188efe49cb8b5de2273
+</span></span><span class="line"><span class="cl">   Device Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)
+</span></span><span class="line"><span class="cl">   Storage Array Type: VMW_SATP_ALUA
+</span></span><span class="line"><span class="cl">   Storage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}
+</span></span><span class="line"><span class="cl">   Path Selection Policy: VMW_PSP_MRU
+</span></span><span class="line"><span class="cl">   Path Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}
+</span></span><span class="line"><span class="cl">   Path Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;
+</span></span><span class="line"><span class="cl">   Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
+</span></span><span class="line"><span class="cl">   Is USB: false
+</span></span></code></pre></div>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -4784,12 +4784,12 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <ul>
 <li>Set the multipathing policy for the desired iSCSI device to RoundRobin:</li>
 </ul>
-<pre tabindex="0"><code>esxcli storage nmp device set --device &lt;DeviceIdentifier&gt; --psp VMW_PSP_RR
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli storage nmp device set --device &lt;DeviceIdentifier&gt; --psp VMW_PSP_RR
+</span></span></code></pre></div><ul>
 <li>Verify that the policy has been successfully applied:</li>
 </ul>
-<pre tabindex="0"><code>esxcli storage nmp device list | grep &lt;DeviceIdentifier&gt;
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli storage nmp device list | grep &lt;DeviceIdentifier&gt;
+</span></span></code></pre></div>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -4804,16 +4804,16 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <ul>
 <li>Output after chages</li>
 </ul>
-<pre tabindex="0"><code>naa.60014058f1117188efe49cb8b5de2273
-   Device Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)
-   Storage Array Type: VMW_SATP_ALUA
-   Storage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}
-   Path Selection Policy: VMW_PSP_RR
-   Path Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}
-   Path Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;
-   Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
-   Is USB: false
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">naa.60014058f1117188efe49cb8b5de2273
+</span></span><span class="line"><span class="cl">   Device Display Name: LIO-ORG iSCSI Disk (naa.60014058f1117188efe49cb8b5de2273)
+</span></span><span class="line"><span class="cl">   Storage Array Type: VMW_SATP_ALUA
+</span></span><span class="line"><span class="cl">   Storage Array Type Device Config: {implicit_support=on; explicit_support=on; explicit_allow=on; alua_followover=on; action_OnRetryErrors=on; {TPG_id=0,TPG_state=AO}}
+</span></span><span class="line"><span class="cl">   Path Selection Policy: VMW_PSP_RR
+</span></span><span class="line"><span class="cl">   Path Selection Policy Device Config: {policy=iops,iops=1000,bytes=10485760,useANO=0; lastPathIndex=0: NumIOsPending=0,numBytesPending=0}
+</span></span><span class="line"><span class="cl">   Path Selection Policy Device Custom Config: policy=iops;iops=1000;bytes=10485760;samplingCycles=16;latencyEvalTime=180000;useANO=0;
+</span></span><span class="line"><span class="cl">   Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
+</span></span><span class="line"><span class="cl">   Is USB: false
+</span></span></code></pre></div>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -4826,16 +4826,16 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
         <div class="admonition-content">the multipath policy must now be VMW_PSP_RR</div>
     </aside>
 <p>To further optimize path usage and load distribution, I adjusted the IOPS parameter for the Round Robin policy. By default, ESXi switches storage paths after 1000 I/O operations, but I used the following command snippet to change this behavior to switch after every single I/O:</p>
-<pre tabindex="0"><code>for i in `esxcfg-scsidevs -c |awk &#39;{print $1}&#39; | grep naa.xxxx`; do 
-   esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i
-done
-</code></pre><p>Where .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">for i in `esxcfg-scsidevs -c |awk &#39;{print $1}&#39; | grep naa.xxxx`; do 
+</span></span><span class="line"><span class="cl">   esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i
+</span></span><span class="line"><span class="cl">done
+</span></span></code></pre></div><p>Where .xxxx matches the first few characters of your NAA IDs. Reducing the IOPS value from 1000 to 1 means the ESXi host will alternate between available paths much more frequently. In practice, this can help evenly distribute the workload across all paths, potentially improving overall responsiveness and performance.</p>
 <p>However, when combined with changes like increasing MaxIoSizeKB, the outcome can vary. In some cases, this adjustment may yield better results, while in others it could degrade performance. Therefore, it’s crucial to test these parameters individually for each storage environment to determine the most effective configuration.</p>
 <h2 id="why-jumbo-frames-matter-bonus">Why Jumbo Frames Matter (bonus)</h2>
 <p>Jumbo frames allow Ethernet frames larger than the standard 1500 bytes to be transmitted, reducing the total number of frames required to send the same amount of data. This results in lower CPU overhead and better performance, particularly in high-bandwidth and storage-intensive environments. However, it’s essential to ensure that every device in the network path—NICs, switches, and storage systems—supports and is configured for jumbo frames for optimal performance.</p>
 <p>To verify that jumbo frames are functioning correctly in your environment, you can use the <em><strong>vmkping</strong></em> command on your ESXi host:</p>
-<pre tabindex="0"><code>vmkping -I vmk1 -s 8973 -d 192.168.67.250
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vmkping -I vmk1 -s 8973 -d 192.168.67.250
+</span></span></code></pre></div>
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -4920,32 +4920,32 @@ Almost immediately, I noticed unexpected performance issues. Nested VMs were exp
 <p>For the first test, I configured both pNICs (10 Gb/s) as active in an Active/Active load balancing setup and placed both nested ESXi hosts on the same physical host. Additionally, Promiscuous Mode was enabled on the port group to ensure traffic could flow properly between the nested hosts.</p>
 <p><img src="test1.png" alt="Test 1"></p>
 <h3 id="results">Results</h3>
-<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  1.35 GBytes  1.16 Gbits/sec    0            sender  
-[  5]   0.00-10.00  sec  1.35 GBytes  1.16 Gbits/sec                 receiver 
-</code></pre><h3 id="performance-measurement-2-single-nic-active-nested-hosts-on-the-same-physical-host">Performance Measurement 2: Single NIC Active, Nested Hosts on the Same Physical Host</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  1.35 GBytes  1.16 Gbits/sec    0            sender  
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  1.35 GBytes  1.16 Gbits/sec                 receiver 
+</span></span></code></pre></div><h3 id="performance-measurement-2-single-nic-active-nested-hosts-on-the-same-physical-host">Performance Measurement 2: Single NIC Active, Nested Hosts on the Same Physical Host</h3>
 <p>For the second test, I modified the setup to use only one physical NIC (pNIC) while keeping both nested ESXi hosts on the same physical host. Promiscuous Mode was still enabled on the port group to ensure traffic routing between the nested hosts. By disabling the second uplink, the traffic path was simplified, reducing potential conflicts.</p>
 <p><img src="test2.png" alt="Test 2"></p>
 <h3 id="results-1">Results</h3>
-<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  11.4 GBytes  9.82 Gbits/sec    0            sender
-[  5]   0.00-10.01  sec  11.4 GBytes  9.80 Gbits/sec                 receiver
-</code></pre><h3 id="performance-measurement-3-mac-learning-and-forged-transmits-dual-uplinks-nested-hosts-on-the-same-physical-host">Performance Measurement 3: MAC Learning and Forged Transmits, Dual Uplinks, Nested Hosts on the Same Physical Host</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  11.4 GBytes  9.82 Gbits/sec    0            sender
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.01  sec  11.4 GBytes  9.80 Gbits/sec                 receiver
+</span></span></code></pre></div><h3 id="performance-measurement-3-mac-learning-and-forged-transmits-dual-uplinks-nested-hosts-on-the-same-physical-host">Performance Measurement 3: MAC Learning and Forged Transmits, Dual Uplinks, Nested Hosts on the Same Physical Host</h3>
 <p>For the third test, I switched to using MAC Learning and Forged Transmits, while keeping both physical NICs (pNICs) active in the Active/Active load balancing configuration. Both nested ESXi hosts were still located on the same physical host. This configuration was designed to optimize traffic handling without relying on Promiscuous Mode</p>
 <p><img src="test3.png" alt="Test 3"></p>
 <h3 id="results-2">Results</h3>
-<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr  
-[  5]   0.00-10.00  sec  24.2 GBytes  20.8 Gbits/sec    0            sender  
-[  5]   0.00-10.01  sec  24.2 GBytes  20.8 Gbits/sec                 receiver  
-</code></pre><h3 id="performance-measurement-4-mac-learning-and-forged-transmits-single-uplink-nested-hosts-on-the-same-physical-host">Performance Measurement 4: MAC Learning and Forged Transmits, Single Uplink, Nested Hosts on the Same Physical Host</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  24.2 GBytes  20.8 Gbits/sec    0            sender  
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.01  sec  24.2 GBytes  20.8 Gbits/sec                 receiver  
+</span></span></code></pre></div><h3 id="performance-measurement-4-mac-learning-and-forged-transmits-single-uplink-nested-hosts-on-the-same-physical-host">Performance Measurement 4: MAC Learning and Forged Transmits, Single Uplink, Nested Hosts on the Same Physical Host</h3>
 <p>For the fourth test, I used a single uplink (pNIC) with both nested ESXi hosts on the same ESXi server. MAC Learning and Forged Transmits were enabled to optimize traffic handling.
 The throughput was 20.7 Gbits/sec, almost identical to Test 3. This confirms that, since the traffic did not need to traverse the physical network infrastructure, the single uplink configuration with MAC Learning and Forged Transmits performed just as efficiently, without the overhead of Promiscuous Mode.</p>
 <p><img src="test4.png" alt="Test 4"></p>
 <h3 id="results-3">Results</h3>
-<pre tabindex="0"><code>[ ID] Interval           Transfer     Bitrate         Retr  
-[  5]   0.00-10.00  sec  24.2 GBytes  20.8 Gbits/sec    0            sender  
-[  5]   0.00-10.01  sec  24.2 GBytes  20.8 Gbits/sec                 receiver  
-</code></pre><h3 id="further-performance-measurements-and-security-considerations">Further Performance Measurements and Security Considerations</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ ID] Interval           Transfer     Bitrate         Retr  
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.00  sec  24.2 GBytes  20.8 Gbits/sec    0            sender  
+</span></span><span class="line"><span class="cl">[  5]   0.00-10.01  sec  24.2 GBytes  20.8 Gbits/sec                 receiver  
+</span></span></code></pre></div><h3 id="further-performance-measurements-and-security-considerations">Further Performance Measurements and Security Considerations</h3>
 <p>Additional performance tests revealed that the difference between Promiscuous Mode and MAC Learning was minimal or even non-existent when the nested hosts were placed on two different physical hosts.
 The traffic between the nested VMs did not significantly differ whether Promiscuous Mode or MAC Learning was enabled, indicating that both configurations performed similarly in a multi-host environment.</p>
 
@@ -4964,45 +4964,45 @@ It is recommended to disable it once the issue is resolved to maintain a secure 
     </aside>
 <h3 id="side-effect-of-promiscuous-mode-duplicate-packets">Side Effect of Promiscuous Mode: Duplicate Packets</h3>
 <p>Enabling Promiscuous Mode on a network interface can lead to duplicate packets when both the source and destination are on the same ESXi host. In this mode, the virtual machine receives all traffic, including its own outbound packets, causing unnecessary duplication. This can result in performance degradation due to increased CPU usage and network inefficiencies.</p>
-<pre tabindex="0"><code>[root@esxnuc04:/usr/lib/vmware/vsan/bin] vmkping -I vmk1 192.168.69.203
-PING 192.168.69.203 (192.168.69.203): 56 data bytes
-64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.356 ms
-64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.423 ms (DUP!)
-64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.426 ms (DUP!)
-64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.429 ms (DUP!)
-64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.249 ms
-64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.274 ms (DUP!)
-64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.277 ms (DUP!)
-64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.281 ms (DUP!)
-64 bytes from 192.168.69.203: icmp_seq=2 ttl=64 time=0.261 ms
-</code></pre><h2 id="sidequest-using-iperf-on-esxi-803">Sidequest: Using iPerf on ESXi 8.0.3</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@esxnuc04:/usr/lib/vmware/vsan/bin] vmkping -I vmk1 192.168.69.203
+</span></span><span class="line"><span class="cl">PING 192.168.69.203 (192.168.69.203): 56 data bytes
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.356 ms
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.423 ms (DUP!)
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.426 ms (DUP!)
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=0 ttl=64 time=0.429 ms (DUP!)
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.249 ms
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.274 ms (DUP!)
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.277 ms (DUP!)
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=1 ttl=64 time=0.281 ms (DUP!)
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.69.203: icmp_seq=2 ttl=64 time=0.261 ms
+</span></span></code></pre></div><h2 id="sidequest-using-iperf-on-esxi-803">Sidequest: Using iPerf on ESXi 8.0.3</h2>
 <p>To use iPerf for network performance testing on ESXi 8.0.3, you&rsquo;ll need to follow a few steps to enable and configure the necessary settings.</p>
 <ul>
 <li>Step 1: Disable the ESXi firewall temporarily
 First, disable the ESXi firewall to allow the iPerf tool to operate without restrictions:</li>
 </ul>
-<pre tabindex="0"><code>esxcli network firewall set --enabled false
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli network firewall set --enabled false
+</span></span></code></pre></div><ul>
 <li>Step 2: Allow executing iPerf
 Next, set the system to allow execution of non-installed binaries (such as iPerf), which are not part of the default ESXi installation:</li>
 </ul>
-<pre tabindex="0"><code>localcli system settings advanced set -o /User/execInstalledOnly -i 0
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">localcli system settings advanced set -o /User/execInstalledOnly -i 0
+</span></span></code></pre></div><ul>
 <li>Step 3: Execute iPerf (Client example)
 Once you&rsquo;ve set the necessary configuration, you can execute iPerf to test the network performance. Use the following command to run iPerf as a client (-c) and specify the target IP address (e.g., 192.168.69.203):</li>
 </ul>
-<pre tabindex="0"><code>./usr/lib/vmware/vsan/bin/iperf3 -c 192.168.69.203
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">./usr/lib/vmware/vsan/bin/iperf3 -c 192.168.69.203
+</span></span></code></pre></div><ul>
 <li>Step 4: Re-enable the firewall
 Once you’ve finished testing, remember to re-enable the firewall for security reasons:</li>
 </ul>
-<pre tabindex="0"><code>esxcli network firewall set --enabled true
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli network firewall set --enabled true
+</span></span></code></pre></div><ul>
 <li>Step 5: Restrict execution of non-installed binaries
 To revert the system to its default behavior and restrict the execution of non-installed binaries, run the following command:</li>
 </ul>
-<pre tabindex="0"><code>localcli system settings advanced set -o /User/execInstalledOnly -i 1
-</code></pre><h2 id="why-mac-learning-and-forged-transmits-replace-promiscuous-mode-in-nested-environments">Why MAC Learning and Forged Transmits Replace Promiscuous Mode in Nested Environments</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">localcli system settings advanced set -o /User/execInstalledOnly -i 1
+</span></span></code></pre></div><h2 id="why-mac-learning-and-forged-transmits-replace-promiscuous-mode-in-nested-environments">Why MAC Learning and Forged Transmits Replace Promiscuous Mode in Nested Environments</h2>
 <p>In a typical nested ESXi environment, each inner VM sends packets with its unique MAC address, which the virtual switch on the parent ESXi host does not recognize by default. This creates a challenge because:</p>
 <ul>
 <li>Without Promiscuous Mode, the switch drops packets destined for or originating from these MAC addresses.</li>
@@ -5203,16 +5203,16 @@ There is a wonderful <a href="https://www.vmware.com/explore/video-library/video
 <ul>
 <li>This command turns on memory tiering</li>
 </ul>
-<pre tabindex="0"><code>esxcli system settings kernel set -s MemoryTiering -v TRUE
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s MemoryTiering -v TRUE
+</span></span></code></pre></div><ul>
 <li>This command selects the NVMe</li>
 </ul>
-<pre tabindex="0"><code>esxcli system tierdevice create -d /vmfs/devices/disks/&lt;Your NVME&gt;
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system tierdevice create -d /vmfs/devices/disks/&lt;Your NVME&gt;
+</span></span></code></pre></div><ul>
 <li>Enter the factor here (0-400%).</li>
 </ul>
-<pre tabindex="0"><code>esxcli system settings advanced set -o /Mem/TierNvmePct -i 400
-</code></pre><p>After a reboot, you have the selected amount of additional memory.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced set -o /Mem/TierNvmePct -i 400
+</span></span></code></pre></div><p>After a reboot, you have the selected amount of additional memory.</p>
 
     <aside class="admonition warning">
         <div class="admonition-title">
@@ -5245,12 +5245,12 @@ Fortunately, there are a few workarounds here.</p>
 <ul>
 <li>With this command, we prevent the PSOD from occurring when the ESXi boots.</li>
 </ul>
-<pre tabindex="0"><code>esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE
+</span></span></code></pre></div><ul>
 <li>With this command, we prevent the ESXi from getting a PSOD when the VMs are switched on.</li>
 </ul>
-<pre tabindex="0"><code>esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
+</span></span></code></pre></div>
     <aside class="admonition tip">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -5600,38 +5600,38 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 			<content type="html"><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
 <h1 id="certificate-creation">Certificate creation</h1>
 <p>First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.</p>
-<pre tabindex="0"><code>[req]
-default_bits = 4096
-default_md = sha256
-days = 365
-distinguished_name = req_distinguished_name
-req_extensions = v3_req
-prompt = no
- 
-[req_distinguished_name]
-C   = DE
-ST  = RLP
-L   = NW
-O   = Land RLP
-OU  = sdnwarrior
-CN  = nsxm0001.lab.home
-emailAddress = mail@lab.home
- 
-[v3_req]
-subjectAltName = @sans
- 
-[sans]
-DNS.1 = nsxm0001.lab.home
-DNS.2 = nsxm0002.lab.home
-DNS.3 = nsxm0003.lab.home
-DNS.4 = nsxm0004.lab.home
-IP.1 = 192.168.12.110
-IP.2 = 192.168.12.111
-IP.3 = 192.168.12.112
-IP.4 = 192.168.12.113
-</code></pre><p>The CSR is generated with the following command:</p>
-<pre tabindex="0"><code>openssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf
-</code></pre><p>Two files are generated, a private key file and the actual request, which must be submitted to the CA.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[req]
+</span></span><span class="line"><span class="cl">default_bits = 4096
+</span></span><span class="line"><span class="cl">default_md = sha256
+</span></span><span class="line"><span class="cl">days = 365
+</span></span><span class="line"><span class="cl">distinguished_name = req_distinguished_name
+</span></span><span class="line"><span class="cl">req_extensions = v3_req
+</span></span><span class="line"><span class="cl">prompt = no
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">[req_distinguished_name]
+</span></span><span class="line"><span class="cl">C   = DE
+</span></span><span class="line"><span class="cl">ST  = RLP
+</span></span><span class="line"><span class="cl">L   = NW
+</span></span><span class="line"><span class="cl">O   = Land RLP
+</span></span><span class="line"><span class="cl">OU  = sdnwarrior
+</span></span><span class="line"><span class="cl">CN  = nsxm0001.lab.home
+</span></span><span class="line"><span class="cl">emailAddress = mail@lab.home
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">[v3_req]
+</span></span><span class="line"><span class="cl">subjectAltName = @sans
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">[sans]
+</span></span><span class="line"><span class="cl">DNS.1 = nsxm0001.lab.home
+</span></span><span class="line"><span class="cl">DNS.2 = nsxm0002.lab.home
+</span></span><span class="line"><span class="cl">DNS.3 = nsxm0003.lab.home
+</span></span><span class="line"><span class="cl">DNS.4 = nsxm0004.lab.home
+</span></span><span class="line"><span class="cl">IP.1 = 192.168.12.110
+</span></span><span class="line"><span class="cl">IP.2 = 192.168.12.111
+</span></span><span class="line"><span class="cl">IP.3 = 192.168.12.112
+</span></span><span class="line"><span class="cl">IP.4 = 192.168.12.113
+</span></span></code></pre></div><p>The CSR is generated with the following command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">openssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf
+</span></span></code></pre></div><p>Two files are generated, a private key file and the actual request, which must be submitted to the CA.</p>
 
     <aside class="admonition attention">
         <div class="admonition-title">
@@ -5655,14 +5655,14 @@ IP.4 = 192.168.12.113
           </figcaption></figure>
 <p>After the import, the certificate can be validated using an API request.
 API calls may vary depending on the NSX-T versions, in my example NSX version 4.1.2.3 is used.</p>
-<pre tabindex="0"><code>GET https://&lt;nsx-mgr&gt;/api/v1/trust- management/certificates/&lt;cert-id&gt;?action=validate
-</code></pre><h2 id="exchange-of-certificates">Exchange of certificates</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">GET https://&lt;nsx-mgr&gt;/api/v1/trust- management/certificates/&lt;cert-id&gt;?action=validate
+</span></span></code></pre></div><h2 id="exchange-of-certificates">Exchange of certificates</h2>
 <p>An API request must be executed for each manager node and for the VIP. This requires the certificate ID and the manager node ID. Both can be copied from the WebGUI or requested via API Get Requests.</p>
 <p>The following API call is used to exchange the Manager Node certificate:</p>
-<pre tabindex="0"><code>POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=API&amp;node_id=&lt;node- id&gt;
-</code></pre><p>The following API call is used to exchange the cluster VIP certificate:</p>
-<pre tabindex="0"><code>POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=MGMT_CLUSTER
-</code></pre><p>After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=API&amp;node_id=&lt;node- id&gt;
+</span></span></code></pre></div><p>The following API call is used to exchange the cluster VIP certificate:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">POST /api/v1/trust-management/certificates/&lt;cert- id&gt;?action=apply_certificate&amp;service_type=MGMT_CLUSTER
+</span></span></code></pre></div><p>After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.</p>
 <h2 id="further-resources">Further resources:</h2>
 <p><a href="https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.2/administration/GUID-50C36862-A29D-48FA-8CE7-697E64E10E37.html">VMware Administration Handbook</a></p>
 ]]></content>

@@ -29,7 +29,7 @@
   <meta itemprop="description" content="Performance tuning for NUCs">
   <meta itemprop="datePublished" content="2024-11-17T11:57:43+01:00">
   <meta itemprop="dateModified" content="2024-11-17T11:57:43+01:00">
-  <meta itemprop="wordCount" content="623">
+  <meta itemprop="wordCount" content="624">
   <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
   <meta itemprop="keywords" content="Homelab,Nuc,Memory Tiering"><meta property="og:url" content="https://sdn-warrior.org/posts/nuc/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
@@ -58,8 +58,8 @@
     "name": "How to get most out of your Nuc ",
     "description": "Performance tuning for NUCs",
     "keywords": ["homelab", "nuc", "memory Tiering"],
-    "articleBody": "First things first Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC. Unfortunately, these are relatively difficult to get in Germany, but it’s worth the effort. Search for\rASUS NUC LAN and USB Expansion Module (90AR0000-P00010)\rIO expansion\nvSphere 8 supports the cards natively and you don’t have to install any drivers. It also supports jumbo frames, which is relevant for NSX Labs. It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name CRS326-4C +20G+2Q.\nPractical tip\rMy experience with 2.5 Gb/s Lan has shown that it makes sense to set the ports to a fixed speed in the hypervisor and on the switch, otherwise I kept having network failures.\rMemory Tiering Memory Tiering is very new in ESXi vSphere 8.0U3 and is still a Tech Preview. With memory tiering, you can use up to 400% of the physical RAM. This requires a fast NVMe. I would recommend a PCIe4 NVMe with at least 5000 MB/s read/write. Memory Tiering stores very cold (unused RAM pages) and cold RAM pages (less than 20% used) on the NVMe (Memory Tier). There is a wonderful Explore Session on this.\nTo enable memory tiering, you have to enter the following commands via the ESX Cli:\nThis command turns on memory tiering esxcli system settings kernel set -s MemoryTiering -v TRUE\rThis command selects the NVMe esxcli system tierdevice create -d /vmfs/devices/disks/\rEnter the factor here (0-400%). esxcli system settings advanced set -o /Mem/TierNvmePct -i 400\rAfter a reboot, you have the selected amount of additional memory.\nAttention\rThe selected disk is no longer available to the ESXi. The minimum capacity must match the selected factor. If the disk is larger, it will still be used entirely for memory tiering. My recommendation is to use 1 TB NVMe with 64 GB of physical RAM and 400% as the factor. ESXi will use the NVMe evenly so that the disk doesn’t break as quickly.\rUsing P/E Cores Intel has introduced the big.little CPU architecture from the 12th generation of their consumer CPUs. This leads to some problems with ESXi. If the efficiency cores are activated, the ESXi starts with a PSOD (Purble Screen of Death). Fortunately, there are a few workarounds here.\nDisable the E cores in the BIOS This means that you can use hyperthreading and the P Cores. However, you are clearly wasting potential here. That’s why we don’t want to.\nUse P and E cores and sacrifice hyperthreading for them My tests showed that I got significantly more performance out of my 13th generation i7 if I didn’t use hyperthreading and only used “real” CPU cores, even if the E cores have a lower clock rate. William Lam has written very detailed blog articles about this, I link to him here for more information, as this article was actually only intended to be a short summary.\nWe actually only need two ESX CLI commands to make it all work.\nWith this command, we prevent the PSOD from occurring when the ESXi boots. esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE\rWith this command, we prevent the ESXi from getting a PSOD when the VMs are switched on. esxcli system settings kernel set -s ignoreMsrFaults -v TRUE\rPractical tip\rWhen reinstalling an ESXi server, I always switch off the E Cores, which saves me from having to manipulate the boot loader. After I have allowed memory tiering and the E/P Cores via the ESX CLI, I switch the E/P Cores back on in the BIOS.\rIf everything is correct, an ESX NUC of the 13th generation looks like this. NUC i7 13th Gen with Memory Tiering and P/E Cores\n",
-    "wordCount" : "623",
+    "articleBody": "First things first Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC. Unfortunately, these are relatively difficult to get in Germany, but it’s worth the effort. Search for\rASUS NUC LAN and USB Expansion Module (90AR0000-P00010)\rIO expansion\nvSphere 8 supports the cards natively and you don’t have to install any drivers. It also supports jumbo frames, which is relevant for NSX Labs. It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name CRS326-4C +20G+2Q.\nPractical tip\rMy experience with 2.5 Gb/s Lan has shown that it makes sense to set the ports to a fixed speed in the hypervisor and on the switch, otherwise I kept having network failures.\rMemory Tiering Memory Tiering is very new in ESXi vSphere 8.0U3 and is still a Tech Preview. With memory tiering, you can use up to 400% of the physical RAM. This requires a fast NVMe. I would recommend a PCIe4 NVMe with at least 5000 MB/s read/write. Memory Tiering stores very cold (unused RAM pages) and cold RAM pages (less than 20% used) on the NVMe (Memory Tier). There is a wonderful Explore Session on this.\nTo enable memory tiering, you have to enter the following commands via the ESX Cli:\nThis command turns on memory tiering esxcli system settings kernel set -s MemoryTiering -v TRUE This command selects the NVMe esxcli system tierdevice create -d /vmfs/devices/disks/ Enter the factor here (0-400%). esxcli system settings advanced set -o /Mem/TierNvmePct -i 400 After a reboot, you have the selected amount of additional memory.\nAttention\rThe selected disk is no longer available to the ESXi. The minimum capacity must match the selected factor. If the disk is larger, it will still be used entirely for memory tiering. My recommendation is to use 1 TB NVMe with 64 GB of physical RAM and 400% as the factor. ESXi will use the NVMe evenly so that the disk doesn’t break as quickly.\rUsing P/E Cores Intel has introduced the big.little CPU architecture from the 12th generation of their consumer CPUs. This leads to some problems with ESXi. If the efficiency cores are activated, the ESXi starts with a PSOD (Purble Screen of Death). Fortunately, there are a few workarounds here.\nDisable the E cores in the BIOS This means that you can use hyperthreading and the P Cores. However, you are clearly wasting potential here. That’s why we don’t want to.\nUse P and E cores and sacrifice hyperthreading for them My tests showed that I got significantly more performance out of my 13th generation i7 if I didn’t use hyperthreading and only used “real” CPU cores, even if the E cores have a lower clock rate. William Lam has written very detailed blog articles about this, I link to him here for more information, as this article was actually only intended to be a short summary.\nWe actually only need two ESX CLI commands to make it all work.\nWith this command, we prevent the PSOD from occurring when the ESXi boots. esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE With this command, we prevent the ESXi from getting a PSOD when the VMs are switched on. esxcli system settings kernel set -s ignoreMsrFaults -v TRUE Practical tip\rWhen reinstalling an ESXi server, I always switch off the E Cores, which saves me from having to manipulate the boot loader. After I have allowed memory tiering and the E/P Cores via the ESX CLI, I switch the E/P Cores back on in the BIOS.\rIf everything is correct, an ESX NUC of the 13th generation looks like this. NUC i7 13th Gen with Memory Tiering and P/E Cores\n",
+    "wordCount" : "624",
     "inLanguage": "en",
     "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2024-11-17T11:57:43+01:00",
     "dateModified": "2024-11-17T11:57:43+01:00",
@@ -198,12 +198,12 @@
       <line x1="16" y1="13" x2="8" y2="13"></line>
       <line x1="16" y1="17" x2="8" y2="17"></line>
       <polyline points="10 9 9 9 8 9"></polyline>
-   </svg>623 Words
+   </svg>624 Words
      Words // ReadTime
     
     
     
-    2 Minutes, 49 Seconds</p>
+    2 Minutes, 50 Seconds</p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -267,16 +267,16 @@ There is a wonderful <a href="https://www.vmware.com/explore/video-library/video
 <ul>
 <li>This command turns on memory tiering</li>
 </ul>
-<pre class="mermaid">esxcli system settings kernel set -s MemoryTiering -v TRUE
-</pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s MemoryTiering -v TRUE
+</span></span></code></pre></div><ul>
 <li>This command selects the NVMe</li>
 </ul>
-<pre class="mermaid">esxcli system tierdevice create -d /vmfs/devices/disks/<Your NVME>
-</pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system tierdevice create -d /vmfs/devices/disks/&lt;Your NVME&gt;
+</span></span></code></pre></div><ul>
 <li>Enter the factor here (0-400%).</li>
 </ul>
-<pre class="mermaid">esxcli system settings advanced set -o /Mem/TierNvmePct -i 400
-</pre><p>After a reboot, you have the selected amount of additional memory.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced set -o /Mem/TierNvmePct -i 400
+</span></span></code></pre></div><p>After a reboot, you have the selected amount of additional memory.</p>
 
     <aside class="admonition warning">
         <div class="admonition-title">
@@ -309,12 +309,12 @@ Fortunately, there are a few workarounds here.</p>
 <ul>
 <li>With this command, we prevent the PSOD from occurring when the ESXi boots.</li>
 </ul>
-<pre class="mermaid">esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE
-</pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s cpuUniformityHardCheckPanic -v FALSE
+</span></span></code></pre></div><ul>
 <li>With this command, we prevent the ESXi from getting a PSOD when the VMs are switched on.</li>
 </ul>
-<pre class="mermaid">esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
-</pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
+</span></span></code></pre></div>
     <aside class="admonition tip">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -383,10 +383,7 @@ Fortunately, there are a few workarounds here.</p>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script><script defer async type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({ startOnLoad: true,theme: 'dark' });
-    </script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>
