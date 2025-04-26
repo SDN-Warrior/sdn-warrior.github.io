@@ -6,8 +6,171 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Thu, 10 Apr 2025 22:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Sat, 26 Apr 2025 16:00:10 -0500</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VMUG Connect St. Louis 2025</title>
+			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
+			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
+			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
+			<content type="html"><![CDATA[<h2 id="vmug-st-louis--between-tech-talks-and-travel-vibes">VMUG St. Louis – Between Tech Talks and Travel Vibes</h2>
+<p>This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from <a href="https://www.evoila.de">evoila</a>, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&rsquo;m German after all.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug01_hu_4658cd35b81958b2.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug01_hu_2cebf33334a1f31e.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug01_hu_4658cd35b81958b2.webp"alt="Coffee at Half &amp; Half"  width="1367"  height="1387" />
+        </picture><figcaption>
+            <p>Coffee at Half &amp; Half</p>
+          </figcaption></figure>
+<p>The agenda was packed: from VCF sessions to cloud-native talks and everything in between. But what stood out most to me wasn’t just the content – it was the people. Seeing familiar faces from previous events and meeting new folks who share the same enthusiasm for VMware technologies is what keeps me coming back to VMUG events. In the end, it&rsquo;s the community that makes the events special.</p>
+<p>Of course, I couldn’t resist bringing my homelab brain along – some of the conversations sparked new ideas that I’ll definitely try out in my setup back home - Is that the VCF 9 Beta I hear clattering?.
+Also, a big highlight: catching up with <a href="https://williamlam.com/">William Lam</a> in person – always a pleasure and a source of inspiration.</p>
+<p>But before I get to the division of labor for the trip, I want to say a few words about St. Louis itself.</p>
+<h2 id="stl">STL</h2>
+<p>Since this was my first trip to the USA, all I can say is that I heard a lot of nonsense beforehand and, in my opinion, St. Louis is nowhere near as bad as its reputation.
+On the contrary, I got lots of tips from local Reddit users and was welcomed very warmly by the people there. Yes, the US is different from Europe, but it would be strange if it weren&rsquo;t, considering that there are 7,388 km (no idea how many feet that is) as the crow flies between the bar where I&rsquo;m typing this and my home, and yes, I&rsquo;m not a budding unsuccessful writer, which is why I&rsquo;m in a bar and not Starbucks. But I&rsquo;m straying from the actual topic.</p>
+<h2 id="beyond-tech--my-personal-highlights-in-st-louis">Beyond Tech – My Personal Highlights in St. Louis</h2>
+<p>While the VMUG itself was a clear highlight, I also took some time to explore St. Louis – and the city definitely delivered. One of the first stops was the legendary <strong>Anheuser-Busch Brewery</strong>, where my colleague <a href="https://www.linkedin.com/in/andreas-mensing-a224b230/">Andreas Mensing</a> and I joined a guided tour. Besides learning more about the brewing process, the history of this iconic brand, and meeting the famous Clydesdales (Horses), we also enjoyed a well-earned <strong>free beer</strong> at the end - or maybe two. Who&rsquo;s going to count here—not me.
+<em>Fun fact:</em> The brewery has been around since <strong>1852</strong> and still produces some of the most well-known beers in the U.S., including Budweiser. I have to say that I like Beer Hug (IPA) much better than Budweiser.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug02_hu_82109c3527c35f0a.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug02_hu_f8eac66df7f959f9.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug02_hu_82109c3527c35f0a.webp"alt="Free beer"  width="2142"  height="1428" />
+        </picture><figcaption>
+            <p>free beer</p>
+          </figcaption></figure>
+<p>Another must-see: <strong>the Gateway Arch</strong>. Standing at <strong>192 meters</strong>, it’s the tallest monument in the U.S., and the view from the top is absolutely worth the ride up. Right underneath it, there’s a <strong>free museum</strong> that covers the history of westward expansion – and speaking of free: most museums in the U.S. don’t charge admission, which is something I really appreciated as a visitor.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug03_hu_c45dd932a3743caf.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug03_hu_7d4558bc73bd438b.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug03_hu_c45dd932a3743caf.webp"alt="Arch"  width="2013"  height="1509" />
+        </picture><figcaption>
+            <p>View from the top of the arch</p>
+          </figcaption></figure>
+<p>One of the most unexpected gems was the <strong>City Museum</strong>. It’s hard to describe – part art installation, part adventure playground, part industrial fantasy - MadMax meets IKEA smaland. If the weather is good, I absolutely recommend a visit. Unfortunately, the rooftop area was closed during my stay, but the outdoor section was open and a lot of fun.<br>
+It’s a place where you can easily spend hours – whether you&rsquo;re a kid or just a curious tech guy climbing through repurposed factory parts. However, you could get stuck in one of the tubes. On the other hand, you are never too old to slide. Regardless of all the things there are to climb or slide on, you can still get a good impression of the city&rsquo;s history here.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug04_hu_a29cb685580dd7ab.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug04_hu_703dd0ca8d1d0c55.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug04_hu_a29cb685580dd7ab.webp"alt="City Museum"  width="1809"  height="1357" />
+        </picture><figcaption>
+            <p>City Museum</p>
+          </figcaption></figure>
+<p>I can also recommend the zoo to anyone who likes zoos. Admission is free and the zoo is huge. Personally, I&rsquo;m a bit critical of zoos, but the grounds are in a beautiful location in Forest Park, where there are also two other museums.</p>
+<p>Last but not least: <strong>Baseball!</strong><br>
+I got the chance to attend a game between the <strong>Milwaukee Brewers and the St. Louis Cardinals</strong>. The atmosphere in <strong>Busch Stadium</strong> was electric, and the Cardinals secured a <strong>3–2 win at home</strong>. Great weather, beer and a real American sports vibe – the perfect way to wrap up the trip.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug05_hu_928fd24c00554fd1.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug05_hu_3f1dfcfa0f649dc.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug05_hu_928fd24c00554fd1.webp"alt="Baseball"  width="1072"  height="1214" />
+        </picture><figcaption>
+            <p>Baseball with the Crew</p>
+          </figcaption></figure>
+<p>I could write a lot more, but this is supposed to be about VMUG Connect, not just my vacation fun.</p>
+<h2 id="vmug-st-louis--day-1-preconnect--expert-exchange">VMUG St. Louis – Day 1: PreConnect &amp; Expert Exchange</h2>
+<p>Day 1 kicked off with the <strong>PreConnect sessions</strong>, a more intimate format focused on direct exchange between customers, Broadcom experts, and fellow vExperts. The theme was simple but powerful: <em>Meet the Experts</em>.</p>
+<p>There were two sessions – one centered around <strong>Private AI</strong> and the second focused on <strong>VMware Cloud Foundation (VCF)</strong>. Both were structured more like open Q&amp;A panels than formal presentations, with lots of room for discussion and live feedback.</p>
+<p>Personally, I really enjoyed the VCF session. It wasn’t just informative – it was also a great opportunity to exchange ideas with others working on similar challenges and projects.
+Afterwards, there was a welcome reception at the Anheuser Busch brewery. Since I was already familiar with the tour, I decided to skip it and went straight to &ldquo;coffee&rdquo;, where I had some good conversations that weren&rsquo;t work-related for a change.</p>
+<p>Something funny is that Germans always find each other automatically—it must be a natural phenomenon similar to magnetism—I don&rsquo;t know.</p>
+<p>After that, we went to the afterparty, which pretty much summed up day 1 of Connect.</p>
+<h2 id="vmug-st-louis--day-2-sessions-exams--a-personal-milestone">VMUG St. Louis – Day 2: Sessions, Exams &amp; a Personal Milestone</h2>
+<p>Day 2 started right on time at <strong>8:00 AM</strong> with a shared breakfast, followed by the <strong>General Session at 9:00 AM</strong> led by <strong>Brenda Emerson</strong> and <strong>Brad Tompkins</strong>. A great way to start the event and get everyone energized for the day.</p>
+<p>One nice addition to this event: <strong>free VCF certification exam slots</strong> were offered on-site. A great opportunity for those who hadn’t taken them yet – and yes, they were <strong>completely free</strong> for VMUG Connect attendees.</p>
+<p>And speaking of certifications – something very special happened for me personally:<br>
+Just as the VMUG officially started, I received confirmation that I’ve been accepted as a <strong>Broadcom Knight</strong>, specializing in <strong>NSX</strong>. I’m incredibly proud to now be a certified part of this community and grateful for the support from both <a href="https://www.evoila.de">evoila</a> and the Knight program.</p>
+<p>The first session I joined was:<br>
+<strong>Hypervisors: The Elephant in the SOC</strong><br>
+<em>Austin Gadient, CTO &amp; Cofounder, Vali Cyber</em><br>
+Focus was on securing <strong>ESXi hosts</strong>, which – let’s be honest – are often overlooked when it comes to security. It was a thought-provoking session and the product they presented definitely caught my attention.</p>
+<p>After a short break, I joined:<br>
+<strong>Simple Kubernetes Deployment with VMware Cloud Foundation (VCF)</strong><br>
+<em>Kyle Gleed</em><br>
+This one was more introductory and probably aimed at a different audience – so nothing new for me, but still good to see the topic get visibility.</p>
+<p>Later on, I finally got to meet <strong><a href="https://www.linkedin.com/in/francisco-barragan/">Franky Barragan</a></strong> in person during his <strong>{code} session</strong>. I was genuinely happy to connect in real life – of course, we took a selfie right away! Dude, it was nice to meet you. Keep up all your Community work.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug06_hu_6ad7503b150d603e.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug06_hu_46e4c45fb1c7bfa3.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug06_hu_6ad7503b150d603e.webp"alt="Franky and i"  width="1344"  height="896" />
+        </picture><figcaption>
+            <p>Franky &amp; I</p>
+          </figcaption></figure>
+<p>The <strong>session highlight of the day</strong> for me was:<br>
+<strong>You Aren’t Ready: Stories from a Cyber Incident Survivor</strong><br>
+<em>Steve Athanas</em><br>
+His talk was packed with energy, personal stories, and a powerful message: most of us still don’t take <strong>cybersecurity</strong> seriously enough. It was a wake-up call – and a fantastic talk.</p>
+<h2 id="bonus-the-power-of-knowledge-sharing">Bonus: The Power of Knowledge Sharing</h2>
+<p>Another special moment for me was attending the session:<br>
+<strong>The Power of Knowledge Sharing: Building Trust and Growing Your Career with VMUG</strong><br>
+<em>Jens Klasen</em></p>
+<p><a href="https://www.linkedin.com/in/jensklasen/">Jens</a>
+is a respected former colleague and a good friend – and of course, I had to show my support by joining his session.<br>
+(Not just because he used a <strong>picture of me</strong> in his presentation – although that definitely caught my attention 😄).</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug10_hu_2b01b12db6d605b5.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug10_hu_328ae983f697e65f.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug10_hu_2b01b12db6d605b5.webp"alt="Jens"  width="1541"  height="1026" />
+        </picture><figcaption>
+            <p>Jens Klasen</p>
+          </figcaption></figure>
+<p>It’s always inspiring to see people you know sharing their stories and giving back to the community. His talk was authentic, practical, and a great reminder of how much <strong>knowledge sharing</strong> can impact your personal and professional growth and it remindeds me that I still have to prepare a session for the VMUG in Kaiserslautern, which he happens to be chairing.</p>
+<p>We ended the evening at the hotel rooftop bar. A great second day full of impressions.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug07_hu_47a75a9685a5c7bf.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug07_hu_3fb25c864c03f8df.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug07_hu_47a75a9685a5c7bf.webp"alt="The Germans and our fantastic Polish colleague from Evoila Poland"  width="1794"  height="1196" />
+        </picture><figcaption>
+            <p>The Germans and our fantastic Polish colleague from Evoila Poland</p>
+          </figcaption></figure>
+<h2 id="vmug-st-louis--day-3-homelabs-heroes--honest-answers">VMUG St. Louis – Day 3: Homelabs, Heroes &amp; Honest Answers</h2>
+<p>Just like the day before, Day 3 began with a shared breakfast at the venue – a nice way to reconnect and ease into the final day of the event.</p>
+<p>My first session of the day was also one of my personal highlights:<br>
+<strong>Homelabs Breakout Session</strong><br>
+<em>William Lam, Distinguished Platform Engineering Architect</em></p>
+<p>Finally getting to meet <strong><a href="https://williamlam.com/">William Lam</a></strong> in person was a big moment for me. He’s been one of my biggest motivators and sources of inspiration over the years.<br>
+He actually had two slots that day: an <strong>exclusive AMA session</strong> for VMUG Advantage members and a second, open <strong>Homelab session</strong> for everyone.<br>
+Needless to say – I got my <strong>selfie</strong> with him and i was on both sessions!</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug08_hu_107fdd97a4e815a8.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug08_hu_f559581c2943434f.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug08_hu_107fdd97a4e815a8.webp"alt="William and i"  width="1980"  height="1320" />
+        </picture><figcaption>
+            <p>William &amp; I</p>
+          </figcaption></figure>
+<p>Next up was:<br>
+<strong>How to Be an Influencer</strong><br>
+<em>Corey Romero, Senior Community (vExpert) Manager</em><br>
+While it didn’t bring too much new for me, it was definitely entertaining and fun to watch.</p>
+<p>The day wrapped up with a special <strong>General Session</strong> featuring <strong>Hock Tan</strong>, who took questions directly from the VMUG community. Sure, not every answer may have pleased everyone – but just the fact that the <strong>CEO of a multi-billion-dollar company</strong> shows up to a <strong>community-run event</strong> and takes live questions speaks volumes. It was a strong message: <strong>Broadcom is listening</strong>.</p>
+
+<figure><picture>
+          <source srcset="/vmug-stl-25/vmug09_hu_e0d7aecf9ada21be.webp" type="image/webp">
+          <source srcset="/vmug-stl-25/vmug09_hu_c6b9a77c28671b16.jpg" type="image/jpeg">
+          <img src="/vmug-stl-25/vmug09_hu_e0d7aecf9ada21be.webp"alt="Hock Tan and Chris McCain, Broadcom"  width="1968"  height="1312" />
+        </picture><figcaption>
+            <p>Hock Tan and Chris McCain, Broadcom</p>
+          </figcaption></figure>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>Even though the technical depth of this event wasn’t quite on the same level as the <strong>Broadcom Knight Event in Amsterdam</strong>, the <strong>strongest asset of VMUG is the community</strong> and the connections you make.<br>
+The exchange with others – whether it’s VMUG members, Broadcom folks, or fellow vExperts – is a huge part of what makes these events so valuable.</p>
+<p>For me personally, the trip was absolutely worth it. I’m grateful for all the impressions, conversations, and moments I was able to collect. It’s hard to capture everything in a single blog post – especially when most of my content is usually about tech and homelab stuff. I’m pretty sure I forgot a bunch of things&hellip; and there are <strong>at least 300 photos</strong> I haven’t even shown.</p>
+<p>Still, I have to wrap this up at some point – my MacBook battery is nearly dead, and I want to enjoy the last evening in St. Louis with Andreas. By the time you’re reading this, I’m probably already on the flight back home. I hope there will be more <strong>VMUG Connect</strong> events like this in the future – and that I’ll continue to be part of this amazing community.<br>
+To share knowledge, to learn from others, and to keep growing – together.</p>
+<p><strong>In this spirit: sharing is caring.</strong></p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
