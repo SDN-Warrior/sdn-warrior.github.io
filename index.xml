@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 26 Apr 2025 16:00:10 -0500</lastBuildDate>
+    <lastBuildDate>Tue, 06 May 2025 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NSX Expiring Transport Node Certificates</title>
+      <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
+      <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VMUG Connect St. Louis 2025</title>
       <link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
@@ -141,13 +148,6 @@
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Unraid - A Storage Journey</title>
-      <link>https://sdn-warrior.org/posts/unraid-storage/</link>
-      <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
-      <description>&lt;h2 id=&#34;my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing&#34;&gt;My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing&lt;/h2&gt;&#xA;&lt;p&gt;As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.&lt;/p&gt;&#xA;&lt;p&gt;After thorough research, I decided to go with Unraid – an operating system renowned for its simplicity, flexibility, and scalability. These key features were the deciding factors for me:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

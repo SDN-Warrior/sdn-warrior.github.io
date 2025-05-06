@@ -7,8 +7,29 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 26 Apr 2025 16:00:10 -0500</lastBuildDate>
+    <lastBuildDate>Tue, 06 May 2025 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Homelab</title>
+      <link>https://sdn-warrior.org/tags/homelab/</link>
+      <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nsx</title>
+      <link>https://sdn-warrior.org/tags/nsx/</link>
+      <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Broadcom</title>
       <link>https://sdn-warrior.org/tags/broadcom/</link>
@@ -31,20 +52,6 @@
       <description></description>
     </item>
     <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Sddc</title>
       <link>https://sdn-warrior.org/tags/sddc/</link>
       <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
@@ -56,13 +63,6 @@
       <link>https://sdn-warrior.org/tags/vcf/</link>
       <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nsx</title>
-      <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/nsx/</guid>
       <description></description>
     </item>
     <item>

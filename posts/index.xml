@@ -6,8 +6,375 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sat, 26 Apr 2025 16:00:10 -0500</lastBuildDate>
+		<lastBuildDate>Tue, 06 May 2025 18:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>NSX Expiring Transport Node Certificates</title>
+			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
+			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days. NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years. The Transport Node certificate used at create time is not replaced on upgrade. Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>In NSX versions <strong>4.1.x</strong> and <strong>4.2.0</strong>, <strong>edge transport nodes</strong> and <strong>host transport nodes</strong> are instantiated using certificates with a <strong>validity period of only 825 days</strong>.
+This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&rsquo;t seen anything about this in the changelog.
+In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?</p>
+<h2 id="the-problem">The Problem</h2>
+<p>First of all, don&rsquo;t panic. The affected certificates are not visible in the GUI, but NSX Manager will issue a warning and display an error 30 days in advance. If you don&rsquo;t see these messages in your NSX, you have more than 30 days to respond.
+Furthermore, it only affects transport nodes deployed with NSX 4.1.x - 4.2. If you have upgraded from NSX 3.X to one of the affected versions or have just deployed VCF version 5.2.x, you are safe.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">The certificate issued at the time of Transport Node creation <strong>is not replaced automatically during an upgrade</strong>.</div>
+    </aside>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>As the 825-day period approaches its end, you may encounter <strong>certificate expiration issues</strong>, potentially affecting NSX component communication and overall platform stability.
+
+    <aside class="admonition Warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">Once the TransportNode certificate expires, there is a grace period of only 24 hours after which all impacted Edges and Hosts will be disconnected from NSX.</div>
+    </aside></p>
+<p>If you are affected, there are two scenarios.</p>
+<ul>
+<li>Scenario A) The certificates will expire sometime in the near future, you may have received a warning in NSX Manager and therefore found my blog, or you are not yet aware of the problem because the certificates will expire sometime between 31 and 825 days from now.</li>
+<li>Scenario B) The certificates have already expired and transport nodes are disconnected from NSX.</li>
+</ul>
+<p>There is a solution for both scenarios. But let&rsquo;s start with the simple scenario A first.</p>
+<h2 id="find-the-problem">Find the problem</h2>
+<p>If you don&rsquo;t know which NSX version you installed and want to check whether you are affected by this issue, Broadcom has a relatively simple solution. There is a script called CARR (Certificate Analyzer, Results and Recovery) that can be easily run on NSX Manager (NSX 4.1.x to 4.2) or on an external client (other NSX versions).
+Download <a href="https://knowledge.broadcom.com/external/article/369034">Certificate Analyzer, Results and Recovery (CARR)</a>from the official KB article.</p>
+<p>In all cases, the script requires the following ports to be open between the client machine and the 3 NSX Managers</p>
+<ul>
+<li>ssh port 22</li>
+<li>https port 443</li>
+<li>corfu port 9000</li>
+</ul>
+<p>If running on the NSX Manager directly, ports 443 and 9000 will already be open between the 3 Managers.</p>
+<p>If you want to run the script on the NSX manager, then the script must be executed directly from the /root directory.
+To do this, copy the script to your NSX Manager or Global NSX Manager using sftp and unzip it with tar and run the script.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">tar -xvf carr-1.15.tar.gz
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> carr-1.15
+</span></span><span class="line"><span class="cl">./start.sh -d
+</span></span></code></pre></div>
+    <aside class="admonition Warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">The CARR script supports multiple parameters. Always perform an NSX backup first and, above all, run the script in dryrun mode. Dryrun mode executes the script in read-only mode.</div>
+    </aside>
+<p>Script options:</p>
+<ul>
+<li>
+<p>-o = this flag is used to force online mode</p>
+</li>
+<li>
+<p>-t = specify lead time for expiring certificates, between 31 and 825 days.</p>
+</li>
+<li>
+<p>-d = dryrun</p>
+</li>
+</ul>
+<p>I ran the script with the default settings (lead time for expiring 825 days) and the output was as follows:</p>
+<h3 id="carr-script-validation-report">CARR Script Validation Report</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Certificate Checks</th>
+          <th>Validation Results</th>
+          <th>Probable Fix</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>API</td>
+          <td>WARNING: Certificate is expiring in 680 days<!-- raw HTML omitted -->SUCCESS: 10.28.0.3</td>
+          <td>Certificate is CA signed. Customer should import the new CA signed certificate.</td>
+      </tr>
+      <tr>
+          <td>VIP</td>
+          <td>WARNING: Certificate is expiring in 680 days<!-- raw HTML omitted -->SUCCESS: 10.28.0.3</td>
+          <td>Certificate is CA signed. Customer should import the new CA signed certificate.</td>
+      </tr>
+      <tr>
+          <td>STALE-CERTIFICATES</td>
+          <td>SUCCESS: No stale certificates found.</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>APH_AR</td>
+          <td>SUCCESS: 10.28.0.3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>COMPUTE_MANAGER</td>
+          <td>VC(CM): vcf02-vcsa.lab.home: SUCCESS: No issue with certificates found.</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>LOCAL-MANAGER-PI</td>
+          <td>The NSX-manager is not federated. Skipping Local Manager cert validations</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>SITE-TO-SITE</td>
+          <td>The NSX-manager is not federated. Skipping APH_AR cert validations</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>HOST</td>
+          <td>No Host certificate is expiring or has expired</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>EDGE</td>
+          <td>No EDGE node certificate is expiring or has expired</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>CCP</td>
+          <td>SUCCESS: 10.28.0.3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>APH_TN</td>
+          <td>SUCCESS: 10.28.0.3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>CBM_CLUSTER_MANAGER</td>
+          <td>SUCCESS: 10.28.0.3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>CBM_CORFU</td>
+          <td>SUCCESS: 10.28.0.3</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p><em>All validations done.</em></p>
+<p>As you can see from the output for HOST and EDGE, my installation is not affected. However, it shows that my API and VIP certificate will expire in 680 days. CARR is also smart enough to recognize that it is a certificate signed by a CA and not a certificate issued by NSX itself.</p>
+
+    <aside class="admonition Warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">If I hadn&rsquo;t run the script in dry run mode, the script would have replaced my API and VIP certificates from NSX Manager with its own self-signed certificates. However, this is not desirable in this case. Caution is advised here, as it is easy to accidentally replace certificates that you do not want to replace.</div>
+    </aside>
+<p>To trigger TN cert replacement, environment details must be populated in a pre-existing file validation_config.yaml. This yaml file is located in the same folder as start.sh.
+My example yaml. I have disabled validation of all certificates except HOST and EDGE.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># user interface to provide the validation config</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># user can specify if any certificate validation needs to be skipped.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># by default all certificate types will be validated.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># For Hosts , the vCenter cluster names for host must be specified. Script will validate hosts in those clusters only.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># For Edge node, Edge cluster name must be specified. Script will validate edge nodes in those clusters only.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">HOST</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">True</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">clusters</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">vcenter_name</span><span class="p">:</span><span class="w"> </span><span class="l">vcf02-vcsa.lab.home</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">vcenter_cluster_name</span><span class="p">:</span><span class="w"> </span><span class="l">sfo-m01-cluster-001</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">EDGE</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">True</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">clusters</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cl01</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">API</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">VIP</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">CBM-FILE-PERMISSIONS</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">CBM_CORFU</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">CBM_CLUSTER_MANAGER</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">CORFU_SERVER</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">CORFU_CLIENTS</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">LOCAL-MANAGER-PI</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">GLOBAL-MANAGER-PI</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">STALE-CERTIFICATES</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">APH_TN</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">APH_AR</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">CCP</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">SITE-TO-SITE</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">COMPUTE_MANAGER</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="kc">False</span><span class="w">
+</span></span></span></code></pre></div><p>When I now run the script without dry run, I see in the output that all certificates except HOST and EDGE are skipped. This effectively prevents certificates that you do not want to exchange from being exchanged.</p>
+<h3 id="carr-script-validation-report-1">CARR Script Validation Report</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Certificate Checks</th>
+          <th>Validation Results</th>
+          <th>Probable Fix</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>API</td>
+          <td>Validation for the &lsquo;API&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>VIP</td>
+          <td>Validation for the &lsquo;VIP&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>STALE-CERTIFICATES</td>
+          <td>Validation for the &lsquo;STALE-CERTIFICATES&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>APH_AR</td>
+          <td>Validation for the &lsquo;APH_AR&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>COMPUTE_MANAGER</td>
+          <td>Validation for the &lsquo;COMPUTE_MANAGER&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>LOCAL-MANAGER-PI</td>
+          <td>Validation for the &lsquo;LOCAL-MANAGER-PI&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>SITE-TO-SITE</td>
+          <td>Validation for the &lsquo;SITE-TO-SITE&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>HOST</td>
+          <td>No Host certificate is expiring or has expired</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>EDGE</td>
+          <td>No EDGE node certificate is expiring or has expired</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>CCP</td>
+          <td>Validation for the &lsquo;CCP&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>APH_TN</td>
+          <td>Validation for the &lsquo;APH_TN&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>CBM_CLUSTER_MANAGER</td>
+          <td>Validation for the &lsquo;CBM_CLUSTER_MANAGER&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>CBM_CORFU</td>
+          <td>Validation for the &lsquo;CBM_CORFU&rsquo; is disabled in the input config file</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="what-to-do-if-the-transport-nodes-are-already-disconnected">What to do if the transport nodes are already disconnected?</h2>
+<p>There is a solution for this as well. Unfortunately, CARR can no longer be used for separate transport nodes. The solution to this problem is to manually generate new certificates on the transport node and then push them from the transport node to the NSX Manager.</p>
+
+    <aside class="admonition Warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">In general, caution is advised when undertaking this task. Personally, I would always open a ticket with Broadcom, as errors can cause further damage in case of doubt. If an Edge Node is disconnected, you can also perform a redeployment via API, which may even be faster than troubleshooting with CARR or manually.
+You can find out how to do this in my blog here: <a href="https://sdn-warrior.org/posts/nsx-edge-redeploy/">SDN-warrior - NSX Edge Redeploy Guide</a></div>
+    </aside>
+<ul>
+<li>
+<p>SSH to the Transport Node as root user</p>
+</li>
+<li>
+<p>Empty Transport Node certificate and private key</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">cat /dev/null &gt; /etc/vmware/nsx/host-cert.pem
+</span></span><span class="line"><span class="cl">cat /dev/null &gt; /etc/vmware/nsx/host-privkey.pem
+</span></span></code></pre></div><ul>
+<li>Generate a new self-signed TN certificate and key.</li>
+</ul>
+<h4 id="for-nsx-41x-versions-prior-to-4125">For NSX 4.1.x versions prior to 4.1.2.5:</h4>
+<ul>
+<li>Create a temporary openssl config file from the existing openssl config</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">cat /etc/vmware/nsx/openssl-proxy.cnf &gt; /tmp/tmp-openssl-proxy.cnf
+</span></span></code></pre></div><ul>
+<li>UUID is extracted and added to the temporary openssl config</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo &#34;UID = $(grep -o &#39;&lt;uuid&gt;[^&lt;]*&#39; /etc/vmware/nsx/host-cfg.xml | sed &#39;s/&lt;uuid&gt;//&#39;)&#34; &gt;&gt; /tmp/tmp-openssl-proxy.cnf
+</span></span></code></pre></div><ul>
+<li>Add extension in the temporary openssl config</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo -e &#34;[ req_ext ]\nbasicConstraints     = CA:FALSE\nextendedKeyUsage     = clientAuth\nsubjectKeyIdentifier = hash\nauthorityKeyIdentifier = keyid,issuer&#34; &gt;&gt; /tmp/tmp-openssl-proxy.cnf
+</span></span></code></pre></div><ul>
+<li>Replace the certificate, where below -days parameter specifies 3650 days (10 years) validity period</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /etc/vmware/nsx/host-privkey.pem -out /etc/vmware/nsx/host-cert.pem -config /tmp/tmp-openssl-proxy.cnf -extensions req_ext
+</span></span></code></pre></div><h4 id="for-nsx-4125-and-higher">For NSX 4.1.2.5 and higher</h4>
+<ul>
+<li>restarting nsx-proxy restart creates the new cert-key pair:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/etc/init.d/nsx-proxy restart
+</span></span></code></pre></div><ul>
+<li>Identify NSX Manager thumbprint, ssh as admin user to NSX Manager</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">get certificate api thumbprint
+</span></span></code></pre></div><p>To push the new cert-key pair to the Manager, from root user on the Host or Edge run (Any NSX Manager name or IP can be used)</p>
+<h4 id="edge">Edge</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">su admin -c push host-certificate &lt;Manager hostname-or-IP&gt; username admin thumbprint &lt;thumbprint from step 4&gt;
+</span></span><span class="line"><span class="cl">Password for API user: &lt;enter admin password&gt;
+</span></span></code></pre></div><h4 id="host">Host</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">nsxcli -c push host-certificate &lt;Manager hostname-or-IP&gt; username admin thumbprint &lt;thumbprint from step 4&gt;
+</span></span><span class="line"><span class="cl">Password for API user: &lt;enter admin password&gt;
+</span></span></code></pre></div><p>The official Broadcom KB article can be found here: <a href="https://knowledge.broadcom.com/external/article/345802/alarm-for-transport-node-certificate-is.html">Broadcom: Alarm For Transport Node Certificate is About to Expire.</a></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>At first glance, this problem sounds quite drastic, but if you have monitoring in place and regularly check the status of your NSX installation, the outage can be avoided relatively easily. The most important thing to know, however, is that upgrading your NSX version does <strong>not</strong> extend existing certificate lifetimes!</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>

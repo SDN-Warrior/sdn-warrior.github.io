@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 26 Apr 2025 16:00:10 -0500</lastBuildDate>
+    <lastBuildDate>Tue, 06 May 2025 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NSX Expiring Transport Node Certificates</title>
+      <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
+      <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VMUG Connect St. Louis 2025</title>
       <link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
