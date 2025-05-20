@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 06 May 2025 18:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 20 May 2025 18:00:16 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ReSTNSX with HCX</title>
+      <link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
+      <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&amp;rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.&lt;/p&gt;&#xA;&lt;p&gt;But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&amp;rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.&#xA;We will see in this post whether it is really that simple.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>NSX Expiring Transport Node Certificates</title>
       <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
       <description>&lt;p&gt;In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.&lt;/p&gt;&#xA;&lt;p&gt;For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>MAC Learning is your friend</title>
-      <link>https://sdn-warrior.org/posts/mac-learning/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

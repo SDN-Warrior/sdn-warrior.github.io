@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 06 May 2025 18:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 20 May 2025 18:00:16 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ReSTNSX with HCX</title>
+      <link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
+      <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&amp;rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.&lt;/p&gt;&#xA;&lt;p&gt;But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&amp;rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.&#xA;We will see in this post whether it is really that simple.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>NSX Expiring Transport Node Certificates</title>
       <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
