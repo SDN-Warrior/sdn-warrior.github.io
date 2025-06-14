@@ -6,8 +6,381 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 20 May 2025 18:00:16 +0200</lastBuildDate>
+		<lastBuildDate>Sat, 14 Jun 2025 10:14:45 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Tales from the Lab - Minisforum MS-A2</title>
+			<link>https://sdn-warrior.org/posts/ms-a2/</link>
+			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>After being impressed with the performance and form factor of the Minisforum <strong>MS-01</strong>, I had to get my hands on their latest beast: the <strong>MS-A2</strong>, powered by AMD&rsquo;s latest Zen 5 architecture.
+It&rsquo;s also exciting to test a gadget before <a href="https://williamlam.com/">William Lam</a>. Thanks for letting me be the first (I&rsquo;m just kidding, of course).</p>
+<p>In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.</p>
+<p>A quick disclaimer first: I am not a hardware tester and do not have any real measuring equipment. Everything I report here is based on my experience with both devices in my environment.</p>
+
+<figure><a href="01.jpg"><picture>
+          <source srcset="/ms-a2/01_hu_21849c19b5422a45.webp" type="image/webp">
+          <source srcset="/ms-a2/01_hu_b7702070d3eae534.jpg" type="image/jpeg">
+          <img src="/ms-a2/01_hu_21849c19b5422a45.webp"alt="MS-A2"  width="2200"  height="1650" />
+        </picture></a><figcaption>
+            <p>MS-A2 (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="use-case">Use Case</h2>
+<p>Perhaps a quick word about what I do with the machines (for anyone who doesn&rsquo;t read my blog regularly and stumbled across the article via Google).
+The minicomputers primarily provide compute and storage resources for my labs. My labs are 99% nested, which means that I install another hypervisor on top of the hypervisor to then perform my actual tests. Nesting offers several advantages: I don&rsquo;t have to rebuild a test lab, and I can move a finished lab back and forth between hardware platforms, for example.
+The VCF setup I used to perform the more practical tests allows me to change the hardware base relatively quickly.</p>
+<p>But let&rsquo;s start with the less exciting stuff—tech specs.</p>
+<h2 id="tech-specs-comparison">Tech Specs Comparison</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Feature</th>
+          <th>Minisforum MS-01</th>
+          <th>Minisforum MS-A2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>CPU</strong></td>
+          <td>Intel Core i9 13900H (14C/20T, 5.4 GHz Turbo)</td>
+          <td>AMD Ryzen™ 9 9955HX (16C/32T, Zen 5, up to 5.4 GHz)</td>
+      </tr>
+      <tr>
+          <td><strong>Architecture</strong></td>
+          <td>Raptor Lake (14nm)</td>
+          <td>Zen 5 (4nm)</td>
+      </tr>
+      <tr>
+          <td><strong>TDP</strong></td>
+          <td>45W</td>
+          <td>55W</td>
+      </tr>
+      <tr>
+          <td><strong>RAM Support</strong></td>
+          <td>2x DDR4 SO-DIMM (up to 64 GB, ECC/Non-ECC)</td>
+          <td>2x DDR5 SO-DIMM (up to 96 GB)</td>
+      </tr>
+      <tr>
+          <td><strong>Storage</strong></td>
+          <td>2x M.2 NVMe (PCIe 3.0), 1x M.2 NVMe (PCIe 4.0)</td>
+          <td>3x M.2 NVMe (PCIe 3.0)</td>
+      </tr>
+      <tr>
+          <td><strong>Network</strong></td>
+          <td>2x 2.5G Intel i226 NICs / 2x 10G Intel X710</td>
+          <td>1x 2.5G Intel i226 NIC  / 1x 2.5G Realtek NIC / 2x 10G Intel X710</td>
+      </tr>
+      <tr>
+          <td><strong>Graphics</strong></td>
+          <td>Intel® Iris® Xe-Grafik</td>
+          <td>Radeon 610M</td>
+      </tr>
+      <tr>
+          <td><strong>Cooling</strong></td>
+          <td>Dual-fan active cooling (customizable)</td>
+          <td>Dual-fan active cooling (improved thermal design)</td>
+      </tr>
+      <tr>
+          <td><strong>Size</strong></td>
+          <td>154 x 150 x 64 mm</td>
+          <td>154 x 150 x 64 mm (identical chassis)</td>
+      </tr>
+      <tr>
+          <td><strong>Power Supply</strong></td>
+          <td>External 19V DC</td>
+          <td>External 19V DC</td>
+      </tr>
+      <tr>
+          <td><strong>TPM</strong></td>
+          <td>Yes (firmware TPM)</td>
+          <td>Yes (firmware TPM)</td>
+      </tr>
+      <tr>
+          <td><strong>vPro/SEV Support</strong></td>
+          <td>vPro (limited)</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>At first glance, the two devices have a lot in common. Fortunately, the form factor is the same, so I don&rsquo;t have to buy a new rack mount. The exciting details are in the small print. The MS-01 only officially supports 64 GB RAM, while the A2 only supports up to 96 GB RAM.
+Nevertheless, I have installed 128 GB of RAM in both systems. I am using the Crucial DDR5 RAM 128GB Kit (2x64GB 5600MHz SODIMM).</p>
+
+<figure><a href="02.jpg"><picture>
+          <source srcset="/ms-a2/02_hu_9674d606d90ed580.webp" type="image/webp">
+          <source srcset="/ms-a2/02_hu_a5814a900fc70b22.jpg" type="image/jpeg">
+          <img src="/ms-a2/02_hu_9674d606d90ed580.webp"alt="RAM"  width="1621"  height="1216" />
+        </picture></a><figcaption>
+            <p>MS-A2 - RAM (click to enlarge)</p>
+          </figcaption></figure>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I tested both devices with 128 GB RAM and they work fine for me. However, I must point out that there is no guarantee that it will work.</div>
+    </aside>
+<p>The second difference is the CPU architecture. While Intel relies on its Big/Little architecture, which gives us performance and efficiency cores, AMD Zen 5 has symmetrical cores and uses SMT, which is equivalent to Intel&rsquo;s Hyperthreading.
+I have described how to make P and E cores usable with ESXi <a href="https://sdn-warrior.org/posts/nuc/#using-pe-cores">here</a>.</p>
+<p>In my opinion, this is already a plus point for the MS-A2, as I can install ESXi just like that.
+What I find a little strange is the network card selection. While the MS-01 has two 2.5G cards from Intel, the MS-A2 comes with a strange configuration of one 2.5G Intel card and one 2.5G Realtek card. Unfortunately, there is no Realtek driver for built-in cards in ESXi. Fun fact: Realtek USB network cards do work, though. Overall, this isn&rsquo;t important to me, as I use the X710 Intel cards throughout, since my network is completely 10G.</p>
+<p>In summary, the following key data can be noted:</p>
+<ul>
+<li>MS-01 14 Cores / 128 GB RAM / 2x10G / VMware ESXi, 8.0.3, 24674464</li>
+<li>MS-A2 32 Cores / 128 GB RAM / 2x10G / VMware ESXi, 8.0.3, 24674464</li>
+</ul>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Since I use my iSCSI as storage for both systems, I don&rsquo;t need to compare storage. However, since both servers are equipped with a 2TB Samsung 990 Pro in the PCIe 4 slot, the values should be identical.</div>
+    </aside>
+
+<figure><a href="03.jpg"><picture>
+          <source srcset="/ms-a2/03_hu_e9eac069a58fe373.webp" type="image/webp">
+          <source srcset="/ms-a2/03_hu_b7d70be6fbee24a0.jpg" type="image/jpeg">
+          <img src="/ms-a2/03_hu_e9eac069a58fe373.webp"alt="RAM"  width="1815"  height="1361" />
+        </picture></a><figcaption>
+            <p>MS-A2 - Inside (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="cinebench-multicore-test--ms-01-vs-ms-a2">Cinebench Multicore Test – MS-01 vs MS-A2</h2>
+<p>As a first pragmatic test, I created a Windows 11 VM on both systems. Each VM was assigned the <strong>maximum number of vCPUs</strong> available on the host—meaning:</p>
+<ul>
+<li><strong>MS-01</strong>: 14 vCPUs (max useeable cores on i9 13900H)</li>
+<li><strong>MS-A2</strong>: 32 vCPUs (max useeable cores on Ryzen 9 9955HX)</li>
+</ul>
+<p>Both ESXi server had the <strong>power policy set to High Performance</strong>, and Cinebench 2024.01 was executed in a continuous loop for 30 minutes to simulate thermal and sustained performance under load.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/ms-a2/04_hu_75c6f36af868959c.webp" type="image/webp">
+          <source srcset="/ms-a2/04_hu_b75a1b88cde7181.jpg" type="image/jpeg">
+          <img src="/ms-a2/04_hu_75c6f36af868959c.webp"alt="Cinebench"  width="2189"  height="781" />
+        </picture></a><figcaption>
+            <p>Cinebench on MS-A2 (click to enlarge)</p>
+          </figcaption></figure>
+<p>This may not be a perfect test, but since the MS-01 is already in lab operation, I didn&rsquo;t want to install Windows 11 natively. Of course, the Windows 11 test VM ran exclusively on the two hosts so as not to distort the results.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>MS-01</th>
+          <th>MS-A2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Power Policy</strong></td>
+          <td>High Performance</td>
+          <td>High Performance</td>
+      </tr>
+      <tr>
+          <td><strong>Idle Power Consumption</strong></td>
+          <td>40 Watts</td>
+          <td>36 Watts</td>
+      </tr>
+      <tr>
+          <td><strong>Cinebench Power Draw</strong></td>
+          <td>86 Watts</td>
+          <td>121 Watts</td>
+      </tr>
+      <tr>
+          <td><strong>Cinebench Score</strong></td>
+          <td>734 pts (14 Cores)</td>
+          <td>1670 pts (32 Cores)</td>
+      </tr>
+  </tbody>
+</table>
+<p>The difference is substantial. Even though the MS-A2 pulls more power under load, it <strong>doubles the Cinebench score</strong> compared to the MS-01. Idle consumption is slightly better on the MS-A2, likely due to the newer and more efficient AMD Zen 5 architecture. Performance-per-watt in multicore scenarios clearly favors the MS-A2.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">The power consumption was measured using an Aquara Smart plug. This is therefore not a scientifically accurate result. ;) So don&rsquo;t sue me if your electricity bills skyrocket.</div>
+    </aside>
+<p>Minisforum mentions more efficient cooling on its website, which may well be true, but the MS-A2 is somewhat louder and, above all, significantly warmer than the MS-01, which seems logical considering the power consumption.
+However, both are still within acceptable limits. I wouldn&rsquo;t want to have the MS-A2 running 24/7 at full load next to my pillow, but anyone who knows my blog knows that I shut down devices I don&rsquo;t need anyway.
+So my colleagues on the teams call haven&rsquo;t complained about a tornado raging next to me.</p>
+<p>All in all, I would say that the noise is justified for the performance. When idle, however, the MS-A2 is inaudible.
+My Mikrotik switch is louder, as is my Dyson fan, which is currently running thanks to the 28 degrees Celsius temperature.</p>
+<h2 id="internal-network-performance--vm-to-vm-on-the-same-host">Internal Network Performance – VM to VM on the Same Host</h2>
+<p>The external network performance was identical on both servers, which is not surprising since both have the same network cards and both CPUs have enough power to run a 10 Gb/s network.
+That&rsquo;s why I&rsquo;m not going to bother with detailed tests at this point.</p>
+<p>What interests me much more is how the performance compares between two VMs, as I do a lot of nested labs and also vSAN nested, which is often a decisive factor.</p>
+<h3 id="test-setup">Test Setup</h3>
+<ul>
+<li><strong>2x Alpine Linux VMs</strong> (2 vCPU, 2 GB RAM each)</li>
+<li><code>alpine-a</code>: runs <code>iperf3 -s</code></li>
+<li><code>alpine-b</code>: runs <code>iperf3 -c 192.168.16.11</code></li>
+<li>No optimizations applied (default config, no tuning)</li>
+<li>Only these two VMs were running on the host</li>
+</ul>
+<h3 id="ms-01">MS-01</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">alpine-b:~# iperf3 -c 192.168.16.11
+</span></span><span class="line"><span class="cl">Connecting to host 192.168.16.11, port <span class="m">5201</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span> <span class="nb">local</span> 192.168.16.12 port <span class="m">55930</span> connected to 192.168.16.11 port <span class="m">5201</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span> ID<span class="o">]</span> Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   0.00-1.00   sec  5.03 GBytes  43.2 Gbits/sec    <span class="m">0</span>   2.80 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   1.00-2.00   sec  4.33 GBytes  37.2 Gbits/sec   <span class="m">60</span>   2.75 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   2.00-3.00   sec  4.96 GBytes  42.6 Gbits/sec    <span class="m">0</span>   2.75 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   3.00-4.00   sec  5.88 GBytes  50.5 Gbits/sec    <span class="m">0</span>   3.01 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   4.00-5.00   sec  6.93 GBytes  59.6 Gbits/sec    <span class="m">0</span>   3.01 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   5.00-6.00   sec  6.99 GBytes  60.1 Gbits/sec    <span class="m">0</span>   3.24 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   6.00-7.00   sec  6.54 GBytes  56.2 Gbits/sec    <span class="m">0</span>   3.24 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   7.00-8.00   sec  6.32 GBytes  54.3 Gbits/sec    <span class="m">0</span>   3.24 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   8.00-9.00   sec  6.62 GBytes  56.9 Gbits/sec  <span class="m">139</span>   2.59 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   9.00-10.00  sec  6.37 GBytes  54.8 Gbits/sec    <span class="m">0</span>   2.78 MBytes
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl"><span class="o">[</span> ID<span class="o">]</span> Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   0.00-10.00  sec  60.0 GBytes  51.5 Gbits/sec  <span class="m">199</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   0.00-10.01  sec  60.0 GBytes  51.5 Gbits/sec           receiver
+</span></span></code></pre></div><h3 id="ms-a2">MS-A2</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">alpine-b:~# iperf3 -c 192.168.16.11
+</span></span><span class="line"><span class="cl">Connecting to host 192.168.16.11, port <span class="m">5201</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span> <span class="nb">local</span> 192.168.16.12 port <span class="m">35168</span> connected to 192.168.16.11 port <span class="m">5201</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span> ID<span class="o">]</span> Interval           Transfer     Bitrate         Retr  Cwnd
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   0.00-1.00   sec  9.47 GBytes  81.3 Gbits/sec    <span class="m">0</span>   2.06 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   1.00-2.00   sec  10.0 GBytes  85.8 Gbits/sec    <span class="m">0</span>   3.58 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   2.00-3.00   sec  10.2 GBytes  87.4 Gbits/sec    <span class="m">0</span>   3.78 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   3.00-4.00   sec  10.1 GBytes  86.7 Gbits/sec    <span class="m">0</span>   3.78 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   4.00-5.00   sec  10.1 GBytes  87.1 Gbits/sec    <span class="m">0</span>   3.78 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   5.00-6.00   sec  10.1 GBytes  87.0 Gbits/sec    <span class="m">0</span>   3.78 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   6.00-7.00   sec  10.3 GBytes  88.6 Gbits/sec    <span class="m">0</span>   3.97 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   7.00-8.00   sec  10.3 GBytes  88.7 Gbits/sec    <span class="m">0</span>   3.97 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   8.00-9.00   sec  10.1 GBytes  87.2 Gbits/sec    <span class="m">0</span>   3.97 MBytes
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   9.00-10.00  sec  10.1 GBytes  86.9 Gbits/sec    <span class="m">0</span>   3.97 MBytes
+</span></span><span class="line"><span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+</span></span><span class="line"><span class="cl"><span class="o">[</span> ID<span class="o">]</span> Interval           Transfer     Bitrate         Retr
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   0.00-10.00  sec   <span class="m">101</span> GBytes  86.7 Gbits/sec    <span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>  5<span class="o">]</span>   0.00-10.03  sec   <span class="m">101</span> GBytes  86.4 Gbits/sec           receiver
+</span></span></code></pre></div><h3 id="an-attempt-to-interpret-the-results">An attempt to interpret the results</h3>
+<p>The difference is likely due to the internal memory bandwidth, PCIe performance, and possibly better NUMA handling on the MS-A2’s Zen 5 platform.
+Since this is purely intra-host, the NICs themselves aren’t part of the data path, which makes this a good synthetic benchmark for VM-to-VM memory and CPU path efficiency.
+The MS-A2 has a clear lead here—offering nearly 70% higher throughput compared to the MS-01.
+In addition, the results on the MS-01 fluctuate, which in my opinion can happen when a vCPU is moved to an E Core. Since AMD does not have E Cores, the result is significantly more stable and subject to less fluctuation.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I am not an expert in CPU architecture, so I can only speculate. So take the statements made with a grain of salt.
+However, this does not change the fact that my tests, after repeated trials, have always reliably come out in favor of the MS-A2.</div>
+    </aside>
+<h2 id="but-can-it-run-doom-vcf">But can it run <del>doom</del> VCF?</h2>
+<p>First of all, I did not install VCF on the MS-A2. Why? Time!
+But I did migrate an existing nested lab to the MS-A2. Remember? Introduction and all that? That&rsquo;s exactly why I build my labs nested.
+Here&rsquo;s a brief overview of how my VCF lab is set up.</p>
+<p>It&rsquo;s a consolidated design and doesn&rsquo;t use vSAN. It&rsquo;s also built on three nested ESXi servers.
+This isn&rsquo;t officially supported with VCF 5.X, but to be honest, I&rsquo;m constantly doing things that aren&rsquo;t supported, and that&rsquo;s not going to bother us here.
+I deployed the original lab on 2 MS-01 and have been using it for quite some time.
+The 3 nested ESXi hosts each have 8 vCPUs, 45 GB RAM, and a small boot disk.
+The principal storage is NFS. If you&rsquo;re wondering how that works, I wrote a blog post about it <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">here</a>.</p>
+<p>If you&rsquo;re good at math, you&rsquo;ll have noticed that 3x 45 GB RAM is more than 128 GB RAM, but a little oversubscription never hurt anyone (except when it comes to licenses).</p>
+<p>After everything had been migrated offline, since Intel and AMD are not compatible at all and therefore no live migration between the two systems is possible, I started VCF and the poor MS-A2 immediately went into full load.</p>
+
+<figure><picture>
+          <source srcset="/ms-a2/05_hu_d0cf20c3eeca560d.webp" type="image/webp">
+          <source srcset="/ms-a2/05_hu_174a4308cd7bdb3f.jpg" type="image/jpeg">
+          <img src="/ms-a2/05_hu_d0cf20c3eeca560d.webp"alt="A2 full load"  width="1098"  height="384" />
+        </picture><figcaption>
+            <p>MS-A2 on full load</p>
+          </figcaption></figure>
+<p>Poor sweet summer child - the MS-A2 becomes slightly louder and the temperatures rise.</p>
+<ul>
+<li>I received the first sign of life after approx. 3:30 minutes. My vCenter responded to the first ping.
+Of course, the ping times were far from ideal.</li>
+<li>After 6:50 minutes i can logon to the vCenter.
+Only NSX Manager is taking its time. But we are already familiar with that.</li>
+<li>After a good 8 minutes, NSX Manager is also available, but still a little sluggish.</li>
+<li>After 10 minutes, everything has settled down enough that you can use the lab really well.</li>
+</ul>
+<p>I don&rsquo;t notice any difference in responsiveness compared to when it&rsquo;s running on 2 MS-01.</p>
+<h2 id="wheres-the-poop-robin">Where&rsquo;s the poop, Robin?</h2>
+<p>I&rsquo;m not sure which of my readers are familiar with the series, but never mind. AMD and NSX is one of those things. Officially, NSX does not work on Ryzen or other AMD consumer CPUs.</p>
+<p>At first, I was a little surprised, because I knew that NSX Edges cause problems during installation or upgrade on AMD consumer CPUs, but I deployed my Edges on Intel. A quick look at the console of one of my Edge VMs revealed the following.</p>
+
+<figure><picture>
+          <source srcset="/ms-a2/06_hu_209ec07d665dc4f4.webp" type="image/webp">
+          <source srcset="/ms-a2/06_hu_728b42e44c315225.jpg" type="image/jpeg">
+          <img src="/ms-a2/06_hu_209ec07d665dc4f4.webp"alt="Edge VM"  width="1490"  height="1021" />
+        </picture><figcaption>
+            <p>Stress on the EdgeVM</p>
+          </figcaption></figure>
+<p>So, at first, I was pretty clueless. Luckily, there&rsquo;s the awesome vExpert community, because a) I&rsquo;m getting older and forgetting more than I want to admit, and b) I don&rsquo;t always know everything.
+My thanks go to <a href="https://www.linkedin.com/in/abbed-sedkaoui-678718151/">Abbed Sedkaoui</a> for his quick help. He put me on the right track. By the way, he has a great <a href="https://strivevirtually.net/">blog</a>.</p>
+<p>The problem is that when the Edge VM is started, a Python script is executed that checks whether an AMD CPU is installed and, if it is not an AMD EPYC, simply throws an error and prevents DPDK from starting. This leaves Edge offline.
+
+<figure><picture>
+          <source srcset="/ms-a2/07_hu_f27f5985afa075fd.webp" type="image/webp">
+          <source srcset="/ms-a2/07_hu_d244c01a65652c2e.jpg" type="image/jpeg">
+          <img src="/ms-a2/07_hu_f27f5985afa075fd.webp"alt="Edge VM Error"  width="1496"  height="617" />
+        </picture><figcaption>
+            <p>EdgeVM - Here&rsquo;s the problem</p>
+          </figcaption></figure></p>
+<p>The solution is simple: log in to EdgeVM with root and edit the following script /opt/vmware/nsx-edge/bin/config.py.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl"># AMD only claims DPDK support of the following processors:
+</span></span><span class="line"><span class="cl"># (1) AMD EPYC 7XX1 series and newer.
+</span></span><span class="line"><span class="cl"># (2) AMD EPYC 3000 Embedded Family and newer.
+</span></span><span class="line"><span class="cl">vendor_info = &#34;&#39;
+</span></span><span class="line"><span class="cl">model_name = &#34;&#39;
+</span></span><span class="line"><span class="cl">for line in cpuinfo.splitlines():
+</span></span><span class="line"><span class="cl">    if line startswith( &#39;vendor_id&#39;):
+</span></span><span class="line"><span class="cl">        vendor_info = line.split(&#39;:&#39;1) [1].strip()
+</span></span><span class="line"><span class="cl">    if line startswith &#39;model name&#39;):
+</span></span><span class="line"><span class="cl">        model_name = line-split(&#39;:&#39;, 1) [1] .strip()
+</span></span><span class="line"><span class="cl">    if vendor-info and model_name:
+</span></span><span class="line"><span class="cl">        break
+</span></span><span class="line"><span class="cl">#  if &#34;AMD&#34; in vendor_info and &#34;AMD EPYC&#34; not in model_name: &lt;---here
+</span></span><span class="line"><span class="cl">#      self.error_exit(&#34;Unsupported CPU: %s&#34; % model_name)   &lt;---here
+</span></span></code></pre></div><p>You just need to comment out the CPU check. After that, the Edge must be rebooted and our NSX will now work.</p>
+<p>The problem is upgrading or redeploying the Edge VMs. You only have about a minute after the Edge has been deployed to adjust the script.
+That&rsquo;s why I&rsquo;ll be deploying my Edges via OVA in the future and using them on an Intel host. That&rsquo;s the easiest way for me.</p>
+<h2 id="conclusion---is-the-ms-a2-the-perfect-home-server">Conclusion - Is the MS-A2 the perfect home server?</h2>
+<p>I would give a clear yes and no. It depends greatly on what you intend to do with it. If you want to deploy VCF without workarounds and technical challenges, then I would definitely say go for the MS-01 and buy two of them. If you are using Proxmox or another hypervisor, then the MS-A2 is a no-brainer – buy it and be happy.
+Both the MS-01 and MS-A2 are excellent compact systems for homelab use, but the MS-A2 clearly sets a new bar.
+With twice the Cinebench score and significantly higher throughput on the internal network, this box is the clear winner for me.
+However, I don&rsquo;t mind DIY solutions and unsupported solutions. I can completely understand if someone prefers to buy a home server on which they can run vcf without any tinkering—but that&rsquo;s just not my thing.</p>
+<h2 id="maybe-one-more-thinghow-much-does-it-cost">Maybe one more thing—how much does it cost?</h2>
+<p>Since I haven&rsquo;t had time to update my Lab BOM yet, I&rsquo;ll briefly mention the costs here. I ordered the MS-A2 from Amazon because it was available immediately and I couldn&rsquo;t wait for the one I actually ordered from Minisforum to arrive.
+I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, there&rsquo;s a custom rack mount for €92, but I&rsquo;m not counting that in the total cost. At €312, the RAM isn&rsquo;t exactly cheap and is still hard to come by in some places. But I think that&rsquo;s the price you pay for being an early adopter.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">And as always, I pay for the fun out of my own pocket, as I do not place any advertisements nor am I sponsored by any company.</div>
+    </aside>
+]]></content>
+		</item>
 		
 		<item>
 			<title>ReSTNSX with HCX</title>

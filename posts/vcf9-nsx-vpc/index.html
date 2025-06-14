@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short article about VPCs in NSX 9 and VCF 9.">
+
+  <meta itemprop="name" content="VCF 9 - NSX VPC">
+  <meta itemprop="description" content="A short article about VPCs in NSX 9 and VCF 9.">
+  <meta itemprop="datePublished" content="2025-06-12T21:34:54+02:00">
+  <meta itemprop="dateModified" content="2025-06-12T21:34:54+02:00">
+  <meta itemprop="wordCount" content="816">
+  <meta itemprop="image" content="http://localhost:1313/images/logo.jpg">
+  <meta itemprop="keywords" content="Vcf,Nsx,Homelab"><meta property="og:url" content="http://localhost:1313/posts/vcf9-nsx-vpc/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="VCF 9 - NSX VPC">
+  <meta property="og:description" content="A short article about VPCs in NSX 9 and VCF 9.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-12T21:34:54+02:00">
+    <meta property="article:modified_time" content="2025-06-12T21:34:54+02:00">
+    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Homelab">
+    <meta property="og:image" content="http://localhost:1313/images/logo.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/logo.jpg">
+  <meta name="twitter:title" content="VCF 9 - NSX VPC">
+  <meta name="twitter:description" content="A short article about VPCs in NSX 9 and VCF 9.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF 9 - NSX VPC",
+    "name": "VCF 9 - NSX VPC",
+    "description": "A short article about VPCs in NSX 9 and VCF 9.",
+    "keywords": ["vcf", "nsx", "homelab"],
+    "articleBody": "Introduction Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!\nBut wait, from the top, what are VPCs anyway? VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.\nWhile in NSX 4.X VPCs were only visible in the GUI when an NSX project was created, VMware has now changed this completely. As soon as you open the NSX GUI, the VPCs tab immediately catches your eye.\nNSX 9 VPC (click to enlarge)\nAs you can see here in the screenshot, VPC is very present in NSX 9, but before we can talk about VPCs, we need to talk about a new gateway in NSX 9 - the Default Transit Gateway.\nDefault Transit Gateway What the hell is a Default Transit Gateway? Yes, that’s what I asked myself when I first tried out the beta of VCF 9. Whereas in NSX 4.X a VPC was attached directly to a T0 or a VRF, in VCF9 a Transit Gateway is connected upstream, or rather the default Transit Gateway. At present, you can only have one Transit Gateway per project. What is new in VCF 9 or NSX 9 is that the default project can now also have one or more VPCs.\nInfo\rI will not go into NSX projects in this article, otherwise it would go beyond the scope of this article. However, you can imagine that a project can represent a department or customer, while a VPC can be a logically separate environment within the project. For example, to realize test and staging environments within a project or to provide different development environments for different teams in the same project.\rThe default Transit Gateway is present from the start and cannot be deleted. The configuration options are also very limited. I can specify the name, the External Connectio and the VPC Transit Subnet. This network comes from the 100.64.x.x range and is normally assigned by NSX itself and does not need to be customized. The HA mode is taken over by the T0 to which my Transit Gateway is connected or, more precisely, my VPC connection profile determines whether the HA mode is taken over by my T0 or not.\nInfo\rIf you want to use default outbound NAT in your VPC, then your T0 should be active/standby or active/active stateful. Otherwise only manual static NAT is possible.\rHowever, this is only half the truth, because there is also the so-called distributed mode. However, this assumes that I have created my External Connection as a Distributed Connection and not as a Centralized Connection (with Edge Transportnodes). But that’s another story and I will work through the Distributed Connection in a separate article.\nLet’s get started - Network Connectivity First we need to configure our network connectivity. There are two ways to do this. 1. in the vCenter or 2. in the NSX Manager under System -\u003e Setup Network Connectivity. This point is new. In VCF9, edges are no longer deployed via the SDDC as in VCF 5.X, but via the network connectivity. Here I can also expand my Edge Cluster or deploy a new Edge Cluster. Fortunately, the deployment process has been optimized and is less error-prone and also has a few quality of life improvements.\nvCenter Network Connectivity (click to enlarge)\nI now have to configure my VPC External IP Blocks in the Network Configuration. These IP blocks are then used for all public networks and must generally be routed by my network. This also means that these networks must not overlap. The Private - Transit Gateway IP Blocks are new. These are used so that the VPCs of the same project can communicate with each other. Which networks are used in VPCs will be explained in the course of the article. The Private - Transit Gateway IP Blocks do not have to be routed in the physical network. They are used exclusively for intra-VPC communication.\nvCenter Network Connectivity (click to enlarge)\nA few things are now happening in the background. Firstly, my VPC connectivity profile is being configured by NSX.\nInfo\rIn this profile I could also deactivate the N-S services to switch my Transit Gateway to distributed.\rIn addition, an external connectivity profile is created under Networking -\u003e External Connections. This determines which T0 router the Transit Gateway is connected to. Finally, the External Connectivity Profile is assigned to my Transit Gateway. Can also be found under Networking -\u003e Transit Gateway. Now that we have taken care of the external connection, we can concentrate on creating the actual VPC.\nCreate a Virtual Private Cloud ",
+    "wordCount" : "816",
+    "inLanguage": "en",
+    "image":"http://localhost:1313/images/head.jpg","datePublished": "2025-06-12T21:34:54+02:00",
+    "dateModified": "2025-06-12T21:34:54+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "http://localhost:1313/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http://localhost:1313/posts/vcf9-nsx-vpc/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:1313/favicon.ico"
+      }
+    }
+}
+</script><title>VCF 9 - NSX VPC</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.7706d41cf39b63c8212d7b2ed530370bd8fb982204a76fb53dd6353aa90820bd.css" integrity="sha256-dwbUHPObY8ghLXsu1TA3C9j7mCIEp2+1PdY1OqkIIL0=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f&amp;text=VCF%209%20-%20NSX%20VPC" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF%209%20-%20NSX%20VPC&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%209%20-%20NSX%20VPC&amp;summary=VCF%209%20-%20NSX%20VPC%2c%20by%20SDN-Warrior%0a%0aA%20short%20article%20about%20VPCs%20in%20NSX%209%20and%20VCF%209.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF 9 - NSX VPC&#34;,&#34;http://localhost:1313/posts/vcf9-nsx-vpc/&#34;,&#34;VCF 9 - NSX VPC, by SDN-Warrior\n\nA short article about VPCs in NSX 9 and VCF 9.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jun 12, 2025</span></div>
+				<h1>VCF 9 - NSX VPC</h1>
+			</header>
+			<div class="post-info"><p>A short article about VPCs in NSX 9 and VCF 9.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>816 Words
+     Words // ReadTime
+    
+    
+    
+    3 Minutes, 42 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2025-06-12 21:34 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!</p>
+<p>But wait, from the top, what are VPCs anyway?
+VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.</p>
+<p>While in NSX 4.X VPCs were only visible in the GUI when an NSX project was created, VMware has now changed this completely. As soon as you open the NSX GUI, the VPCs tab immediately catches your eye.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/01_hu_6e97a207855c7f15.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/01_hu_58ba79ca0347d187.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/01_hu_6e97a207855c7f15.webp"alt="NSX 9 VPC"  width="1710"  height="1092" />
+        </picture></a><figcaption>
+            <p>NSX 9 VPC (click to enlarge)</p>
+          </figcaption></figure>
+<p>As you can see here in the screenshot, VPC is very present in NSX 9, but before we can talk about VPCs, we need to talk about a new gateway in NSX 9 - the Default Transit Gateway.</p>
+<h2 id="default-transit-gateway">Default Transit Gateway<a href="#default-transit-gateway" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>What the hell is a Default Transit Gateway? Yes, that&rsquo;s what I asked myself when I first tried out the beta of VCF 9.
+Whereas in NSX 4.X a VPC was attached directly to a T0 or a VRF, in VCF9 a Transit Gateway is connected upstream, or rather the default Transit Gateway. At present, you can only have one Transit Gateway per project.
+What is new in VCF 9 or NSX 9 is that the default project can now also have one or more VPCs.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I will not go into NSX projects in this article, otherwise it would go beyond the scope of this article.
+However, you can imagine that a project can represent a department or customer, while a VPC can be a logically separate environment within the project.
+For example, to realize test and staging environments within a project or to provide different development environments for different teams in the same project.</div>
+    </aside>
+<p>The default Transit Gateway is present from the start and cannot be deleted. The configuration options are also very limited.
+I can specify the name, the External Connectio and the VPC Transit Subnet. This network comes from the 100.64.x.x range and is normally assigned by NSX itself and does not need to be customized.
+The HA mode is taken over by the T0 to which my Transit Gateway is connected or, more precisely, my VPC connection profile determines whether the HA mode is taken over by my T0 or not.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">If you want to use default outbound NAT in your VPC, then your T0 should be active/standby or active/active stateful. Otherwise only manual static NAT is possible.</div>
+    </aside>
+<p>However, this is only half the truth, because there is also the so-called distributed mode. However, this assumes that I have created my External Connection as a Distributed Connection and not as a Centralized Connection (with Edge Transportnodes). But that&rsquo;s another story and I will work through the Distributed Connection in a separate article.</p>
+<h2 id="lets-get-started---network-connectivity">Let&rsquo;s get started - Network Connectivity<a href="#lets-get-started---network-connectivity" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>First we need to configure our network connectivity. There are two ways to do this. 1. in the vCenter or 2. in the NSX Manager under System -&gt; Setup Network Connectivity. This point is new. In VCF9, edges are no longer deployed via the SDDC as in VCF 5.X, but via the network connectivity. Here I can also expand my Edge Cluster or deploy a new Edge Cluster.
+Fortunately, the deployment process has been optimized and is less error-prone and also has a few quality of life improvements.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/02_hu_9973e20cc8515ee3.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/02_hu_7d17d2d76af93559.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/02_hu_9973e20cc8515ee3.webp"alt="vCenter Network Connectivity"  width="1720"  height="771" />
+        </picture></a><figcaption>
+            <p>vCenter Network Connectivity (click to enlarge)</p>
+          </figcaption></figure>
+<p>I now have to configure my VPC External IP Blocks in the Network Configuration. These IP blocks are then used for all public networks and must generally be routed by my network.
+This also means that these networks must not overlap. The Private - Transit Gateway IP Blocks are new.
+These are used so that the VPCs of the same project can communicate with each other.
+Which networks are used in VPCs will be explained in the course of the article.
+The Private - Transit Gateway IP Blocks do not have to be routed in the physical network. They are used exclusively for intra-VPC communication.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/03_hu_1c5a4b41c1eecf2a.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/03_hu_55875cca66bf4ed0.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/03_hu_1c5a4b41c1eecf2a.webp"alt="vCenter Network Connectivity"  width="600"  height="698" />
+        </picture></a><figcaption>
+            <p>vCenter Network Connectivity (click to enlarge)</p>
+          </figcaption></figure>
+<p>A few things are now happening in the background. Firstly, my VPC connectivity profile is being configured by NSX.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">In this profile I could also deactivate the N-S services to switch my Transit Gateway to distributed.</div>
+    </aside>
+<p>In addition, an external connectivity profile is created under Networking -&gt; External Connections.
+This determines which T0 router the Transit Gateway is connected to.
+Finally, the External Connectivity Profile is assigned to my Transit Gateway.
+Can also be found under Networking -&gt; Transit Gateway.
+Now that we have taken care of the external connection, we can concentrate on creating the actual VPC.</p>
+<h2 id="create-a-virtual-private-cloud">Create a Virtual Private Cloud<a href="#create-a-virtual-private-cloud" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+
+			</div>
+			
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf-single-nsx/">VCF Quick Tip - WLD with single NSX Manager</a></li>
+	
+	<li><a href="/posts/nsx-expiring-tn-certificates/">NSX Expiring Transport Node Certificates</a></li>
+	
+	<li><a href="/posts/vcf-token/">VCF - How to use the Broadcom Download Token</a></li>
+	
+	<li><a href="/posts/vcf-stretched-cluster/">VCF Stretched Cluster</a></li>
+	
+	<li><a href="/posts/vcf-import-overlay/">VCF Import Tool - Enable Overlay in an imported VCF Domain</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="next-post" href="http://localhost:1313/posts/nsx-dfw-troubleshooting/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>Nsx Dfw Troubleshooting</span>
+			</a>
+			<a class="prev-post" href="http://localhost:1313/posts/restnsx-with-hcx/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>ReSTNSX with HCX</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

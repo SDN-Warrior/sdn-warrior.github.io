@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Minisforum on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/minisforum/</link>
+    <description>Recent content in Minisforum on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Sat, 14 Jun 2025 10:14:45 +0200</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/minisforum/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tales from the Lab - Minisforum MS-A2</title>
+      <link>https://sdn-warrior.org/posts/ms-a2/</link>
+      <pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;After being impressed with the performance and form factor of the Minisforum &lt;strong&gt;MS-01&lt;/strong&gt;, I had to get my hands on their latest beast: the &lt;strong&gt;MS-A2&lt;/strong&gt;, powered by AMD&amp;rsquo;s latest Zen 5 architecture.&#xA;It&amp;rsquo;s also exciting to test a gadget before &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;. Thanks for letting me be the first (I&amp;rsquo;m just kidding, of course).&lt;/p&gt;&#xA;&lt;p&gt;In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
