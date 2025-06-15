@@ -290,6 +290,25 @@ In addition, the results on the MS-01 fluctuate, which in my opinion can happen 
         <div class="admonition-content">I am not an expert in CPU architecture, so I can only speculate. So take the statements made with a grain of salt.
 However, this does not change the fact that my tests, after repeated trials, have always reliably come out in favor of the MS-A2.</div>
     </aside>
+<h2 id="noise---methodologically-incorrect-investigation">Noise - Methodologically incorrect investigation</h2>
+<p>I measured the noise development of the MS-A2 “professionally” with my iPhone. There are 100 and 1 apps for this, but I chose the one with the most reviews (Dezibel X – no advertising for the app) and I can&rsquo;t calibrate it. If anyone wants to give me a dB meter, I&rsquo;ll do more professional tests in the future. :D</p>
+<p>However, I don&rsquo;t have the time to compare it with the MS-01 - I tested this subsequently at the request of a LinkedIn user. I measured from a distance of 2 meters, as I normally sit between 2 and 3 meters away from my lab.
+I get a base load of 32-34 dB. However, it should be noted that it is quite warm in my office today and my Mikrotik switch is generally a little louder than usual, but the point is to measure the relative additional load.
+The background noise in my homeoffice ranges from quiet whispering to the gentle rustling of leaves in the wind. I live in a relatively rural area, so the loudest sounds are my neighbors or the owl outside my window.</p>
+<p>In idle mode, the MS-A2 is completely inaudible in my environment. I haven&rsquo;t noticed any real change in the dB meter. The fan is drowned out by the rustling of the Mikrotik router – I really should replace the fans in that box.
+I started my VCF Lab on the MS-A2 and waited about 10 minutes. The noise level rises to 35-36 dB but regularly reaches up to 42,3-43 dB. I have the fan curve set to performance, which means that the MS-A2 spins up quickly and then calms down again quickly, which results in a wave-like background noise with the noise constantly rising and falling.
+I need to see if I can set the fan curve and response behavior in the same way as on an ASUS NUC. The NUC has an incredible number of options for fan management.</p>
+
+<figure><picture>
+          <source srcset="/ms-a2/08_hu_8642c8890b3feeb2.webp" type="image/webp">
+          <source srcset="/ms-a2/08_hu_fd24d318cfb87461.jpg" type="image/jpeg">
+          <img src="/ms-a2/08_hu_8642c8890b3feeb2.webp"alt="A2 noise"  width="589"  height="1042" />
+        </picture><figcaption>
+            <p>MS-A2 noise level</p>
+          </figcaption></figure>
+<p>The blue curve is the average, and you can see a clear increase in the high frequencies, which are the frequencies that most people find disturbing.
+To put this into context, 42 dB is still considered relatively quiet and may not even be noticeable in a city apartment.
+However, a difference of up to 10 dB is also significant. Humans perceive this as approximately double the noise level.</p>
 <h2 id="but-can-it-run-doom-vcf">But can it run <del>doom</del> VCF?</h2>
 <p>First of all, I did not install VCF on the MS-A2. Why? Time!
 But I did migrate an existing nested lab to the MS-A2. Remember? Introduction and all that? That&rsquo;s exactly why I build my labs nested.
