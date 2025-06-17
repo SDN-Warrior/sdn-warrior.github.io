@@ -588,6 +588,8 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 </span></span></code></pre></div><p>Here we see that a DNAT is being performed, making our VM accessible from outside the network. And the best part is that it&rsquo;s all completely simple and requires no network knowledge.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>VPCs are more prevalent than ever, and VMware is pursuing a clear path toward multi-tenancy in VCF9 and NSX9. Many familiar mechanisms have now been combined in NSX 9, and exciting developments are still on the way. In this article, I have only discussed centralized deployment. Distributed deployment is perhaps even more exciting, but it would have made this article too long. I also haven&rsquo;t talked about security or NSX projects, because both deployment options can be combined to bring significant added value to an on-premises cloud. I will therefore be publishing further articles on VCF 9, NSX 9, and VPCs in the near future. I look forward to many more exciting topics with VCF9. In my opinion, VCF 9 is a really big leap forward, and a lot has really happened in NSX 9 in particular. One thing is clear: the next few weeks and months will not be boring.</p>
+<h3 id="one-more-thing">One more thing</h3>
+<p>Perhaps a little fun fact. Anyone who has read my article on <a href="https://sdn-warrior.org/posts/ms-a2/">MS-A2</a> will know that I wrote that I run a VCF installation on it – well, now I can reveal that my VCF 9 lab is currently running nested on my single Minisforum MS-A2 server.</p>
 ]]></content>
 		</item>
 		
