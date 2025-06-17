@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 14 Jun 2025 10:14:45 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 17 Jun 2025 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF 9 - NSX VPC</title>
+      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
+      <pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!&lt;/p&gt;&#xA;&lt;p&gt;But wait, from the top, what are VPCs anyway?&#xA;VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Tales from the Lab - Minisforum MS-A2</title>
       <link>https://sdn-warrior.org/posts/ms-a2/</link>

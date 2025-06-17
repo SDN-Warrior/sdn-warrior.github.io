@@ -6,8 +6,590 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sat, 14 Jun 2025 10:14:45 +0200</lastBuildDate>
+		<lastBuildDate>Tue, 17 Jun 2025 18:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF 9 - NSX VPC</title>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
+			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!</p>
+<p>But wait, from the top, what are VPCs anyway?
+VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.</p>
+<p>While in NSX 4.X VPCs were only visible in the GUI when an NSX project was created, VMware has now changed this completely. As soon as you open the NSX GUI, the VPCs tab immediately catches your eye.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/01_hu_6e97a207855c7f15.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/01_hu_58ba79ca0347d187.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/01_hu_6e97a207855c7f15.webp"alt="NSX 9 VPC"  width="1710"  height="1092" />
+        </picture></a><figcaption>
+            <p>NSX 9 VPC (click to enlarge)</p>
+          </figcaption></figure>
+<p>As you can see here in the screenshot, VPC is very present in NSX and VCF 9, but before we can talk about VPCs, we need to talk about a new gateway in NSX 9 - the Default Transit Gateway.</p>
+<h2 id="default-transit-gateway">Default Transit Gateway</h2>
+<p>What the hell is a Default Transit Gateway? Yes, that&rsquo;s what I asked myself when I first tried out the beta of VCF 9.
+Whereas in NSX 4.X a VPC was attached directly to a T0 or a VRF, in VCF9 a Transit Gateway is connected upstream, or rather the default Transit Gateway. At present, you can only have one Transit Gateway per project.
+What is new in VCF 9 or NSX 9 is that the default project can now also have one or more VPCs.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I will not go into NSX projects in this article, otherwise it would go beyond the scope of this article.
+However, you can imagine that a project can represent a department or customer, while a VPC can be a logically separate environment within the project.
+For example, to realize test and staging environments within a project or to provide different development environments for different teams in the same project.</div>
+    </aside>
+<p>The default Transit Gateway is present from the start and cannot be deleted. The configuration options are also very limited.
+I can specify the name, the External Connection and the VPC Transit Subnet. This network comes from the 100.64.x.x range and is normally assigned by NSX itself and does not need to be customized.
+The HA mode is taken over by the T0 to which my Transit Gateway is connected or, more precisely, my VPC connection profile determines whether the HA mode is taken over by my T0 or not.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">If you want to use default outbound NAT in your VPC, then your T0 should be active/standby or active/active stateful. Otherwise only manual static NAT is possible.</div>
+    </aside>
+<p>However, this is only half the truth, because there is also the so-called distributed mode. However, this assumes that I have created my External Connection as a Distributed Connection and not as a Centralized Connection (with Edge Transportnodes). But that&rsquo;s another story and I will work through the Distributed Connection in a separate article.</p>
+<h2 id="lets-get-started---network-connectivity">Let&rsquo;s get started - Network Connectivity</h2>
+<p>First we need to configure our network connectivity. There are two ways to do this. 1. in the vCenter or 2. in the NSX Manager under System -&gt; Setup Network Connectivity. This point is new. In VCF9, edges are no longer deployed via the SDDC as in VCF 5.X, but via the network connectivity. Here I can also expand my Edge Cluster or deploy a new Edge Cluster.
+Fortunately, the deployment process has been optimized and is less error-prone and also has a few quality of life improvements.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/02_hu_9973e20cc8515ee3.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/02_hu_7d17d2d76af93559.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/02_hu_9973e20cc8515ee3.webp"alt="vCenter Network Connectivity"  width="1720"  height="771" />
+        </picture></a><figcaption>
+            <p>vCenter Network Connectivity (click to enlarge)</p>
+          </figcaption></figure>
+<p>I now have to configure my VPC External IP Blocks in the Network Configuration. These IP blocks are then used for all public networks and must generally be routed by my network.
+This also means that these networks must not overlap. The Private - Transit Gateway IP Blocks are new.
+These are used so that the VPCs of the same project can communicate with each other.
+Which networks are used in VPCs will be explained in the course of the article.
+The Private - Transit Gateway IP Blocks do not have to be routed in the physical network. They are used exclusively for intra-VPC communication.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/03_hu_1c5a4b41c1eecf2a.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/03_hu_55875cca66bf4ed0.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/03_hu_1c5a4b41c1eecf2a.webp"alt="vCenter Network Connectivity"  width="600"  height="698" />
+        </picture></a><figcaption>
+            <p>vCenter Network Connectivity (click to enlarge)</p>
+          </figcaption></figure>
+<p>A few things are now happening in the background. Firstly, my VPC connectivity profile is being configured by NSX.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">In this profile I could also deactivate the N-S services to switch my Transit Gateway to distributed.</div>
+    </aside>
+<p>In addition, an external connectivity profile is created under Networking -&gt; External Connections.
+This determines which T0 router the Transit Gateway is connected to.
+Finally, the External Connectivity Profile is assigned to my Transit Gateway.
+Can also be found under Networking -&gt; Transit Gateway.
+Now that we have taken care of the external connection, we can concentrate on creating the actual VPC.</p>
+<h2 id="create-a-virtual-private-cloud">Create a Virtual Private Cloud</h2>
+<p>We are now about to create our first VPC. In VCF 9, there are two options.
+One is via vCenter and the other is directly via NSX. Since we have not yet configured a VPC service profile, we will create our first VPC via NSX. To do this, we go to Add VPC in the VPC menu and are greeted by this attractive dialog box.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/04_hu_34a3a5205039d702.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/04_hu_8559e73aab0a9897.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/04_hu_34a3a5205039d702.webp"alt="New VPC"  width="1709"  height="1185" />
+        </picture></a><figcaption>
+            <p>New VCP in NSX (click to enlarge)</p>
+          </figcaption></figure>
+<p>Here we assign a name to our VPC, select the previously created connectivity profile, and can select or create a service profile.
+In the VPC service profile, we can activate a DHCP server and assign profile-specific DNS servers.
+These must be accessible from the VPC. The same applies to the NTP server. We can also create subnet profiles.
+The standard profiles that every normal NSX segment has are stored here. Normally, we don&rsquo;t need to worry about anything here.
+In my VPC setup, I have activated a DHCP server in the service profile for my default project and specified my LAB DNS and global NTP server.</p>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/05_hu_85802a63d6c6338a.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/05_hu_99ef011c61bcfdf0.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/05_hu_85802a63d6c6338a.webp"alt="VPC Service Profile"  width="1161"  height="692" />
+        </picture></a><figcaption>
+            <p>VPC Service Profile (click to enlarge)</p>
+          </figcaption></figure>
+<p>Next, I define a private VPC IP CIDR (maximum of 5 per VPC). In my lab, this is 192.168.5.0/24. I will explain what these are and what they do in the next section. I also assign a short, descriptive log identifier and assign the VPC name.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/06_hu_47a10574b80e6a1e.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/06_hu_38b9b1790fe46dcc.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/06_hu_47a10574b80e6a1e.webp"alt="VPC Blue"  width="1450"  height="922" />
+        </picture></a><figcaption>
+            <p>VPC Blue (click to enlarge)</p>
+          </figcaption></figure>
+<p>After saving and creating the VPC, the additional configurations must be carried out. Here, we can authorize users/groups for the VPC and assign different roles.
+More importantly, however, we can create our actual subnets. I think now would be a good time to explain the different types of subnets.</p>
+<h3 id="vpc-subnets">VPC Subnets</h3>
+<p>In VCF 9, there are now three different types of VPC subnets. Actually, there are four, but the fourth is an AVI service subnet, which is actually only a automatic created private VPC subnet - so that doesn&rsquo;t really count.
+This means that we actually have three subnet types.</p>
+<ul>
+<li>Private VPC</li>
+</ul>
+<p>This subnet is the network that is only routed within the VPC. That is why it is private – makes sense so far. This subnet cannot be accessed outside the VPC and the network is assigned from the private VPC IP CIDRs.</p>
+<ul>
+<li>Private - Transit Gateway</li>
+</ul>
+<p>This network is new in VCF9. Similar to the private network, the network is created from the defined private transit gateway IP blocks (VPC connectivity profile).
+However, it is routed via the default transit gateway, which allows you to access workloads in these networks from all VPCs connected to the same transit gateway.
+Since you can currently only have one transit gateway per NSX project, you should use these networks with caution.
+The useful thing is that even though the networks are routed via the transit gateway, they are only accessible to VPCs.
+VMs connected to a T1 or T0 router via segments cannot reach these networks because the T0 does not have routes for private networks.</p>
+<ul>
+<li>Public</li>
+</ul>
+<p>The name says it all. These are subnets created from the previously defined external IP blocks.
+They must be routed, must not overlap, and are managed via the VPC Connectivity Profile, as with the Transit Gateway.
+Workloads in public networks are generally accessible from anywhere.</p>
+
+<figure><a href="07.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/07_hu_1e1fe21fdc3ef778.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/07_hu_197ba01d90a8fa61.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/07_hu_1e1fe21fdc3ef778.webp"alt="VPC Subnets"  width="1155"  height="938" />
+        </picture></a><figcaption>
+            <p>VPC Subnets (click to enlarge)</p>
+          </figcaption></figure>
+<h3 id="additional-configurations">Additional Configurations</h3>
+<p>Now that we have clarified which subnets exist in VPC, we can move on to the final settings so that the VPC can be created.
+I create one for each subnet and let it be assigned automatically.
+Since Default Outbound NAT is specified in the VPC Connectivity Profile, NSX automatically creates an Outbound NAT Rule.
+In addition, a group containing all VPC subnets is automatically created. This can be used in the distributed firewall.
+We could also define additional firewall rules (requires a vDefend license – without a license, only stateless N/S rules can be defined).
+I will explain the topic of network services later in this article.</p>
+
+<figure><a href="09.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/08_hu_e65411376a507cd2.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/08_hu_e394e3a37cd13784.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/08_hu_e65411376a507cd2.webp"alt="Additional Configurations"  width="1230"  height="630" />
+        </picture></a><figcaption>
+            <p>Additional Configurations (click to enlarge)</p>
+          </figcaption></figure>
+<p>For my test, I create another VPC. My finished topology now looks like this.
+As always, I will use Alpine Linux VMs for testing.</p>
+
+<figure><a href="09.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/09_hu_d56b22ba04099af3.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/09_hu_e9307de555b8cc7.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/09_hu_d56b22ba04099af3.webp"alt="VPC Topologiy"  width="1370"  height="1010" />
+        </picture></a><figcaption>
+            <p>VPC Topologiy (click to enlarge)</p>
+          </figcaption></figure>
+<p>I created a second VPC via vCenter.
+This option has been integrated into the network overview and is essentially the same as in NSX.
+This creation option can also be controlled via permissions or even completely disabled.
+There is only one difference compared to creation via NSX Manager.
+In vCenter, you can currently only manage VPCs from the default project.
+All VPCs from other projects are read-only. In addition, you cannot modify the profiles.
+This is reserved for the NSX administrator.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">In my opinion, this is a good way to hand over the management of VPC networks to vSphere administrators or others.
+No network knowledge is required to create a new subnet, as the profiles are predefined. Developers could, for example, create new networks in their development VPC themselves. No complicated automation is required, just a simple right-click in vCenter.</div>
+    </aside>
+<h2 id="initial-tests-with-the-vpc-blue">Initial tests with the VPC-Blue</h2>
+<p>For my test, I created six VMs (see table) and assigned them to the corresponding networks of the VPCs in vCenter. The table shows the gateways automatically created by NSX.</p>
+<table>
+  <thead>
+      <tr>
+          <th>VM Name</th>
+          <th>Network Type</th>
+          <th>Gateway</th>
+          <th>IP Adress</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>alpine01-blue-private</td>
+          <td>private</td>
+          <td>192.168.5.1/28</td>
+          <td>192.168.5.3</td>
+      </tr>
+      <tr>
+          <td>alpine02-blue-transit</td>
+          <td>transit</td>
+          <td>10.28.12.1/28</td>
+          <td>10.28.12.3</td>
+      </tr>
+      <tr>
+          <td>alpine03-blue-public</td>
+          <td>public</td>
+          <td>192.168.72.17/28</td>
+          <td>192.168.72.19</td>
+      </tr>
+      <tr>
+          <td>alpine04-red-private</td>
+          <td>private</td>
+          <td>192.168.5.1/28</td>
+          <td>192.168.5.4</td>
+      </tr>
+      <tr>
+          <td>alpine05-red-transit</td>
+          <td>transit</td>
+          <td>10.28.12.17/28</td>
+          <td>10.28.12.19</td>
+      </tr>
+      <tr>
+          <td>alpine06-red-public</td>
+          <td>public</td>
+          <td>192.168.72.33/28</td>
+          <td>192.168.72.35</td>
+      </tr>
+  </tbody>
+</table>
+<p>As you can see, the public and transit networks do not overlap and are created consecutively.
+Since I have enabled DHCP in every VPC subnet, the first and second IP addresses are occupied. The first is the gateway, the second is the DHCP server.</p>
+<h2 id="test-scenarios">Test scenarios</h2>
+<p>I will perform certain tests for each VM from VPC-BLUE.
+First, I will test Internet connectivity, then intra-VPC connectivity, i.e., communication with all VMs in VPC-BLUE, and finally inter-VPC connectivity, i.e., communication with all VMs in VPC-RED.
+Finally, I will perform a connectivity test from outside the NSX environment.
+I will do all of this with simple ICMP tests. To do this, all firewalls on NSX and the VMs have been disabled.</p>
+<h3 id="alpine01-blue-private">alpine01-blue-private</h3>
+<h4 id="internet-connectivity">Internet connectivity</h4>
+<p>In my first test, I would like to see where the <em><strong>alpine01-blue-private</strong></em> can communicate. The VM has been assigned the IP address 192.168.5.3 by the DHCP.
+Since N-S Services and Default Outbound NAT are enabled in the VPC Connectivity Profile, alpine01-blue-private reaches the Internet and is nat-ed to the first public IP address of the public network IP for VPC SNAT.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">To make this work, NSX takes a subnet from the public network block in the background and reserves it for outbound NAT.
+Each VPC gets its own outbound NAT IP.
+VPC-Blue has been assigned the outbound NAT IP address 192.168.72.0/32, and VPC-RED has automatically been assigned the outbound NAT IP address 192.168.72.1/32.
+The public subnets should therefore be sufficiently large, as a maximum of five subnets can be specified per profile.</div>
+    </aside>
+
+<figure><a href="10.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/10_hu_c5f6f7dd76f1b69d.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/10_hu_180e956146ec7d08.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/10_hu_c5f6f7dd76f1b69d.webp"alt="VPC NAT"  width="1152"  height="375" />
+        </picture></a><figcaption>
+            <p>VPC-Blue Auto SNAT Rule (click to enlarge)</p>
+          </figcaption></figure>
+<h4 id="intra-vpc-connectivity">Intra VPC connectivity</h4>
+<p>Next, I test the connectivity to the alpine02-blue-transit vm. This test is also successful, as the transit VM can also be accessed via the VPC gateway.
+Even though you might think that the SNAT rule applies here, it does not, because NAT takes place on the transit gateway and not on the VPC gateway. The traffic is also distributed routed between the two subnets.
+This can also be seen very clearly in the NSX Traceflow. The same applies to the connectivity to the alpine03-vpc-blue-public VM.</p>
+<h4 id="inter-vpc-connectivity">Inter VPC connectivity</h4>
+<p>In this test, I first try to reach the VM alpine04-red-private. This is not possible because private networks are not routed via the Transit Gateway. In addition, the private networks overlap.
+Next, I perform a connection test to alpine05-red-transit. This is successful, but the traffic is nated via SNAT on the transit gateway. This also means that the traffic is not distributed routed and must run via the edge VM.
+The same applies to traffic to alpine06-red-public.
+
+<figure><a href="11.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/11_hu_80aae25820b2fbc7.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/11_hu_c585d340fe8edffe.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/11_hu_80aae25820b2fbc7.webp"alt="TCPDUMP"  width="1022"  height="204" />
+        </picture></a><figcaption>
+            <p>TCPDUMP on alpine05-red-transit (click to enlarge)</p>
+          </figcaption></figure></p>
+<h4 id="external-connectivity">External connectivity</h4>
+<p>The VM cannot be accessed externally.
+My core router also does not have a route for the 192.168.5.0/28 subnet.
+The routes are not announced to the T0 and therefore cannot be accessed by my physical test client on which I am currently writing this blog.
+To avoid writing a lengthy explanation, I will present the results in table form.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Test #</th>
+          <th>Source</th>
+          <th>Destination</th>
+          <th>Connect</th>
+          <th>NAT</th>
+          <th>Dist. Routing</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>blue-private</td>
+          <td>Internet</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>blue-private</td>
+          <td>blue-transit</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>blue-private</td>
+          <td>blue-public</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>blue-private</td>
+          <td>red-private</td>
+          <td>No</td>
+          <td>-</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td>blue-private</td>
+          <td>red-transit</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td>blue-private</td>
+          <td>red-public</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td>External</td>
+          <td>blue-private</td>
+          <td>No</td>
+          <td>-</td>
+          <td>-</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="alpine02-blue-transit">alpine02-blue-transit</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Test #</th>
+          <th>Source</th>
+          <th>Destination</th>
+          <th>Connect</th>
+          <th>SNAT</th>
+          <th>Dist. Routing</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>blue-transit</td>
+          <td>Internet</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>blue-transit</td>
+          <td>blue-private</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>blue-transit</td>
+          <td>blue-public</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>blue-transit</td>
+          <td>red-private</td>
+          <td>No</td>
+          <td>-</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td>blue-transit</td>
+          <td>red-transit</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td>blue-transit</td>
+          <td>red-public</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td>External</td>
+          <td>blue-transit</td>
+          <td>No</td>
+          <td>-</td>
+          <td>-</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="alpine03-blue-public">alpine03-blue-public</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Test #</th>
+          <th>Source</th>
+          <th>Destination</th>
+          <th>Connect</th>
+          <th>NAT</th>
+          <th>Dist. Routing</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>blue-public</td>
+          <td>Internet</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>blue-public</td>
+          <td>blue-private</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>blue-public</td>
+          <td>blue-transit</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>blue-public</td>
+          <td>red-private</td>
+          <td>No</td>
+          <td>-</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td>blue-public</td>
+          <td>red-transit</td>
+          <td>No</td>
+          <td>-</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td>blue-public</td>
+          <td>red-public</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td>External</td>
+          <td>blue-public</td>
+          <td>Yes</td>
+          <td>-</td>
+          <td>No</td>
+      </tr>
+  </tbody>
+</table>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Since N-S services are enabled in the VCP Connectivity Profile, traffic between VPCs cannot be distributed routed.
+Disabling N-S services would allow traffic to be distributed routed, but NAT would then no longer be possible.
+Test 5 is interesting because NAT is not used there, but since we have N-S services active, the traffic still has to pass through the Edge VM.</div>
+    </aside>
+<p>I think I was able to clearly explain how VPC and the various subnets work. It opens up exciting possibilities.
+However,  I would like to discuss one more feature, namely the option of assigning an external IP address to a VM from a private VPC subnet. This can be done via NSX as well as via vCenter.</p>
+<h2 id="assign-external-ip">Assign External IP</h2>
+<p>With this feature, you can make a VM from a private VPC network available with just two clicks via vCenter.
+You can think of it a bit like Elastic IP.</p>
+
+<figure><a href="12.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/12_hu_cdadece31d017777.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/12_hu_5b0e7c79309688dc.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/12_hu_cdadece31d017777.webp"alt="External IP"  width="1012"  height="826" />
+        </picture></a><figcaption>
+            <p>Assign External IP (click to enlarge)</p>
+          </figcaption></figure>
+<p>All you have to do is select the VM&rsquo;s network adapter and confirm. The magic happens in the background. But let&rsquo;s take a closer look. An external IP was created in NSX under VPC / Network Services. If we take a closer look, we see that an IP address from the public subnet of VPC Blue was assigned.</p>
+
+<figure><a href="13.png"><picture>
+          <source srcset="/vcf9-nsx-vpc/13_hu_8335eb187ac53037.webp" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc/13_hu_650e714933e23284.jpg" type="image/jpeg">
+          <img src="/vcf9-nsx-vpc/13_hu_8335eb187ac53037.webp"alt="External IP VCP-Blue"  width="1159"  height="731" />
+        </picture></a><figcaption>
+            <p>Assign External IP VPC-Blue (click to enlarge)</p>
+          </figcaption></figure>
+<p>The vm alpine01-blue-private is now accessible from anywhere via the IP address 192.168.72.2.
+Pretty cool. You can also cancel the assignment at any time, and the public IP will be returned to the IP address pool and can be used elsewhere.</p>
+<p>This is implemented via a DNAT, which cannot be found in the NSX GUI. You can check this on the Active Edge by selecting the relevant interface with the command <em><strong>get firewall Interfaces</strong></em> and then displaying the NAT rules with <em><strong>get firewall &lt; uuid &gt; ruleset rules</strong></em>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">vcf09-edge01&gt; get firewall 0bbcf4b5-1321-40b4-9325-f8023c06bdf2 ruleset rules 
+</span></span><span class="line"><span class="cl">Tue Jun <span class="m">17</span> <span class="m">2025</span> UTC 16:10:06.440
+</span></span><span class="line"><span class="cl">DNAT rule count: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">    Rule ID   : <span class="m">536875009</span>
+</span></span><span class="line"><span class="cl">    Rule      : in inet protocol any postnat from any to addrset <span class="o">{</span>192.168.72.2<span class="o">}</span> dnat EIP table id: b1274d77-e09e-4cf5-8377-4501f54e296e
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">SNAT rule count: <span class="m">2</span>
+</span></span><span class="line"><span class="cl">    Rule ID   : <span class="m">536875008</span>
+</span></span><span class="line"><span class="cl">    Rule      : out inet protocol any prenat from addrset <span class="o">{</span>192.168.5.3<span class="o">}</span> to any snat EIP table id: b1274d77-e09e-4cf5-8377-4501f54e296e
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    Rule ID   : <span class="m">536873996</span>
+</span></span><span class="line"><span class="cl">    Rule      : out protocol any prenat from ip 192.168.5.0/24 to any snat ip 192.168.72.1 port 37001-65535
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Firewall rule count: <span class="m">0</span>
+</span></span></code></pre></div><p>Here we see that a DNAT is being performed, making our VM accessible from outside the network. And the best part is that it&rsquo;s all completely simple and requires no network knowledge.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>VPCs are more prevalent than ever, and VMware is pursuing a clear path toward multi-tenancy in VCF9 and NSX9. Many familiar mechanisms have now been combined in NSX 9, and exciting developments are still on the way. In this article, I have only discussed centralized deployment. Distributed deployment is perhaps even more exciting, but it would have made this article too long. I also haven&rsquo;t talked about security or NSX projects, because both deployment options can be combined to bring significant added value to an on-premises cloud. I will therefore be publishing further articles on VCF 9, NSX 9, and VPCs in the near future. I look forward to many more exciting topics with VCF9. In my opinion, VCF 9 is a really big leap forward, and a lot has really happened in NSX 9 in particular. One thing is clear: the next few weeks and months will not be boring.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
