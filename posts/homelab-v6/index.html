@@ -25,7 +25,7 @@
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A quick update on what&#39;s been happening in my lab over the last few weeks.">
 
-  <meta itemprop="name" content="Homelab V6">
+  <meta itemprop="name" content="Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too">
   <meta itemprop="description" content="A quick update on what&#39;s been happening in my lab over the last few weeks.">
   <meta itemprop="datePublished" content="2025-06-20T17:00:00+02:00">
   <meta itemprop="dateModified" content="2025-06-20T17:00:00+02:00">
@@ -33,7 +33,7 @@
   <meta itemprop="image" content="https://sdn-warrior.org/images/logo.jpg">
   <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/homelab-v6/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
-  <meta property="og:title" content="Homelab V6">
+  <meta property="og:title" content="Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too">
   <meta property="og:description" content="A quick update on what&#39;s been happening in my lab over the last few weeks.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
@@ -50,15 +50,15 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://sdn-warrior.org/images/logo.jpg">
-  <meta name="twitter:title" content="Homelab V6">
+  <meta name="twitter:title" content="Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too">
   <meta name="twitter:description" content="A quick update on what&#39;s been happening in my lab over the last few weeks.">
 
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "Homelab V6",
-    "name": "Homelab V6",
+    "headline": "Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too",
+    "name": "Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too",
     "description": "A quick update on what's been happening in my lab over the last few weeks.",
     "keywords": ["vcf", "nsx", "homelab", "minisforum", "intel", "amd"],
     "articleBody": "Introduction I’ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks. On top of that, the Minisforum A2 was finally available. But first things first.\n2.5 Gb/s LAN - and what I have learned Well, where should I start? I bought the Mikrotik CRS326-4C+20G+2Q for my NUCs, which offered me 20x 2.5 GB/s ports and wasn’t exactly cheap at around 800 euros. In hindsight, I can say that it wasn’t a good investment. Not that the switch is bad, it’s not, but as of today, I only use exactly 2 2.5G ports. For this purpose, I utilize all 10G and 40G ports (with brakeout) as 10G ports are now in short supply. Following the recent upgrade, I have exactly one 10G port remaining in the entire lab. That’s why I’m actually considering selling the Switch again. But hey, that’s part of homelabbing. Sometimes you just make bad investments.\nAnother thing that bothers me about 2.5G is that I constantly have problems with autospeed. Sooner or later, I lose a network port when the switch or server is set to autospeed. This isn’t just a problem with Mikrotik switches; I’ve had the same issue with other manufacturers as well. It also affects my TP-Link access points. As a workaround, I just set everything to fixed speed, then Wakeup on LAN doesn’t work because the nucs can’t handle 2.5 Gb in power save mode – there’s always something. That’s why I decided three weeks ago to sell my beloved nuc cluster and say goodbye to the 2.5 GB LAN experiment. And because I spent a little too much money at Minisforum. But more on that later.\nPost NUC era It’s not just Taylor Swift who has different eras, my home lab does too. Does that mean I’ve now said goodbye to NUCs altogether? A resounding yes and no. I won’t be building any more NUC-based workloads, simply because although the ratio between CPU performance and RAM is good again with the 14th generation, the network is just too slow, especially with VCF9, vSAN ESA and other things I want to test.\nHowever, the NUC 14 with Ultra 7 155H CPU, 16 threads, and a maximum of 128 GB RAM is the perfect management NUC, and since I got it used for around €310, it will be my last remaining NUC with ESX. For management, the single 2.5 Gb/s adapter is sufficient, as it is not an H version (high) and therefore no second network card can be installed.\nDusty NUC 14 (click to enlarge)\nYes, I know that the NUC is dusty, but that’s hard to avoid with an open rack.\nWhat’s new? Now for the obvious: I bought two MS-A2s from Minisforum. These form my new AMD cluster with 32 cores, 64 threads, and 2x 128 GB RAM. In addition, everything on the network side has now been converted to 2x 10 GB per ESXi server.\nMS-A2 Powerhouse\nSince the housing dimensions are completely identical to the MS-01, I was able to use the thingsINrack custom rackmount solution again. Unfortunately, they have become significantly more expensive than last time. You now have to pay around 90 euros for the 3D-printed bracket. The front is molded plastic and therefore has a nice finish. Of all the solutions on the market, this is still the cheapest and most flexible solution. I have had my MS-01 in a rackmount like this from the beginning and have not had any changes or problems with the rackmount so far (I am not being paid for this, I am just very happy with it).\nIn addition, two more MS-01s have been added. I posted this on LinkedIn weeks ago, but never got around to documenting it here on the blog. The four existing MS-01s have been upgraded to 96 GB of RAM. Now you might ask why we didn’t go straight to 128 GB – well, what can I say? Stupid decisions or bad timing. Shortly after I received the 96 GB RAM for all my MS-01s, the 128 GB RAM was announced. But since everything was already installed, I didn’t want to send the RAM back.\nThat’s life as an early adopter sometimes.\nThe lab is finished now! … The lab is finished now? Please insert the Star Wars Anakin and Padmé meme here. I would put it in the blog, but I’m afraid Disney would sue me :D At least one update is still pending. My management NUC urgently needs 128 GB of RAM, and I think it will get that next month. Otherwise, I’m still thinking about memory tiering on the AMD servers, as they have a lot of CPU power. However, I would have to buy more NVMes for this, as only 2 TB per MS-A2 is currently installed and I don’t have any fast NVMes left in stock.\nAnother consideration is to run MS-01 on Proxmox – has anyone here ever called Jehovah? Don’t panic, I’m staying loyal to VMware. The idea is to use Proxmox and deploy a thick nested ESX VM on it. Proxmox can do hyperthreading with E/P cores, which unfortunately neither ESXi8 nor ESXi9 can do at the moment. But of course, ESXi is designed to run on enterprise server hardware, and there are currently no asymmetric cores available. In any case, the MS-01 would then have 20 threads and I could deploy nested servers with 16 vCores. But this is currently nothing more than a thought experiment. I’ve done this technically before, but without measuring performance. I could well imagine that a nested ESXi would run better on a physical ESXi than on a Proxmox server. Maybe a future experiment.\nPictures or it didn’t happen Network setup (click to enlarge)\nHere is my network diagram, as I have often been asked which tool I use to draw these beautiful diagrams – it is Excalidraw. The whole thing runs as a docker container on my Unraid server.\nLab capacity (click to enlarge)\nHere you can see the lab capacity, but you should treat the GHz capacity with caution, as it is not accurate due to the E/P cores. vSphere calculates the capacity based on the first core and the maximum non-boosted frequency of the core, and then multiplies this by the number of cores in the server. This is why the display is never accurate for consumer CPUs, at least for the newer Intel generation.\nIn total, my lab now has 132 physical cores, including E and P cores. However, this does not matter when creating a VM. If, as with VCF Automation, there is a minimum number of vCores (24 vCPUs), then at the end of the day, 24 vCPUs must be executable on an ESX server, regardless of whether they ultimately run on E/P cores. This also explains why I bought two AMD boxes. I want to test VCF9 with Automation. I currently have 896 GB of RAM. I could upgrade the MS-01 to 128 GB, but that would cost another €1,800, which is too expensive for me at the moment – cost-benefit analysis and all that.\nLab v6 (click to enlarge)\nYes, there is another NUC extreme, and it will remain. However, that is my self-built NAS and does not run any VMware workloads. It is also connected with 2x10G. Thus, it has never really been considered part of the NUC era.\n",
@@ -85,7 +85,7 @@
       }
     }
 }
-</script><title>Homelab V6</title>
+</script><title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
 <link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.7706d41cf39b63c8212d7b2ed530370bd8fb982204a76fb53dd6353aa90820bd.css" integrity="sha256-dwbUHPObY8ghLXsu1TA3C9j7mCIEp2+1PdY1OqkIIL0=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
@@ -124,7 +124,7 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-v6%2f&amp;text=Homelab%20V6" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-v6%2f&amp;text=Homelab%20V6%20-%20It%e2%80%99s%20not%20just%20Taylor%20Swift%20who%20has%20different%20eras%2c%20my%20home%20lab%20does%20too" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
@@ -136,14 +136,14 @@
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=Homelab%20V6&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-v6%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=Homelab%20V6%20-%20It%e2%80%99s%20not%20just%20Taylor%20Swift%20who%20has%20different%20eras%2c%20my%20home%20lab%20does%20too&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-v6%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-v6%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Homelab%20V6&amp;summary=Homelab%20V6%2c%20by%20SDN-Warrior%0a%0aA%20quick%20update%20on%20what%27s%20been%20happening%20in%20my%20lab%20over%20the%20last%20few%20weeks.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-v6%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Homelab%20V6%20-%20It%e2%80%99s%20not%20just%20Taylor%20Swift%20who%20has%20different%20eras%2c%20my%20home%20lab%20does%20too&amp;summary=Homelab%20V6%20-%20It%e2%80%99s%20not%20just%20Taylor%20Swift%20who%20has%20different%20eras%2c%20my%20home%20lab%20does%20too%2c%20by%20SDN-Warrior%0a%0aA%20quick%20update%20on%20what%27s%20been%20happening%20in%20my%20lab%20over%20the%20last%20few%20weeks.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -151,7 +151,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;Homelab V6&#34;,&#34;https://sdn-warrior.org/posts/homelab-v6/&#34;,&#34;Homelab V6, by SDN-Warrior\n\nA quick update on what&#39;s been happening in my lab over the last few weeks.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too&#34;,&#34;https://sdn-warrior.org/posts/homelab-v6/&#34;,&#34;Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too, by SDN-Warrior\n\nA quick update on what&#39;s been happening in my lab over the last few weeks.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -181,7 +181,7 @@
 	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
 			<header class="post-header">
 				<div class="post-meta"><span>Jun 20, 2025</span></div>
-				<h1>Homelab V6</h1>
+				<h1>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</h1>
 			</header>
 			<div class="post-info"><p>A quick update on what&#39;s been happening in my lab over the last few weeks.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
