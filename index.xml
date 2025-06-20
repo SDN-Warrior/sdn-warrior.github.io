@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 17 Jun 2025 18:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 20 Jun 2025 17:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Homelab V6</title>
+      <link>https://sdn-warrior.org/posts/homelab-v6/</link>
+      <pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.&#xA;On top of that, the Minisforum A2 was finally available. But first things first.&lt;/p&gt;&#xA;&lt;h2 id=&#34;25-gbs-lan---and-what-i-have-learned&#34;&gt;2.5 Gb/s LAN - and what I have learned&lt;/h2&gt;&#xA;&lt;p&gt;Well, where should I start? I bought the Mikrotik CRS326-4C+20G+2Q for my NUCs, which offered me 20x 2.5 GB/s ports and wasn&amp;rsquo;t exactly cheap at around 800 euros.&#xA;In hindsight, I can say that it wasn&amp;rsquo;t a good investment. Not that the switch is bad, it&amp;rsquo;s not, but as of today, I only use exactly 2 2.5G ports.&#xA;For this purpose, I utilize all 10G and 40G ports (with brakeout) as 10G ports are now in short supply. Following the recent upgrade, I have exactly one 10G port remaining in the entire lab.&#xA;That&amp;rsquo;s why I&amp;rsquo;m actually considering selling the Switch again.&#xA;But hey, that&amp;rsquo;s part of homelabbing. Sometimes you just make bad investments.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9 - NSX VPC Part 1</title>
       <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
       <description>&lt;h2 id=&#34;my-homelab-journey-from-unraid-beginnings-to-version-5&#34;&gt;My Homelab Journey: From Unraid Beginnings to Version 5&lt;/h2&gt;&#xA;&lt;p&gt;Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-beginning-unraid-with-custom-hardware&#34;&gt;The Beginning: Unraid with Custom Hardware&lt;/h2&gt;&#xA;&lt;p&gt;My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>How to use QoS in NSX</title>
-      <link>https://sdn-warrior.org/posts/nsx-qos/</link>
-      <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.&lt;/p&gt;&#xA;&lt;p&gt;In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&amp;rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -6,8 +6,109 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 17 Jun 2025 18:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Fri, 20 Jun 2025 17:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Homelab V6</title>
+			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
+			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>I&rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.
+On top of that, the Minisforum A2 was finally available. But first things first.</p>
+<h2 id="25-gbs-lan---and-what-i-have-learned">2.5 Gb/s LAN - and what I have learned</h2>
+<p>Well, where should I start? I bought the Mikrotik CRS326-4C+20G+2Q for my NUCs, which offered me 20x 2.5 GB/s ports and wasn&rsquo;t exactly cheap at around 800 euros.
+In hindsight, I can say that it wasn&rsquo;t a good investment. Not that the switch is bad, it&rsquo;s not, but as of today, I only use exactly 2 2.5G ports.
+For this purpose, I utilize all 10G and 40G ports (with brakeout) as 10G ports are now in short supply. Following the recent upgrade, I have exactly one 10G port remaining in the entire lab.
+That&rsquo;s why I&rsquo;m actually considering selling the Switch again.
+But hey, that&rsquo;s part of homelabbing. Sometimes you just make bad investments.</p>
+<p>Another thing that bothers me about 2.5G is that I constantly have problems with autospeed. Sooner or later, I lose a network port when the switch or server is set to autospeed. This isn&rsquo;t just a problem with Mikrotik switches; I&rsquo;ve had the same issue with other manufacturers as well. It also affects my TP-Link access points.
+As a workaround, I just set everything to fixed speed, then Wakeup on LAN doesn&rsquo;t work because the nucs can&rsquo;t handle 2.5 Gb in power save mode – there&rsquo;s always something.
+That&rsquo;s why I decided three weeks ago to sell my beloved nuc cluster and say goodbye to the 2.5 GB LAN experiment. And because I spent a little too much money at Minisforum. But more on that later.</p>
+<h2 id="post-nuc-era">Post NUC era</h2>
+<p>It&rsquo;s not just Taylor Swift who has different eras, my home lab does too. Does that mean I&rsquo;ve now said goodbye to NUCs altogether?
+A resounding yes and no. I won&rsquo;t be building any more NUC-based workloads, simply because although the ratio between CPU performance and RAM is good again with the 14th generation, the network is just too slow, especially with VCF9, vSAN ESA and other things I want to test.</p>
+<p>However, the NUC 14 with Ultra 7 155H CPU, 16 threads, and a maximum of 128 GB RAM is the perfect management NUC, and since I got it used for around €310, it will be my last remaining NUC with ESX.
+For management, the single 2.5 Gb/s adapter is sufficient, as it is not an H version (high) and therefore no second network card can be installed.</p>
+
+<figure><picture>
+          <source srcset="/labv6/01_hu_f8e51ae31bb23459.webp" type="image/webp">
+          <source srcset="/labv6/01_hu_7971fea3d9179955.jpg" type="image/jpeg">
+          <img src="/labv6/01_hu_f8e51ae31bb23459.webp"alt="Network bgp setup"  width="2016"  height="1512" />
+        </picture><figcaption>
+            <p>Dusty NUC 14 (click to enlarge)</p>
+          </figcaption></figure>
+<p>Yes, I know that the NUC is dusty, but that&rsquo;s hard to avoid with an open rack.</p>
+<h2 id="whats-new">What&rsquo;s new?</h2>
+<p>Now for the obvious: I bought two MS-A2s from Minisforum. These form my new AMD cluster with 32 cores, 64 threads, and 2x 128 GB RAM. In addition, everything on the network side has now been converted to 2x 10 GB per ESXi server.</p>
+
+<figure><picture>
+          <source srcset="/labv6/05_hu_17c850cfd8229e05.webp" type="image/webp">
+          <source srcset="/labv6/05_hu_dc5c7e5aed1604f3.jpg" type="image/jpeg">
+          <img src="/labv6/05_hu_17c850cfd8229e05.webp"alt="MS-A2"  width="993"  height="433" />
+        </picture><figcaption>
+            <p>MS-A2 Powerhouse</p>
+          </figcaption></figure>
+<p>Since the housing dimensions are completely identical to the MS-01, I was able to use the thingsINrack custom rackmount solution again.
+Unfortunately, they have become significantly more expensive than last time.
+You now have to pay around 90 euros for the 3D-printed bracket.
+The front is molded plastic and therefore has a nice finish. Of all the solutions on the market, this is still the cheapest and most flexible solution.
+I have had my MS-01 in a rackmount like this from the beginning and have not had any changes or problems with the rackmount so far (I am not being paid for this, I am just very happy with it).</p>
+<p>In addition, two more MS-01s have been added.
+I posted this on LinkedIn weeks ago, but never got around to documenting it here on the blog.
+The four existing MS-01s have been upgraded to 96 GB of RAM. Now you might ask why we didn&rsquo;t go straight to 128 GB – well, what can I say?
+Stupid decisions or bad timing. Shortly after I received the 96 GB RAM for all my MS-01s, the 128 GB RAM was announced.
+But since everything was already installed, I didn&rsquo;t want to send the RAM back.</p>
+<p>That&rsquo;s life as an early adopter sometimes.</p>
+<h2 id="the-lab-is-finished-now--the-lab-is-finished-now">The lab is finished now! &hellip; The lab is finished now?</h2>
+<p>Please insert the Star Wars Anakin and Padmé meme here. I would put it in the blog, but I&rsquo;m afraid Disney would sue me :D
+At least one update is still pending. My management NUC urgently needs 128 GB of RAM, and I think it will get that next month.
+Otherwise, I&rsquo;m still thinking about memory tiering on the AMD servers, as they have a lot of CPU power.
+However, I would have to buy more NVMes for this, as only 2 TB per MS-A2 is currently installed and I don&rsquo;t have any fast NVMes left in stock.</p>
+<p>Another consideration is to run MS-01 on Proxmox – has anyone here ever called Jehovah?
+Don&rsquo;t panic, I&rsquo;m staying loyal to VMware. The idea is to use Proxmox and deploy a thick nested ESX VM on it.
+Proxmox can do hyperthreading with E/P cores, which unfortunately neither ESXi8 nor ESXi9 can do at the moment.
+But of course, ESXi is designed to run on enterprise server hardware, and there are currently no asymmetric cores available.
+In any case, the MS-01 would then have 20 threads and I could deploy nested servers with 16 vCores.
+But this is currently nothing more than a thought experiment.
+I&rsquo;ve done this technically before, but without measuring performance.
+I could well imagine that a nested ESXi would run better on a physical ESXi than on a Proxmox server. Maybe a future experiment.</p>
+<h2 id="pictures-or-it-didnt-happen">Pictures or it didn&rsquo;t happen</h2>
+
+<figure><a href="02.jpg"><picture>
+          <source srcset="/labv6/02_hu_a8ec062de2ee43e7.webp" type="image/webp">
+          <source srcset="/labv6/02_hu_54e5ef0b5c60a893.jpg" type="image/jpeg">
+          <img src="/labv6/02_hu_a8ec062de2ee43e7.webp"alt="Network"  width="6577"  height="4155" />
+        </picture></a><figcaption>
+            <p>Network setup (click to enlarge)</p>
+          </figcaption></figure>
+<p>Here is my network diagram, as I have often been asked which tool I use to draw these beautiful diagrams – it is Excalidraw. The whole thing runs as a docker container on my Unraid server.</p>
+
+<figure><a href="04.jpg"><picture>
+          <source srcset="/labv6/04_hu_1c3bf8d667797c2c.webp" type="image/webp">
+          <source srcset="/labv6/04_hu_c715f7393650ffd3.jpg" type="image/jpeg">
+          <img src="/labv6/04_hu_1c3bf8d667797c2c.webp"alt="capacity"  width="1708"  height="493" />
+        </picture></a><figcaption>
+            <p>Lab capacity (click to enlarge)</p>
+          </figcaption></figure>
+<p>Here you can see the lab capacity, but you should treat the GHz capacity with caution, as it is not accurate due to the E/P cores. vSphere calculates the capacity based on the first core and the maximum non-boosted frequency of the core, and then multiplies this by the number of cores in the server. This is why the display is never accurate for consumer CPUs, at least for the newer Intel generation.</p>
+<p>In total, my lab now has 132 physical cores, including E and P cores. However, this does not matter when creating a VM. If, as with VCF Automation, there is a minimum number of vCores (24 vCPUs), then at the end of the day, 24 vCPUs must be executable on an ESX server, regardless of whether they ultimately run on E/P cores. This also explains why I bought two AMD boxes. I want to test VCF9 with Automation.
+I currently have 896 GB of RAM. I could upgrade the MS-01 to 128 GB, but that would cost another €1,800, which is too expensive for me at the moment – cost-benefit analysis and all that.</p>
+
+<figure><a href="03.jpg"><picture>
+          <source srcset="/labv6/03_hu_38f7f44bffbf9008.webp" type="image/webp">
+          <source srcset="/labv6/03_hu_88729db730447785.jpg" type="image/jpeg">
+          <img src="/labv6/03_hu_38f7f44bffbf9008.webp"alt="the lab"  width="2142"  height="2856" />
+        </picture></a><figcaption>
+            <p>Lab v6 (click to enlarge)</p>
+          </figcaption></figure>
+<p>Yes, there is another NUC extreme, and it will remain. However, that is my self-built NAS and does not run any VMware workloads. It is also connected with 2x10G.
+Thus, it has never really been considered part of the NUC era.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1</title>
