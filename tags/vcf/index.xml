@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 20 Jun 2025 17:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 24 Jun 2025 01:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NSX - IDFW &amp; DFW Troubleshooting</title>
+      <link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
+      <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.&#xA;I&amp;rsquo;m sure everyone has been in this situation: you&amp;rsquo;ve written a nice new Identity firewall, but for some reason it doesn&amp;rsquo;t work.&#xA;If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn&amp;rsquo;t work with the Identity firewall.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-the-identity-firewall&#34;&gt;What is the Identity Firewall?&lt;/h2&gt;&#xA;&lt;p&gt;An identity firewall does not make firewall decisions based on IP addresses, but uses user and group information to apply security policies.&#xA;It identifies users based on their login credentials and dynamically assigns them appropriate access rights and firewall rules.&#xA;This enables more granular control and improved protection, as access permissions are directly linked to the actual identity of the user.&#xA;If you want to know how I used this for one of my customers, you can read about it &lt;a href=&#34;https://sdn-warrior.org/posts/nsx-idfw-vdi/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
       <link>https://sdn-warrior.org/posts/homelab-v6/</link>

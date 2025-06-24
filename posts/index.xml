@@ -6,8 +6,154 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Fri, 20 Jun 2025 17:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Tue, 24 Jun 2025 01:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
+			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
+			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.
+I&rsquo;m sure everyone has been in this situation: you&rsquo;ve written a nice new Identity firewall, but for some reason it doesn&rsquo;t work.
+If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn&rsquo;t work with the Identity firewall.</p>
+<h2 id="what-is-the-identity-firewall">What is the Identity Firewall?</h2>
+<p>An identity firewall does not make firewall decisions based on IP addresses, but uses user and group information to apply security policies.
+It identifies users based on their login credentials and dynamically assigns them appropriate access rights and firewall rules.
+This enables more granular control and improved protection, as access permissions are directly linked to the actual identity of the user.
+If you want to know how I used this for one of my customers, you can read about it <a href="https://sdn-warrior.org/posts/nsx-idfw-vdi/">here</a>.</p>
+<h2 id="how-do-i-now-fix-my-firewall-rule">How do I now fix my firewall rule?</h2>
+<p>There may be several reasons why my Identity Firewall is not working. Here is a list of some of them:</p>
+<ul>
+<li>
+<p>Group memberships in AD have been changed or new users have been created.</p>
+<p>This is one of the simplest cases.
+The default Delta Sync with AD is 180 minutes, and in larger environments, this sync interval may be higher for performance reasons.
+There are two solutions here: either wait or force a Delta Sync under System - Identity Firewall AD.</p>
+</li>
+<li>
+<p>The Identity Firewall is turned off.</p>
+<p>This may sound a bit silly, but it has actually happened to me.
+You can create Identity Firewall Rules and groups, push the policy, and then find that the rules do not work.
+You don&rsquo;t get an error message or notification. If this is the case, the Identity Firewall may not be allowed for the cluster on which the source VMs are located. To do this, go to Security - Distributed Firewall and under Settings, you can enable or disable the Identity Firewall for each cluster.</p>
+</li>
+</ul>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/nsx-ts-idfw/04_hu_6591a39dfa9db7c9.webp" type="image/webp">
+          <source srcset="/nsx-ts-idfw/04_hu_f702c348226f62bd.jpg" type="image/jpeg">
+          <img src="/nsx-ts-idfw/04_hu_6591a39dfa9db7c9.webp"alt="iDFW"  width="1705"  height="972" />
+        </picture></a><figcaption>
+            <p>iDFW Settings (click to enlarge)</p>
+          </figcaption></figure>
+<ul>
+<li>
+<p>Guest Introspection not installed</p>
+<p>If you want to use Guest Introspection, i.e. the version with VMware Tools, then these must also be installed on the source VM.
+The standard VMware Tools installation does not install these. Either install VMware Tools full or select Guest Introspection explicitly.
+The source of the error is of course eliminated if you do log scraping (which I personally do not prefer).</p>
+</li>
+</ul>
+<h2 id="what-should-you-do-if-you-want-to-know-whether-rules-have-actually-been-implemented-for-a-vm">What should you do if you want to know whether rules have actually been implemented for a VM?</h2>
+<p>As mentioned at the beginning, unfortunately you cannot use the Traceflow tool to check a firewall rule.
+However, there are ways to see if there are Identity Firewall user sessions and which rules have been implemented.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/nsx-ts-idfw/01_hu_a9cf205d56b09ab1.webp" type="image/webp">
+          <source srcset="/nsx-ts-idfw/01_hu_d63dea7af385105a.jpg" type="image/jpeg">
+          <img src="/nsx-ts-idfw/01_hu_a9cf205d56b09ab1.webp"alt="iDFW Sessions"  width="1190"  height="995" />
+        </picture></a><figcaption>
+            <p>IDFW User Sessions (click to enlarge)</p>
+          </figcaption></figure>
+<p>The easiest way to check the sessions is in the GUI under Security - Security Overview and then scroll all the way down to Identity Firewall User Sessions.
+The VM is not displayed in plain text, but Universal Search in NSX resolves the VM.</p>
+
+    <aside class="admonition tip">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+   </svg></div><b>Practical tip</b>
+        </div>
+        <div class="admonition-content">Unfortunately, the NSX GUI is not always the fastest, and the display is not 100% reliable. If a user logs in and out again quickly, the GUI may not display anything. For this reason, IDFW rules can also be logged if you have a central syslog.</div>
+    </aside>
+<p>The other option is to view it via the CLI.</p>
+<h2 id="cli---find-the-rules">CLI - Find the rules!</h2>
+<p>To find out which firewall rules are actually implemented on a VM, we first need to log in to the ESX server on which the VM is currently running.
+First, we use a simple CLI command to find the network card of our VM.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">summarize-dvfilter | grep -A16 WinClientA0001
+</span></span></code></pre></div><p>The result should look like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@esxnuc03:~] summarize-dvfilter | grep -A16 WinClientA0001
+</span></span><span class="line"><span class="cl">world 1085633 vmm0:WinClientA0001 vcUuid:&#39;50 27 d1 31 1f 89 df b1-65 58 00 d0 ab 64 1f 91&#39;
+</span></span><span class="line"><span class="cl"> port 67108888 WinClientA0001.eth0
+</span></span><span class="line"><span class="cl">  vNic slot 2
+</span></span><span class="line"><span class="cl">   name: nic-1085633-eth0-vmware-sfw.2
+</span></span><span class="line"><span class="cl">   agentName: vmware-sfw
+</span></span><span class="line"><span class="cl">   state: IOChain Attached
+</span></span><span class="line"><span class="cl">   vmState: Attached
+</span></span><span class="line"><span class="cl">   failurePolicy: failClosed
+</span></span><span class="line"><span class="cl">   serviceVMID: 1
+</span></span><span class="line"><span class="cl">   filter source: Dynamic Filter Creation
+</span></span><span class="line"><span class="cl">   moduleName: nsxt-vsip-24765085
+</span></span><span class="line"><span class="cl">[root@esxnuc03:~] 
+</span></span></code></pre></div><p>The name of the NIC is important for our next step. In my example, it is <em><strong>nic-1085633-eth0-vmware-sfw.2</strong></em>.</p>
+<p>Next, let&rsquo;s display all realized rules for the VM:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vsipioctl getrules -f nic-1085633-eth0-vmware-sfw.2
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@esxnuc03:~] vsipioctl getrules -f nic-1085633-eth0-vmware-sfw.2
+</span></span><span class="line"><span class="cl">ruleset mainrs {
+</span></span><span class="line"><span class="cl">  # generation number: 0
+</span></span><span class="line"><span class="cl">  # realization time : 2025-06-23T18:55:56
+</span></span><span class="line"><span class="cl">  # FILTER (APP Category) rules
+</span></span><span class="line"><span class="cl">  rule 16360 at 1 inout protocol any from any to any with extended src ba9e01bc-5779-4eb2-813e-4c5b8e3ff1bf drop;
+</span></span><span class="line"><span class="cl">  rule 14312 at 2 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">  rule 14312 at 3 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept;
+</span></span><span class="line"><span class="cl">  rule 14316 at 4 inout protocol any from addrset a34212cb-acb2-49b3-b74c-7683c0345a19 to any drop with log tag &#39;alpine-drop&#39;;
+</span></span><span class="line"><span class="cl">  rule 2 at 5 inout protocol any from any to any accept with log tag &#39;debug&#39;;
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ruleset mainrs_L2 {
+</span></span><span class="line"><span class="cl">  # generation number: 0
+</span></span><span class="line"><span class="cl">  # realization time : 2025-06-23T18:55:56
+</span></span><span class="line"><span class="cl">  # FILTER rules
+</span></span><span class="line"><span class="cl">  rule 1 at 1 inout ethertype any stateless from any to any accept;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div>
+<figure><a href="05.png"><picture>
+          <source srcset="/nsx-ts-idfw/05_hu_c79000b0c9a4c0f8.webp" type="image/webp">
+          <source srcset="/nsx-ts-idfw/05_hu_1d457e0eb2c2e7aa.jpg" type="image/jpeg">
+          <img src="/nsx-ts-idfw/05_hu_c79000b0c9a4c0f8.webp"alt="Firewallrules"  width="1450"  height="789" />
+        </picture></a><figcaption>
+            <p>Firewall Rules (click to enlarge)</p>
+          </figcaption></figure>
+<p>We can see in the output that firewall rule 16360 has been implemented on my test VM and is therefore active. This firewall rule is my identity firewall rule, and a user who is enabled for this rule is logged in.</p>
+<p>We can also see that the VM has implemented two additional rules, namely 14312 and 14316. Although these rules have nothing to do with the VM, the VM is still assigned these rules because the Apply to field is set to dfw, meaning that all VMs receive these rules. I have described the importance of the Apply to field <a href="https://sdn-warrior.org/posts/nsx-apply-to/">here</a>.</p>
+<p>Theoretically, you can also see this in the GUI, but with a delay, and in my experience it was more unreliable than reliable. Nevertheless, I want to show it. If you look at the firewall rule and then go to the group and look at the effective members, a VM should be implemented. As I said, the GUI is very slow here, and if I have problems with the IDFW, I prefer to rely on the CLI.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/nsx-ts-idfw/02_hu_f5890197874403e5.webp" type="image/webp">
+          <source srcset="/nsx-ts-idfw/02_hu_3026bd4bdb273dc8.jpg" type="image/jpeg">
+          <img src="/nsx-ts-idfw/02_hu_f5890197874403e5.webp"alt="Effectiv Members"  width="1188"  height="970" />
+        </picture></a><figcaption>
+            <p>Effectiv Members (click to enlarge)</p>
+          </figcaption></figure>
+<p>This method allows you to quickly check whether an IDFW / DFW rule has been realized on the VM. If, as in the example above, the IDFW is disabled for the cluster, I can see the FW rule in the GUI, but it is not displayed in the CLI.
+The same would be the case if I had an error with the apply to field. The rule would not be realized on my VM and also not shown in the cli.</p>
+<h2 id="summary">Summary</h2>
+<p>Troubleshooting the IDFW can sometimes be a little difficult, but it&rsquo;s not impossible.
+I hope this quick practical tip helps you. It has often helped me when the GUI has tricked me. In combination with the check mechanisms in the GUI (even if these are sometimes slow) and the logging the IDFW / DFW is easy to troubleshoot.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
