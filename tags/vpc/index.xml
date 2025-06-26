@@ -10,14 +10,14 @@
     <lastBuildDate>Thu, 26 Jun 2025 19:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>VCF 9 - NSX VPC Part 2</title>
+      <title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
       <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
       <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.&#xA;If you are not familiar with VPCs and have not yet come across this topic, I recommend reading &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;Part 1&lt;/a&gt; first.&#xA;I will not go into all the basics again in this article, as these were already explained in the first article.&#xA;In this article, I will look at the distributed deployment of VPCs and show how VPCs can also be used without an edge cluster.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>VCF 9 - NSX VPC Part 1</title>
+      <title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
       <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
       <pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>

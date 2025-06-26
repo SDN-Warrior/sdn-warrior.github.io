@@ -10,7 +10,7 @@
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>VCF 9 - NSX VPC Part 2</title>
+			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
 			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
 			
@@ -1013,7 +1013,7 @@ Thus, it has never really been considered part of the NUC era.</p>
 		</item>
 		
 		<item>
-			<title>VCF 9 - NSX VPC Part 1</title>
+			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
 			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
 			
