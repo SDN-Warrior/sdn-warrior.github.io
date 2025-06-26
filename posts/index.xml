@@ -53,7 +53,7 @@ Since our default tenant (aka default project) has a transit gateway in centrali
           </figcaption></figure>
 <p>The most important setting besides the name (yes, I recently watched Oppenheimer) is the External Connection.
 These settings determine whether the transit gateway is distributed or centralized.
-The External IP Block defines the public VPC network (I explained the different networks in VPCs in Part 1).
+The External IP Block defines the public VPC network (I explained the different networks in VPCs in <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a>).
 We have the option of connecting the project to a T0 gateway independently of the transit gateway.
 However, this is only relevant for non-VPC networks and will not be considered here.
 The same applies to the option of assigning an edge cluster to the tenant.
@@ -97,7 +97,7 @@ In my lab, it is VLAN 1011 and my Mikrotik Core Router has 10.28.11.1/24. My ext
         <div class="admonition-content">NSX 9 currently only supports static routing, and if I had used a different external IP block, I would have had to set up additional routes on my Mikrotik – laziness wins out in this case.</div>
     </aside>
 <h2 id="lets-build-a-vpc-or-two-or">Let&rsquo;s build a VPC, or two, or&hellip;</h2>
-<p>Readers of Part 1 should now be quite familiar with all of this.</p>
+<p>Readers of <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a> should now be quite familiar with all of this.</p>
 
 <figure><a href="03.png"><picture>
           <source srcset="/vcf9-nsx-vpc-2/03_hu_48978bf52479495.webp" type="image/webp">
@@ -184,7 +184,7 @@ In addition, I will create the VPC Core in the same way. I hope the Demon Core d
         </picture></a><figcaption>
             <p>VPCs tenant Manhatten (click to enlarge)</p>
           </figcaption></figure>
-<p>We can also test the interconnectivity between the VPCs from Part 1. The overall network topology looks like this:</p>
+<p>We can also test the interconnectivity between the VPCs from <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a>. The overall network topology looks like this:</p>
 
 <figure><a href="05.png"><picture>
           <source srcset="/vcf9-nsx-vpc-2/05_hu_433eec8d2e4efae9.webp" type="image/webp">
