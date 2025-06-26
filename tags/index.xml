@@ -7,27 +7,34 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 24 Jun 2025 01:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 26 Jun 2025 19:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Homelab</title>
       <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
+      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
       <title>Nsx</title>
       <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
+      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/nsx/</guid>
       <description></description>
     </item>
     <item>
       <title>Vcf</title>
       <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
+      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vpc</title>
+      <link>https://sdn-warrior.org/tags/vpc/</link>
+      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vpc/</guid>
       <description></description>
     </item>
     <item>
@@ -140,13 +147,6 @@
       <link>https://sdn-warrior.org/tags/ansible/</link>
       <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/ansible/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Mikrotik</title>
-      <link>https://sdn-warrior.org/tags/mikrotik/</link>
-      <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/mikrotik/</guid>
       <description></description>
     </item>
   </channel>

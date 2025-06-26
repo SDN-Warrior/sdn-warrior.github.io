@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 24 Jun 2025 01:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 26 Jun 2025 19:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF 9 - NSX VPC Part 2</title>
+      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
+      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.&#xA;If you are not familiar with VPCs and have not yet come across this topic, I recommend reading &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;Part 1&lt;/a&gt; first.&#xA;I will not go into all the basics again in this article, as these were already explained in the first article.&#xA;In this article, I will look at the distributed deployment of VPCs and show how VPCs can also be used without an edge cluster.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>NSX - IDFW &amp; DFW Troubleshooting</title>
       <link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
@@ -141,13 +148,6 @@
       <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-automate-ipam-and-dns&#34;&gt;Why Automate IPAM and DNS?&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Consistency: Automation minimizes human errors and ensures uniformity.&lt;/li&gt;&#xA;&lt;li&gt;Efficiency: Automating repetitive tasks saves time and allows teams to focus on strategic activities.&lt;/li&gt;&#xA;&lt;li&gt;Scalability: As networks grow, automated solutions adapt more easily than manual processes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;my-goal&#34;&gt;My goal&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Get a free IP address is dynamically fetched from a defined subnet in NetBox.&lt;/li&gt;&#xA;&lt;li&gt;The IP address is immediately assigned to the specified FQDN in NetBox.&lt;/li&gt;&#xA;&lt;li&gt;A corresponding Host A record is created in your Windows DNS Server.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Before diving into the implementation, ensure the following:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-      <link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
-      <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-chatgpt&#34;&gt;Why ChatGPT?&lt;/h2&gt;&#xA;&lt;p&gt;Let’s be honest: starting with Ansible can feel overwhelming, especially if you&amp;rsquo;re new to it. My last experience with something remotely similar was years ago, working with PowerShell scripts or even earlier with .NET 3 (yes, I’m &amp;ldquo;that old&amp;rdquo;).&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
