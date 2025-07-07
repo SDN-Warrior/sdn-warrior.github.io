@@ -91,7 +91,8 @@ The process is straightforward. The operating system is also updated if necessar
         </picture></a><figcaption>
             <p>Fleet Management onboarding (click to enlarge)</p>
           </figcaption></figure>
-<p>Here you need the fleet manager FQDN and the admin password. The admin password must comply with the new complexity rules.
+<p>Here you need the fleet manager FQDN and the admin password. In addition, the admin password for VCF Operations is required; without it, the process cannot be completed.</p>
+<p>The admin password must comply with the new complexity rules.
 The days of <em><strong>VMware1!</strong></em> are over. If a password that is too weak was set during deployment, onboarding will now fail.
 Okay, I could have written that earlier, but you are warned about this during OVA deployment, and I&rsquo;m sure my readers would never just click “continue” without thinking – not that this would have happened to the author here.</p>
 
