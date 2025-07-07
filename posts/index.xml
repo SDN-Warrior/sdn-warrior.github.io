@@ -6,8 +6,302 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Thu, 26 Jun 2025 19:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Mon, 07 Jul 2025 20:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF 9 - Migration to central VCF Operations instance</title>
+			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
+			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
+			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Where should I start? Perhaps I should describe my starting point.
+I deployed a nested lab with VCF9 for the VCF9 beta, so far so good.
+This lab came with its own VCF Operations. Now we are GA and I am lucky enough to have 256 core VCF9 licenses.
+I wanted to upgrade part of my hardware lab to ESX9 because I also want to test memory tiering in its final version, and that&rsquo;s where my problems start.
+In VCF9, there are no more keys and you have to license your products via VCF Operations and vCenter.
+This also applies to VVF, or if you want to use ESX9 on your physical lab hardware.</p>
+<p>Conclusion: I need a second VCF Operations and would have to split my licenses. However, this is not a good solution because my nested lab is not permanently on, which means that Lab VCF Operations is also not permanently on.</p>
+<p>The solution: a central VCF Operations and Fleet Manager.</p>
+<h2 id="lets-get-started">Let&rsquo;s get started</h2>
+<p>First, I shut down my Nested VCF Operations, as well as the Cloud Proxy and Fleet Manager, because in the best case scenario, I won&rsquo;t need them in my Nested Lab anymore.
+Since the licenses are activated online, I have until the end of this year before the next usage report is due. So, for now, nothing will be left inactive.</p>
+<p>Then I deploy a new VCF Operations, a Fleet Manager, and a Cloud Proxy.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Cloud Proxy</b>
+        </div>
+        <div class="admonition-content">The Cloud Proxy is theoretically optional and can only be deployed after my VCF Operations has been successfully deployed and set up. The basic function of the Cloud Proxy can also be taken over by the Operations appliance if, for example, resources are limited.</div>
+    </aside>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Deployment</b>
+        </div>
+        <div class="admonition-content"><p>Here, I will show you the method that worked best for me.
+Of course, you can use the VCF Installer to deploy a new VVF or VCF environment and onboard additional setups into an existing operation.
+However, since I did not want to redeploy my physical lab, but instead upgraded from ESXi8 to ESX9 beforehand, this method is not possible.
+I also didn&rsquo;t want to onboard my physical lab in the nested VCF operations, as the operations should be continuously available.</p>
+<p>I therefore strongly recommend this method only for LAB environments. Don&rsquo;t sue me if your environment crashes. :D So you have been warned.</p>
+</div>
+    </aside>
+<p>The actual deployment is done using standard OVAs that you download from the Broadcom portal beforehand. So far, so unspectacular.
+I won&rsquo;t go into detail about the basic setup of the individual appliances, as this is fairly straightforward.
+I also won&rsquo;t explain how to integrate a cloud proxy, as this is fairly self-explanatory and can be done via Operations under <em><strong>Administration -&gt; Cloud Proxies</strong></em>.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf-operations-migration/01_hu_e28bd52f1557ff68.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/01_hu_2fe78e0452706ca6.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/01_hu_e28bd52f1557ff68.webp"alt="Fleet Manager"  width="2016"  height="1394" />
+        </picture></a><figcaption>
+            <p>Fleet Manager OVA (click to enlarge)</p>
+          </figcaption></figure>
+<p>Perhaps one more note: the fleet manager OVA is called  VCF-OPS-Lifecycle-Manager-Appliance.</p>
+<p>Now that we have deployed our VCF Operation and Fleet Manager, we need to bring the VCF Operation Cluster online and connect our Fleet Manager.
+To do this, open the Operations admin interface using the following URL: https://&lt; VCFOPS FQDN &gt;/admin</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf-operations-migration/02_hu_a8d1e5ff758c5d6a.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/02_hu_c09ac50e6a8a9e8d.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/02_hu_a8d1e5ff758c5d6a.webp"alt="VCF OPS Admin"  width="1726"  height="878" />
+        </picture></a><figcaption>
+            <p>VCF Operations Admin Interface (click to enlarge)</p>
+          </figcaption></figure>
+<p>This is where the “cluster” is put into operation.
+The process is straightforward. The operating system is also updated if necessary, provided that an Internet connection is available.</p>
+<p>Since we deployed VCF Operations manually, no Fleet Manager is connected yet, of course.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf-operations-migration/03_hu_3f76f2315cd56072.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/03_hu_ed89624d05339531.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/03_hu_3f76f2315cd56072.webp"alt="VCF Fleet"  width="1723"  height="982" />
+        </picture></a><figcaption>
+            <p>Fleet Management onboarding (click to enlarge)</p>
+          </figcaption></figure>
+<p>Here you need the fleet manager FQDN and the admin password. The admin password must comply with the new complexity rules.
+The days of <em><strong>VMware1!</strong></em> are over. If a password that is too weak was set during deployment, onboarding will now fail.
+Okay, I could have written that earlier, but you are warned about this during OVA deployment, and I&rsquo;m sure my readers would never just click “continue” without thinking – not that this would have happened to the author here.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf-operations-migration/04_hu_aa9be912cc82685.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/04_hu_b0102362e43b67fc.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/04_hu_aa9be912cc82685.webp"alt="VCF Fleet sucess"  width="1727"  height="900" />
+        </picture></a><figcaption>
+            <p>Fleet Management onboarding successfull (click to enlarge)</p>
+          </figcaption></figure>
+<p>Of course, I was able to connect to the Fleet Manager right away the first time—at least that&rsquo;s what I&rsquo;m going to say. The whole process takes a little time, so it&rsquo;s best to have a cup of coffee ready.</p>
+<p>When the Fleet Manager is connected, a VCF operation instance with Pending Import is now displayed in Operations under Fleet <em><strong>Management -&gt; Lifecycle</strong></em>.</p>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf-operations-migration/05_hu_45748868331a54a2.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/05_hu_e1a8bd8458180ff6.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/05_hu_45748868331a54a2.webp"alt="Pending Operations"  width="1726"  height="903" />
+        </picture></a><figcaption>
+            <p>Pending VCF Operations (click to enlarge)</p>
+          </figcaption></figure>
+<p>This should not cause us any concern and is completely normal. Before we can continue here, we need to onboard our future environments so that the Fleet Manager can do its job.</p>
+<h2 id="onboarding-of-vcf-and-other-esx9-environments">Onboarding of VCF and other ESX9 environments</h2>
+<p>At this point, it would also be possible to deploy a cloud proxy, but this is not necessary.
+To continue, my nested LAB and my ESX 9 servers must be integrated.
+This is done via <em><strong>Administration -&gt; Integrations</strong></em> Here, you specify the accounts you want to onboard.
+For my ESX 9 servers, I specify the vCenter and select vSphere Cloud Foundation for VCF. You need the login details for the SDDC Manager.
+It is recommended to create separate credentials in Operations, even if you use the same password multiple times.
+I decided to enable “Domain Monitoring when creating” under Advanced Settings.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf-operations-migration/06_hu_7b07f3636a9700c7.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/06_hu_d88ebb1f1261064d.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/06_hu_7b07f3636a9700c7.webp"alt="Account Integration"  width="1724"  height="898" />
+        </picture></a><figcaption>
+            <p>Account Integration (click to enlarge)</p>
+          </figcaption></figure>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Information</b>
+        </div>
+        <div class="admonition-content">By default, this setting is set to false. If you configure a VCF account with the default setting, data collection and monitoring of domains is disabled. If you edit the VCF account and change this setting to true, data collection and monitoring is enabled but it is done only for the newly discovered domains.</div>
+    </aside>
+<p>Under <em><strong>Collector / Group</strong></em>, you can select the collector you want to use for collecting data. The default collector group contains the VCF operations.</p>
+
+<figure><a href="07.png"><picture>
+          <source srcset="/vcf-operations-migration/07_hu_d850e26422ef9332.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/07_hu_1a432747751d0786.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/07_hu_d850e26422ef9332.webp"alt="Collector"  width="1725"  height="900" />
+        </picture></a><figcaption>
+            <p>Collecting Status (click to enlarge)</p>
+          </figcaption></figure>
+<p>After successfully adding our accounts, data collection must also be activated.</p>
+
+    <aside class="admonition danger">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">It&rsquo;s easy to overlook, but if you want to integrate the VCF environment so that you can manage and license it rather than just monitor it, you need to click the Activate Management button in this dialog box for the vCenter. The process takes about 15 minutes. If you don&rsquo;t do this, licensing will not be possible later. The settings can be changed at any time.</div>
+    </aside>
+
+<figure><a href="08.png"><picture>
+          <source srcset="/vcf-operations-migration/08_hu_5d9138f93fbc5bdc.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/08_hu_e64ef8016c9f0f37.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/08_hu_5d9138f93fbc5bdc.webp"alt="License"  width="1229"  height="794" />
+        </picture></a><figcaption>
+            <p>vSphere Client Plugin (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="licensing">Licensing</h2>
+<p>You must register the VCF Operations instance that you want to use for license management in the VCF Business Services console.
+There are two ways to do this: Connected and Disconnected.</p>
+<ul>
+<li>Connected Mode</li>
+</ul>
+<p>If the environment is connected to the Internet, you can register your VCF Operations instance in connected mode. Connected mode provides a faster and simplified registration process and makes it easier to update your licenses. In addition, usage is automatically uploaded every night.
+The exact process for registering the VCF operation in connected mode can be found <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/register-vcf-operations/register-vcf-operation-in.html">here</a>.
+However, the entire process is guided very well by the GUI. The license must be updated every 6 months or when a subscription expires. In Connected mode, this can be done with a single click.</p>
+<ul>
+<li>Disconnected Mode</li>
+</ul>
+<p>Disconnected mode is for all users who have a dark site and therefore no internet access for VCF operations. Onboarding is a little more complicated because license files and usage reports have to be uploaded and downloaded manually. Even in disconnected mode, you have to create and upload usage reports regularly. The license must be updated at least every 6 months or when a subscription expires.
+Instructions for disconnected mode can be found <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/register-vcf-operations/register-vcf-operations-in-disconnected-mode.html">here</a>. However, the process is really very simple and very well guided via the GUI.</p>
+<h3 id="assigning-licenses">Assigning licenses</h3>
+<p>After 15 minutes, the previously added vCenters appear in VCF Operations. Under <em><strong>License Management - Licenses</strong></em>, you should now see our vCenters and our VVF or VCF licenses that we previously assigned to our Operations via the VCF Business Service console.
+Because we have deployed a central VCF Operations, the licenses do not need to be split.
+Instead, I can assign the same license to all of my added vCenter9 instances, as long as there are enough cores available in my license.
+To do this, I select the vCenter instances and assign a primary license.
+This license is then imported into vCenter and used to license all other VCF products, such as NSX.
+vSAN must be assigned to the vCenters as a so-called add-on license.</p>
+
+<figure><a href="12.png"><picture>
+          <source srcset="/vcf-operations-migration/12_hu_91ef16b82ceb856e.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/12_hu_c45ef128373c4fab.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/12_hu_91ef16b82ceb856e.webp"alt="License"  width="1723"  height="895" />
+        </picture></a><figcaption>
+            <p>VCF License (click to enlarge)</p>
+          </figcaption></figure>
+<p>Now all that&rsquo;s missing is the VCF lifecycle. Remember, we still had one point left to cover.</p>
+<h2 id="vcf-lifecycle">VCF Lifecycle</h2>
+<p>We still had our fleet manager who hadn&rsquo;t been fully onboarded yet.
+First, we need to create deployment targets. These can be found under <em><strong>Fleet Management -&gt; Lifecycle -&gt; VCF Management -&gt; Deployment Targets</strong></em>.</p>
+
+<figure><a href="09.png"><picture>
+          <source srcset="/vcf-operations-migration/09_hu_cc89d1c9f4620b0b.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/09_hu_4c6deaa291a0a73a.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/09_hu_cc89d1c9f4620b0b.webp"alt="Deployment targets"  width="1726"  height="896" />
+        </picture></a><figcaption>
+            <p>VCF License (click to enlarge)</p>
+          </figcaption></figure>
+<p>The deployment target is important so that the Lifecycle Manager can deploy components.
+Here, too, the vCenter is selected and the correct account must be specified. If no suitable account exists, a new one can be created from the dialog box.
+The connection is then validated and the deployment target is configured.</p>
+
+    <aside class="admonition Tip">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Tip</b>
+        </div>
+        <div class="admonition-content">As a deployment target, you need to add every vCenter where you want to deploy stuff or where VCF Operations components are running. In my case, my VCF Operations, Cloud Proxy, and Fleet Manager are running on my management host, which is still in my vSphere 8 environment. That&rsquo;s why this environment also needs to be saved as a deployment target, otherwise the next steps won&rsquo;t work.</div>
+    </aside>
+<p>Finally, we take care of our operation that is still displayed as Pending Import. To do this, we click on the Import button under <em><strong>Fleet Management -&gt; Lifecycle -&gt; VCF Management -&gt; Overview for VCF Operations</strong></em>.
+
+<figure><a href="10.png"><picture>
+          <source srcset="/vcf-operations-migration/10_hu_290d5a0cb3326b7f.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/10_hu_add7d6105f27fe89.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/10_hu_290d5a0cb3326b7f.webp"alt="Import"  width="1713"  height="825" />
+        </picture></a><figcaption>
+            <p>Import Operations  (click to enlarge)</p>
+          </figcaption></figure></p>
+<p>Most of it is already preselected; you just need to enter the root password for the vCenter instance where my components are located (VCF Operations and Cloud Proxies). After confirming with Next, you need to do the same for the Cloud Proxy.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Cloud Proxy</b>
+        </div>
+        <div class="admonition-content">SSH must be enabled on the cloud proxy (if one is used). If this was forgotten during deployment, it can be easily enabled via the VM console. To do this, log in with root and enter systemctl start sshd and systemctl enable sshd.</div>
+    </aside>
+<p>Congratulations, our deployment should now look like this.</p>
+
+<figure><a href="11.png"><picture>
+          <source srcset="/vcf-operations-migration/11_hu_df5028b0e416d90.webp" type="image/webp">
+          <source srcset="/vcf-operations-migration/11_hu_dfa7f51a90af9bae.jpg" type="image/jpeg">
+          <img src="/vcf-operations-migration/11_hu_df5028b0e416d90.webp"alt="Import"  width="1728"  height="892" />
+        </picture></a><figcaption>
+            <p>Import Operations  (click to enlarge)</p>
+          </figcaption></figure>
+<p>We are now able to deploy an operation for logs via the Fleet Manager.
+It is important that you have configured your Broadcom token under Depot Configuration or, if you have an offline repo, that this is configured.</p>
+<p>But there are also a few limitations:</p>
+<ul>
+<li>VCF Management supports only one instance each of VCF Automation, VCF Operations, VCF Operations for logs, or VCF Operations for networks. All components integrate with VCF Operations.</li>
+<li>VCF Management supports multiple instances of VCF Identity Broker. For each VCF instance, VCF Management allows you to deploy one and only one VCF Identity Broker instance.</li>
+<li>You deploy VCF Identity Broker into either an embedded form factor such as vCenter or an external form factor such as a VCF appliance.</li>
+<li>The first VCF Automation or VCF Operations for networks instance that you import or deploy will be in integrated mode.</li>
+</ul>
+<h2 id="resource-requirements">Resource requirements</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Function</th>
+          <th>vCPUs</th>
+          <th>RAM (Configured)</th>
+          <th>Provisioned Disk</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>VCF Operations</td>
+          <td>4</td>
+          <td>16 GB</td>
+          <td>158.18 GB</td>
+      </tr>
+      <tr>
+          <td>Cloud Proxy</td>
+          <td>2</td>
+          <td>8 GB</td>
+          <td>150.20 GB</td>
+      </tr>
+      <tr>
+          <td>Fleet</td>
+          <td>4</td>
+          <td>12 GB</td>
+          <td>205.43 GB</td>
+      </tr>
+  </tbody>
+</table>
+<p>I&rsquo;m pretty sure that the required resources can still be adjusted in the lab. Especially when it comes to RAM, you should easily be able to get by with half, but I haven&rsquo;t been able to test it properly yet.</p>
+<h2 id="summary">Summary</h2>
+<p>Manual deployment is not as intuitive and simple as it is with the VCF installer. However, this setup allows me to easily control and manage my licenses via VCF Operations, which is particularly useful in an environment with nested Labs. For a production environment, I would prefer deployment in a VCF Management Domain.
+The components can still be shared by multiple instances if the security concept allows it. I think the blog has shown that import is also possible at a later date.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
