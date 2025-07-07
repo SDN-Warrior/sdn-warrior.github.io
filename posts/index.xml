@@ -118,7 +118,9 @@ Okay, I could have written that earlier, but you are warned about this during OV
 <p>At this point, it would also be possible to deploy a cloud proxy, but this is not necessary.
 To continue, my nested LAB and my ESX 9 servers must be integrated.
 This is done via <em><strong>Administration -&gt; Integrations</strong></em> Here, you specify the accounts you want to onboard.
-For my ESX 9 servers, I specify the vCenter and select vSphere Cloud Foundation for VCF. You need the login details for the SDDC Manager.
+For my ESX 9 servers, I select vCenter as the account type and specify the appropriate vCenter 9 and account details.</p>
+<p>For my VCF configuration, I select vSphere Cloud Foundation for VCF.
+You need the login details for the SDDC Manager and not the vCenter.
 It is recommended to create separate credentials in Operations, even if you use the same password multiple times.
 I decided to enable “Domain Monitoring when creating” under Advanced Settings.</p>
 
