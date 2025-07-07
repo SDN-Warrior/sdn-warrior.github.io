@@ -2,25 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/homelab/</loc>
+    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/operations/</loc>
+    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/posts/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf/</loc>
+    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf-operations-migration/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2025-06-26T19:00:00+02:00</lastmod>
+    <loc>https://sdn-warrior.org/tags/vvf/</loc>
+    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2025-06-26T19:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2025-06-26T19:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf/</loc>
     <lastmod>2025-06-26T19:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</loc>
