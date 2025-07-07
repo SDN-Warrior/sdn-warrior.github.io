@@ -188,7 +188,7 @@ However, the entire process is guided very well by the GUI. The license must be 
 <p>Disconnected mode is for all users who have a dark site and therefore no internet access for VCF operations. Onboarding is a little more complicated because license files and usage reports have to be uploaded and downloaded manually. Even in disconnected mode, you have to create and upload usage reports regularly. The license must be updated at least every 6 months or when a subscription expires.
 Instructions for disconnected mode can be found <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/register-vcf-operations/register-vcf-operations-in-disconnected-mode.html">here</a>. However, the process is really very simple and very well guided via the GUI.</p>
 <h3 id="assigning-licenses">Assigning licenses</h3>
-<p>After 15 minutes, the previously added vCenters appear in VCF Operations. Under <em><strong>License Management - Licenses</strong></em>, you should now see our vCenters and our VVF or VCF licenses that we previously assigned to our Operations via the VCF Business Service console.
+<p>After 15 minutes, the previously added vCenter will be displayed in VCF Operations. Under <em><strong>License Management – Licenses</strong></em>, i should now see my vCenter and VVF or VCF licenses that I previously assigned to my operations via the VCF Business Service Console.
 Because we have deployed a central VCF Operations, the licenses do not need to be split.
 Instead, I can assign the same license to all of my added vCenter9 instances, as long as there are enough cores available in my license.
 To do this, I select the vCenter instances and assign a primary license.
