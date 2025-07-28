@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 07 Jul 2025 20:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 29 Jul 2025 00:10:05 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF 9 - NSX VPC Part 3 - Security</title>
+      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
+      <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my two other VPC articles, I showed you the basics and the differences between &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;centralized deployment&lt;/a&gt; and &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/&#34;&gt;distributed deployment&lt;/a&gt;.&#xA;Today, I would like to write something about security, as VPCs offer various possibilities in this area.&#xA;VPCs provide a certain degree of isolation through their private networks, as these cannot be easily routed from outside the VPC.&#xA;But what if we want to protect a VM from the public network or a private VM that has been assigned a public IP? This is where the distributed firewall and gateway firewall come into play.&#xA;Let&amp;rsquo;s find out exactly how.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9 - Migration to central VCF Operations instance</title>
       <link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>

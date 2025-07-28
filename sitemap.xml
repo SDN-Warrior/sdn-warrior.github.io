@@ -3,21 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/operations/</loc>
-    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+    <loc>https://sdn-warrior.org/tags/nsx/</loc>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/security/</loc>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2025-07-07T20:00:00+02:00</lastmod>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/vcf/</loc>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</loc>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vpc/</loc>
+    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/operations/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf-operations-migration/</loc>
@@ -26,13 +38,7 @@
     <loc>https://sdn-warrior.org/tags/vvf/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2025-06-26T19:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</loc>
-    <lastmod>2025-06-26T19:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vpc/</loc>
     <lastmod>2025-06-26T19:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</loc>
@@ -114,9 +120,6 @@
     <lastmod>2025-01-28T20:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-apply-to/</loc>
-    <lastmod>2025-01-11T02:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/security/</loc>
     <lastmod>2025-01-11T02:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/nsx-tep-groups/</loc>

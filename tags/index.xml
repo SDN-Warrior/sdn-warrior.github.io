@@ -7,13 +7,41 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 07 Jul 2025 20:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 29 Jul 2025 00:10:05 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Homelab</title>
       <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
+      <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nsx</title>
+      <link>https://sdn-warrior.org/tags/nsx/</link>
+      <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Security</title>
+      <link>https://sdn-warrior.org/tags/security/</link>
+      <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/security/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf</title>
+      <link>https://sdn-warrior.org/tags/vcf/</link>
+      <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vpc</title>
+      <link>https://sdn-warrior.org/tags/vpc/</link>
+      <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vpc/</guid>
       <description></description>
     </item>
     <item>
@@ -24,31 +52,10 @@
       <description></description>
     </item>
     <item>
-      <title>Vcf</title>
-      <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Vvf</title>
       <link>https://sdn-warrior.org/tags/vvf/</link>
       <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vvf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nsx</title>
-      <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/nsx/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vpc</title>
-      <link>https://sdn-warrior.org/tags/vpc/</link>
-      <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vpc/</guid>
       <description></description>
     </item>
     <item>
@@ -133,13 +140,6 @@
       <link>https://sdn-warrior.org/tags/kvm/</link>
       <pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/kvm/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Security</title>
-      <link>https://sdn-warrior.org/tags/security/</link>
-      <pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/security/</guid>
       <description></description>
     </item>
     <item>
