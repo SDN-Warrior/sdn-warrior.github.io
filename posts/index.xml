@@ -313,7 +313,7 @@ To double-check, I create a new firewall policy. NSX always has TCP Strict enabl
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
    </svg></div><b>Attention</b>
         </div>
-        <div class="admonition-content">Just because the firewall rejects the rule does not mean that you will not encounter problems. In my case, the transport node (ESX) received messages that the enhanced DP flow table usage was very high. However, the ESX host still received all packets, which caused problems in my small nested lab. When I perform the same test with VMs connected to a centralized transit gateway, my edge VMs start to lose their N/S connection because they go directly into overload. However, it should be noted that I have small edge VMs in the lab that are not designed for a data throughput of 10 Gb/s.</div>
+        <div class="admonition-content">Just because the firewall rejects the traffic does not mean that you will not encounter problems. In my case, the transport node (ESX) received messages that the enhanced DP flow table usage was very high. However, the ESX host still received all packets, which caused problems in my small nested lab. When I perform the same test with VMs connected to a centralized transit gateway, my edge VMs start to lose their N/S connection because they go directly into overload. However, it should be noted that I have small edge VMs in the lab that are not designed for a data throughput of 10 Gb/s.</div>
     </aside>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@vcf09-m01-esx03:~] vsipioctl getrules -f nic-1164294-eth0-vmware-sfw.2
 </span></span><span class="line"><span class="cl">ruleset mainrs {
@@ -345,6 +345,7 @@ The VPC default rule set is very good for isolating the VPCs from each other, bu
 Use Apply To, even on VPC rules, even if they are already restricted to the VPC.
 I have written about why <a href="https://sdn-warrior.org/posts/nsx-apply-to/">Apply To</a> is useful in another article. This also applies to the VPC topic.</p>
 <p>Otherwise, all I can say is get yourself a KALI Linux and test your lab. I noticed the behavior with TCP Strict more by accident. It&rsquo;s not a huge vulnerability, but you should be aware of what defaults and automatically generated rules or settings do. I don&rsquo;t know yet if there will be another article on the topic of VPCs. My esteemed colleague <a href="https://sdn-techtalk.com/posts/vks-vpc/">Steven Schramm</a> has taken a closer look at the topic of VPCs and VKS. It&rsquo;s a very readable article.</p>
+<p>So all that&rsquo;s left for me to say is happy pen testing!</p>
 ]]></content>
 		</item>
 		
