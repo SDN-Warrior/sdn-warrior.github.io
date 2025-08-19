@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 29 Jul 2025 00:10:05 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 19 Aug 2025 09:21:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 certificate exchange</title>
+      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+      <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+      <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9 - NSX VPC Part 3 - Security</title>
       <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
       <description>&lt;p&gt;In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.&lt;/p&gt;&#xA;&lt;p&gt;For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>MAC Learning is your friend</title>
-      <link>https://sdn-warrior.org/posts/mac-learning/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

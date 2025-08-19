@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 29 Jul 2025 00:10:05 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 19 Aug 2025 09:21:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 certificate exchange</title>
+      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+      <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+      <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9 - NSX VPC Part 3 - Security</title>
       <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
@@ -141,13 +148,6 @@
       <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My esteemed colleague, Steven Schramm, recently published an excellent article titled &lt;em&gt;&lt;a href=&#34;https://sdn-techtalk.com/posts/multitep-ha/&#34;&gt;Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability&lt;/a&gt;&lt;/em&gt;. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-tep-groups-and-why-are-they-interesting&#34;&gt;What Are TEP Groups and Why Are They Interesting?&lt;/h2&gt;&#xA;&lt;p&gt;With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Redeploy an NSX Edge VM Appliance</title>
-      <link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
-      <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

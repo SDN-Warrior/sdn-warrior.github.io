@@ -6,8 +6,262 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 29 Jul 2025 00:10:05 +0200</lastBuildDate>
+		<lastBuildDate>Tue, 19 Aug 2025 09:21:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF9 certificate exchange</title>
+			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
+			<content type="html"><![CDATA[<h2 id="certificates--the-mother-of-all-evils">Certificates – the mother of all evils</h2>
+<p>In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.
+Certificates are like printers: everyone hates them, but we need them.
+Fortunately, VCF and VCF9 have greatly simplified the entire procedure.
+In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.
+However, it is still not an enjoyable process.</p>
+<h2 id="lets-get-started">Let&rsquo;s get started</h2>
+<p>VCF (VCF9) currently supports two integrations of certificate authorities. It supports Microsoft CA or OpenSSL.
+Since I already have a Windows domain running, I simply use Microsoft CA for the sake of simplicity.
+Nevertheless, the completely manual method is also supported, which I will show at the end of this article.</p>
+<p>I will use the Microsoft Certification Authority Web Enrollment Service. If you want to use fully automated certificate enrolment with a microsoft CA, there is no way around this.
+Please note that the web service requires basic authentication and generally poses a security risk if everything is not configured correctly.</p>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">Here I show a basic setup of the RootCA. This is not set up according to Microsoft&rsquo;s best practices, and the servers should be hardened as a matter of urgency.
+In addition, separate accounts should be used in accordance with the least privilege principle.</div>
+    </aside>
+<h2 id="preparing-the-rootca">Preparing the RootCA</h2>
+<p>The following server roles must be enabled on the CA:</p>
+<ul>
+<li>Certification Authority</li>
+<li>Certification Authority Web Enrollment</li>
+</ul>
+<p>After installing the roles, Basic Authentication must be enabled in IIS.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-ca/01_hu_d2b19c76ff78eb76.webp" type="image/webp">
+          <source srcset="/vcf9-ca/01_hu_e19f23cb9b65fdb6.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/01_hu_d2b19c76ff78eb76.webp"alt="IIS Settings"  width="1195"  height="543" />
+        </picture></a><figcaption>
+            <p>IIS Settings (click to enlarge)</p>
+          </figcaption></figure>
+<p>Next, a dedicated certificate template must be created. This template defines the attributes used to sign the VCF component certificates.
+To do this, I start the Certificate Templates console by running certtmpl.msc.
+I duplicate the default template Web Server.</p>
+<p>In the new template, adjust the compatibility settings so that Windows Server 2008 R2 is specified as the certification authority and Windows 7 / Server 2008 R2 as the certificate recipient.
+Give the template a unique name, e.g. VMware.</p>
+<p>Remove ‘Server authentication’ from the application policies under Extensions, enable the ‘Basic Constraints‘ extension, and in the key usage settings, enable ‘Signature is proof of origin (non-repudiation)’ while keeping the default settings for the rest.
+On the Subject Name tab, make sure that ’Supply in the request’ is selected. Save the new template once all settings have been applied.</p>
+<p>Finally, add the template to the Microsoft certification authority. To do this, open ‘certsrv.msc’, go to ‘Certificate Templates’ and select ‘New → Certificate Template to Issue’.
+Select the template you just created and activate it.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-ca/02_hu_ca26c802cfc121ec.webp" type="image/webp">
+          <source srcset="/vcf9-ca/02_hu_ea0b5e1fc433b598.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/02_hu_ca26c802cfc121ec.webp"alt="Template settings"  width="968"  height="750" />
+        </picture></a><figcaption>
+            <p>Template settings (click to enlarge)</p>
+          </figcaption></figure>
+<p>The final step is to assign the rights. The CA user requires the following rights:</p>
+<ul>
+<li>Issue and Manage Certificates</li>
+<li>Request Certificates</li>
+</ul>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">As already mentioned, I use the administrator in my lab, which is not safe for production and should be changed.</div>
+    </aside>
+<p>This completes the process on the Windows side. The CA can now be used either manually or automatically via VCF Operations.</p>
+<h2 id="preparing-vcf-operations">Preparing VCF Operations</h2>
+<p>The cool thing is that you can now not only change VCF certificates, but also, if you use a central VCF operations like I do, you can also change these certificates.</p>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">VCF management components only support Microsoft Certificate Authority. VCF Instance components support both Microsoft Certificate Authority and OpenSSL.</div>
+    </aside>
+<p>This is also practical, as I can store different CAs per VCF instance in VCF Operations. Perhaps I will write a second article in which I do the whole thing via OpenSSL CA.
+To set the CA for a VCF, go to <em><strong>Fleet Management</strong></em> -&gt; <em><strong>Certificates</strong></em> and then select the VCF instance or VCF Management, depending on whether it is to be configured for the management components or the VCF instance.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-ca/03_hu_58dfbb7b75422ee2.webp" type="image/webp">
+          <source srcset="/vcf9-ca/03_hu_59e60f7347a064f8.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/03_hu_58dfbb7b75422ee2.webp"alt="CA Settings"  width="1440"  height="921" />
+        </picture></a><figcaption>
+            <p>CA Settings (click to enlarge)</p>
+          </figcaption></figure>
+<p>The settings are self-explanatory. It is important that the complete username with domain is used and that the template is written correctly (case sensitive).
+For the CA server URL, https is recommended, as basic authentication is used, which means that the user and password are transmitted in plain text.
+Therefore, as a minimum security measure, transport encryption with TLS should be used here.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">If firewalls are used, communication between SDDC and the RootCA must of course be ensured.
+Time is also a very critical issue here, so all components should be synchronised with the same NTP server.</div>
+    </aside>
+<h2 id="request-certificate">Request certificate</h2>
+<p>In my case, I want to replace the vCenter certificate in my workload domain.
+To do this, I select my workload domain in VCF Operations, click on the component that is to receive a new certificate, and select <em><strong>Generate CSR</strong></em>.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf9-ca/04_hu_34fe14fe00d64d87.webp" type="image/webp">
+          <source srcset="/vcf9-ca/04_hu_7d3d919be6372e76.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/04_hu_34fe14fe00d64d87.webp"alt="request certificate"  width="1704"  height="951" />
+        </picture></a><figcaption>
+            <p>request certificate (click to enlarge)</p>
+          </figcaption></figure>
+<p>The Generate CSR dialogue box appears and some information must be added.
+The Common Name, Host and Subject Alternative Name (SAN) are pre-filled and should not be changed. The following fields must be completed or modified:</p>
+<ul>
+<li>Organisation</li>
+<li>Organisation Unit</li>
+<li>Country</li>
+<li>State/Province</li>
+<li>Locality</li>
+<li>Key Size</li>
+</ul>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf9-ca/05_hu_26d15c8e4cc49edf.webp" type="image/webp">
+          <source srcset="/vcf9-ca/05_hu_3d600c16ab6afbc1.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/05_hu_26d15c8e4cc49edf.webp"alt="request certificate details"  width="1145"  height="1022" />
+        </picture></a><figcaption>
+            <p>request certificate details (click to enlarge)</p>
+          </figcaption></figure>
+<p>Once saved, a new certificate request is created in the background. The private key remains on the server that created it.
+You can download the request if a manual signing request is used or required.
+This would be the case if you do not want to use the Microsoft Certification Authority Web Enrollment Service for security reasons or if you do not use either Microsoft or OpenSSL CA.</p>
+<p>Once the certificate request has been successfully created, all you need to do is select <em><strong>Replace With Configured CA Certificate</strong></em> and the automatic enrolment process will start.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf9-ca/06_hu_d1958b8d103d914b.webp" type="image/webp">
+          <source srcset="/vcf9-ca/06_hu_25da9800ff8d896b.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/06_hu_d1958b8d103d914b.webp"alt="certificate enrollment"  width="1697"  height="1025" />
+        </picture></a><figcaption>
+            <p>certificate enrollment (click to enlarge)</p>
+          </figcaption></figure>
+
+<figure><a href="07.png"><picture>
+          <source srcset="/vcf9-ca/07_hu_1222c1a91a1eff51.webp" type="image/webp">
+          <source srcset="/vcf9-ca/07_hu_159584a492084d8c.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/07_hu_1222c1a91a1eff51.webp"alt="certificate enrollment ca"  width="1102"  height="678" />
+        </picture></a><figcaption>
+            <p>choose CA (click to enlarge)</p>
+          </figcaption></figure>
+<p>The SDDC now takes care of all further steps. A new certificate is automatically requested from the CA, signed and then exchanged on the relevant system.
+Depending on the system, the process takes a few minutes, so it&rsquo;s best to go and make a cup of coffee while you wait, as you can&rsquo;t do anything else at this point.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">VMware Cloud Foundation supports automatic renewal of Transport Layer Security (TLS) certificates for components that have VMCA, Microsoft CA, Open SSL, or self-signed certificates and support non-disruptive certificate updates.</div>
+    </aside>
+
+<figure><a href="08.png"><picture>
+          <source srcset="/vcf9-ca/08_hu_624810602ebf49b9.webp" type="image/webp">
+          <source srcset="/vcf9-ca/08_hu_69d9babca20e9fd2.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/08_hu_624810602ebf49b9.webp"alt="new certificate"  width="1280"  height="1095" />
+        </picture></a><figcaption>
+            <p>new certificate (click to enlarge)</p>
+          </figcaption></figure>
+<p>And (e)voilà, here is our beautiful new certificate (sorry for the bad pun about my employer evoila).
+The cool thing is that certificate renewal can now be done with a simple button press. No more filling out annoying requests or interacting with the CA. One button press, a cup of coffee, a little wait, and the job is done – that&rsquo;s how I like it.</p>
+<p>But Daniel, you wanted to show us how to do it manually!</p>
+<h2 id="extra---the-manual-way">Extra - the manual way</h2>
+<p>It all starts as before with a request.
+To ensure that the certificate can be easily exchanged with VCF Operations, the request must be executed via Operations and then simply downloaded via the GUI.</p>
+<p>With the request, I now create a certificate at my CA and save it as Base 64 encoded.
+I now have to import the certificate, together with the the CA certificate.
+To do this, the certificate must be PEM encoded. Alternatively, the certificate can also be imported as a certificate chain encoded in Base64. VCF Operations supports both options.</p>
+<p>Server Certificate</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">-----BEGIN CERTIFICATE-----
+</span></span><span class="line"><span class="cl">MIIDdzCCAl+gAwIBAgIEbmh8+TANBgkq...
+</span></span><span class="line"><span class="cl">...dein Server/Leaf-Zertifikat...
+</span></span><span class="line"><span class="cl">-----END CERTIFICATE-----
+</span></span></code></pre></div><p>Root Certificate</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">-----BEGIN CERTIFICATE-----
+</span></span><span class="line"><span class="cl">MIIFQTCCAymgAwIBAgISA9pL1W...
+</span></span><span class="line"><span class="cl">...Intermediate CA Zertifikat...
+</span></span><span class="line"><span class="cl">-----END CERTIFICATE-----
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-----BEGIN CERTIFICATE-----
+</span></span><span class="line"><span class="cl">MIIDrzCCApegAwIBAgIQCDvgVpF3...
+</span></span><span class="line"><span class="cl">...Root CA Zertifikat (optional)...
+</span></span><span class="line"><span class="cl">-----END CERTIFICATE-----
+</span></span></code></pre></div>
+<figure><a href="09.png"><picture>
+          <source srcset="/vcf9-ca/09_hu_74f01c6e00e64d8b.webp" type="image/webp">
+          <source srcset="/vcf9-ca/09_hu_f33a625f1542e774.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/09_hu_74f01c6e00e64d8b.webp"alt="import new certificate"  width="1577"  height="1016" />
+        </picture></a><figcaption>
+            <p>import new certificate (click to enlarge)</p>
+          </figcaption></figure>
+<p>Once the certificate has been successfully imported, it can now be assigned. To do this, select the certificate in VCF Operations that is to be replaced and click on the button <em><strong>Replace with imported certificate</strong></em>.</p>
+
+<figure><a href="10.png"><picture>
+          <source srcset="/vcf9-ca/10_hu_a3282f36275232b.webp" type="image/webp">
+          <source srcset="/vcf9-ca/10_hu_7cbd35695f133653.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/10_hu_a3282f36275232b.webp"alt="replace with imported certificate"  width="1577"  height="912" />
+        </picture></a><figcaption>
+            <p>replace with imported certificate (click to enlarge)</p>
+          </figcaption></figure>
+<p>VCF Operations suggests the certificate. If this does not work, you must select the correct certificate from the drop-down menu. In my case, it worked and the correct certificate was selected.
+Push replace and go to the coffee machine.</p>
+<p>
+<figure><a href="11.png"><picture>
+          <source srcset="/vcf9-ca/11_hu_ff9a91fc7b9171df.webp" type="image/webp">
+          <source srcset="/vcf9-ca/11_hu_1da6ccd1b122231f.jpg" type="image/jpeg">
+          <img src="/vcf9-ca/11_hu_ff9a91fc7b9171df.webp"alt="fresh NSX certificate"  width="1510"  height="1046" />
+        </picture></a><figcaption>
+            <p>fresh NSX certificate (click to enlarge)</p>
+          </figcaption></figure>
+After another cup of coffee, my NSX certificate was successfully exchanged. Damn, I&rsquo;ve had a lot of coffee today, but that&rsquo;s sometimes how it is in IT.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Certificates will still be a pain in the neck in 2025, but VCF Operations has made the process much, much easier.
+The ability to easily exchange certificates for both management components and the components of my VCF instances is brilliant.
+Unfortunately, there is still no nice built-in feature that allows me to do this on Microsoft without the Web Enrollment Service.</p>
+<p>The fact that I can automatically renew my certificates with a single button is also something that makes the whole process much easier for me.
+Many of the things just shown were already possible in older VCF versions, but now that everything is centralised in VCF Operations and works for all my VCF instances, it&rsquo;s just great. I will take a look at enrolment with an OpenSSL CA when I have time, but for now I am focusing on the Microsoft CA, as it is really widespread in practice and I am more familiar with the Windows CA than with the OpenSSL CA.</p>
+<p>Maybe one more thing:
+It is also possible to exchange the certificates of the ESX servers. You just have to activate the <em><strong>Show ESX Hosts</strong></em> slider.</p>
+<p>Now that you&rsquo;ve read this far, how painful is certificate exchange for you, and how much coffee have you had? Feel free to let me know on <a href="https://www.linkedin.com/in/daniel-krieger-6476591a9/">LinkedIn</a>.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
