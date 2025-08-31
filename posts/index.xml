@@ -6,8 +6,267 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 19 Aug 2025 09:21:00 +0200</lastBuildDate>
+		<lastBuildDate>Sun, 31 Aug 2025 12:00:00 +0000</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VMware Explore 2025</title>
+			<link>https://sdn-warrior.org/posts/explore-2025/</link>
+			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+			<description><![CDATA[My VMware Explore 2025]]></description>
+			<content type="html"><![CDATA[<h2 id="viva-las-vegas---a-kind-of-travelogue">Viva Las Vegas - A kind of travelogue.</h2>
+<p>At the beginning of the year, I had the pleasure of flying to the <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">USA</a>, and now I&rsquo;m on my way to Las Vegas.
+After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &ldquo;comfortable&rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.
+Perhaps one more small note. I won&rsquo;t write much about the sessions; anyone who wants to can look them up in <a href="https://github.com/lamw/vmware-explore-2025-session-urls">William Lam&rsquo;s repository</a>. I want to focus more on the vibe of the event here—that is, I&rsquo;ll try to. I&rsquo;m not really a travel blogger.</p>
+
+<figure><a href="01.jpg"><picture>
+          <source srcset="/explore-2025/01_hu_c63d69ef332160ea.webp" type="image/webp">
+          <source srcset="/explore-2025/01_hu_11f52a5bac392903.jpg" type="image/jpeg">
+          <img src="/explore-2025/01_hu_c63d69ef332160ea.webp"alt="Viva Las Vegas"  width="1944"  height="1458" />
+        </picture></a><figcaption>
+            <p>Viva Las Vegas (click to enlarge)</p>
+          </figcaption></figure>
+<p>But before I talk or write about Explore itself, I&rsquo;ll first write a little about Las Vegas. When you hear Las Vegas, you have a certain cliché in your head—at least I do.
+The city is loud, flashy, and never sleeps, and what can I say, it&rsquo;s all true.
+The entertainment dial is turned up to 11—a sea of lights from flashing hotels, casinos, and some very obscure billboards, or even trucks that serve as rolling, illuminated billboards.
+As a German, this is a culture shock at first.</p>
+
+<figure><a href="02.jpg"><picture>
+          <source srcset="/explore-2025/02_hu_4d66ef0ec2da648e.webp" type="image/webp">
+          <source srcset="/explore-2025/02_hu_baea07ac7041e98f.jpg" type="image/jpeg">
+          <img src="/explore-2025/02_hu_4d66ef0ec2da648e.webp"alt="Old Vegas"  width="1411"  height="1058" />
+        </picture></a><figcaption>
+            <p>Old Vegas (click to enlarge)</p>
+          </figcaption></figure>
+<p>But if you prefer something a little quieter, I can give you two recommendations. These are certainly not insider tips, but then again, I&rsquo;m not a travel blogger.</p>
+<h2 id="hoover-dam-and-mike-ocallaghanpat-tillman-memorial-bridge">Hoover Dam and Mike O’Callaghan–Pat Tillman Memorial Bridge</h2>
+<p>Visiting Hoover Dam feels like standing in front of a monument that engineers built just to prove they could. In short, it&rsquo;s a huge thing.</p>
+
+<figure><a href="03.jpg"><picture>
+          <source srcset="/explore-2025/03_hu_29960e2052fb3139.webp" type="image/webp">
+          <source srcset="/explore-2025/03_hu_be78445ab46d8e1f.jpg" type="image/jpeg">
+          <img src="/explore-2025/03_hu_29960e2052fb3139.webp"alt="Hoover Dam"  width="3000"  height="2000" />
+        </picture></a><figcaption>
+            <p>Hoover Dam (click to enlarge)</p>
+          </figcaption></figure>
+<p>The concrete wall on the border between Nevada and Arizona was completed in 1936 and still supplies electricity to millions of households today.
+The Hoover Dam is so massive that it slows down the Earth&rsquo;s rotation slightly when Lake Mead is full—only a tiny fraction of a second, but the idea alone makes me smile.
+When you&rsquo;re at the dam, you can walk back and forth between two states and two time zones. That gives you an extra hour to drink beer—I mean coffee.</p>
+<p>Right next to it is the Mike O&rsquo;Callaghan–Pat Tillman Memorial Bridge, better known as the Hoover Dam Bypass Bridge.
+From here, you have a spectacular panoramic view of the dam—almost like something out of a postcard.</p>
+
+<figure><a href="04.jpg"><picture>
+          <source srcset="/explore-2025/04_hu_919ec32baaaea168.webp" type="image/webp">
+          <source srcset="/explore-2025/04_hu_8616c2cc04f65e5e.jpg" type="image/jpeg">
+          <img src="/explore-2025/04_hu_919ec32baaaea168.webp"alt="view from the bridge"  width="2142"  height="1606" />
+        </picture></a><figcaption>
+            <p>view from the bridge (click to enlarge)</p>
+          </figcaption></figure>
+<p>There is a museum at Hoover Dam, but I skipped it and therefore can&rsquo;t really say anything about it. However, my colleagues who visited it thought it was good.
+I preferred to go directly to the Valley of Fire to have more time there.</p>
+<h2 id="valley-of-fire">Valley of Fire</h2>
+<p>The Valley of Fire is located about 80 km northeast of Las Vegas and can be reached in less than an hour by car.
+The park covers around 186 square kilometres, making it the oldest and largest state park in Nevada.
+It goes without saying, but it&rsquo;s a desert and it&rsquo;s hot, so be sure to take water with you. You can buy some at the visitor centre or fill up empty bottles for free.
+It was about 110 degrees Fahrenheit that day, which is around 43 degrees Celsius, which a taxi driver said was cool.
+To me, it felt like sticking my head in a hot air fryer. It may not be the best idea to drive to a desert in the summer, but the landscape makes up for it.</p>
+
+<figure><a href="05.jpg"><picture>
+          <source srcset="/explore-2025/05_hu_cbaa3d56a9a1fc8c.webp" type="image/webp">
+          <source srcset="/explore-2025/05_hu_9c4f2774449b24dc.jpg" type="image/jpeg">
+          <img src="/explore-2025/05_hu_cbaa3d56a9a1fc8c.webp"alt="Valley of Fire"  width="3000"  height="2000" />
+        </picture></a><figcaption>
+            <p>Valley of Fire (click to enlarge)</p>
+          </figcaption></figure>
+<p>I don&rsquo;t think I&rsquo;ve ever sweated so much in my life, but it was a fantastic day.
+There are five signposted short walks, all between one and two miles long, which are manageable with sufficient sun cream and water.
+There is also a road through the park, allowing you to cruise through beautiful and striking scenery in a typical American car.</p>
+<p>If that&rsquo;s too low-tech for you, you can also visit the Sphere. It&rsquo;s like an IMAX cinema on steroids, although that doesn&rsquo;t really do it justice.</p>
+<h2 id="sphere">Sphere</h2>
+<p>Who doesn&rsquo;t know it, the gigantic sphere that peeks shyly into one hotel room or another?
+The Sphere is approximately 112 metres high and 157 metres in diameter, a rather large sphere that uses LEDs on the outside to display dancing cats, smilies and other things 24/7.
+You can see it as you approach the airport.</p>
+
+<figure><a href="06.jpg"><picture>
+          <source srcset="/explore-2025/06_hu_397bbff9db02f755.webp" type="image/webp">
+          <source srcset="/explore-2025/06_hu_28cfc9e1576232d1.jpg" type="image/jpeg">
+          <img src="/explore-2025/06_hu_397bbff9db02f755.webp"alt="the Sphere"  width="1926"  height="1444" />
+        </picture></a><figcaption>
+            <p>Dacing cats at the Sphere (click to enlarge)</p>
+          </figcaption></figure>
+<p>We watched
+Postcard from Earth by Darren Aronofsky, and what can I say? Audiovisually, it was the most impressive experience I&rsquo;ve ever had.
+It&rsquo;s very difficult to describe, and even the YouTube videos you can find don&rsquo;t do the experience justice.
+If you have the opportunity to visit the sphere, then do it. Highly recommended.</p>
+<h2 id="explore-2025">Explore 2025</h2>
+<p>But enough with the travel tips, let&rsquo;s get started with the event. Since I&rsquo;ve only been to European events so far, the first big difference to Barcelona is that Explore is located on several floors of a hotel.
+This makes the event a little more compact and not quite as sprawling as at the Fira Gran Via.
+Depending on which hotel you&rsquo;re staying in, you might not even see daylight—if you want to avoid it.</p>
+
+<figure><a href="07.jpg"><picture>
+          <source srcset="/explore-2025/07_hu_244490e0540a644b.webp" type="image/webp">
+          <source srcset="/explore-2025/07_hu_aa2d877978ae5352.jpg" type="image/jpeg">
+          <img src="/explore-2025/07_hu_244490e0540a644b.webp"alt="Event Pass"  width="1512"  height="2016" />
+        </picture></a><figcaption>
+            <p>Event Pass (click to enlarge)</p>
+          </figcaption></figure>
+<p>In terms of organization, everything was once again tip-top. Easy check-in, easy to find your way around, friendly staff everywhere who helped you find your way.
+What immediately stands out is that it&rsquo;s less busy than expected. I don&rsquo;t have any figures, but the days of 10,000 visitors and more are long gone.
+However, with the absence of EUC, Carbon Black, and smaller partners, this was to be expected.
+From a visitor&rsquo;s point of view, however, this is not necessarily a bad thing, as you could get into every session without any problems, even if you hadn&rsquo;t registered in advance or the session was officially fully booked.
+There were no long queues anywhere, and there were always plenty of snacks, refreshments, and coffee available. I&rsquo;ve had different experiences in Barcelona.</p>
+<h2 id="day-1">Day 1</h2>
+<p>Day 1 started for me with a session on edge computing. It was co-hosted by Audi. Edge computing is a really exciting topic, and my employer evoila will also be presenting it at our in-house exhibition.
+So it was fascinating to hear about the topic from a customer perspective and learn how Audi is using it.
+The possibility of building a compact single-host edge cluster with vSAN storage, NSX networking, and automation tools such as ArgoCD in a VCF context has a lot of potential.</p>
+<p>After that, I attended a session with <a href="https://vgandalf.com/">Tim Burkhard</a>, who explained the network control plane.
+Since NSX is my area of expertise, there was nothing new for me here, but sessions with vGandalf are always entertaining and bring out the fanboy in me.</p>
+<p>11/10 I would definitely attend again. Of course, a photo with him is a must.</p>
+
+<figure><a href="08.jpg"><picture>
+          <source srcset="/explore-2025/08_hu_25d854a5737b2ca.webp" type="image/webp">
+          <source srcset="/explore-2025/08_hu_ea61512e0dc66f0a.jpg" type="image/jpeg">
+          <img src="/explore-2025/08_hu_25d854a5737b2ca.webp"alt="vGandalf"  width="3000"  height="2000" />
+        </picture></a><figcaption>
+            <p>vGandalf and the SDN-Warrior (click to enlarge)</p>
+          </figcaption></figure>
+<p>I then went on to other sessions, including William Lam&rsquo;s, but this time I didn&rsquo;t manage to get a photo. Next time, then.
+In between, I attended the vExpert Community meeting, picked up my swag, and talked to lots of vExperts.</p>
+<h3 id="community">Community</h3>
+<p>And while we&rsquo;re on the subject of community, I was overwhelmed by how many people stopped to say hello.
+I can hardly put it into words, but it was incredible. Thank you so much, it was amazing, and I am grateful to everyone who reads my LinkedIn posts or my blog.
+I&rsquo;m still surprised when someone asks me if they can take a photo with me.
+Thank you for this incredible support.</p>
+
+<figure><a href="09.jpg"><picture>
+          <source srcset="/explore-2025/09_hu_e80010a4e387735a.webp" type="image/webp">
+          <source srcset="/explore-2025/09_hu_6af0c6c5cf59634f.jpg" type="image/jpeg">
+          <img src="/explore-2025/09_hu_e80010a4e387735a.webp"alt="Sebastian Garcia and me"  width="2048"  height="1152" />
+        </picture></a><figcaption>
+            <p>Sebastian Garcia and me (click to enlarge)</p>
+          </figcaption></figure>
+<p>Photo credits go to <a href="https://www.linkedin.com/posts/activity-7367001767860994048-Gcjm?utm_source=share&amp;utm_medium=member_desktop&amp;rcm=ACoAADCvLVcBxkTlNAba6yJqH706PjezWwpyC8I">Sebastian Garcia</a>. An absolutely friendly person. Thank you for the nice conversation.</p>
+<p>Day one ended with the welcome reception, after which my colleagues and I hit the Vegas nightlife.</p>
+<h2 id="day-2">Day 2</h2>
+<p>The second day started with little sleep and slight jet lag at breakfast on the Explore.
+Although breakfast is a funny thing—I understand it to mean something else. This was more like lunch.
+After enough coffee, I headed to the general keynote, which had the somewhat unwieldy title Shaping the Future of Private Cloud and AI Innovation.
+What was special about the general keynote for me was that I was asked if I would like to contribute a video clip for Paul Turner&rsquo;s part.
+
+<figure><a href="10.jpg"><picture>
+          <source srcset="/explore-2025/10_hu_5916e9af2e5326d4.webp" type="image/webp">
+          <source srcset="/explore-2025/10_hu_438214b514963a1.jpg" type="image/jpeg">
+          <img src="/explore-2025/10_hu_5916e9af2e5326d4.webp"alt="general keynote"  width="1272"  height="713" />
+        </picture></a><figcaption>
+            <p>vExperts @ General Keynote (click to enlarge)</p>
+          </figcaption></figure></p>
+<p>My contribution was shown alongside four other well-known vExperts, including <a href="https://williamlam.com/">William Lam</a>, <a href="https://vmiss.net/">Melissa Palmer</a>, <a href="https://www.ntpro.nl/blog/">Eric Sloof</a> and <a href="https://www.yellow-bricks.com/">Duncan Epping</a>.
+Seeing my own face on the main stage in Las Vegas, alongside the other great vExperts, was a bit strange but also great at the same time.</p>
+<p>I filmed my part from the audience and uploaded it to YouTube.</p>
+<div class="video-container">
+  <iframe width="560" height="315"
+    src="https://www.youtube-nocookie.com/embed/Iiosv_2kYpY"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+<p>The complete keynote can currently only be viewed directly at <a href="https://www.vmware.com/explore/video-library/video/6377276035112">VMware</a>.</p>
+<p>After this highlight, I withdrew to prepare myself mentally for the upcoming certification.
+With the full pass, you could complete various certifications on site, and I took the opportunity to take my VCP VCF9 Administrator exam, which I successfully completed.
+As a small bonus, everyone who successfully certified received a pair of sneakers.
+
+<figure><a href="11.jpg"><picture>
+          <source srcset="/explore-2025/11_hu_5db862b758e5e0f5.webp" type="image/webp">
+          <source srcset="/explore-2025/11_hu_6e07e1355b859254.jpg" type="image/jpeg">
+          <img src="/explore-2025/11_hu_5db862b758e5e0f5.webp"alt="cert swag"  width="2142"  height="2856" />
+        </picture></a><figcaption>
+            <p>Swag (click to enlarge)</p>
+          </figcaption></figure>
+Swag is always welcome.</p>
+<p>In addition to the general keynote, the highlight for me was the session by Duncan Epping and Rakesh Radhakrishnan entitled
+<a href="https://event.vmware.com/flow/vmware/explore2025lv/content/page/catalog/session/1742370482000001PYRW">Innovations Redefining Storage and Disaster Recovery for VMware Cloud Foundation 9</a>.
+I found it particularly exciting that it will be possible to use vSAN over Fibre Channel in the future, which makes me, as an old storage guy, especially happy.
+It should be possible to connect a vSAN storage-only cluster to an existing FC fabric via FC, allowing vSAN and FC storage to be used simultaneously.
+This combines the best of both worlds and allows drop-in replacements to be implemented without making my FC fabric obsolete.</p>
+
+<figure><a href="12.jpg"><picture>
+          <source srcset="/explore-2025/12_hu_5233469c6a85ab58.webp" type="image/webp">
+          <source srcset="/explore-2025/12_hu_664511ff5bf6d482.jpg" type="image/jpeg">
+          <img src="/explore-2025/12_hu_5233469c6a85ab58.webp"alt="Wakuda"  width="1958"  height="1468" />
+        </picture></a><figcaption>
+            <p>Fancy entrance to Wakuda (click to enlarge)</p>
+          </figcaption></figure>
+<p>The day ended with the VMUG reception at Wakuda, where Hock Tan personally addressed the VMUG community.
+He promised VMUG support and emphasized how important VMUG is for VMware and Broadcom.</p>
+<p>
+<figure><a href="13.jpg"><picture>
+          <source srcset="/explore-2025/13_hu_179ade85c09a609e.webp" type="image/webp">
+          <source srcset="/explore-2025/13_hu_e3c04dde60f02e02.jpg" type="image/jpeg">
+          <img src="/explore-2025/13_hu_179ade85c09a609e.webp"alt="Wakuda vExpert"  width="761"  height="571" />
+        </picture></a><figcaption>
+            <p>Edd and me talking about stuff (click to enlarge)</p>
+          </figcaption></figure>
+There was plenty of space for pleasant conversations at Wakuda. Here, I had the opportunity to chat with Edd. By the way, you should check out his <a href="https://vxworld.co.uk/">blog</a>.</p>
+<p>After that, I threw myself into the nightlife just like before. That&rsquo;s a pattern and it will continue.</p>
+<h2 id="day-3">Day 3</h2>
+<p>This day started off rather leisurely for me. I didn&rsquo;t have a session until 11, so I used the time to prepare this article and chat with a few vExperts.
+I also took a closer look at the expo and the community hub and had a few conversations there as well.
+I then attended the VMUG Leaders and VMware Champions Meet-up and tried in vain to take another exam.
+Unfortunately, there were no more slots available, and my place on the waiting list didn&rsquo;t help either.</p>
+
+<figure><a href="14.jpg"><picture>
+          <source srcset="/explore-2025/14_hu_2d0c5ee7ed32b8e4.webp" type="image/webp">
+          <source srcset="/explore-2025/14_hu_f8dc997a09a7fe86.jpg" type="image/jpeg">
+          <img src="/explore-2025/14_hu_2d0c5ee7ed32b8e4.webp"alt="VMUG and Champions"  width="1644"  height="2192" />
+        </picture></a><figcaption>
+            <p>VMUG Leaders and VMware Champions Meet-up (click to enlarge)</p>
+          </figcaption></figure>
+<p>As part of VMware Champions, there will also be a session on VPCs with me. Exact details are not yet known.</p>
+<p>Sadly, I missed the vExpert group photo while trying to get a spot for the exam.
+My colleague <a href="https://sdn-techtalk.com/">Steven Schramm</a> and I then went to the Knight Welcome Reception.</p>
+<p>Work hard, play hard. Afterwards, there was the Explore closing party on the pool deck of the Palazzo hotel with music and cool refreshments. Which was, of course, fantastic.</p>
+
+<figure><a href="15.jpg"><picture>
+          <source srcset="/explore-2025/15_hu_f0fe364458861a8f.webp" type="image/webp">
+          <source srcset="/explore-2025/15_hu_4b73fd38c6a090e0.jpg" type="image/jpeg">
+          <img src="/explore-2025/15_hu_f0fe364458861a8f.webp"alt="Vparty"  width="1944"  height="1458" />
+        </picture></a><figcaption>
+            <p>The Party (click to enlarge)</p>
+          </figcaption></figure>
+<p>For most of the evoila team, this was also the last day of Explore. For Steven and me, things continued on Thursday with an exclusive full-day event for Broadcom Knights.</p>
+<h2 id="knight-day">Knight Day</h2>
+<p>The day started at 8 a.m. with an update on the Knight program and what changes will be made. Spoiler alert: I have to complete a number of certifications.
+The rest of the day was spent looking at the roadmap and a condensed version of the last three days.
+
+<figure><a href="16.jpg"><picture>
+          <source srcset="/explore-2025/16_hu_b03c1fe7ead60ea.webp" type="image/webp">
+          <source srcset="/explore-2025/16_hu_3b57eb5b82f02fca.jpg" type="image/jpeg">
+          <img src="/explore-2025/16_hu_b03c1fe7ead60ea.webp"alt="knight"  width="2142"  height="2856" />
+        </picture></a><figcaption>
+            <p>Knight Training (click to enlarge)</p>
+          </figcaption></figure>
+Since the day is under NDA, I can&rsquo;t say anything about the roadmap except that I&rsquo;m looking forward to the many new features in VCF 9.X.
+The day ended with an evening event at the Excalibur Hotel called Tournament of Kings. In a not-too-historically-accurate version of the European Middle Ages, the battle between good and evil was fought over a cold beer and fried chicken.
+
+<figure><a href="17.jpg"><picture>
+          <source srcset="/explore-2025/17_hu_18de52d558f17225.webp" type="image/webp">
+          <source srcset="/explore-2025/17_hu_c37e8d0900fa77ff.jpg" type="image/jpeg">
+          <img src="/explore-2025/17_hu_18de52d558f17225.webp"alt="knight event"  width="2741"  height="2056" />
+        </picture></a><figcaption>
+            <p>Tournament of Kings (click to enlarge)</p>
+          </figcaption></figure>
+It was dramatic, loud, American, and very entertaining. Thank you for the wonderful day, dear Knight Team.</p>
+<h2 id="last-words">Last words</h2>
+<p>Since everything must come to an end, Friday was our departure day, and we spent our last dollars on food and boarded our flight back across the pond.
+What remains? A great event, wonderful conversations, new and old faces, and a lot of gratitude for everything.
+Thanks also to my employer, <a href="https://evoila.com/">evoila</a>, who sent 13 people to Las Vegas, making us the largest German group there.
+Oh, and we achieved <a href="https://evoila.com/de/partner/vmware/">Pinnacle status</a>, which is also worth mentioning.
+I&rsquo;m already looking forward to the upcoming Knight exclusive events and Explore on Tour in Germany.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>

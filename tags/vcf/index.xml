@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 19 Aug 2025 09:21:00 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 31 Aug 2025 12:00:00 +0000</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VMware Explore 2025</title>
+      <link>https://sdn-warrior.org/posts/explore-2025/</link>
+      <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+      <guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+      <description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9 - Certificate exchange</title>
       <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
