@@ -7,20 +7,41 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 31 Aug 2025 12:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Sep 2025 23:00:08 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Broadcom</title>
-      <link>https://sdn-warrior.org/tags/broadcom/</link>
-      <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/tags/broadcom/</guid>
+      <title>Sddc</title>
+      <link>https://sdn-warrior.org/tags/sddc/</link>
+      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/sddc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Upgrade</title>
+      <link>https://sdn-warrior.org/tags/upgrade/</link>
+      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/upgrade/</guid>
       <description></description>
     </item>
     <item>
       <title>Vcf</title>
       <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf9</title>
+      <link>https://sdn-warrior.org/tags/vcf9/</link>
+      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf9/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Broadcom</title>
+      <link>https://sdn-warrior.org/tags/broadcom/</link>
+      <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+      <guid>https://sdn-warrior.org/tags/broadcom/</guid>
       <description></description>
     </item>
     <item>
@@ -126,27 +147,6 @@
       <link>https://sdn-warrior.org/tags/vmug/</link>
       <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
       <guid>https://sdn-warrior.org/tags/vmug/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Sddc</title>
-      <link>https://sdn-warrior.org/tags/sddc/</link>
-      <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/sddc/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nfs</title>
-      <link>https://sdn-warrior.org/tags/nfs/</link>
-      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/nfs/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kickstarrter</title>
-      <link>https://sdn-warrior.org/tags/kickstarrter/</link>
-      <pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/kickstarrter/</guid>
       <description></description>
     </item>
   </channel>

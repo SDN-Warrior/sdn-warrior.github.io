@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 31 Aug 2025 12:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Sep 2025 23:00:08 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 -  VCF5.X to VCF9 upgrade</title>
+      <link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VMware Explore 2025</title>
       <link>https://sdn-warrior.org/posts/explore-2025/</link>
@@ -141,13 +148,6 @@
       <pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-hcx&#34;&gt;What is HCX?&lt;/h2&gt;&#xA;&lt;p&gt;VMware HCX is an application mobility platform designed to simplify application migration, workload redeployment, and disaster recovery in data centers and clouds.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>How Apply To works in NSX DFW</title>
-      <link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
-      <pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;When working with the &lt;strong&gt;NSX Distributed Firewall (DFW)&lt;/strong&gt;, one feature that often goes unnoticed or misunderstood is &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt;. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.&lt;/p&gt;&#xA;&lt;p&gt;In many VMware training courses, &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
