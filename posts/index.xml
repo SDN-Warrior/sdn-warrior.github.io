@@ -315,7 +315,7 @@ Depending on the hardware and size of the vSAN storage, this process can take a 
             <p>vSAN upgrade (click to enlarge)</p>
           </figcaption></figure>
 <p>Now everything is ready for me to start onboarding in Operations.</p>
-<h3 id="onbaording-in-vcf-operations">Onbaording in VCF Operations</h3>
+<h3 id="onboarding-in-vcf-operations">Onboarding in VCF Operations</h3>
 <p>I have a central VCF Operations because I don&rsquo;t want to deploy an entire fleet every time I need a new nested lab.
 I described how I built it in this <a href="https://sdn-warrior.org/posts/vcf-operations-migration/">article</a>.
 When onboarding in Operations, there are really only two things to keep in mind.
