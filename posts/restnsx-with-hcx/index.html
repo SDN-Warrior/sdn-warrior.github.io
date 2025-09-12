@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-05-20T18:00:16+02:00">
   <meta itemprop="dateModified" content="2025-05-20T18:00:16+02:00">
   <meta itemprop="wordCount" content="1668">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Vmware,HCX,Nsx,Vcf"><meta property="og:url" content="http://localhost:1313/posts/restnsx-with-hcx/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vmware,HCX,Nsx,Vcf"><meta property="og:url" content="https://sdn-warrior.org/posts/restnsx-with-hcx/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="ReSTNSX with HCX">
   <meta property="og:description" content="How can ReSTNSX help me with the migration with HCX">
@@ -44,10 +44,10 @@
     <meta property="article:tag" content="HCX">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Vcf">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="ReSTNSX with HCX">
   <meta name="twitter:description" content="How can ReSTNSX help me with the migration with HCX">
 
@@ -62,16 +62,16 @@
     "articleBody": "Introduction I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can’t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.\nBut what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware’s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience. We will see in this post whether it is really that simple.\nA quick note about transparency: I was provided with a free demo license, but I am not receiving any money and this does not influence my opinion. In this post, I’ll walk you through how RESTNSX complements HCX, especially when migrating applications with strict security policies or complex network requirements.\nWhy Combine HCX with ReSTNSX? While HCX handles the heavy lifting of vMotion, replication, and network extension, it doesn’t touch NSX security rules or segment tagging. That’s where RESTNSX comes in. ReSTNSX can access various systems via API, including Checkpoint and Palo Alto firewalls (which are not the focus of this article), as well as external resources such as Active Directory and SMTP servers. The architecture is relatively simple: there is a Cloud Control OVA, and that’s it. It really is that simple.\nReSTNSX Architecture taken from ReSTNSX Website (click to enlarge)\nSome key benefits:\nAutomatically replicate security policies to the destination environment Tag migrated VMs for policy-based firewall rules Clean up or reassign segments and groups after cutover Automate post-migration tasks (e.g., updating DFW rules, creating new groups) Getting started To get started, you first need to deploy the OVA and register the product. The process is pretty straightforward, so I won’t go into detail here. Once the CloudControl OVA has been successfully deployed and registered, you need to register the data sources. To do this, go to Administration - Data Sources.\nInfo\rThe default credentials are admin and the password is default, which should of course be changed.\rDatasources in ReSTNSX (click to enlarge)\nAs you can see here, I have set up two NSX environments as data sources. NSXB is a pure NSX lab, and VCF02 is my VCF stretched cluster, which I have already discussed in my blog.\nDatasources in ReSTNSX (click to enlarge)\nThen I got this test setup ready:\nRESTNSX \u0026 HCX Test Scenario The migration scenario involves moving workloads from a source environment named NSXB to a destination environment VCF02. The VCF02 NSX environment initially contains no custom firewall rules, tags, or groups—only the default settings provided by NSX.\nInitial Environment (NSXB) In the source NSXB environment, we have the following setup:\nTag: dfg_alpine Security Group: dfg_all_Alpine Tagged VMs: Alpine1, Alpine2, Alpine3, and Alpine4 A custom firewall policy named ReSTNSX-Policy is configured as follows:\nAllow ICMP to Alpine VMs\nAllow all ICMP traffic from any source to all VMs in the group dfg_all_Alpine.\nApplied to: All distributed firewall (DFW) VMs\nAllow HTTP and HTTPS to WAN\nAllow HTTP and HTTPS traffic originating from VMs in the dfg_all_Alpine group to any external (non-RFC1918) destination (Internet).\nApplied to: dfg_all_Alpine\nAllow SSH to Alpine VMs\nAllow SSH traffic (TCP port 22) from any source to all VMs in the dfg_all_Alpine group.\nApplied to: dfg_all_Alpine\nAllow iPerf3 Between Alpine VMs\nAllow iPerf3 traffic (TCP port 5201) between all VMs within the dfg_all_Alpine group.\nApplied to: dfg_all_Alpine\nAllow DNS from Alpine VMs\nAllow DNS traffic (TCP and UDP port 53) from all VMs in the dfg_all_Alpine group to any destination.\nApplied to: dfg_all_Alpine\nDrop All from Alpine VMs\nDrop all other traffic originating from the VMs within the dfg_all_Alpine group to any destination.\nApplied to: All distributed firewall (DFW) VMs\nReSTNSX Firewall policy (click to enlarge)\nMigration of the firewall rules and VMs I am migrating the workloads (Alpine3-4) seamlessly to the VCF02 environment using VMware HCX. Of course, the VMs stop communicating after the migration because there are no firewall rules in the target environment yet, except for the default Layer 3, which is set to drop all on my system.\nInfo\rIt is important that I replicate the NSX Security TAGs with HCX when migrating. Of course, this is only possible if the source system already has NSX and does not come from a legacy VMware environment. But in my case, I save myself additional steps here. ReSTNSX can, of course, provide TAGs via the Policy Engine or Bulk Provisioning, but why make life unnecessarily difficult?\rThere are several ways to migrate my firewall ruleset to the target environment. I could import a ruleset using bulk provisioning and a CSV file, but in my opinion, the charm of this solution lies in the Policy Engine. Using the Policy Engine, which can be found under Tools in the menu, you can easily create a sync task that can synchronize a wide variety of tasks on a cyclical basis.\nPolicy Engine in ReSTNSX (click to enlarge)\nThe screenshot shows my finished policy. It is relatively simple. I have selected to create a policy of type dFW Sections. By default, synchronization runs every 30 minutes when the policy is enabled. Under NSX Manager, I specify my source and target NSX Manager, and in the dFW Section field, I set the source policy. In my example, it is the previously created ReSTNSX policy from my NSXB environment. My destination is the VCF02 environment. Under Synchronization Method, I can specify various options for what exactly should be synchronized. Direction specifies the source and destination systems; a bi-directional sync is also possible. Further up in the screenshot, you can see the result of the preview sync. As you can see, sections, rules, security groups, static members, services, and context profiles are synchronized—that’s quite a lot. But first, a quick word about the synchronization method, as this has an impact on the actual implementation.\nThere are 4 synchronization options: Effective Members, Membership Criteria, Membership Criteria (MAT Mode), and Effective Members + Membership Criteria.\nEffective Members: This mode ensures that the realized members from the source group are written to the new group, which means that the new group receives a static IP assignment for its members. In this case, the membership criterion is an IP, even if it was previously a dynamic group. If the source VM does not have a realized IP, it is not part of the new group.\nMembership Criteria: In this mode, only the criteria for how the groups receive their members are synchronized. In the case of an IP-only group, the defined IPs are simply stored as criteria. This mode allows us to obtain our dynamic groups, but if TAGs are used as criteria, they must be created in the target environment (or synchronized with HCX), otherwise the groups will remain empty.\nMembership Criteria (MAT Mode): Only for V to T migration. Since I don’t have NSX-V in use, I couldn’t test anything here.\nEffective Members + Membership Criteria: This is a combination of both methods. I have my dynamic TAG definition and my effective members. This can be used if you cannot synchronize TAGs and want to make sure that communication works instantly in the new environment. However, this requires post-processing steps and is not necessary in my setup.\nBy default, ReSTNSX creates firewall sections, rules, and object names in the target environment that are identical to those in the source environment. This behavior can be changed when creating the policy.\nInfo\rIt is not possible to change the behavior after the first synchronization. The policy must be deleted and recreated. When deleting the policy, you can also delete all objects created by the policy.\rFirewall Policy in the target NSX (click to enlarge)\nA policy does not have to be activated; you can also start it manually with a forced sync and use this policy as a one-time synchronization. For long migration scenarios, performing the synchronization cyclically is invaluable, especially if there are rule adjustments during the migration phase. After successful synchronization, the complete policy is available 1:1 in my VCF02 and the migrated VMs alpine 3 and 4 are automatically in the dFG_all_Alpine group, as they retained their NSX security tags during the HCX migration and the groups created by ReSTNSX use the same definitions as in the source environment.\nFirewall groups in the target NSX (click to enlarge)\nAdditional features of ReSTNSX ReSTNSX is not just a simple migration tool, although that was certainly the first use that came to mind. It can do much more than that. ReSTNSX has a very good, customizable dashboard that provides me with long-term information about my NSX environment.\nReSTNSX Dashboard (click to enlarge)\nOf course, the dashboard in my lab doesn’t show much, because I don’t have Aria Operations for Networks running, and I also shut down my labs after successful testing so as not to drive up my electricity bill even more. ReSTNSX also features a comprehensive reporting system and enables NSX documentation and auditing. Bulk Provisioning is a powerful tool for manipulating, creating, and detaching security tags, groups, firewall rules, and other items. You can even clone an entire NSX environment.\nConclusion ReSTNSX is not just a simple migration tool, it also accelerates Day 2 operations in NSX and VCF. Combined with HCX, it has never been easier to migrate existing microsegmented workloads from one workload domain to a new workload domain or VCF instance. ReSTNSX uses APIs from vCenter and NSX and offers a centralized CLI. It also offers true multi-cloud management (VMware Cloud on AWS (VMCoAWS), Google (GCVE), Azure, Oracle, and IBM). I’m sure I’ve only scratched the surface, as some things are not so easy to test, especially when it comes to multi-cloud, but I hope I’ve been able to provide some insight into a cool tool that can make everyday life and migration tasks easier.\n",
     "wordCount" : "1668",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/net.jpg","datePublished": "2025-05-20T18:00:16+02:00",
+    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2025-05-20T18:00:16+02:00",
     "dateModified": "2025-05-20T18:00:16+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/restnsx-with-hcx/"
+      "@id": "https://sdn-warrior.org/posts/restnsx-with-hcx/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>ReSTNSX with HCX</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -122,26 +122,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2frestnsx-with-hcx%2f&amp;text=ReSTNSX%20with%20HCX" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2frestnsx-with-hcx%2f&amp;text=ReSTNSX%20with%20HCX" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2frestnsx-with-hcx%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2frestnsx-with-hcx%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=ReSTNSX%20with%20HCX&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2frestnsx-with-hcx%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=ReSTNSX%20with%20HCX&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2frestnsx-with-hcx%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2frestnsx-with-hcx%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=ReSTNSX%20with%20HCX&amp;summary=ReSTNSX%20with%20HCX%2c%20by%20SDN-Warrior%0a%0aHow%20can%20ReSTNSX%20help%20me%20with%20the%20migration%20with%20HCX%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2frestnsx-with-hcx%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=ReSTNSX%20with%20HCX&amp;summary=ReSTNSX%20with%20HCX%2c%20by%20SDN-Warrior%0a%0aHow%20can%20ReSTNSX%20help%20me%20with%20the%20migration%20with%20HCX%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -149,7 +149,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;ReSTNSX with HCX&#34;,&#34;http://localhost:1313/posts/restnsx-with-hcx/&#34;,&#34;ReSTNSX with HCX, by SDN-Warrior\n\nHow can ReSTNSX help me with the migration with HCX\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;ReSTNSX with HCX&#34;,&#34;https://sdn-warrior.org/posts/restnsx-with-hcx/&#34;,&#34;ReSTNSX with HCX, by SDN-Warrior\n\nHow can ReSTNSX help me with the migration with HCX\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -167,10 +167,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-			<li><a href="http://localhost:1313/links/">Links</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -191,7 +191,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/vmware">VMware</a></span><span class="tag"><a href="http://localhost:1313/tags/hcx">HCX</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">NSX</a></span><span class="tag"><a href="http://localhost:1313/tags/vcf">VCF</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">VMware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/hcx">HCX</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">NSX</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">VCF</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -433,14 +433,14 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/ms-a2/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/ms-a2/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>Tales from the Lab - Minisforum MS-A2</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/nsx-expiring-tn-certificates/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -453,14 +453,14 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

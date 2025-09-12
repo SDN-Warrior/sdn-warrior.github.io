@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-03-05T21:00:00+01:00">
   <meta itemprop="dateModified" content="2025-03-05T21:00:00+01:00">
   <meta itemprop="wordCount" content="1377">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Vmware,Vcf,Homelab,Broadcom,Nfs"><meta property="og:url" content="http://localhost:1313/posts/vcf-import-overlay/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vmware,Vcf,Homelab,Broadcom,Nfs"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-import-overlay/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF Import Tool - Enable Overlay in an imported VCF Domain">
   <meta property="og:description" content="Part 2 VCF Import Cluster with NFS and activating the overlay.">
@@ -45,10 +45,10 @@
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Broadcom">
     <meta property="article:tag" content="Nfs">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="VCF Import Tool - Enable Overlay in an imported VCF Domain">
   <meta name="twitter:description" content="Part 2 VCF Import Cluster with NFS and activating the overlay.">
 
@@ -63,16 +63,16 @@
     "articleBody": "Introduction My blog is a follow-up to my article “VCF Import Tool - Run VCF with NFS as principal Storage” and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.\nThe VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.\nCreating an IP pool For our TEP network we can either use a DHCP server or the IP pool variant preferred by VMware. I personally find the DHCP server more flexible and easier for environments that need to grow quickly, but there is no right or wrong at this point. However, when creating the pool, you should make sure that our subnet has a sufficient size, as this can only be changed to a limited extent after successful allocation.\nBest practice\rVMware recommends the use of /24 networks in the current NSX Reference Design Guide. This would also be my recommendation, as you need 2 IP addresses per transport node for a dual TEP setup and you want to be prepared for the future. Outside of VCF, setups with 4 TEP IP addresses per transport node are also possible and you never know what will happen in future.\rTo create an IP pool, we go to IP Address Pools under Networking in the NSX Gui and click the ADD IP ADDRESS POOL button.\nUnder Subnet we click on the IP RANGES button and configure our IP range, our network CIDR and a gateway. The TEP network must be routed, as the Edge Transport Nodes normally have their TEP IP addresses in a different network and VLAN. While it is possible for the Edge Transport Nodes to be on the same VLAN and network as our Host Transport Nodes, this is a less common scenario and requires the Edge Transport Nodes to either run on non-NSX enabled hosts or use NSX backed VLAN segments. I have already writte a blog for Evoila about this.\nIP Pool configuration (click to enlarge)\nFinally, we define a name for the IP pool and save the configuration.\nUpdate the default Transport Zone In NSX, a transport zone (TZ for short) is a logical grouping of transport nodes that defines which network segments can exist on these nodes. It determines the scope of the overlay and VLAN networks and is not a security feature. There are two types of TZ: an overlay and a VLAN transport zone. For the imported or converted VCF environment, we only need to make changes to the overlay TZ. The VLAN TZ is created when the Edge Nodes are deployed via the SDDC Manager and no longer needs to be customized. VCF uses the default transport zone nsx-overlay-transportzone. This must also be assigned later in the transport node profile.\nInfo Overlay TZ\rVCF 5.2.1 currently only supports one overlay transport zone. It is not possible to use multiple overlay transport zones. This can be a crucial point in the NSX design. If I don’t want the overlay networks in my workload domains to be visible everywhere, I have to deploy multiple workload domains with their own NSX instance.\rWe first need to add two tags to the TZ. These tags are used internally by the SDDC manager to identify the TZ as being used by VCF.\nTAGs\rNote that the tag consists of two parts, the tag name and the tag scope. Also, tags are case sensitive, so you need to enter them exactly as shown.\rThe transport zones can be found in the NSX GUI under System - Transport Zone. There should be exactly one overlay transport zone that also has the default flag. The following TAGs must be attached to the overlay transport zone:\nTag Name Scope VCF Created by vcf vcf-orchestration The transport zone type cannot be changed afterwards. We can and must only add tags here.\nTransport Zone configuration (click to enlarge)\nEdit the Transport Node Profiles The next step is to customize the transport node profile so that we can use overlay networks and create NSX TEP interfaces on our ESXi servers.\nSince NSX 3.1.x, the Transport Node profile can be found under Fabric - Hosts - Transport Node Profile. The VCF Import Tool has already created a profile for us. As is so often the case with VCF, the profile has a cryptic name that consists of an ID + domain and the text autoconf-tnp. You can safely ignore the name. We need to go to the profile’s host switch config and add the overlay transport zone to the profile. As soon as we have added this TZ, additional options for IP assignment will appear. The previously created IP pool is selected here. We save the whole thing and that’s it for the changes in the NSX.\nTransport Node Profile configuration (click to enlarge)\nAfter everything has been saved, NSX starts customizing the cluster and configuring TEP IP addresses for each of our ESXi servers.\nVerify TEP Network There are several ways to check the TEP network. We can look it up in the vCenter, where each host should now have 2 VMK adapters with IP addresses from our TEP network. VKM10 and VMK11 are responsible for processing our TEP traffic in the dual TEP setup. The second option is in NSX itself. To do this, go to System - Fabric - Hosts and look at our cluster. In the TEP IP Addresses column, each ESXi in the cluster should have two IP addresses.\nTransport Node TEP IPs (click to enlarge)\nThe third option is to ping from one ESXi server to another. To do this, the VMK ping command must be executed as follows:\n[root@vcf03-m01-esx01:~] vmkping -I vmk10 -S vxlan 10.28.4.105 -d -s 1972 PING 10.28.4.105 (10.28.4.105): 1972 data bytes 1980 bytes from 10.28.4.105: icmp_seq=0 ttl=64 time=0.274 ms 1980 bytes from 10.28.4.105: icmp_seq=1 ttl=64 time=0.113 ms 1980 bytes from 10.28.4.105: icmp_seq=2 ttl=64 time=0.267 ms I use an MTU of 2000 in my lab, so the maximum payload is 1972 bytes.\n-d sets the don’t fragment bit, and -S vxlan uses the VXLAN socket interface for the ping. This is used to test the transport over the NSX Geneve overlay.\nInfo MTU\rNSX 4.X uses a minimum MTU of 1700 bytes. Normally, I also stick to this size in my labs, but I made a typing error when creating the AVN and I didn’t want to do it all over again. Happy little excidents ;) In productive environments, an MTU size of 9000 is always preferable.\rUpdate the SDDC Manager We need to use our VCF import tool again so that our SDDC manager also knows that we now have an overlay transport zone and that we can deploy our AVN for the Aria Suite, for example. To do this, we perform a sync and wait for it to complete.\npython3 vcf_brownfield.py sync --vcenter 'vcf03-vcsa.lab.home' --sso-user 'administrator@vsphere.local' --domain-name 'mgmt' Don’t be surprised if you get an error after the sync. However, you can ignore it and it is totally logical that it occurs.\nStatus: VALIDATION_FAILED Check Name: vCenter Server no NSX Manager present Description: Check that the vCenter Server does not have an NSX Manager connected to it Details: Detected an NSX Manager connected to the vCenter Server Remediation: Please ensure that no NSX Manager is connected to the vCenter Server to be imported So our converted MGMT domain would be ready for use. Next, I deployed my Edge Cluster and then the Aria Suite. But that’s not what this article is about.\nConclusion I really like the VCF Import tool, even though it still needs some fine-tuning here and there. The sync function is quite practical and is a good way to bring changes made outside of the SDDC Manager back into the SDDC Manager. Hopefully Broadcom will also provide the sync for a regularly deployed VCF, which from NSX’s point of view would significantly enrich the VCF in terms of flexibility.\n",
     "wordCount" : "1377",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/net.jpg","datePublished": "2025-03-05T21:00:00+01:00",
+    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2025-03-05T21:00:00+01:00",
     "dateModified": "2025-03-05T21:00:00+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/vcf-import-overlay/"
+      "@id": "https://sdn-warrior.org/posts/vcf-import-overlay/"
     },
     "publisher": {
       "@type": "Organization",
@@ -80,21 +80,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -123,26 +123,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf-import-overlay%2f&amp;text=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-import-overlay%2f&amp;text=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf-import-overlay%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-import-overlay%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf-import-overlay%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-import-overlay%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf-import-overlay%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain&amp;summary=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain%2c%20by%20SDN-Warrior%0a%0aPart%202%20VCF%20Import%20Cluster%20with%20NFS%20and%20activating%20the%20overlay.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf-import-overlay%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain&amp;summary=VCF%20Import%20Tool%20-%20Enable%20Overlay%20in%20an%20imported%20VCF%20Domain%2c%20by%20SDN-Warrior%0a%0aPart%202%20VCF%20Import%20Cluster%20with%20NFS%20and%20activating%20the%20overlay.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -150,7 +150,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF Import Tool - Enable Overlay in an imported VCF Domain&#34;,&#34;http://localhost:1313/posts/vcf-import-overlay/&#34;,&#34;VCF Import Tool - Enable Overlay in an imported VCF Domain, by SDN-Warrior\n\nPart 2 VCF Import Cluster with NFS and activating the overlay.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF Import Tool - Enable Overlay in an imported VCF Domain&#34;,&#34;https://sdn-warrior.org/posts/vcf-import-overlay/&#34;,&#34;VCF Import Tool - Enable Overlay in an imported VCF Domain, by SDN-Warrior\n\nPart 2 VCF Import Cluster with NFS and activating the overlay.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -168,10 +168,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-			<li><a href="http://localhost:1313/links/">Links</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -192,7 +192,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/vmware">vmware</a></span><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/broadcom">broadcom</a></span><span class="tag"><a href="http://localhost:1313/tags/nfs">nfs</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/broadcom">broadcom</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nfs">nfs</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -389,14 +389,14 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/vcf-stretched-cluster/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>VCF Stretched Cluster</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/vcf-import-cluster/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf-import-cluster/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -409,14 +409,14 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

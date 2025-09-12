@@ -2,151 +2,151 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Homelab on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/homelab/</link>
+    <link>https://sdn-warrior.org/tags/homelab/</link>
     <description>Recent content in Homelab on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tails from the Lab – Lab setup</title>
-      <link>http://localhost:1313/posts/tails-from-the-lab-setup/</link>
+      <link>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</link>
       <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/tails-from-the-lab-setup/</guid>
+      <guid>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - Certificate exchange</title>
-      <link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
+      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
       <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
       <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 3 - Security</title>
-      <link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
+      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
       <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my two other VPC articles, I showed you the basics and the differences between &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;centralized deployment&lt;/a&gt; and &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/&#34;&gt;distributed deployment&lt;/a&gt;.&#xA;Today, I would like to write something about security, as VPCs offer various possibilities in this area.&#xA;VPCs provide a certain degree of isolation through their private networks, as these cannot be easily routed from outside the VPC.&#xA;But what if we want to protect a VM from the public network or a private VM that has been assigned a public IP? This is where the distributed firewall and gateway firewall come into play.&#xA;Let&amp;rsquo;s find out exactly how.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - Migration to central VCF Operations instance</title>
-      <link>http://localhost:1313/posts/vcf-operations-migration/</link>
+      <link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
       <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where should I start? Perhaps I should describe my starting point.&#xA;I deployed a nested lab with VCF9 for the VCF9 beta, so far so good.&#xA;This lab came with its own VCF Operations. Now we are GA and I am lucky enough to have 256 core VCF9 licenses.&#xA;I wanted to upgrade part of my hardware lab to ESX9 because I also want to test memory tiering in its final version, and that&amp;rsquo;s where my problems start.&#xA;In VCF9, there are no more keys and you have to license your products via VCF Operations and vCenter.&#xA;This also applies to VVF, or if you want to use ESX9 on your physical lab hardware.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-      <link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
+      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
       <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.&#xA;If you are not familiar with VPCs and have not yet come across this topic, I recommend reading &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;Part 1&lt;/a&gt; first.&#xA;I will not go into all the basics again in this article, as these were already explained in the first article.&#xA;In this article, I will look at the distributed deployment of VPCs and show how VPCs can also be used without an edge cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX - IDFW &amp; DFW Troubleshooting</title>
-      <link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
+      <link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
       <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.&#xA;I&amp;rsquo;m sure everyone has been in this situation: you&amp;rsquo;ve written a nice new Identity firewall, but for some reason it doesn&amp;rsquo;t work.&#xA;If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn&amp;rsquo;t work with the Identity firewall.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-the-identity-firewall&#34;&gt;What is the Identity Firewall?&lt;/h2&gt;&#xA;&lt;p&gt;An identity firewall does not make firewall decisions based on IP addresses, but uses user and group information to apply security policies.&#xA;It identifies users based on their login credentials and dynamically assigns them appropriate access rights and firewall rules.&#xA;This enables more granular control and improved protection, as access permissions are directly linked to the actual identity of the user.&#xA;If you want to know how I used this for one of my customers, you can read about it &lt;a href=&#34;https://sdn-warrior.org/posts/nsx-idfw-vdi/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-      <link>http://localhost:1313/posts/homelab-v6/</link>
+      <link>https://sdn-warrior.org/posts/homelab-v6/</link>
       <pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/homelab-v6/</guid>
+      <guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.&#xA;On top of that, the Minisforum A2 was finally available. But first things first.&lt;/p&gt;&#xA;&lt;h2 id=&#34;25-gbs-lan---and-what-i-have-learned&#34;&gt;2.5 Gb/s LAN - and what I have learned&lt;/h2&gt;&#xA;&lt;p&gt;Well, where should I start? I bought the Mikrotik CRS326-4C+20G+2Q for my NUCs, which offered me 20x 2.5 GB/s ports and wasn&amp;rsquo;t exactly cheap at around 800 euros.&#xA;In hindsight, I can say that it wasn&amp;rsquo;t a good investment. Not that the switch is bad, it&amp;rsquo;s not, but as of today, I only use exactly 2 2.5G ports.&#xA;For this purpose, I utilize all 10G and 40G ports (with brakeout) as 10G ports are now in short supply. Following the recent upgrade, I have exactly one 10G port remaining in the entire lab.&#xA;That&amp;rsquo;s why I&amp;rsquo;m actually considering selling the Switch again.&#xA;But hey, that&amp;rsquo;s part of homelabbing. Sometimes you just make bad investments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-      <link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
+      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
       <pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!&lt;/p&gt;&#xA;&lt;p&gt;But wait, from the top, what are VPCs anyway?&#xA;VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tales from the Lab - Minisforum MS-A2</title>
-      <link>http://localhost:1313/posts/ms-a2/</link>
+      <link>https://sdn-warrior.org/posts/ms-a2/</link>
       <pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
-      <guid>http://localhost:1313/posts/ms-a2/</guid>
+      <guid>https://sdn-warrior.org/posts/ms-a2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;After being impressed with the performance and form factor of the Minisforum &lt;strong&gt;MS-01&lt;/strong&gt;, I had to get my hands on their latest beast: the &lt;strong&gt;MS-A2&lt;/strong&gt;, powered by AMD&amp;rsquo;s latest Zen 5 architecture.&#xA;It&amp;rsquo;s also exciting to test a gadget before &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;. Thanks for letting me be the first (I&amp;rsquo;m just kidding, of course).&lt;/p&gt;&#xA;&lt;p&gt;In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX Expiring Transport Node Certificates</title>
-      <link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
+      <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
       <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF - How to use the Broadcom Download Token</title>
-      <link>http://localhost:1313/posts/vcf-token/</link>
+      <link>https://sdn-warrior.org/posts/vcf-token/</link>
       <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf-token/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-token/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Quick Tip - WLD with single NSX Manager</title>
-      <link>http://localhost:1313/posts/vcf-single-nsx/</link>
+      <link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
       <pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
-      <guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&amp;rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.&#xA;We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Stretched Cluster</title>
-      <link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
+      <link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
       <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is my third article in my VCF Homelab series.&#xA;On second thought, I may have put the cart before the horse, because a stretched vSAN cluster requires a functioning management domain.&#xA;But ok, that shouldn&amp;rsquo;t bother us now. I&amp;rsquo;ll try to cover all the essentials of the deployment in this article.&lt;/p&gt;&#xA;&lt;h3 id=&#34;what-are-the-benefits-of-a-stretched-vsan-cluster-and-why-does-it-have-to-be-vsan&#34;&gt;What are the benefits of a stretched vSAN cluster and why does it have to be vSAN?&lt;/h3&gt;&#xA;&lt;p&gt;Well, first the obvious.&#xA;We have to use vSAN because we have a consolidated design here and VCF (version 5.2.1) does not allow any other principal storage in the consolidated design (also, this article is about a vSAN stretched cluster).&#xA;Secondly, we want to use the synchronous replication of vSAN to the second site. Another reason is “German Angst”. We want to have redundancy here and a muti AZ design. In Germany, there have traditionally been stretched clusters across multiple fire compartments or buildings for a long time. In the past, I myself have already implemented such scenarios with layer 2 over layer 3 (aka VxLAN).&#xA;The much more elegant way (and also the way supported by VCF) is the vSAN stretched cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-      <link>http://localhost:1313/posts/vcf-import-overlay/</link>
+      <link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-      <link>http://localhost:1313/posts/vcf-import-cluster/</link>
+      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
       <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
     </item>
     <item>
       <title>JetKVM - all show and no substance?</title>
-      <link>http://localhost:1313/posts/jetkvm/</link>
+      <link>https://sdn-warrior.org/posts/jetkvm/</link>
       <pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/jetkvm/</guid>
+      <guid>https://sdn-warrior.org/posts/jetkvm/</guid>
       <description>&lt;h2 id=&#34;jetkvm-a-kickstarter-project&#34;&gt;JetKVM a Kickstarter Project&lt;/h2&gt;&#xA;&lt;p&gt;Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&amp;rsquo;m only now getting to my conclusion and test.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Ansible VLAN deployment with MikroTik</title>
-      <link>http://localhost:1313/posts/vlan-automation/</link>
+      <link>https://sdn-warrior.org/posts/vlan-automation/</link>
       <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vlan-automation/</guid>
+      <guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
       <description>&lt;h2 id=&#34;yet-another-ansible-post&#34;&gt;Yet Another Ansible Post&lt;/h2&gt;&#xA;&lt;p&gt;As the year comes to a close, I can&amp;rsquo;t help but reflect on the progress I&amp;rsquo;ve made with Ansible in the past few weeks. Looking back, there&amp;rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.&lt;/p&gt;&#xA;&lt;h2 id=&#34;goals&#34;&gt;Goals&lt;/h2&gt;&#xA;&lt;p&gt;The main goal is to have a single file that describes all the required VLANs. This file should also allow me to delete or reuse VLANs as needed. Each VLAN must be deployed across three switches and configured as a tagged VLAN on specific ports.&lt;/p&gt;</description>
     </item>
     <item>
       <title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
-      <link>http://localhost:1313/posts/ipam-automation/</link>
+      <link>https://sdn-warrior.org/posts/ipam-automation/</link>
       <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
-      <guid>http://localhost:1313/posts/ipam-automation/</guid>
+      <guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-automate-ipam-and-dns&#34;&gt;Why Automate IPAM and DNS?&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Consistency: Automation minimizes human errors and ensures uniformity.&lt;/li&gt;&#xA;&lt;li&gt;Efficiency: Automating repetitive tasks saves time and allows teams to focus on strategic activities.&lt;/li&gt;&#xA;&lt;li&gt;Scalability: As networks grow, automated solutions adapt more easily than manual processes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;my-goal&#34;&gt;My goal&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Get a free IP address is dynamically fetched from a defined subnet in NetBox.&lt;/li&gt;&#xA;&lt;li&gt;The IP address is immediately assigned to the specified FQDN in NetBox.&lt;/li&gt;&#xA;&lt;li&gt;A corresponding Host A record is created in your Windows DNS Server.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Before diving into the implementation, ensure the following:&lt;/p&gt;</description>
     </item>
     <item>
       <title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-      <link>http://localhost:1313/posts/first-steps-ansible/</link>
+      <link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
       <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
-      <guid>http://localhost:1313/posts/first-steps-ansible/</guid>
+      <guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-chatgpt&#34;&gt;Why ChatGPT?&lt;/h2&gt;&#xA;&lt;p&gt;Let’s be honest: starting with Ansible can feel overwhelming, especially if you&amp;rsquo;re new to it. My last experience with something remotely similar was years ago, working with PowerShell scripts or even earlier with .NET 3 (yes, I’m &amp;ldquo;that old&amp;rdquo;).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V5</title>
-      <link>http://localhost:1313/posts/homelab-v5/</link>
+      <link>https://sdn-warrior.org/posts/homelab-v5/</link>
       <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
-      <guid>http://localhost:1313/posts/homelab-v5/</guid>
+      <guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
       <description>&lt;h2 id=&#34;my-homelab-journey-from-unraid-beginnings-to-version-5&#34;&gt;My Homelab Journey: From Unraid Beginnings to Version 5&lt;/h2&gt;&#xA;&lt;p&gt;Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-beginning-unraid-with-custom-hardware&#34;&gt;The Beginning: Unraid with Custom Hardware&lt;/h2&gt;&#xA;&lt;p&gt;My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.&lt;/p&gt;</description>
     </item>
   </channel>

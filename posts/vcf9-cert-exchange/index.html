@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-08-19T09:21:00+02:00">
   <meta itemprop="dateModified" content="2025-08-19T09:21:00+02:00">
   <meta itemprop="wordCount" content="1587">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Certificates"><meta property="og:url" content="http://localhost:1313/posts/vcf9-cert-exchange/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Certificates"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-cert-exchange/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF 9 - Certificate exchange">
   <meta property="og:description" content="A brief guide to replacing certificates in VCF9 with VCF Operations.">
@@ -44,10 +44,10 @@
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Certificates">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="VCF 9 - Certificate exchange">
   <meta name="twitter:description" content="A brief guide to replacing certificates in VCF9 with VCF Operations.">
 
@@ -62,16 +62,16 @@
     "articleBody": "Certificates – the mother of all evils In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact. Certificates are like printers: everyone hates them, but we need them. Fortunately, VCF and VCF9 have greatly simplified the entire procedure. In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free. However, it is still not an enjoyable process.\nLet’s get started VCF (VCF9) currently supports two integrations of certificate authorities. It supports Microsoft CA or OpenSSL. Since I already have a Windows domain running, I simply use Microsoft CA for the sake of simplicity. Nevertheless, the completely manual method is also supported, which I will show at the end of this article.\nI will use the Microsoft Certification Authority Web Enrollment Service. If you want to use fully automated certificate enrolment with a microsoft CA, there is no way around this. Please note that the web service requires basic authentication and generally poses a security risk if everything is not configured correctly.\nAttention\rHere I show a basic setup of the RootCA. This is not set up according to Microsoft’s best practices, and the servers should be hardened as a matter of urgency. In addition, separate accounts should be used in accordance with the least privilege principle.\rPreparing the RootCA The following server roles must be enabled on the CA:\nCertification Authority Certification Authority Web Enrollment After installing the roles, Basic Authentication must be enabled in IIS.\nIIS Settings (click to enlarge)\nNext, a dedicated certificate template must be created. This template defines the attributes used to sign the VCF component certificates. To do this, I start the Certificate Templates console by running certtmpl.msc. I duplicate the default template Web Server.\nIn the new template, adjust the compatibility settings so that Windows Server 2008 R2 is specified as the certification authority and Windows 7 / Server 2008 R2 as the certificate recipient. Give the template a unique name, e.g. VMware.\nRemove ‘Server authentication’ from the application policies under Extensions, enable the ‘Basic Constraints‘ extension, and in the key usage settings, enable ‘Signature is proof of origin (non-repudiation)’ while keeping the default settings for the rest. On the Subject Name tab, make sure that ’Supply in the request’ is selected. Save the new template once all settings have been applied.\nFinally, add the template to the Microsoft certification authority. To do this, open ‘certsrv.msc’, go to ‘Certificate Templates’ and select ‘New → Certificate Template to Issue’. Select the template you just created and activate it.\nTemplate settings (click to enlarge)\nThe final step is to assign the rights. The CA user requires the following rights:\nIssue and Manage Certificates Request Certificates Attention\rAs already mentioned, I use the administrator in my lab, which is not safe for production and should be changed.\rThis completes the process on the Windows side. The CA can now be used either manually or automatically via VCF Operations.\nPreparing VCF Operations The cool thing is that you can now not only change VCF certificates, but also, if you use a central VCF operations like I do, you can also change these certificates.\nAttention\rVCF management components only support Microsoft Certificate Authority. VCF Instance components support both Microsoft Certificate Authority and OpenSSL.\rThis is also practical, as I can store different CAs per VCF instance in VCF Operations. Perhaps I will write a second article in which I do the whole thing via OpenSSL CA. To set the CA for a VCF, go to Fleet Management -\u003e Certificates and then select the VCF instance or VCF Management, depending on whether it is to be configured for the management components or the VCF instance.\nCA Settings (click to enlarge)\nThe settings are self-explanatory. It is important that the complete username with domain is used and that the template is written correctly (case sensitive). For the CA server URL, https is recommended, as basic authentication is used, which means that the user and password are transmitted in plain text. Therefore, as a minimum security measure, transport encryption with TLS should be used here.\nInfo\rIf firewalls are used, communication between SDDC and the RootCA must of course be ensured. Time is also a very critical issue here, so all components should be synchronised with the same NTP server.\rRequest certificate In my case, I want to replace the vCenter certificate in my workload domain. To do this, I select my workload domain in VCF Operations, click on the component that is to receive a new certificate, and select Generate CSR.\nrequest certificate (click to enlarge)\nThe Generate CSR dialogue box appears and some information must be added. The Common Name, Host and Subject Alternative Name (SAN) are pre-filled and should not be changed. The following fields must be completed or modified:\nOrganisation Organisation Unit Country State/Province Locality Key Size request certificate details (click to enlarge)\nOnce saved, a new certificate request is created in the background. The private key remains on the server that created it. You can download the request if a manual signing request is used or required. This would be the case if you do not want to use the Microsoft Certification Authority Web Enrollment Service for security reasons or if you do not use either Microsoft or OpenSSL CA.\nOnce the certificate request has been successfully created, all you need to do is select Replace With Configured CA Certificate and the automatic enrolment process will start.\ncertificate enrollment (click to enlarge)\nchoose CA (click to enlarge)\nThe SDDC now takes care of all further steps. A new certificate is automatically requested from the CA, signed and then exchanged on the relevant system. Depending on the system, the process takes a few minutes, so it’s best to go and make a cup of coffee while you wait, as you can’t do anything else at this point.\nInfo\rVMware Cloud Foundation supports automatic renewal of Transport Layer Security (TLS) certificates for components that have VMCA, Microsoft CA, Open SSL, or self-signed certificates and support non-disruptive certificate updates.\rnew certificate (click to enlarge)\nAnd (e)voilà, here is our beautiful new certificate (sorry for the bad pun about my employer evoila). The cool thing is that certificate renewal can now be done with a simple button press. No more filling out annoying requests or interacting with the CA. One button press, a cup of coffee, a little wait, and the job is done – that’s how I like it.\nBut Daniel, you wanted to show us how to do it manually!\nExtra - the manual way It all starts as before with a request. To ensure that the certificate can be easily exchanged with VCF Operations, the request must be executed via Operations and then simply downloaded via the GUI.\nWith the request, I now create a certificate at my CA and save it as Base 64 encoded. I now have to import the certificate, together with the the CA certificate. To do this, the certificate must be PEM encoded. Alternatively, the certificate can also be imported as a certificate chain encoded in Base64. VCF Operations supports both options.\nServer Certificate\n-----BEGIN CERTIFICATE----- MIIDdzCCAl+gAwIBAgIEbmh8+TANBgkq... ...dein Server/Leaf-Zertifikat... -----END CERTIFICATE----- Root Certificate\n-----BEGIN CERTIFICATE----- MIIFQTCCAymgAwIBAgISA9pL1W... ...Intermediate CA Zertifikat... -----END CERTIFICATE----- -----BEGIN CERTIFICATE----- MIIDrzCCApegAwIBAgIQCDvgVpF3... ...Root CA Zertifikat (optional)... -----END CERTIFICATE----- import new certificate (click to enlarge)\nOnce the certificate has been successfully imported, it can now be assigned. To do this, select the certificate in VCF Operations that is to be replaced and click on the button Replace with imported certificate.\nreplace with imported certificate (click to enlarge)\nVCF Operations suggests the certificate. If this does not work, you must select the correct certificate from the drop-down menu. In my case, it worked and the correct certificate was selected. Push replace and go to the coffee machine.\nfresh NSX certificate (click to enlarge)\nAfter another cup of coffee, my NSX certificate was successfully exchanged. Damn, I’ve had a lot of coffee today, but that’s sometimes how it is in IT.\nConclusion Certificates will still be a pain in the neck in 2025, but VCF Operations has made the process much, much easier. The ability to easily exchange certificates for both management components and the components of my VCF instances is brilliant. Unfortunately, there is still no nice built-in feature that allows me to do this on Microsoft without the Web Enrollment Service.\nThe fact that I can automatically renew my certificates with a single button is also something that makes the whole process much easier for me. Many of the things just shown were already possible in older VCF versions, but now that everything is centralised in VCF Operations and works for all my VCF instances, it’s just great. I will take a look at enrolment with an OpenSSL CA when I have time, but for now I am focusing on the Microsoft CA, as it is really widespread in practice and I am more familiar with the Windows CA than with the OpenSSL CA.\nMaybe one more thing: It is also possible to exchange the certificates of the ESX servers. You just have to activate the Show ESX Hosts slider.\nNow that you’ve read this far, how painful is certificate exchange for you, and how much coffee have you had? Feel free to let me know on LinkedIn.\n",
     "wordCount" : "1587",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/head.jpg","datePublished": "2025-08-19T09:21:00+02:00",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2025-08-19T09:21:00+02:00",
     "dateModified": "2025-08-19T09:21:00+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/vcf9-cert-exchange/"
+      "@id": "https://sdn-warrior.org/posts/vcf9-cert-exchange/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>VCF 9 - Certificate exchange</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -122,26 +122,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-cert-exchange%2f&amp;text=VCF%209%20-%20Certificate%20exchange" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-cert-exchange%2f&amp;text=VCF%209%20-%20Certificate%20exchange" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-cert-exchange%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-cert-exchange%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF%209%20-%20Certificate%20exchange&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-cert-exchange%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF%209%20-%20Certificate%20exchange&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-cert-exchange%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-cert-exchange%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%209%20-%20Certificate%20exchange&amp;summary=VCF%209%20-%20Certificate%20exchange%2c%20by%20SDN-Warrior%0a%0aA%20brief%20guide%20to%20replacing%20certificates%20in%20VCF9%20with%20VCF%20Operations.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-cert-exchange%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209%20-%20Certificate%20exchange&amp;summary=VCF%209%20-%20Certificate%20exchange%2c%20by%20SDN-Warrior%0a%0aA%20brief%20guide%20to%20replacing%20certificates%20in%20VCF9%20with%20VCF%20Operations.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -149,7 +149,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF 9 - Certificate exchange&#34;,&#34;http://localhost:1313/posts/vcf9-cert-exchange/&#34;,&#34;VCF 9 - Certificate exchange, by SDN-Warrior\n\nA brief guide to replacing certificates in VCF9 with VCF Operations.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF 9 - Certificate exchange&#34;,&#34;https://sdn-warrior.org/posts/vcf9-cert-exchange/&#34;,&#34;VCF 9 - Certificate exchange, by SDN-Warrior\n\nA brief guide to replacing certificates in VCF9 with VCF Operations.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -167,10 +167,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-			<li><a href="http://localhost:1313/links/">Links</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -191,7 +191,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/certificates">certificates</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/certificates">certificates</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -484,14 +484,14 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/explore-2025/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/explore-2025/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>VMware Explore 2025</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/vcf9-nsx-vpc-part3/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -504,14 +504,14 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

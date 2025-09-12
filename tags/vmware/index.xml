@@ -2,144 +2,144 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vmware on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/vmware/</link>
+    <link>https://sdn-warrior.org/tags/vmware/</link>
     <description>Recent content in Vmware on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Sun, 31 Aug 2025 12:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMware Explore 2025</title>
-      <link>http://localhost:1313/posts/explore-2025/</link>
+      <link>https://sdn-warrior.org/posts/explore-2025/</link>
       <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/explore-2025/</guid>
+      <guid>https://sdn-warrior.org/posts/explore-2025/</guid>
       <description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
     </item>
     <item>
       <title>ReSTNSX with HCX</title>
-      <link>http://localhost:1313/posts/restnsx-with-hcx/</link>
+      <link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
       <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
-      <guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
+      <guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&amp;rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.&lt;/p&gt;&#xA;&lt;p&gt;But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&amp;rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.&#xA;We will see in this post whether it is really that simple.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX Expiring Transport Node Certificates</title>
-      <link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
+      <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
       <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
-      <guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
     </item>
     <item>
       <title>VMUG Connect St. Louis 2025</title>
-      <link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
+      <link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
       <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
-      <guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
+      <guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
       <description>&lt;h2 id=&#34;vmug-st-louis--between-tech-talks-and-travel-vibes&#34;&gt;VMUG St. Louis – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from &lt;a href=&#34;https://www.evoila.de&#34;&gt;evoila&lt;/a&gt;, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&amp;rsquo;m German after all.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Stretched Cluster</title>
-      <link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
+      <link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
       <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is my third article in my VCF Homelab series.&#xA;On second thought, I may have put the cart before the horse, because a stretched vSAN cluster requires a functioning management domain.&#xA;But ok, that shouldn&amp;rsquo;t bother us now. I&amp;rsquo;ll try to cover all the essentials of the deployment in this article.&lt;/p&gt;&#xA;&lt;h3 id=&#34;what-are-the-benefits-of-a-stretched-vsan-cluster-and-why-does-it-have-to-be-vsan&#34;&gt;What are the benefits of a stretched vSAN cluster and why does it have to be vSAN?&lt;/h3&gt;&#xA;&lt;p&gt;Well, first the obvious.&#xA;We have to use vSAN because we have a consolidated design here and VCF (version 5.2.1) does not allow any other principal storage in the consolidated design (also, this article is about a vSAN stretched cluster).&#xA;Secondly, we want to use the synchronous replication of vSAN to the second site. Another reason is “German Angst”. We want to have redundancy here and a muti AZ design. In Germany, there have traditionally been stretched clusters across multiple fire compartments or buildings for a long time. In the past, I myself have already implemented such scenarios with layer 2 over layer 3 (aka VxLAN).&#xA;The much more elegant way (and also the way supported by VCF) is the vSAN stretched cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-      <link>http://localhost:1313/posts/vcf-import-overlay/</link>
+      <link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-      <link>http://localhost:1313/posts/vcf-import-cluster/</link>
+      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
       <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Migration with HCX</title>
-      <link>http://localhost:1313/posts/migration-with-hcx/</link>
+      <link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
       <pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/migration-with-hcx/</guid>
+      <guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-hcx&#34;&gt;What is HCX?&lt;/h2&gt;&#xA;&lt;p&gt;VMware HCX is an application mobility platform designed to simplify application migration, workload redeployment, and disaster recovery in data centers and clouds.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How Apply To works in NSX DFW</title>
-      <link>http://localhost:1313/posts/nsx-apply-to/</link>
+      <link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
       <pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-apply-to/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;When working with the &lt;strong&gt;NSX Distributed Firewall (DFW)&lt;/strong&gt;, one feature that often goes unnoticed or misunderstood is &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt;. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.&lt;/p&gt;&#xA;&lt;p&gt;In many VMware training courses, &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>More performance trough NSX Edge TEP groups?</title>
-      <link>http://localhost:1313/posts/nsx-tep-groups/</link>
+      <link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
       <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My esteemed colleague, Steven Schramm, recently published an excellent article titled &lt;em&gt;&lt;a href=&#34;https://sdn-techtalk.com/posts/multitep-ha/&#34;&gt;Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability&lt;/a&gt;&lt;/em&gt;. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-tep-groups-and-why-are-they-interesting&#34;&gt;What Are TEP Groups and Why Are They Interesting?&lt;/h2&gt;&#xA;&lt;p&gt;With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redeploy an NSX Edge VM Appliance</title>
-      <link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
+      <link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
       <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
     </item>
     <item>
       <title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-      <link>http://localhost:1313/posts/first-steps-ansible/</link>
+      <link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
       <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
-      <guid>http://localhost:1313/posts/first-steps-ansible/</guid>
+      <guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-chatgpt&#34;&gt;Why ChatGPT?&lt;/h2&gt;&#xA;&lt;p&gt;Let’s be honest: starting with Ansible can feel overwhelming, especially if you&amp;rsquo;re new to it. My last experience with something remotely similar was years ago, working with PowerShell scripts or even earlier with .NET 3 (yes, I’m &amp;ldquo;that old&amp;rdquo;).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V5</title>
-      <link>http://localhost:1313/posts/homelab-v5/</link>
+      <link>https://sdn-warrior.org/posts/homelab-v5/</link>
       <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
-      <guid>http://localhost:1313/posts/homelab-v5/</guid>
+      <guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
       <description>&lt;h2 id=&#34;my-homelab-journey-from-unraid-beginnings-to-version-5&#34;&gt;My Homelab Journey: From Unraid Beginnings to Version 5&lt;/h2&gt;&#xA;&lt;p&gt;Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-beginning-unraid-with-custom-hardware&#34;&gt;The Beginning: Unraid with Custom Hardware&lt;/h2&gt;&#xA;&lt;p&gt;My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How to use QoS in NSX</title>
-      <link>http://localhost:1313/posts/nsx-qos/</link>
+      <link>https://sdn-warrior.org/posts/nsx-qos/</link>
       <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-qos/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.&lt;/p&gt;&#xA;&lt;p&gt;In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&amp;rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX 4.2.1.1 Hotfix Update</title>
-      <link>http://localhost:1313/posts/nsx4_2_1_1/</link>
+      <link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
       <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx4_2_1_1/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
       <description>&lt;p&gt;The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-enhanced-stability-for-virtual-environments&#34;&gt;1. Enhanced Stability for Virtual Environments&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Loss of IP Bindings after VMotion (Issue 3453866): Addressed the removal of IP bindings and logical ports associated with VMs during vMotion events.&lt;/li&gt;&#xA;&lt;li&gt;Critical ESXi Errors with UENS (Issue 3456283): Fixed intermittent PSODs caused by control priority filter lookups, ensuring smoother ESXi operations.&lt;/li&gt;&#xA;&lt;li&gt;Portgroup Creation Issue (Issue 3458111): Resolved the creation of additional portgroups during full sync, preventing potential vCenter crashes.&lt;/li&gt;&#xA;&lt;li&gt;Transport Zone Reference Issue (Issue 3454291): Fixed transport zone profile mismatches, restoring vMotion and service functionality.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;2-improved-network-performance&#34;&gt;2. Improved Network Performance&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;TCP Packet Drops in EDP (Issue 3457047): Resolved issues causing TCP connection drops when using Enhanced Datapath configurations.&lt;/li&gt;&#xA;&lt;li&gt;Packet Reordering with LRO (Issue 3456533): Fixed packet reordering issues when HW Large Receive Offload is enabled, improving TCP throughput.&lt;/li&gt;&#xA;&lt;li&gt;Reduced Traffic Performance with UENS and LRO (Issue 3456289): Addressed performance degradation in VSAN workloads.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;3-robust-security-and-monitoring&#34;&gt;3. Robust Security and Monitoring&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NSX UI Alarm for Metrics Delivery Failure (Issue 3456663): Fixed authentication issues following certificate changes to restore metrics delivery.&lt;/li&gt;&#xA;&lt;li&gt;IDPS and TLS Prevention (Issue 3458040): Enhanced malicious traffic prevention by resolving decryption issues with IDPS.&lt;/li&gt;&#xA;&lt;li&gt;IDPS Events and Certificate Verification (Issue 3458038): Restored the flow of IDPS events to Security Intelligence by fixing Kafka channel errors.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;4-stability-in-upgrades-and-configurations&#34;&gt;4. Stability in Upgrades and Configurations&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NSX Manager Slowness (Issue 3453882): Resolved slowness and instability in NSX Manager post-upgrade.&lt;/li&gt;&#xA;&lt;li&gt;Edge Node IP Table Rules (Issue 3452795): Ensured proper application of IP table rules on Edge nodes.&lt;/li&gt;&#xA;&lt;li&gt;NSX Configuration Realization (Issue 3452794): Fixed issues preventing configuration realization on Transport Nodes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;5-enhancements-in-distributed-firewall-and-flow-management&#34;&gt;5. Enhancements in Distributed Firewall and Flow Management&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;DFW Rules During Upgrade (Issue 3450247): Mitigated periods where DFW rules were disabled during the upgrade process.&lt;/li&gt;&#xA;&lt;li&gt;Flow Exporter Alarms (Issues 3429787, 3456644): Fixed alarms and restored flow export functionality for Security Intelligence.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;6-overlay-and-connectivity-improvements&#34;&gt;6. Overlay and Connectivity Improvements&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Overlay Segment Connectivity (Issue 3450019): Addressed connectivity loss in Overlay Segments when Edge TEP groups were enabled.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;&#xA;&lt;p&gt;This NSX update resolves critical issues to improve operational reliability, security, and performance in virtual environments. For a seamless experience, upgrading to this release is highly recommended. As always, thorough testing in a staging environment before deployment in production is advised.&lt;/p&gt;</description>
     </item>
     <item>
       <title>iSCSI Tuning</title>
-      <link>http://localhost:1313/posts/iscsi-tuning/</link>
+      <link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
       <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+      <guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
       <description>&lt;p&gt;In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.&lt;/p&gt;&#xA;&lt;p&gt;For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.&lt;/p&gt;</description>
     </item>
     <item>
       <title>MAC Learning is your friend</title>
-      <link>http://localhost:1313/posts/mac-learning/</link>
+      <link>https://sdn-warrior.org/posts/mac-learning/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>http://localhost:1313/posts/mac-learning/</guid>
+      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V4</title>
-      <link>http://localhost:1313/posts/labv4/</link>
+      <link>https://sdn-warrior.org/posts/labv4/</link>
       <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/labv4/</guid>
+      <guid>https://sdn-warrior.org/posts/labv4/</guid>
       <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX 4.X Certificate exchange of the NSX Manager</title>
-      <link>http://localhost:1313/posts/nsx-cert-exchange/</link>
+      <link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
       <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
       <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
     </item>
   </channel>

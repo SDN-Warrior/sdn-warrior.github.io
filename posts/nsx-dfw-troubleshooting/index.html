@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-06-24T01:00:00+02:00">
   <meta itemprop="dateModified" content="2025-06-24T01:00:00+02:00">
   <meta itemprop="wordCount" content="1162">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Homelab,Vcf"><meta property="og:url" content="http://localhost:1313/posts/nsx-dfw-troubleshooting/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Nsx,Homelab,Vcf"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="NSX - IDFW & DFW Troubleshooting">
   <meta property="og:description" content="A brief guide to troubleshooting the IdFW and dFW">
@@ -43,10 +43,10 @@
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Vcf">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="NSX - IDFW & DFW Troubleshooting">
   <meta name="twitter:description" content="A brief guide to troubleshooting the IdFW and dFW">
 
@@ -61,16 +61,16 @@
     "articleBody": "Introduction Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators. I’m sure everyone has been in this situation: you’ve written a nice new Identity firewall, but for some reason it doesn’t work. If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn’t work with the Identity firewall.\nWhat is the Identity Firewall? An identity firewall does not make firewall decisions based on IP addresses, but uses user and group information to apply security policies. It identifies users based on their login credentials and dynamically assigns them appropriate access rights and firewall rules. This enables more granular control and improved protection, as access permissions are directly linked to the actual identity of the user. If you want to know how I used this for one of my customers, you can read about it here.\nHow do I now fix my firewall rule? There may be several reasons why my Identity Firewall is not working. Here is a list of some of them:\nGroup memberships in AD have been changed or new users have been created.\nThis is one of the simplest cases. The default Delta Sync with AD is 180 minutes, and in larger environments, this sync interval may be higher for performance reasons. There are two solutions here: either wait or force a Delta Sync under System - Identity Firewall AD.\nThe Identity Firewall is turned off.\nThis may sound a bit silly, but it has actually happened to me. You can create Identity Firewall Rules and groups, push the policy, and then find that the rules do not work. You don’t get an error message or notification. If this is the case, the Identity Firewall may not be allowed for the cluster on which the source VMs are located. To do this, go to Security - Distributed Firewall and under Settings, you can enable or disable the Identity Firewall for each cluster.\niDFW Settings (click to enlarge)\nGuest Introspection not installed\nIf you want to use Guest Introspection, i.e. the version with VMware Tools, then these must also be installed on the source VM. The standard VMware Tools installation does not install these. Either install VMware Tools full or select Guest Introspection explicitly. The source of the error is of course eliminated if you do log scraping (which I personally do not prefer).\nWhat should you do if you want to know whether rules have actually been implemented for a VM? As mentioned at the beginning, unfortunately you cannot use the Traceflow tool to check a firewall rule. However, there are ways to see if there are Identity Firewall user sessions and which rules have been implemented.\nIDFW User Sessions (click to enlarge)\nThe easiest way to check the sessions is in the GUI under Security - Security Overview and then scroll all the way down to Identity Firewall User Sessions. The VM is not displayed in plain text, but Universal Search in NSX resolves the VM.\nPractical tip\rUnfortunately, the NSX GUI is not always the fastest, and the display is not 100% reliable. If a user logs in and out again quickly, the GUI may not display anything. For this reason, IDFW rules can also be logged if you have a central syslog.\rThe other option is to view it via the CLI.\nCLI - Find the rules! To find out which firewall rules are actually implemented on a VM, we first need to log in to the ESX server on which the VM is currently running. First, we use a simple CLI command to find the network card of our VM.\nsummarize-dvfilter | grep -A16 WinClientA0001 The result should look like this:\n[root@esxnuc03:~] summarize-dvfilter | grep -A16 WinClientA0001 world 1085633 vmm0:WinClientA0001 vcUuid:'50 27 d1 31 1f 89 df b1-65 58 00 d0 ab 64 1f 91' port 67108888 WinClientA0001.eth0 vNic slot 2 name: nic-1085633-eth0-vmware-sfw.2 agentName: vmware-sfw state: IOChain Attached vmState: Attached failurePolicy: failClosed serviceVMID: 1 filter source: Dynamic Filter Creation moduleName: nsxt-vsip-24765085 [root@esxnuc03:~] The name of the NIC is important for our next step. In my example, it is nic-1085633-eth0-vmware-sfw.2.\nNext, let’s display all realized rules for the VM:\nvsipioctl getrules -f nic-1085633-eth0-vmware-sfw.2 [root@esxnuc03:~] vsipioctl getrules -f nic-1085633-eth0-vmware-sfw.2 ruleset mainrs { # generation number: 0 # realization time : 2025-06-23T18:55:56 # FILTER (APP Category) rules rule 16360 at 1 inout protocol any from any to any with extended src ba9e01bc-5779-4eb2-813e-4c5b8e3ff1bf drop; rule 14312 at 2 inout protocol icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept; rule 14312 at 3 inout protocol ipv6-icmp from any to addrset a34212cb-acb2-49b3-b74c-7683c0345a19 accept; rule 14316 at 4 inout protocol any from addrset a34212cb-acb2-49b3-b74c-7683c0345a19 to any drop with log tag 'alpine-drop'; rule 2 at 5 inout protocol any from any to any accept with log tag 'debug'; } ruleset mainrs_L2 { # generation number: 0 # realization time : 2025-06-23T18:55:56 # FILTER rules rule 1 at 1 inout ethertype any stateless from any to any accept; } Firewall Rules (click to enlarge)\nWe can see in the output that firewall rule 16360 has been implemented on my test VM and is therefore active. This firewall rule is my identity firewall rule, and a user who is enabled for this rule is logged in.\nWe can also see that the VM has implemented two additional rules, namely 14312 and 14316. Although these rules have nothing to do with the VM, the VM is still assigned these rules because the Apply to field is set to dfw, meaning that all VMs receive these rules. I have described the importance of the Apply to field here.\nTheoretically, you can also see this in the GUI, but with a delay, and in my experience it was more unreliable than reliable. Nevertheless, I want to show it. If you look at the firewall rule and then go to the group and look at the effective members, a VM should be implemented. As I said, the GUI is very slow here, and if I have problems with the IDFW, I prefer to rely on the CLI.\nEffectiv Members (click to enlarge)\nThis method allows you to quickly check whether an IDFW / DFW rule has been realized on the VM. If, as in the example above, the IDFW is disabled for the cluster, I can see the FW rule in the GUI, but it is not displayed in the CLI. The same would be the case if I had an error with the apply to field. The rule would not be realized on my VM and also not shown in the cli.\nSummary Troubleshooting the IDFW can sometimes be a little difficult, but it’s not impossible. I hope this quick practical tip helps you. It has often helped me when the GUI has tricked me. In combination with the check mechanisms in the GUI (even if these are sometimes slow) and the logging the IDFW / DFW is easy to troubleshoot.\n",
     "wordCount" : "1162",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/platin.jpg","datePublished": "2025-06-24T01:00:00+02:00",
+    "image":"https://sdn-warrior.org/images/platin.jpg","datePublished": "2025-06-24T01:00:00+02:00",
     "dateModified": "2025-06-24T01:00:00+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/nsx-dfw-troubleshooting/"
+      "@id": "https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/"
     },
     "publisher": {
       "@type": "Organization",
@@ -78,21 +78,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>NSX - IDFW &amp; DFW Troubleshooting</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/platin.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -121,26 +121,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-dfw-troubleshooting%2f&amp;text=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-dfw-troubleshooting%2f&amp;text=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-dfw-troubleshooting%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-dfw-troubleshooting%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-dfw-troubleshooting%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-dfw-troubleshooting%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-dfw-troubleshooting%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting&amp;summary=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting%2c%20by%20SDN-Warrior%0a%0aA%20brief%20guide%20to%20troubleshooting%20the%20IdFW%20and%20dFW%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-dfw-troubleshooting%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting&amp;summary=NSX%20-%20IDFW%20%26%20DFW%20Troubleshooting%2c%20by%20SDN-Warrior%0a%0aA%20brief%20guide%20to%20troubleshooting%20the%20IdFW%20and%20dFW%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -148,7 +148,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;NSX - IDFW \u0026 DFW Troubleshooting&#34;,&#34;http://localhost:1313/posts/nsx-dfw-troubleshooting/&#34;,&#34;NSX - IDFW \u0026 DFW Troubleshooting, by SDN-Warrior\n\nA brief guide to troubleshooting the IdFW and dFW\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;NSX - IDFW \u0026 DFW Troubleshooting&#34;,&#34;https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/&#34;,&#34;NSX - IDFW \u0026 DFW Troubleshooting, by SDN-Warrior\n\nA brief guide to troubleshooting the IdFW and dFW\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -166,10 +166,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-			<li><a href="http://localhost:1313/links/">Links</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -190,7 +190,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -375,14 +375,14 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/vcf9-nsx-vpc-part2/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/homelab-v6/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/homelab-v6/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -395,14 +395,14 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

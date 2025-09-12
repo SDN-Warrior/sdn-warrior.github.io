@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mikrotik on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/mikrotik/</link>
+    <link>https://sdn-warrior.org/tags/mikrotik/</link>
     <description>Recent content in Mikrotik on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Tue, 24 Dec 2024 13:00:00 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/mikrotik/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/mikrotik/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ansible VLAN deployment with MikroTik</title>
-      <link>http://localhost:1313/posts/vlan-automation/</link>
+      <link>https://sdn-warrior.org/posts/vlan-automation/</link>
       <pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vlan-automation/</guid>
+      <guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
       <description>&lt;h2 id=&#34;yet-another-ansible-post&#34;&gt;Yet Another Ansible Post&lt;/h2&gt;&#xA;&lt;p&gt;As the year comes to a close, I can&amp;rsquo;t help but reflect on the progress I&amp;rsquo;ve made with Ansible in the past few weeks. Looking back, there&amp;rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.&lt;/p&gt;&#xA;&lt;h2 id=&#34;goals&#34;&gt;Goals&lt;/h2&gt;&#xA;&lt;p&gt;The main goal is to have a single file that describes all the required VLANs. This file should also allow me to delete or reuse VLANs as needed. Each VLAN must be deployed across three switches and configured as a tagged VLAN on specific ports.&lt;/p&gt;</description>
     </item>
   </channel>

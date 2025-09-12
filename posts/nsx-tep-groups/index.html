@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-01-03T12:00:00+01:00">
   <meta itemprop="dateModified" content="2025-01-03T12:00:00+01:00">
   <meta itemprop="wordCount" content="1977">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Vmware,Network"><meta property="og:url" content="http://localhost:1313/posts/nsx-tep-groups/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Nsx,Vmware,Network"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-tep-groups/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="More performance trough NSX Edge TEP groups?">
   <meta property="og:description" content="How to use Edge TEP groups in NSX">
@@ -43,10 +43,10 @@
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Network">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="More performance trough NSX Edge TEP groups?">
   <meta name="twitter:description" content="How to use Edge TEP groups in NSX">
 
@@ -61,16 +61,16 @@
     "articleBody": "Introduction My esteemed colleague, Steven Schramm, recently published an excellent article titled Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.\nWhat Are TEP Groups and Why Are They Interesting? With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.\nBefore NSX 4.2.1, each segment was bound to a single TEP interface. This limitation meant that North/South traffic could only utilize the maximum throughput of one physical adapter (ESXi where the Edge VM is realized). With TEP HA and the introduction of TEP Groups, this behavior has changed significantly.\nIt is worth noting that prior to TEP HA, a Multi-TEP implementation was already available. While this allowed for failover within the TEP network if a physical adapter lost its link, it did not address Layer 2 or Layer 3 issues. For more details on this topic, I recommend reading Steven’s article.\nHowever, TEP HA is not enabled by default and, as of today, can only be activated via the API.\nLAB Setup For this exploration, I am running NSX 4.2.1 on three Intel NUC Pro devices, each equipped with dual 2.5 Gigabit LAN adapters. My test VMs are pinned to different hosts using DRS rules to ensure separation and accurate testing conditions.\nMulti-TEP is configured in the setup, but TEP HA has not yet been enabled.\nThe test environment includes four Alpine Linux VMs, each connected to the same segment.\nAlpine1: 10.10.20.10 Alpine2: 10.10.20.20 Alpine3: 10.10.20.30 Alpine4: 10.10.20.40 These VMs are distributed across two ESXi servers to simulate North/South traffic under real-world conditions. A third ESXi server hosts the NSX Edge VM, responsible for North/South traffic.\nTo evaluate performance, my iPerf target is located on a separate server with a 10 Gb/s connection, ensuring that the network backbone does not introduce any bottlenecks. This setup provides a robust environment to test TEP HA and its impact on North/South traffic.\nBaseline Tests: North/South Capacity To measure the maximum North/South capacity of the setup, I ran iPerf tests simultaneously on all four Alpine VMs. Each VM generated traffic towards the iPerf target server with a 10 Gb/s connection. Below are the individual results:\nAlpine1: 554 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 6.45 GBytes 554 Mbits/sec 727 sender [ 5] 0.00-100.00 sec 6.45 GBytes 554 Mbits/sec receiver Alpine2: 807 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 9.40 GBytes 807 Mbits/sec 1713 sender [ 5] 0.00-100.00 sec 9.39 GBytes 807 Mbits/sec receiver Alpine3: 465 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 5.42 GBytes 465 Mbits/sec 1196 sender [ 5] 0.00-100.00 sec 5.41 GBytes 466 Mbits/sec receiver Alpine4: 529 Mbps [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 6.16 GBytes 529 Mbits/sec 1010 sender [ 5] 0.00-100.01 sec 6.16 GBytes 529 Mbits/sec receiver Total Throughput The combined total throughput across all four VMs was 2.355 Gbps, indicating the maximum North/South capacity under the current configuration.\nValidating Physical NIC Utilization To monitor the utilization of the Edge VM, we can use esxtop on the ESXi server. By pressing “N”, we can examine the network statistics for the physical NICs (vmnic0 and vmnic1) as well as the interfaces of the Edge VM.\nMy Edge VM is configured with four Fastpath interfaces:\nfp0-fp1: Used for TEP traffic. fp2-fp3: Used for BGP uplinks. Additionally, esxtop displays the mapping of the Edge VM’s interfaces to the respective physical NICs (vmnic). This allows us to verify how traffic is distributed across the available resources and ensures that both TEP and BGP traffic are leveraging the correct network paths.\n67108895 1054173:edge04.lab.home.eth3 vmnic0 DvsPortset-0 \u003c--(fp2) 67108897 1054173:edge04.lab.home.eth1 vmnic0 DvsPortset-0 \u003c--(fp0) 67108898 1054173:edge04.lab.home.eth0 vmnic1 DvsPortset-0 \u003c--(MGMT) 67108899 1054173:edge04.lab.home.eth2 vmnic1 DvsPortset-0 \u003c--(fp1) 67108900 1054173:edge04.lab.home.eth4 vmnic1 DvsPortset-0 \u003c--(fp3) In addition to monitoring this in esxtop, I can observe the activity on my switches. By checking the switch port bandwith statistics, I can determine which physical adapter is actively handling the iPerf traffic and which one is idle. This provides an additional layer of validation for the distribution of traffic across the available pNICs.\nConfiguring Multi-TEP HA The process of enabling Multi-TEP High Availability (HA) is straightforward. It begins with creating a TEP HA Host Switch Profile. This is done through a simple API call using the PUT method to the following endpoint:\nPUT https:///policy/api/v1/infra/host-switch-profiles/nsxvtepha JSON Payload The following JSON payload needs to be provided in the API request:\n{ \"enabled\": \"true\", \"failover_timeout\": \"5\", \"auto_recovery\": \"true\", \"auto_recovery_initial_wait\": \"300\", \"auto_recovery_max_backoff\": \"86400\", \"resource_type\": \"PolicyVtepHAHostSwitchProfile\", \"display_name\": \"nsxvtepha\" } Key Parameters:\nenabled: Enables TEP HA functionality (true or false). failover_timeout: Specifies the timeout (in seconds) for failover to occur. auto_recovery: Enables automatic recovery of TEPs after a failure. auto_recovery_initial_wait: Time (in seconds) before initiating the first recovery attempt. auto_recovery_max_backoff: Maximum backoff time (in seconds) for recovery attempts. display_name: A human-readable name for the profile. This API call creates the TEP HA Host Switch Profile, which can then be applied to the desired transport nodes to enable Multi-TEP HA functionality.\nAssigning the TEP HA Profile To enable the Multi-TEP HA feature, the created TEP HA profile must be assigned to a Transport Node Profile. This assignment ensures that the specified hosts will have the Multi-TEP HA feature enabled.\nSteps to Assign the TEP HA Profile:\nGather the Transport Node Profile ID: Retrieve the ID of the transport node profile that you want to map the TEP HA profile to. Without this ID, you cannot complete the assignment. GET https:///policy/api/v1/infra/host-transport-node-profiles/ Assign the TEP HA Profile: Use the API to update the transport node profile by linking it with the TEP HA profile. The request must specify the IDs of both the transport node profile and the TEP HA profile. PUT https:///policy/api/v1/infra/host-transport-node-profiles/ Add the following entry to the transport node profile to link it with the TEP HA profile:\n{ \"key\": \"VtepHAHostSwitchProfile\", \"value\": \"/infra/host-switch-profiles/nsxvtepha\" } The full transport node profile looks like this:\n{ \"host_switch_spec\": { \"host_switches\": [ { \"host_switch_name\": \"NSX_vCompute3\", \"host_switch_id\": \"50 27 cc 64 fe fc 4b 00-b1 af 91 5d 11 78 b9 06\", \"host_switch_type\": \"VDS\", \"host_switch_mode\": \"STANDARD\", \"ecmp_mode\": \"L3\", \"host_switch_profile_ids\": [ { \"key\": \"UplinkHostSwitchProfile\", \"value\": \"/infra/host-switch-profiles/HostUplink\" }, { \"key\": \"VtepHAHostSwitchProfile\", \"value\": \"/infra/host-switch-profiles/nsxvtepha\" } ], \"uplinks\": [ { \"vds_uplink_name\": \"Uplink 1\", \"uplink_name\": \"Uplink1\" }, { \"vds_uplink_name\": \"Uplink 2\", \"uplink_name\": \"Uplink2\" } ], \"is_migrate_pnics\": false, \"ip_assignment_spec\": { \"ip_pool_id\": \"/infra/ip-pools/tep\", \"resource_type\": \"StaticIpPoolSpec\" }, \"cpu_config\": [ ], \"transport_zone_endpoints\": [ { \"transport_zone_id\": \"/infra/sites/default/enforcement-points/default/transport-zones/OVERLAYTZ\", \"transport_zone_profile_ids\": [ ] }, { \"transport_zone_id\": \"/infra/sites/default/enforcement-points/default/transport-zones/MVLAN\", \"transport_zone_profile_ids\": [ ] } ], \"not_ready\": false, \"portgroup_transport_zone_id\": \"/infra/sites/default/enforcement-points/default/transport-zones/eb370bd3-db11-319c-98ec-585e402bf98c\" } ], \"resource_type\": \"StandardHostSwitchSpec\" }, \"ignore_overridden_hosts\": false, \"resource_type\": \"PolicyHostTransportNodeProfile\", \"id\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"display_name\": \"HostTNP\", \"path\": \"/infra/host-transport-node-profiles/45104efd-72bf-4d69-bc24-87d45b03b402\", \"relative_path\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"parent_path\": \"/infra\", \"remote_path\": \"\", \"unique_id\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"realization_id\": \"45104efd-72bf-4d69-bc24-87d45b03b402\", \"owner_id\": \"1ec3eeb1-8da7-457d-bebe-a8b2b47df7de\", \"marked_for_delete\": false, \"overridden\": false, \"_system_owned\": false, \"_protection\": \"NOT_PROTECTED\", \"_create_time\": 1723569644857, \"_create_user\": \"admin\", \"_last_modified_time\": 1732706346575, \"_last_modified_user\": \"admin\", \"_revision\": 3 } Important Notes Ensure the transport node profile is correctly assigned to the desired hosts to enable Multi-TEP HA. Any misconfiguration or omission of the “key”: “VtepHAHostSwitchProfile” entry will result in the inability to activate the TEP HA functionality. The value field must match the path of the created TEP HA profile. This process is crucial for leveraging the full capabilities of Multi-TEP HA in NSX environments.\nEnabling Edge TEP Groups To enable the TEP Group feature on Edge nodes, the global connectivity configuration must be updated. This is achieved by modifying the tep_group_config parameter via an API call.\nUse the following API request to enable the TEP Group feature on Edge nodes:\nPUT https:///policy/api/v1/infra/connectivity-global-config JSON Payload\n{ // ... \"tep_group_config\": { \"enable_tep_grouping_on_edge\": true }, \"resource_type\": \"GlobalConfig\", // ... } The full global config looks like this:\n{ \"fips\": { \"lb_fips_enabled\": true, \"tls_fips_enabled\": false }, \"l3_forwarding_mode\": \"IPV4_ONLY\", \"uplink_mtu_threshold\": 9000, \"vdr_mac\": \"02:50:56:56:44:52\", \"vdr_mac_nested\": \"02:50:56:56:44:53\", \"allow_changing_vdr_mac_in_use\": false, \"arp_limit_per_gateway\": 50000, \"external_gateway_bfd\": { \"bfd_profile_path\": \"/infra/bfd-profiles/default-external-gw-bfd-profile\", \"enable\": true }, \"lb_ecmp\": false, \"remote_tunnel_physical_mtu\": 1700, \"physical_uplink_mtu\": 9000, \"global_replication_mode_enabled\": false, \"is_inherited\": false, \"site_infos\": [ ], \"tep_group_config\": { \"enable_tep_grouping_on_edge\": true }, \"resource_type\": \"GlobalConfig\", \"id\": \"global-config\", \"display_name\": \"default\", \"path\": \"/infra/global-config\", \"relative_path\": \"global-config\", \"parent_path\": \"/infra\", \"remote_path\": \"\", \"unique_id\": \"071c1408-8d73-42ea-b2ad-b85cc43c96b2\", \"realization_id\": \"071c1408-8d73-42ea-b2ad-b85cc43c96b2\", \"owner_id\": \"1ec3eeb1-8da7-457d-bebe-a8b2b47df7de\", \"marked_for_delete\": false, \"overridden\": false, \"_system_owned\": false, \"_protection\": \"NOT_PROTECTED\", \"_create_time\": 1723479213559, \"_create_user\": \"system\", \"_last_modified_time\": 1735854980053, \"_last_modified_user\": \"admin\", \"_revision\": 5 } Verifying Changes: Checking Edge Node TEP Groups To ensure that the changes to enable TEP Groups are effective, you can verify the configuration directly on an Edge Node using SSH. The following command provides an overview of logical switches and their associated TEP Groups:\nCommand Log in to the Edge Node via SSH and execute:\nget logical-switches Sample Output:\nUUID VNI ENCAP TEP_GROUP NAME GLOBAL_VNI(FED) 7f7e8af0-299e-4354-a143-a6a3689db228 74753 GENEVE 293888 transit-rl-aa5420e0-3d2b-4ff7-b00e-5f234c2f7413 0abeab93-66ef-4b41-87b6-64164b450e8d 67587 GENEVE 293888 transit-bp-T1 09243099-ebb7-41ae-bcf4-10e0b833cc24 68609 GENEVE 293888 inter-sr-routing-bp-T0-ECMP 6261cda0-558f-4a57-838c-d47c95945c31 71680 GENEVE 293888 T1-dhcp-ls Key Parameters to Verify:\nTEP_GROUP: The column should display a valid TEP Group ID (e.g., 293888) for all logical switches. Logical Switch Details: Ensure that all expected logical switches are listed, along with their VNI and encapsulation type (e.g., GENEVE). If the TEP_GROUP column shows values for the logical switches, it confirms that the TEP Group feature is active and functioning as expected. This verification ensures that your configuration changes are effective across the Edge Nodes.\nPerformance Tests with TEP Groups To evaluate the impact of TEP Groups on performance, I ran simultaneous iPerf tests on all four Alpine VMs. Below are the individual results:\nAlpine1: 1.14 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 13.3 GBytes 1.14 Gbits/sec 669 sender [ 5] 0.00-100.00 sec 13.3 GBytes 1.14 Gbits/sec receiver Alpine2: 1.08 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 12.6 GBytes 1.08 Gbits/sec 774 sender [ 5] 0.00-100.00 sec 12.6 GBytes 1.08 Gbits/sec receiver Alpine3: 1.10 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 12.8 GBytes 1.10 Gbits/sec 1002 sender [ 5] 0.00-100.00 sec 12.8 GBytes 1.10 Gbits/sec receiver Alpine4: 1.11 Gbits/sec [ ID] Interval Transfer Bitrate Retr [ 5] 0.00-100.00 sec 12.9 GBytes 1.11 Gbits/sec 990 sender [ 5] 0.00-100.00 sec 12.9 GBytes 1.11 Gbits/sec receiver Total Throughput The combined total throughput across all four VMs was 4.43 Gbps, showing a significant improvement over the baseline tests without TEP Groups. This demonstrates the enhanced traffic distribution and performance benefits enabled by the Multi-TEP HA feature.\nCross-Verification on the Switch To further validate the results, I checked the physical interfaces of the ESXi server hosting the Edge VM directly on the switch. The switch statistics confirm that both physical interfaces are actively utilized during the iPerf tests.\nObservations Both physical interfaces (vmnic0 and vmnic1) show significant traffic, indicating effective utilization and load balancing. This behavior aligns with the expected performance of the TEP Groups feature, ensuring that traffic is distributed across multiple interfaces for maximum throughput. Switch port view\nThe screenshot demonstrates how the Multi-TEP HA configuration efficiently balances the load across both physical NICs, validating the setup and confirming the improvements in traffic handling.\nFinal Thoughts TEP Groups can be easily integrated into any environment with a Multi-TEP setup without requiring significant modifications. The adjustments are minimal and pose a low risk to production environments.\nIn addition to the noticeable performance improvements, TEP Groups also provide significantly better High Availability (HA) handling. The performance gains are particularly impactful in environments with fewer NSX segments, where the previous load distribution method was less effective.\nMoreover, TEP Groups can deliver higher performance for segments with high traffic loads, especially those previously constrained by the physical uplink’s capacity. This makes TEP Groups a valuable enhancement for optimizing both performance and reliability in NSX deployments.\nFurther Resources For more details and in-depth explanations about Multi-TEP High Availability and TEP Groups, refer to the following resources:\nImproving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability VMware NSX Administration Guide: Multi-TEP High Availability ",
     "wordCount" : "1977",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/net.jpg","datePublished": "2025-01-03T12:00:00+01:00",
+    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2025-01-03T12:00:00+01:00",
     "dateModified": "2025-01-03T12:00:00+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/nsx-tep-groups/"
+      "@id": "https://sdn-warrior.org/posts/nsx-tep-groups/"
     },
     "publisher": {
       "@type": "Organization",
@@ -78,21 +78,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>More performance trough NSX Edge TEP groups?</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -121,26 +121,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-tep-groups%2f&amp;text=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f&amp;text=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-tep-groups%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-tep-groups%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-tep-groups%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f&amp;summary=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f%2c%20by%20SDN-Warrior%0a%0aHow%20to%20use%20Edge%20TEP%20groups%20in%20NSX%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-tep-groups%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f&amp;summary=More%20performance%20trough%20NSX%20Edge%20TEP%20groups%3f%2c%20by%20SDN-Warrior%0a%0aHow%20to%20use%20Edge%20TEP%20groups%20in%20NSX%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -148,7 +148,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;More performance trough NSX Edge TEP groups?&#34;,&#34;http://localhost:1313/posts/nsx-tep-groups/&#34;,&#34;More performance trough NSX Edge TEP groups?, by SDN-Warrior\n\nHow to use Edge TEP groups in NSX\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;More performance trough NSX Edge TEP groups?&#34;,&#34;https://sdn-warrior.org/posts/nsx-tep-groups/&#34;,&#34;More performance trough NSX Edge TEP groups?, by SDN-Warrior\n\nHow to use Edge TEP groups in NSX\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -166,10 +166,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-			<li><a href="http://localhost:1313/links/">Links</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -190,7 +190,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vmware">vmware</a></span><span class="tag"><a href="http://localhost:1313/tags/network">network</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/network">network</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -555,14 +555,14 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/nsx-apply-to/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/nsx-apply-to/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>How Apply To works in NSX DFW</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/nsx-edge-redeploy/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/nsx-edge-redeploy/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -575,14 +575,14 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

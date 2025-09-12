@@ -1,20 +1,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>http://localhost:1313/posts/</link>
+		<link>https://sdn-warrior.org/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
 		<lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
-		<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
 			<title>Tails from the Lab – Lab setup</title>
-			<link>http://localhost:1313/posts/tails-from-the-lab-setup/</link>
+			<link>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/tails-from-the-lab-setup/</guid>
+			<guid>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</guid>
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.
@@ -134,10 +134,10 @@ My Ansible playbooks need to be revised because they no longer run properly with
 		
 		<item>
 			<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-			<link>http://localhost:1313/posts/vcf5-to-9-upgrade/</link>
+			<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
 			<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf5-to-9-upgrade/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
 			<description><![CDATA[A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.
@@ -486,10 +486,10 @@ If you have any questions or comments, please feel free to send me a message on 
 		
 		<item>
 			<title>VMware Explore 2025</title>
-			<link>http://localhost:1313/posts/explore-2025/</link>
+			<link>https://sdn-warrior.org/posts/explore-2025/</link>
 			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
 			
-			<guid>http://localhost:1313/posts/explore-2025/</guid>
+			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
 			<description><![CDATA[My VMware Explore 2025]]></description>
 			<content type="html"><![CDATA[<h2 id="viva-las-vegas---a-kind-of-travelogue">Viva Las Vegas - A kind of travelogue.</h2>
 <p>At the beginning of the year, I had the pleasure of flying to the <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">USA</a>, and now I&rsquo;m on my way to Las Vegas.
@@ -745,10 +745,10 @@ I&rsquo;m already looking forward to the upcoming Knight exclusive events and Ex
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>
-			<link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
 			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
 			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
 			<content type="html"><![CDATA[<h2 id="certificates--the-mother-of-all-evils">Certificates – the mother of all evils</h2>
 <p>In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.
@@ -999,10 +999,10 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
 			<pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 3.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In my two other VPC articles, I showed you the basics and the differences between <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">centralized deployment</a> and <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">distributed deployment</a>.
@@ -1339,10 +1339,10 @@ I have written about why <a href="https://sdn-warrior.org/posts/nsx-apply-to/">A
 		
 		<item>
 			<title>VCF 9 - Migration to central VCF Operations instance</title>
-			<link>http://localhost:1313/posts/vcf-operations-migration/</link>
+			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
 			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
 			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Where should I start? Perhaps I should describe my starting point.
@@ -1636,10 +1636,10 @@ The components can still be shared by multiple instances if the security concept
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 2.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.
@@ -2392,10 +2392,10 @@ The complete communication is as follows:</p>
 		
 		<item>
 			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
-			<link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
+			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
 			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
 			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.
@@ -2538,10 +2538,10 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-			<link>http://localhost:1313/posts/homelab-v6/</link>
+			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
 			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/homelab-v6/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
 			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I&rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.
@@ -2639,10 +2639,10 @@ Thus, it has never really been considered part of the NUC era.</p>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!</p>
@@ -3223,10 +3223,10 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
-			<link>http://localhost:1313/posts/ms-a2/</link>
+			<link>https://sdn-warrior.org/posts/ms-a2/</link>
 			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/ms-a2/</guid>
+			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
 			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>After being impressed with the performance and form factor of the Minisforum <strong>MS-01</strong>, I had to get my hands on their latest beast: the <strong>MS-A2</strong>, powered by AMD&rsquo;s latest Zen 5 architecture.
@@ -3615,10 +3615,10 @@ I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, 
 		
 		<item>
 			<title>ReSTNSX with HCX</title>
-			<link>http://localhost:1313/posts/restnsx-with-hcx/</link>
+			<link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
 			<pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
+			<guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
 			<description><![CDATA[How can ReSTNSX help me with the migration with HCX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.</p>
@@ -3835,10 +3835,10 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 		
 		<item>
 			<title>NSX Expiring Transport Node Certificates</title>
-			<link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
+			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
 			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
 			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days. NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years. The Transport Node certificate used at create time is not replaced on upgrade. Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In NSX versions <strong>4.1.x</strong> and <strong>4.2.0</strong>, <strong>edge transport nodes</strong> and <strong>host transport nodes</strong> are instantiated using certificates with a <strong>validity period of only 825 days</strong>.
@@ -4202,10 +4202,10 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>
-			<link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
+			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
 			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
 			
-			<guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
+			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
 			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
 			<content type="html"><![CDATA[<h2 id="vmug-st-louis--between-tech-talks-and-travel-vibes">VMUG St. Louis – Between Tech Talks and Travel Vibes</h2>
 <p>This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from <a href="https://www.evoila.de">evoila</a>, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&rsquo;m German after all.</p>
@@ -4365,10 +4365,10 @@ To share knowledge, to learn from others, and to keep growing – together.</p>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
-			<link>http://localhost:1313/posts/vcf-token/</link>
+			<link>https://sdn-warrior.org/posts/vcf-token/</link>
 			<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-token/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
 			<description><![CDATA[A short article on how to use the Broadcom Download Token.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.
@@ -4492,10 +4492,10 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 		
 		<item>
 			<title>VCF Quick Tip - WLD with single NSX Manager</title>
-			<link>http://localhost:1313/posts/vcf-single-nsx/</link>
+			<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
 			<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
 			<description><![CDATA[Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.
@@ -4775,10 +4775,10 @@ Happy VCF deployment!</p>
 		
 		<item>
 			<title>VCF Stretched Cluster</title>
-			<link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
+			<link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
 			<pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
 			<description><![CDATA[A short article on how to build a stretched vSAN cluster in the VCF.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This is my third article in my VCF Homelab series.
@@ -5265,10 +5265,10 @@ I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witne
 		
 		<item>
 			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-			<link>http://localhost:1313/posts/vcf-import-overlay/</link>
+			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
 			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>My blog is a follow-up to my article <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">&ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&rdquo;</a> and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.</p>
@@ -5423,10 +5423,10 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-			<link>http://localhost:1313/posts/vcf-import-cluster/</link>
+			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
 			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
 			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.
@@ -5776,10 +5776,10 @@ We also still need to install licenses in the SDDC manager and setup the softwar
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>
-			<link>http://localhost:1313/posts/jetkvm/</link>
+			<link>https://sdn-warrior.org/posts/jetkvm/</link>
 			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/jetkvm/</guid>
+			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
 			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
 			<content type="html"><![CDATA[<h2 id="jetkvm-a-kickstarter-project">JetKVM a Kickstarter Project</h2>
 <p>Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&rsquo;m only now getting to my conclusion and test.</p>
@@ -5836,10 +5836,10 @@ Time will tell whether the saying “all show and no substance” applies.</p>
 		
 		<item>
 			<title>Migration with HCX</title>
-			<link>http://localhost:1313/posts/migration-with-hcx/</link>
+			<link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
 			<pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/migration-with-hcx/</guid>
+			<guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
 			<description><![CDATA[Live Migration of Workloads with VMware HCX: A Customer Story]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.</p>
@@ -6224,10 +6224,10 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 		
 		<item>
 			<title>How Apply To works in NSX DFW</title>
-			<link>http://localhost:1313/posts/nsx-apply-to/</link>
+			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
 			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-apply-to/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
 			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>When working with the <strong>NSX Distributed Firewall (DFW)</strong>, one feature that often goes unnoticed or misunderstood is <strong>&lsquo;Apply To&rsquo;</strong>. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as <strong>&lsquo;Apply To&rsquo;</strong> is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.</p>
@@ -6631,10 +6631,10 @@ In addition, there is a limit to the number of firewall rules that can be applie
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>
-			<link>http://localhost:1313/posts/nsx-tep-groups/</link>
+			<link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
 			<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>My esteemed colleague, Steven Schramm, recently published an excellent article titled <em><a href="https://sdn-techtalk.com/posts/multitep-ha/">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></em>. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.</p>
@@ -6957,10 +6957,10 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 		
 		<item>
 			<title>Redeploy an NSX Edge VM Appliance</title>
-			<link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
+			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
 			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
 			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.</p>
@@ -7226,10 +7226,10 @@ Ensure these values align with those defined in the node_settings section.</p>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>
-			<link>http://localhost:1313/posts/vlan-automation/</link>
+			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
 			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vlan-automation/</guid>
+			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
 			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
 			<content type="html"><![CDATA[<h2 id="yet-another-ansible-post">Yet Another Ansible Post</h2>
 <p>As the year comes to a close, I can&rsquo;t help but reflect on the progress I&rsquo;ve made with Ansible in the past few weeks. Looking back, there&rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.</p>
@@ -7490,10 +7490,10 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
-			<link>http://localhost:1313/posts/ipam-automation/</link>
+			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
 			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/ipam-automation/</guid>
+			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
 			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.</p>
@@ -7764,10 +7764,10 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-			<link>http://localhost:1313/posts/first-steps-ansible/</link>
+			<link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
 			<pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/first-steps-ansible/</guid>
+			<guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
 			<description><![CDATA[How I Used ChatGPT to Create My First Ansible Playbook]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.</p>
@@ -8219,10 +8219,10 @@ Efficiency:</p>
 		
 		<item>
 			<title>Homelab V5</title>
-			<link>http://localhost:1313/posts/homelab-v5/</link>
+			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
 			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/homelab-v5/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
 			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
 			<content type="html"><![CDATA[<h2 id="my-homelab-journey-from-unraid-beginnings-to-version-5">My Homelab Journey: From Unraid Beginnings to Version 5</h2>
 <p>Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.</p>
@@ -8479,10 +8479,10 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 		
 		<item>
 			<title>How to use QoS in NSX</title>
-			<link>http://localhost:1313/posts/nsx-qos/</link>
+			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
 			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-qos/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
 			<description><![CDATA[How to use QoS in NSX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.</p>
@@ -9003,10 +9003,10 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
-			<link>http://localhost:1313/posts/nsx4_2_1_1/</link>
+			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx4_2_1_1/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
 			<content type="html"><![CDATA[<p>The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:</p>
 <h2 id="1-enhanced-stability-for-virtual-environments">1. Enhanced Stability for Virtual Environments</h2>
@@ -9050,10 +9050,10 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>iSCSI Tuning</title>
-			<link>http://localhost:1313/posts/iscsi-tuning/</link>
+			<link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
 			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+			<guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
 			<description><![CDATA[Optimizing iSCSI Performance in an Unraid Environment]]></description>
 			<content type="html"><![CDATA[<p>In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.</p>
 <p>For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.</p>
@@ -9225,10 +9225,10 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>http://localhost:1313/posts/mac-learning/</link>
+			<link>https://sdn-warrior.org/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/mac-learning/</guid>
+			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
 			<description><![CDATA[Why you should use MAC Learning]]></description>
 			<content type="html"><![CDATA[<h2 id="intro">Intro</h2>
 <p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
@@ -9386,10 +9386,10 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>http://localhost:1313/posts/unraid-storage/</link>
+			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/unraid-storage/</guid>
+			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
 			<description><![CDATA[How i use Unraid]]></description>
 			<content type="html"><![CDATA[<h2 id="my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing">My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing</h2>
 <p>As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.</p>
@@ -9498,10 +9498,10 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>http://localhost:1313/posts/nuc/</link>
+			<link>https://sdn-warrior.org/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nuc/</guid>
+			<guid>https://sdn-warrior.org/posts/nuc/</guid>
 			<description><![CDATA[Performance tuning for NUCs]]></description>
 			<content type="html"><![CDATA[<h2 id="first-things-first">First things first</h2>
 <p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
@@ -9636,10 +9636,10 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>http://localhost:1313/posts/labv4/</link>
+			<link>https://sdn-warrior.org/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 			
-			<guid>http://localhost:1313/posts/labv4/</guid>
+			<guid>https://sdn-warrior.org/posts/labv4/</guid>
 			<description><![CDATA[Homelab v4]]></description>
 			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
 <p>I have done a huge redesign of my Homelab.
@@ -9671,10 +9671,10 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
-			<link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
+			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
 			<description><![CDATA[NSX and Fortigate]]></description>
 			<content type="html"><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
 <p>Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.</p>
@@ -9745,10 +9745,10 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
+			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
 			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
 			<content type="html"><![CDATA[
     <aside class="admonition info">
@@ -9946,10 +9946,10 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
-			<link>http://localhost:1313/posts/nsx-cert-exchange/</link>
+			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
 			<description><![CDATA[Exchange your NSX Manager certificates]]></description>
 			<content type="html"><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
 <h1 id="certificate-creation">Certificate creation</h1>
