@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2024-12-24T13:00:00+01:00">
   <meta itemprop="dateModified" content="2024-12-24T13:00:00+01:00">
   <meta itemprop="wordCount" content="1478">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Mikrotik,Homelab,Ansible"><meta property="og:url" content="https://sdn-warrior.org/posts/vlan-automation/">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Mikrotik,Homelab,Ansible"><meta property="og:url" content="http://localhost:1313/posts/vlan-automation/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Ansible VLAN deployment with MikroTik">
   <meta property="og:description" content="Ansible VLAN deployment with MikroTik">
@@ -43,10 +43,10 @@
     <meta property="article:tag" content="Mikrotik">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Ansible">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
   <meta name="twitter:title" content="Ansible VLAN deployment with MikroTik">
   <meta name="twitter:description" content="Ansible VLAN deployment with MikroTik">
 
@@ -61,16 +61,16 @@
     "articleBody": "Yet Another Ansible Post As the year comes to a close, I can’t help but reflect on the progress I’ve made with Ansible in the past few weeks. Looking back, there’s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.\nGoals The main goal is to have a single file that describes all the required VLANs. This file should also allow me to delete or reuse VLANs as needed. Each VLAN must be deployed across three switches and configured as a tagged VLAN on specific ports.\nAdditionally, there are the peculiarities of MikroTik hardware to consider. When creating new VLANs on my Top-of-Rack (ToR) switch, MikroTik recommends disabling the L3 Hardware Offloading feature beforehand. In the past, I’ve encountered strange issues when this wasn’t done prior to creating new networks. Therefore, the automation should also handle disabling and re-enabling this feature as part of the process.\nFuture Goals In the future, I plan to expand this setup further, integrating it with Ansible Tower or ArgoCD to enable management through pipelines.\nA pipeline is essentially an automated workflow that takes a defined input—such as a configuration file or a code repository—and processes it through several steps to achieve a desired outcome. For example, in this context, a pipeline could validate my VLAN configuration, deploy it to the target switches, and handle any post-deployment tasks automatically.\nMy locally hosted Gitea instance will serve as the Source of Truth, housing the configuration files and acting as the central repository for all changes. This ensures consistency, version control, and a clear audit trail for every modification.\nWhat I’ve Done For this implementation, I approached things a bit differently compared to my last two Ansible projects—after all, learning is part of the process!\nProject Structure I structured the project as follows:\nINI File: Stores the credentials for the three switches. ansible.cfg: Manages the inventory file and SSH settings. Playbook: A YAML file that runs without additional parameters. Directories: group_vars/: Contains global variables shared across all devices. all.yml: Includes all VLANs that should exist, along with descriptions. host_vars/: Contains per-device variables. Each switch has its own YAML file defining interfaces and bridges. Here’s the project structure visualized:\nmikrotik/ ├── ansible.cfg # Configuration file for project Ansible settings ├── inventory.ini # Inventory file with switch credentials ├── vlan_esx.yml # Main playbook ├── group_vars/ │ └── all.yml # Global VLAN definitions and descriptions └── host_vars/ ├── 192.168.0.1.yml # Variables for Switch 1 (interfaces, bridges) ├── 192.168.0.5.yml # Variables for Switch 2 (interfaces, bridges) └── 192.168.0.7.yml # Variables for Switch 3 (interfaces, bridges) Advantages of This Structure One major advantage of this structure is its scalability. Adding another MikroTik switch is straightforward: I only need to create a new host_var file for the switch and update the inventory.ini file with its credentials.\nAdditionally, since the playbook runs without requiring extra parameters, it simplifies the GitOps approach I plan to implement later. This means the entire process becomes more streamlined and easily automatable through pipelines, reducing complexity and potential for errors.\nProject Files Here are the files I created as part of this project:\nansible.cfg This file configures Ansible with the necessary inventory and SSH settings.\n[defaults] host_key_checking = False transport = ssh inventory = mikrotik.ini [ssh_connection] ssh_type = libssh timeout = 60 inventory.ini [mikrotik] 192.168.0.1 ansible_user=admin ansible_password=\"xxx\" ansible_connection=network_cli ansible_network_os=community.network.routeros 192.168.0.5 ansible_user=admin ansible_password=\"xxx\" ansible_connection=network_cli ansible_network_os=community.network.routeros 192.168.0.7 ansible_user=admin ansible_password=\"xxx\" ansible_connection=network_cli ansible_network_os=community.network.routeros vlan_esx.yml --- - name: Manage VLANs with delete option hosts: mikrotik gather_facts: no collections: - community.network tasks: - name: Disable L3 HW Offloading community.network.routeros_command: commands: - \"/interface ethernet switch set [find name=switch1] l3-hw-offloading=no\" when: ansible_host == '192.168.0.1' register: hw_offload_result - name: Delete VLANs marked for deletion community.network.routeros_command: commands: - \"/interface bridge vlan remove [find vlan-ids={{ item.id }}]\" with_items: \"{{ vlans }}\" when: item.delete | bool - name: Configure VLANs on the bridge community.network.routeros_command: commands: - \"/interface bridge vlan remove [find vlan-ids={{ item.id }}]\" - \"/interface bridge vlan add bridge={{ bridge }} vlan-ids={{ item.id }} tagged={{ interfaces | join(',') }}\" with_items: \"{{ vlans }}\" when: not item.delete | bool - name: Set description for each VLAN community.network.routeros_command: commands: - \"/interface bridge vlan comment [find vlan-ids={{ item.id }}] comment=\\\"{{ item.description }}\\\"\" with_items: \"{{ vlans }}\" when: not item.delete | bool - name: Enable L3 HW Offloading community.network.routeros_command: commands: - \"/interface ethernet switch set [find name=switch1] l3-hw-offloading=yes\" when: ansible_host == '192.168.0.1' register: hw_offload_result group_vars/all.yml vlans: - id: 4 description: \"vMotion\" delete: false - id: 12 description: \"ESXi MGMT\" delete: false - id: 14 description: \"NSXB Host Tep\" delete: false - id: 15 description: \"NSXB Edge Tep\" delete: false - id: 20 description: \"K3s\" delete: false - id: 31 description: \"NSXB Uplink1\" delete: false - id: 41 description: \"NSXB Uplink2\" delete: false - id: 50 description: \"RTEP NSX Federation\" delete: false - id: 69 description: \"vSAN\" delete: false - id: 200 description: \"VCF VM MGMT\" delete: false - id: 201 description: \"VCF MGMT\" delete: false - id: 202 description: \"VCF vSAN\" delete: false - id: 203 description: \"VCF vSAN\" delete: false - id: 204 description: \"VCF HostTEP\" delete: false - id: 205 description: \"VCF EdgeTEP\" delete: false - id: 206 description: \" \" delete: true - id: 207 description: \" \" delete: true - id: 208 description: \" \" delete: true - id: 209 description: \" \" delete: true - id: 211 description: \" \" delete: true - id: 212 description: \" \" delete: true host_vars/switch1.yml Each file defines the specific interfaces and bridges for a switch. Example for 192.168.0.5.yml\ninterfaces: - 10_bonding_SWA02 - 00_bonding_CoreRouter - 01_ether1_ESX01_1 - 01_ether2_ESX01_2 - 02_qsfpplus1-1_ESX02_1 - 03_qsfpplus1-2_ESX03_1 - 04_qsfpplus1-3_ESX04_1 - 05_qsfpplus1-4_ESX05_1 - 07_ether3_ESX07_1 - 07_ether4_ESX07_2 - 08_ether5_ESX08_1 - 08_ether6_ESX08_2 - 09_ether7_ESX09_1 - 09_ether8_ESX09_2 bridge: bridge What Does the Playbook Do? This playbook is designed to manage VLANs on MikroTik switches, including the ability to delete or configure VLANs. It uses the community.network collection and skips fact-gathering since it only executes specific commands on the devices.\nStep-by-Step Breakdown Disable L3 Hardware Offloading\nThe playbook begins by disabling the L3 Hardware Offloading feature on the switch named Tor Switch. This step is necessary because MikroTik recommends turning off this feature before making VLAN configuration changes. The command is executed only if the host IP is 192.168.0.1. The result is stored in the variable hw_offload_result.\nDelete VLANs Marked for Deletion\nVLANs that are marked for deletion in the vlans variable (delete: true) are removed. The playbook iterates through the list of VLANs and executes the removal command for each VLAN marked as deleted.\nConfigure VLANs\nFor VLANs that are not marked for deletion, the playbook configures them as follows:\nRemoves any existing VLAN with the same ID to avoid conflicts. Adds the VLAN to the specified bridge and assigns it to the interfaces defined as tagged. This ensures a clean and consistent configuration. Set VLAN Descriptions\nThe playbook adds a description to each VLAN that is not marked for deletion. It uses the comment function in MikroTik and sets the description based on the variables provided.\nEnable L3 Hardware Offloading\nFinally, the playbook re-enables the L3 Hardware Offloading feature on ToR Switch, but only if the host IP is 192.168.0.1. The result of this step is also stored in the hw_offload_result variable.\nSummary This playbook automates the entire VLAN management process:\nDisables the L3 offloading feature when required. Deletes VLANs marked for removal. Configures new VLANs, ensuring no conflicts. Sets descriptions for the VLANs. Re-enables the L3 offloading feature after the configuration. The structure ensures reliability and consistency, handling edge cases such as existing VLANs and hardware offloading quirks automatically.\nWhat’s Left to Do There are several improvements I plan to make to this playbook in the future:\nClean Up Variables\nCurrently, there are some unused variables in the playbook that I need to clean up to keep the codebase tidy and maintainable.\nEnhanced Logic for VLAN Checks\nI want to extend the logic to verify if a VLAN already matches the desired target configuration. This would prevent unnecessary deletion and re-creation of VLANs, reducing downtime and ensuring a smoother operation.\nImproved Error Handling\nBetter error handling is a priority to ensure the playbook gracefully recovers from unexpected issues, such as failed commands or unreachable devices.\nPipeline Integration\nThe ultimate goal is to integrate the playbook into a pipeline, enabling automated execution through tools like Ansible Tower or ArgoCD. This would streamline the entire process and align it with a GitOps approach.\nDistributed Switch Integration\nIt’s also conceivable to extend the functionality by adding new VLANs directly to the distributed switch in my vSphere environment. However, this would be handled in a separate playbook to maintain modularity. The pipeline would then orchestrate both playbooks to ensure a seamless configuration process.\nBy addressing these points, the project will become more robust, scalable, and aligned with modern automation practices.\n",
     "wordCount" : "1478",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2024-12-24T13:00:00+01:00",
+    "image":"http://localhost:1313/images/net.jpg","datePublished": "2024-12-24T13:00:00+01:00",
     "dateModified": "2024-12-24T13:00:00+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/vlan-automation/"
+      "@id": "http://localhost:1313/posts/vlan-automation/"
     },
     "publisher": {
       "@type": "Organization",
@@ -78,21 +78,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>Ansible VLAN deployment with MikroTik</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -121,26 +121,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvlan-automation%2f&amp;text=Ansible%20VLAN%20deployment%20with%20MikroTik" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvlan-automation%2f&amp;text=Ansible%20VLAN%20deployment%20with%20MikroTik" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvlan-automation%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvlan-automation%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=Ansible%20VLAN%20deployment%20with%20MikroTik&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvlan-automation%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=Ansible%20VLAN%20deployment%20with%20MikroTik&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvlan-automation%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvlan-automation%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Ansible%20VLAN%20deployment%20with%20MikroTik&amp;summary=Ansible%20VLAN%20deployment%20with%20MikroTik%2c%20by%20SDN-Warrior%0a%0aAnsible%20VLAN%20deployment%20with%20MikroTik%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvlan-automation%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=Ansible%20VLAN%20deployment%20with%20MikroTik&amp;summary=Ansible%20VLAN%20deployment%20with%20MikroTik%2c%20by%20SDN-Warrior%0a%0aAnsible%20VLAN%20deployment%20with%20MikroTik%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -148,7 +148,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;Ansible VLAN deployment with MikroTik&#34;,&#34;https://sdn-warrior.org/posts/vlan-automation/&#34;,&#34;Ansible VLAN deployment with MikroTik, by SDN-Warrior\n\nAnsible VLAN deployment with MikroTik\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;Ansible VLAN deployment with MikroTik&#34;,&#34;http://localhost:1313/posts/vlan-automation/&#34;,&#34;Ansible VLAN deployment with MikroTik, by SDN-Warrior\n\nAnsible VLAN deployment with MikroTik\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -166,10 +166,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -190,7 +190,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/mikrotik">mikrotik</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/ansible">ansible</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/mikrotik">mikrotik</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/ansible">ansible</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -493,14 +493,14 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="https://sdn-warrior.org/posts/nsx-edge-redeploy/">
+			<a class="next-post" href="http://localhost:1313/posts/nsx-edge-redeploy/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>Redeploy an NSX Edge VM Appliance</span>
 			</a>
-			<a class="prev-post" href="https://sdn-warrior.org/posts/ipam-automation/">
+			<a class="prev-post" href="http://localhost:1313/posts/ipam-automation/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -513,20 +513,14 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
-   <path d="M4 11a9 9 0 0 1 9 9"></path>
-   <path d="M4 4a16 16 0 0 1 16 16"></path>
-   <circle cx="5" cy="19" r="1"></circle>
-</svg></a></p>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

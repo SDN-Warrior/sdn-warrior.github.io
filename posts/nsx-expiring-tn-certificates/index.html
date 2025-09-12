@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-05-06T18:00:00+02:00">
   <meta itemprop="dateModified" content="2025-05-06T18:00:00+02:00">
   <meta itemprop="wordCount" content="1591">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Vmware,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Nsx,Vmware,Homelab"><meta property="og:url" content="http://localhost:1313/posts/nsx-expiring-tn-certificates/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="NSX Expiring Transport Node Certificates">
   <meta property="og:description" content="On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days. NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years. The Transport Node certificate used at create time is not replaced on upgrade. Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.">
@@ -43,10 +43,10 @@
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Homelab">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
   <meta name="twitter:title" content="NSX Expiring Transport Node Certificates">
   <meta name="twitter:description" content="On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days. NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years. The Transport Node certificate used at create time is not replaced on upgrade. Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.">
 
@@ -61,16 +61,16 @@
     "articleBody": "Introduction In NSX versions 4.1.x and 4.2.0, edge transport nodes and host transport nodes are instantiated using certificates with a validity period of only 825 days. This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven’t seen anything about this in the changelog. In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?\nThe Problem First of all, don’t panic. The affected certificates are not visible in the GUI, but NSX Manager will issue a warning and display an error 30 days in advance. If you don’t see these messages in your NSX, you have more than 30 days to respond. Furthermore, it only affects transport nodes deployed with NSX 4.1.x - 4.2. If you have upgraded from NSX 3.X to one of the affected versions or have just deployed VCF version 5.2.x, you are safe.\nInfo\rThe certificate issued at the time of Transport Node creation is not replaced automatically during an upgrade.\rWhy It Matters As the 825-day period approaches its end, you may encounter certificate expiration issues, potentially affecting NSX component communication and overall platform stability. Warning\rOnce the TransportNode certificate expires, there is a grace period of only 24 hours after which all impacted Edges and Hosts will be disconnected from NSX.\rIf you are affected, there are two scenarios.\nScenario A) The certificates will expire sometime in the near future, you may have received a warning in NSX Manager and therefore found my blog, or you are not yet aware of the problem because the certificates will expire sometime between 31 and 825 days from now. Scenario B) The certificates have already expired and transport nodes are disconnected from NSX. There is a solution for both scenarios. But let’s start with the simple scenario A first.\nFind the problem If you don’t know which NSX version you installed and want to check whether you are affected by this issue, Broadcom has a relatively simple solution. There is a script called CARR (Certificate Analyzer, Results and Recovery) that can be easily run on NSX Manager (NSX 4.1.x to 4.2) or on an external client (other NSX versions). Download Certificate Analyzer, Results and Recovery (CARR)from the official KB article.\nIn all cases, the script requires the following ports to be open between the client machine and the 3 NSX Managers\nssh port 22 https port 443 corfu port 9000 If running on the NSX Manager directly, ports 443 and 9000 will already be open between the 3 Managers.\nIf you want to run the script on the NSX manager, then the script must be executed directly from the /root directory. To do this, copy the script to your NSX Manager or Global NSX Manager using sftp and unzip it with tar and run the script.\ntar -xvf carr-1.15.tar.gz cd carr-1.15 ./start.sh -d Warning\rThe CARR script supports multiple parameters. Always perform an NSX backup first and, above all, run the script in dryrun mode. Dryrun mode executes the script in read-only mode.\rScript options:\n-o = this flag is used to force online mode\n-t = specify lead time for expiring certificates, between 31 and 825 days.\n-d = dryrun\nI ran the script with the default settings (lead time for expiring 825 days) and the output was as follows:\nCARR Script Validation Report Certificate Checks Validation Results Probable Fix API WARNING: Certificate is expiring in 680 daysSUCCESS: 10.28.0.3 Certificate is CA signed. Customer should import the new CA signed certificate. VIP WARNING: Certificate is expiring in 680 daysSUCCESS: 10.28.0.3 Certificate is CA signed. Customer should import the new CA signed certificate. STALE-CERTIFICATES SUCCESS: No stale certificates found. APH_AR SUCCESS: 10.28.0.3 COMPUTE_MANAGER VC(CM): vcf02-vcsa.lab.home: SUCCESS: No issue with certificates found. LOCAL-MANAGER-PI The NSX-manager is not federated. Skipping Local Manager cert validations SITE-TO-SITE The NSX-manager is not federated. Skipping APH_AR cert validations HOST No Host certificate is expiring or has expired EDGE No EDGE node certificate is expiring or has expired CCP SUCCESS: 10.28.0.3 APH_TN SUCCESS: 10.28.0.3 CBM_CLUSTER_MANAGER SUCCESS: 10.28.0.3 CBM_CORFU SUCCESS: 10.28.0.3 All validations done.\nAs you can see from the output for HOST and EDGE, my installation is not affected. However, it shows that my API and VIP certificate will expire in 680 days. CARR is also smart enough to recognize that it is a certificate signed by a CA and not a certificate issued by NSX itself.\nWarning\rIf I hadn’t run the script in dry run mode, the script would have replaced my API and VIP certificates from NSX Manager with its own self-signed certificates. However, this is not desirable in this case. Caution is advised here, as it is easy to accidentally replace certificates that you do not want to replace.\rTo trigger TN cert replacement, environment details must be populated in a pre-existing file validation_config.yaml. This yaml file is located in the same folder as start.sh. My example yaml. I have disabled validation of all certificates except HOST and EDGE.\n# user interface to provide the validation config # user can specify if any certificate validation needs to be skipped. # by default all certificate types will be validated. # For Hosts , the vCenter cluster names for host must be specified. Script will validate hosts in those clusters only. # For Edge node, Edge cluster name must be specified. Script will validate edge nodes in those clusters only. HOST: validate: True clusters: - vcenter_name: vcf02-vcsa.lab.home vcenter_cluster_name: sfo-m01-cluster-001 EDGE: validate: True clusters: - name: cl01 API: validate: False VIP: validate: False CBM-FILE-PERMISSIONS: validate: False CBM_CORFU: validate: False CBM_CLUSTER_MANAGER: validate: False CORFU_SERVER: validate: False CORFU_CLIENTS: validate: False LOCAL-MANAGER-PI: validate: False GLOBAL-MANAGER-PI: validate: False STALE-CERTIFICATES: validate: False APH_TN: validate: False APH_AR: validate: False CCP: validate: False SITE-TO-SITE: validate: False COMPUTE_MANAGER: validate: False When I now run the script without dry run, I see in the output that all certificates except HOST and EDGE are skipped. This effectively prevents certificates that you do not want to exchange from being exchanged.\nCARR Script Validation Report Certificate Checks Validation Results Probable Fix API Validation for the ‘API’ is disabled in the input config file VIP Validation for the ‘VIP’ is disabled in the input config file STALE-CERTIFICATES Validation for the ‘STALE-CERTIFICATES’ is disabled in the input config file APH_AR Validation for the ‘APH_AR’ is disabled in the input config file COMPUTE_MANAGER Validation for the ‘COMPUTE_MANAGER’ is disabled in the input config file LOCAL-MANAGER-PI Validation for the ‘LOCAL-MANAGER-PI’ is disabled in the input config file SITE-TO-SITE Validation for the ‘SITE-TO-SITE’ is disabled in the input config file HOST No Host certificate is expiring or has expired EDGE No EDGE node certificate is expiring or has expired CCP Validation for the ‘CCP’ is disabled in the input config file APH_TN Validation for the ‘APH_TN’ is disabled in the input config file CBM_CLUSTER_MANAGER Validation for the ‘CBM_CLUSTER_MANAGER’ is disabled in the input config file CBM_CORFU Validation for the ‘CBM_CORFU’ is disabled in the input config file What to do if the transport nodes are already disconnected? There is a solution for this as well. Unfortunately, CARR can no longer be used for separate transport nodes. The solution to this problem is to manually generate new certificates on the transport node and then push them from the transport node to the NSX Manager.\nWarning\rIn general, caution is advised when undertaking this task. Personally, I would always open a ticket with Broadcom, as errors can cause further damage in case of doubt. If an Edge Node is disconnected, you can also perform a redeployment via API, which may even be faster than troubleshooting with CARR or manually. You can find out how to do this in my blog here: SDN-warrior - NSX Edge Redeploy Guide\rSSH to the Transport Node as root user\nEmpty Transport Node certificate and private key\ncat /dev/null \u003e /etc/vmware/nsx/host-cert.pem cat /dev/null \u003e /etc/vmware/nsx/host-privkey.pem Generate a new self-signed TN certificate and key. For NSX 4.1.x versions prior to 4.1.2.5: Create a temporary openssl config file from the existing openssl config cat /etc/vmware/nsx/openssl-proxy.cnf \u003e /tmp/tmp-openssl-proxy.cnf UUID is extracted and added to the temporary openssl config echo \"UID = $(grep -o '[^\u003c]*' /etc/vmware/nsx/host-cfg.xml | sed 's///')\" \u003e\u003e /tmp/tmp-openssl-proxy.cnf Add extension in the temporary openssl config echo -e \"[ req_ext ]\\nbasicConstraints = CA:FALSE\\nextendedKeyUsage = clientAuth\\nsubjectKeyIdentifier = hash\\nauthorityKeyIdentifier = keyid,issuer\" \u003e\u003e /tmp/tmp-openssl-proxy.cnf Replace the certificate, where below -days parameter specifies 3650 days (10 years) validity period openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /etc/vmware/nsx/host-privkey.pem -out /etc/vmware/nsx/host-cert.pem -config /tmp/tmp-openssl-proxy.cnf -extensions req_ext For NSX 4.1.2.5 and higher restarting nsx-proxy restart creates the new cert-key pair: /etc/init.d/nsx-proxy restart Identify NSX Manager thumbprint, ssh as admin user to NSX Manager get certificate api thumbprint To push the new cert-key pair to the Manager, from root user on the Host or Edge run (Any NSX Manager name or IP can be used)\nEdge su admin -c push host-certificate username admin thumbprint Password for API user: Host nsxcli -c push host-certificate username admin thumbprint Password for API user: The official Broadcom KB article can be found here: Broadcom: Alarm For Transport Node Certificate is About to Expire.\nConclusion At first glance, this problem sounds quite drastic, but if you have monitoring in place and regularly check the status of your NSX installation, the outage can be avoided relatively easily. The most important thing to know, however, is that upgrading your NSX version does not extend existing certificate lifetimes!\n",
     "wordCount" : "1591",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2025-05-06T18:00:00+02:00",
+    "image":"http://localhost:1313/images/disc.jpg","datePublished": "2025-05-06T18:00:00+02:00",
     "dateModified": "2025-05-06T18:00:00+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/"
+      "@id": "http://localhost:1313/posts/nsx-expiring-tn-certificates/"
     },
     "publisher": {
       "@type": "Organization",
@@ -78,21 +78,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>NSX Expiring Transport Node Certificates</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -121,26 +121,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-expiring-tn-certificates%2f&amp;text=NSX%20Expiring%20Transport%20Node%20Certificates" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-expiring-tn-certificates%2f&amp;text=NSX%20Expiring%20Transport%20Node%20Certificates" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-expiring-tn-certificates%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-expiring-tn-certificates%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=NSX%20Expiring%20Transport%20Node%20Certificates&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-expiring-tn-certificates%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=NSX%20Expiring%20Transport%20Node%20Certificates&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-expiring-tn-certificates%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnsx-expiring-tn-certificates%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=NSX%20Expiring%20Transport%20Node%20Certificates&amp;summary=NSX%20Expiring%20Transport%20Node%20Certificates%2c%20by%20SDN-Warrior%0a%0aOn%20versions%20NSX%204.1.x%20and%204.2.0%2c%20Edge%20and%20Host%20Transport%20Nodes%20are%20instantiated%20using%20a%20certificate%20with%20validity%20period%20of%20825%20days.%20NSX-T%203.x%20and%20NSX%204.2.1%20and%20higher%20create%20Transport%20Nodes%20using%20a%20certificate%20with%20validity%20period%20of%2010%20years.%20The%20Transport%20Node%20certificate%20used%20at%20create%20time%20is%20not%20replaced%20on%20upgrade.%20Any%20Edge%20that%20may%20have%20been%20deployed%20on%20these%20versions%20or%20any%20Hosts%20prepared%20or%20re-prepared%20on%20these%20versions%20will%20have%20this%20shorter%20validity%20period%20certificate.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnsx-expiring-tn-certificates%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=NSX%20Expiring%20Transport%20Node%20Certificates&amp;summary=NSX%20Expiring%20Transport%20Node%20Certificates%2c%20by%20SDN-Warrior%0a%0aOn%20versions%20NSX%204.1.x%20and%204.2.0%2c%20Edge%20and%20Host%20Transport%20Nodes%20are%20instantiated%20using%20a%20certificate%20with%20validity%20period%20of%20825%20days.%20NSX-T%203.x%20and%20NSX%204.2.1%20and%20higher%20create%20Transport%20Nodes%20using%20a%20certificate%20with%20validity%20period%20of%2010%20years.%20The%20Transport%20Node%20certificate%20used%20at%20create%20time%20is%20not%20replaced%20on%20upgrade.%20Any%20Edge%20that%20may%20have%20been%20deployed%20on%20these%20versions%20or%20any%20Hosts%20prepared%20or%20re-prepared%20on%20these%20versions%20will%20have%20this%20shorter%20validity%20period%20certificate.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -148,7 +148,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;NSX Expiring Transport Node Certificates&#34;,&#34;https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/&#34;,&#34;NSX Expiring Transport Node Certificates, by SDN-Warrior\n\nOn versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days. NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years. The Transport Node certificate used at create time is not replaced on upgrade. Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;NSX Expiring Transport Node Certificates&#34;,&#34;http://localhost:1313/posts/nsx-expiring-tn-certificates/&#34;,&#34;NSX Expiring Transport Node Certificates, by SDN-Warrior\n\nOn versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days. NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years. The Transport Node certificate used at create time is not replaced on upgrade. Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -166,10 +166,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -190,7 +190,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vmware">vmware</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -596,14 +596,14 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="https://sdn-warrior.org/posts/restnsx-with-hcx/">
+			<a class="next-post" href="http://localhost:1313/posts/restnsx-with-hcx/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>ReSTNSX with HCX</span>
 			</a>
-			<a class="prev-post" href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">
+			<a class="prev-post" href="http://localhost:1313/posts/vmug-connect-stl-2025/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -616,20 +616,14 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
-   <path d="M4 11a9 9 0 0 1 9 9"></path>
-   <path d="M4 4a16 16 0 0 1 16 16"></path>
-   <circle cx="5" cy="19" r="1"></circle>
-</svg></a></p>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

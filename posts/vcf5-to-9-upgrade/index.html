@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-09-07T23:00:08+02:00">
   <meta itemprop="dateModified" content="2025-09-07T23:00:08+02:00">
   <meta itemprop="wordCount" content="2082">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Vcf9,Sddc,Upgrade"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf5-to-9-upgrade/">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Vcf9,Sddc,Upgrade"><meta property="og:url" content="http://localhost:1313/posts/vcf5-to-9-upgrade/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 -  VCF5.X to VCF9 upgrade">
   <meta property="og:description" content="A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.">
@@ -44,10 +44,10 @@
     <meta property="article:tag" content="Vcf9">
     <meta property="article:tag" content="Sddc">
     <meta property="article:tag" content="Upgrade">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
   <meta name="twitter:title" content="VCF9 -  VCF5.X to VCF9 upgrade">
   <meta name="twitter:description" content="A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.">
 
@@ -62,16 +62,16 @@
     "articleBody": "Introduction I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9. Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong. But let’s start at the beginning.\nAs things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here’s the bad news—it’s not possible as of today. NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.\nInteroperability Matrix (click to enlarge)\nIt is best to always check the Product Interoperability Matrix for this.\nSince my last available VCF 5 lab was unfortunately already patched to the latest NSX version, I had no choice but to deploy a fresh VCF 5.2.1, as the NSX version here is low enough. And oh my God, I really didn’t miss the Excel or Json deployment of VCF 5.X, but for my readers’ sake, I’ll struggle through it once again.\nInfo\rI will only deploy one management domain in VCF 5.2.1, and I will also skip deploying the edge VMs. However, this does not matter, as you always have to upgrade the management domain first, and the workload domains will function the same way afterwards.\rManagement domain and basic setup I have deployed a management domain with 4 ESXi servers and vSAN. I have set up the whole thing in a nested configuration. Since the SDDC Manager does not yet support download tokens, I used the VMwareDepotChange script. I have already covered this process in my blog.\nSoftware Component Version Date Build Number Cloud Builder VM 5.2.1 09 OCT 2024 24307856 SDDC Manager 5.2.1 09 OCT 2024 24307856 VMware vCenter Server Appliance 8.0 Update 3c 09 OCT 2024 24305161 VMware ESXi 8.0 Update 3b 17 SEP 2024 24280767 VMware NSX 4.2.1 09 OCT 2024 24304122 Info\rI am not deploying Operations because I will integrate the VCF installation into my existing VCF 9 Operations later, after the upgrade.\rAfter the initial deployment, I updated the SDDC to version 5.2.1.1, as it contained several bug fixes. Finally, I took a snapshot of the SDDC Manager, and we were ready to go.\nInfo\rBroadcom has published a KB article on the update sequence for VCF9. Feel free to take a look at it. Depending on which VCF components you are using, you may need to take other steps beforehand.\rUprade SDDC In my setup, the first step is to upgrade the SDDC Manager. As I mentioned above, after the upgrade, the setup will be added to my VCF Operations, which is already up to date.\nSDDC Manager upgrade (click to enlarge)\nThe process is relatively straightforward. The 2 GB of data must be downloaded from the network via the SDDC, after which the upgrade can be initiated.\nSDDC Manager upgrade status (click to enlarge)\nThe SDDC is booted once during the upgrade. I had a minor problem with the SDDC in that it no longer displayed the upgrade status after rebooting. Instead, I only saw update status 0. I checked the log file /var/log/vmware/capengine/cap-update/workflow.log via SSH on the SDDC manager and looked to see if the following was visible:\nYYYY-MM-DDTHH:MM:SS.426528 workflow_manager.go:221: Task stage-cleanup completed YYYY-MM-DDTHH:MM:SS.426646 workflow_manager.go:183: All tasks finished for workflow YYYY-MM-DDTHH:MM:SS.426699 workflow_manager.go:354: Updating instance status to Completed After that, I rebooted the SDDC again and the error was fixed. I had never had this problem before and couldn’t find any KB articles about it. Maybe my nested environment was too slow. So take this fix with a grain of salt. Finally, I configured my VCF9 offline repo in the SDDC as a repository, as I don’t want to download all the VCF9 binaries from the network.\nBinary Management SDDC version 9 supports the Broadcom download token, so there is no need to change anything with a script on the SDDC, but I prefer my central offline repo. I built my own repo with the help of Timo Sugliani’s instructions. It is the easiest way to get your own offline repo, even if you have no Linux knowledge. However, you still need a valid download token.\nBinary Management (click to enlarge)\nNext, I download the upgrade binaries for NSX, vCenter, and ESX to my SDDC manager. The download is faster than the validation. It took me about 30 minutes to get everything I needed.\nStarting the upgrade I start the upgrade with the SDDC for the management domain. To do this, go to Workload Domains —\u003e Management Domain —\u003e Updates in the SDDC manager and then click on the Plan Upgrades button. The process is actually exactly the same as for a normal VCF update.\nPlan Upgrade (click to enlarge)\nI select VCF version 9.0.0.0 as the target version and confirm the version summary.\nVersion summary (click to enlarge)\nThis completes the upgrade plan. It is important to note that the SDDC will only start the upgrade once we have clicked Configure Update. The order of the components is as follows:\nNSX vCenter ESX hosts vSAN You can only configure the update for one component at a time. Pre-checks must be performed before each update. Here, too, the process is no different from a normal VCF update.\nInfo\rSince I have a nested VCF setup with vSAN, there will be some errors. However, these can be ignored.\rNSX Since I don’t have any edges deployed, the NSX upgrade runs without any problems. If I had edge VMs in my environment, I would have had to intervene because of the Ryzen processors, otherwise the edge upgrade would have failed. I explained why this is the case in my article on MS-A2.\nvCenter Next up is the vCenter. Here, the vCenter Reduced Downtime Update is used. This means that a second vCenter appliance is deployed in parallel and assigned a temporary IP address. There are two options here: either I assign a static temporary IP address or I use Auto.\nI usually use IP addresses defined by my customers, as firewalls are usually involved in whatever form. Since I am working here in my lab without a firewall within the lab, I can use auto. This gives the old and new vCenter a temporary APIPA IP to communicate with each other. For the upgrade scheduler, I use Immediate and Automatic for the switchover.\nvCenter update (click to enlarge)\nESX - Houston, we have a problem! The update ran successfully, but I have the problem that my vCenter simply does not want to display ESX9 images, which is essential because without ESX9 images, you cannot upgrade the ESX servers to 9. I thought I was being clever and forced the vCenter to search for new images. You can do this using the deprecated vCenter Lifecycle Manager and push Sync Updates.\nvCenter Lifecycle Manager (click to enlarge)\nInterestingly, the process is not running correctly. I hadn’t encountered this before, and after a quick check in the task log in vCenter, I saw the following error message, which wasn’t really helpful.\nA general system error occurred: Down load patch definitions task failed while synci ng depots. Error: 'integrity.fault.Vclntegrityf ault: VMware Sphere Lifecycle Manager hi d an unknown error. Check the events and I og files for details. vCenter Tasks (click to enlarge)\nOf course, there is nothing specific in the logs either. So Google research…Because the second most important skill in my IT career is knowing how to Google properly—maybe it’s even my most important skill.\nTurns out it’s a known bug in vCenter 9 when performing a brownfield upgrade from 8 to 9. VMware has created a KB article on this topic. The solution is relatively simple: you need to delete metadata from the vCenter DB in the tables vci_updates and vci_update_packages.\nvCenter workaround Lgin to vCenter as Root Stop updatemgr service service-control --stop updatemgr Change to ‘updatemgr’ user. su updatemgr -s /bin/bash Run psql command to patch the DB psql -U vumuser -d VCDB -c \"UPDATE vci_updates set deleted = 0, hidden = 0 where meta_uid like 'ESXi7%' or meta_uid like 'esxi7%' or meta_uid like 'ESXi_7%' or meta_uid like 'esxi_7%'; DELETE FROM vci_updates where id not in (select update_id from vci_update_packages);\" Start updatemgr service service-control --start updatemgr After the changes and the restart of the service, vCenter automatically syncs the image data. Now a new image can be created.\nvCenter Lifecycle Manager after workaround (click to enlarge)\nESX Image For Image Mode, we still need to import an image into the SDDC; without this, the ESX servers cannot be upgraded to 9. After fixing the vCenter, I create a dummy cluster in the vCenter and select the correct image for VCF9.\nAttention\rIt is important that the image from the BOM is used. For VCF9.0.0.0, this is ESX 9.0.0.0 Build 24755229. There is now a patch for ESX 9 (9.0.0.0100), but this cannot be used for the upgrade to VCF9. Instead, it must be installed via VCF 9 Operations after the upgrade to VCF9 has been successfully completed.\rThe image is then imported into the SDDC and the dummy cluster can be deleted again in vCenter. The image is assigned to the management domain cluster in the “Configure Update” step, and after the pre-checks, the ESX servers can be updated. The process ran smoothly - easy, that’s what I expected from the start.\nAttention\rBefore each update, I check vSAN Skyline Health and silence any alarms that may be present due to nested virtualization and the resulting non-certified hardware.\rvSAN The final step in the actual upgrade process is to update the vSAN storage. The process is straightforward, and all you need to do is press the upgrade button under cluster –\u003e configure –\u003e vSAN. Depending on the hardware and size of the vSAN storage, this process can take a relatively long time.\nvSAN upgrade (click to enlarge)\nNow everything is ready for me to start onboarding in Operations.\nOnboarding in VCF Operations I have a central VCF Operations because I don’t want to deploy an entire fleet every time I need a new nested lab. I described how I built it in this article. When onboarding in Operations, there are really only two things to keep in mind. I have to configure the new VCF environment as a deployment target, and I have to enable activate management, otherwise I cannot distribute licenses for the environment with my VCF Operations instance.\nTo onboard, I need to add the VCF instance to my Ops via VCF Operations —\u003e Administration —\u003e Integrations —\u003e Accounts —\u003e Vmware Cloud Foundation. Once the environment appears under Integrations, you can select it and press the Activate Management button. This allows you to assign a license to the VCF instance.\nInfo\rIt may take up to 15 minutes for the setting to become active and for VCF Operations to display the VCF instance in the licensing dialog.\rFinally, the VCF instance is set up as an deployment target under —\u003e Lifecycle —\u003e VCF Management —\u003e Settings —\u003e Deployment Targets.\nThe upgrade is now complete and the VCF 9 instance can be used as normal. Optionally, you can install the ESX patch under Lifecycle. To do this, you must create a new image in vCenter and import it via Ops. The process is more or less identical to the previous update.\nVCF Operations (click to enlarge)\nFinal thoughts The upgrade was more difficult than expected. The missing images in particular took me longer than I would like to admit. To be honest, I thought it would be a straightforward process. My VCF 5.2.1 environment was completely new, with no previous updates or other legacy issues.\nI think VCF 9.0.1 will remedy this, because in theory the upgrade process is very simple and doesn’t really differ much from a normal patch update in VCF5.X.\nWhat I still want to test is an import, i.e., converting a standalone NSX installation into a workload domain. Unfortunately, the same applies here as with my old NSX Labs: when updating my physical lab, I destroyed most of my old setups (because I’m sometimes just stupid). Only labs that are unusable in this case have survived.\nWell, I’ll do another NSX 4.2.1 deployment at some point. But that will be another blog post. If you have any questions or comments, please feel free to send me a message on LinkedIn or to my blog email address.\n",
     "wordCount" : "2082",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2025-09-07T23:00:08+02:00",
+    "image":"http://localhost:1313/images/disc.jpg","datePublished": "2025-09-07T23:00:08+02:00",
     "dateModified": "2025-09-07T23:00:08+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/vcf5-to-9-upgrade/"
+      "@id": "http://localhost:1313/posts/vcf5-to-9-upgrade/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -122,26 +122,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf5-to-9-upgrade%2f&amp;text=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf5-to-9-upgrade%2f&amp;text=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf5-to-9-upgrade%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf5-to-9-upgrade%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf5-to-9-upgrade%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf5-to-9-upgrade%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf5-to-9-upgrade%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade&amp;summary=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade%2c%20by%20SDN-Warrior%0a%0aA%20brief%20guide%20to%20upgrading%20from%20VCF5.X%20to%20VCF9%20on%20a%20brownfield%20site.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf5-to-9-upgrade%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade&amp;summary=VCF9%20-%20%20VCF5.X%20to%20VCF9%20upgrade%2c%20by%20SDN-Warrior%0a%0aA%20brief%20guide%20to%20upgrading%20from%20VCF5.X%20to%20VCF9%20on%20a%20brownfield%20site.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -149,7 +149,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF9 -  VCF5.X to VCF9 upgrade&#34;,&#34;https://sdn-warrior.org/posts/vcf5-to-9-upgrade/&#34;,&#34;VCF9 -  VCF5.X to VCF9 upgrade, by SDN-Warrior\n\nA brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF9 -  VCF5.X to VCF9 upgrade&#34;,&#34;http://localhost:1313/posts/vcf5-to-9-upgrade/&#34;,&#34;VCF9 -  VCF5.X to VCF9 upgrade, by SDN-Warrior\n\nA brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -167,10 +167,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -191,7 +191,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9">vcf9</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/sddc">sddc</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/upgrade">upgrade</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/vcf9">vcf9</a></span><span class="tag"><a href="http://localhost:1313/tags/sddc">sddc</a></span><span class="tag"><a href="http://localhost:1313/tags/upgrade">upgrade</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -582,7 +582,14 @@ If you have any questions or comments, please feel free to send me a message on 
 
 		</article>
 		<div class="post-nav thin">
-			<a class="prev-post" href="https://sdn-warrior.org/posts/explore-2025/">
+			<a class="next-post" href="http://localhost:1313/posts/tails-from-the-lab-setup/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>Tails from the Lab – Lab setup</span>
+			</a>
+			<a class="prev-post" href="http://localhost:1313/posts/explore-2025/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -595,20 +602,14 @@ If you have any questions or comments, please feel free to send me a message on 
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
-   <path d="M4 11a9 9 0 0 1 9 9"></path>
-   <path d="M4 4a16 16 0 0 1 16 16"></path>
-   <circle cx="5" cy="19" r="1"></circle>
-</svg></a></p>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

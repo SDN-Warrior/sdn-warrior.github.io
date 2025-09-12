@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vvf on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/vvf/</link>
+    <link>http://localhost:1313/tags/vvf/</link>
     <description>Recent content in Vvf on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Mon, 07 Jul 2025 20:00:00 +0200</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/vvf/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/vvf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VCF 9 - Migration to central VCF Operations instance</title>
-      <link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
+      <link>http://localhost:1313/posts/vcf-operations-migration/</link>
       <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
+      <guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where should I start? Perhaps I should describe my starting point.&#xA;I deployed a nested lab with VCF9 for the VCF9 beta, so far so good.&#xA;This lab came with its own VCF Operations. Now we are GA and I am lucky enough to have 256 core VCF9 licenses.&#xA;I wanted to upgrade part of my hardware lab to ESX9 because I also want to test memory tiering in its final version, and that&amp;rsquo;s where my problems start.&#xA;In VCF9, there are no more keys and you have to license your products via VCF Operations and vCenter.&#xA;This also applies to VVF, or if you want to use ESX9 on your physical lab hardware.&lt;/p&gt;</description>
     </item>
   </channel>

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kvm on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/kvm/</link>
+    <link>http://localhost:1313/tags/kvm/</link>
     <description>Recent content in Kvm on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Mon, 03 Feb 2025 21:00:00 +0100</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/kvm/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/kvm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>JetKVM - all show and no substance?</title>
-      <link>https://sdn-warrior.org/posts/jetkvm/</link>
+      <link>http://localhost:1313/posts/jetkvm/</link>
       <pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/jetkvm/</guid>
+      <guid>http://localhost:1313/posts/jetkvm/</guid>
       <description>&lt;h2 id=&#34;jetkvm-a-kickstarter-project&#34;&gt;JetKVM a Kickstarter Project&lt;/h2&gt;&#xA;&lt;p&gt;Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&amp;rsquo;m only now getting to my conclusion and test.&lt;/p&gt;</description>
     </item>
   </channel>

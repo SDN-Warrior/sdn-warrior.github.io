@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-06-17T18:00:00+02:00">
   <meta itemprop="dateModified" content="2025-06-17T18:00:00+02:00">
   <meta itemprop="wordCount" content="3000">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Vpc"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Vpc"><meta property="og:url" content="http://localhost:1313/posts/vcf9-nsx-vpc/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF 9 - NSX VPC Part 1 - centralized Transit Gateway">
   <meta property="og:description" content="A short article about VPCs in NSX 9 and VCF 9.">
@@ -44,10 +44,10 @@
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Vpc">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
   <meta name="twitter:title" content="VCF 9 - NSX VPC Part 1 - centralized Transit Gateway">
   <meta name="twitter:description" content="A short article about VPCs in NSX 9 and VCF 9.">
 
@@ -62,16 +62,16 @@
     "articleBody": "Introduction Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!\nBut wait, from the top, what are VPCs anyway? VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.\nWhile in NSX 4.X VPCs were only visible in the GUI when an NSX project was created, VMware has now changed this completely. As soon as you open the NSX GUI, the VPCs tab immediately catches your eye.\nNSX 9 VPC (click to enlarge)\nAs you can see here in the screenshot, VPC is very present in NSX and VCF 9, but before we can talk about VPCs, we need to talk about a new gateway in NSX 9 - the Default Transit Gateway.\nDefault Transit Gateway What the hell is a Default Transit Gateway? Yes, that’s what I asked myself when I first tried out the beta of VCF 9. Whereas in NSX 4.X a VPC was attached directly to a T0 or a VRF, in VCF9 a Transit Gateway is connected upstream, or rather the default Transit Gateway. At present, you can only have one Transit Gateway per project. What is new in VCF 9 or NSX 9 is that the default project can now also have one or more VPCs.\nInfo\rI will not go into NSX projects in this article, otherwise it would go beyond the scope of this article. However, you can imagine that a project can represent a department or customer, while a VPC can be a logically separate environment within the project. For example, to realize test and staging environments within a project or to provide different development environments for different teams in the same project.\rThe default Transit Gateway is present from the start and cannot be deleted. The configuration options are also very limited. I can specify the name, the External Connection and the VPC Transit Subnet. This network comes from the 100.64.x.x range and is normally assigned by NSX itself and does not need to be customized. The HA mode is taken over by the T0 to which my Transit Gateway is connected or, more precisely, my VPC connection profile determines whether the HA mode is taken over by my T0 or not.\nInfo\rIf you want to use default outbound NAT in your VPC, then your T0 should be active/standby or active/active stateful. Otherwise only manual static NAT is possible.\rHowever, this is only half the truth, because there is also the so-called distributed mode. However, this assumes that I have created my External Connection as a Distributed Connection and not as a Centralized Connection (with Edge Transportnodes). But that’s another story and I will work through the Distributed Connection in a separate article.\nLet’s get started - Network Connectivity First we need to configure our network connectivity. There are two ways to do this. 1. in the vCenter or 2. in the NSX Manager under System -\u003e Setup Network Connectivity. This point is new. In VCF9, edges are no longer deployed via the SDDC as in VCF 5.X, but via the network connectivity. Here I can also expand my Edge Cluster or deploy a new Edge Cluster. Fortunately, the deployment process has been optimized and is less error-prone and also has a few quality of life improvements.\nvCenter Network Connectivity (click to enlarge)\nI now have to configure my VPC External IP Blocks in the Network Configuration. These IP blocks are then used for all public networks and must generally be routed by my network. This also means that these networks must not overlap. The Private - Transit Gateway IP Blocks are new. These are used so that the VPCs of the same project can communicate with each other. Which networks are used in VPCs will be explained in the course of the article. The Private - Transit Gateway IP Blocks do not have to be routed in the physical network. They are used exclusively for intra-VPC communication.\nvCenter Network Connectivity (click to enlarge)\nA few things are now happening in the background. Firstly, my VPC connectivity profile is being configured by NSX.\nInfo\rIn this profile I could also deactivate the N-S services to switch my Transit Gateway to distributed.\rIn addition, an external connectivity profile is created under Networking -\u003e External Connections. This determines which T0 router the Transit Gateway is connected to. Finally, the External Connectivity Profile is assigned to my Transit Gateway. Can also be found under Networking -\u003e Transit Gateway. Now that we have taken care of the external connection, we can concentrate on creating the actual VPC.\nCreate a Virtual Private Cloud We are now about to create our first VPC. In VCF 9, there are two options. One is via vCenter and the other is directly via NSX. Since we have not yet configured a VPC service profile, we will create our first VPC via NSX. To do this, we go to Add VPC in the VPC menu and are greeted by this attractive dialog box.\nNew VCP in NSX (click to enlarge)\nHere we assign a name to our VPC, select the previously created connectivity profile, and can select or create a service profile. In the VPC service profile, we can activate a DHCP server and assign profile-specific DNS servers. These must be accessible from the VPC. The same applies to the NTP server. We can also create subnet profiles. The standard profiles that every normal NSX segment has are stored here. Normally, we don’t need to worry about anything here. In my VPC setup, I have activated a DHCP server in the service profile for my default project and specified my LAB DNS and global NTP server.\nVPC Service Profile (click to enlarge)\nNext, I define a private VPC IP CIDR (maximum of 5 per VPC). In my lab, this is 192.168.5.0/24. I will explain what these are and what they do in the next section. I also assign a short, descriptive log identifier and assign the VPC name.\nVPC Blue (click to enlarge)\nAfter saving and creating the VPC, the additional configurations must be carried out. Here, we can authorize users/groups for the VPC and assign different roles. More importantly, however, we can create our actual subnets. I think now would be a good time to explain the different types of subnets.\nVPC Subnets In VCF 9, there are now three different types of VPC subnets. Actually, there are four, but the fourth is an AVI service subnet, which is actually only a automatic created private VPC subnet - so that doesn’t really count. This means that we actually have three subnet types.\nPrivate VPC This subnet is the network that is only routed within the VPC. That is why it is private – makes sense so far. This subnet cannot be accessed outside the VPC and the network is assigned from the private VPC IP CIDRs.\nPrivate - Transit Gateway This network is new in VCF9. Similar to the private network, the network is created from the defined private transit gateway IP blocks (VPC connectivity profile). However, it is routed via the default transit gateway, which allows you to access workloads in these networks from all VPCs connected to the same transit gateway. Since you can currently only have one transit gateway per NSX project, you should use these networks with caution. The useful thing is that even though the networks are routed via the transit gateway, they are only accessible to VPCs. VMs connected to a T1 or T0 router via segments cannot reach these networks because the T0 does not have routes for private networks.\nPublic The name says it all. These are subnets created from the previously defined external IP blocks. They must be routed, must not overlap, and are managed via the VPC Connectivity Profile, as with the Transit Gateway. Workloads in public networks are generally accessible from anywhere.\nVPC Subnets (click to enlarge)\nAdditional Configurations Now that we have clarified which subnets exist in VPC, we can move on to the final settings so that the VPC can be created. I create one for each subnet and let it be assigned automatically. Since Default Outbound NAT is specified in the VPC Connectivity Profile, NSX automatically creates an Outbound NAT Rule. In addition, a group containing all VPC subnets is automatically created. This can be used in the distributed firewall. We could also define additional firewall rules (requires a vDefend license – without a license, only stateless N/S rules can be defined). I will explain the topic of network services later in this article.\nAdditional Configurations (click to enlarge)\nFor my test, I create another VPC. My finished topology now looks like this. As always, I will use Alpine Linux VMs for testing.\nVPC Topologiy (click to enlarge)\nI created a second VPC via vCenter. This option has been integrated into the network overview and is essentially the same as in NSX. This creation option can also be controlled via permissions or even completely disabled. There is only one difference compared to creation via NSX Manager. In vCenter, you can currently only manage VPCs from the default project. All VPCs from other projects are read-only. In addition, you cannot modify the profiles. This is reserved for the NSX administrator.\nInfo\rIn my opinion, this is a good way to hand over the management of VPC networks to vSphere administrators or others. No network knowledge is required to create a new subnet, as the profiles are predefined. Developers could, for example, create new networks in their development VPC themselves. No complicated automation is required, just a simple right-click in vCenter.\rInitial tests with the VPC-Blue For my test, I created six VMs (see table) and assigned them to the corresponding networks of the VPCs in vCenter. The table shows the gateways automatically created by NSX.\nVM Name Network Type Gateway IP Adress alpine01-blue-private private 192.168.5.1/28 192.168.5.3 alpine02-blue-transit transit 10.28.12.1/28 10.28.12.3 alpine03-blue-public public 192.168.72.17/28 192.168.72.19 alpine04-red-private private 192.168.5.1/28 192.168.5.4 alpine05-red-transit transit 10.28.12.17/28 10.28.12.19 alpine06-red-public public 192.168.72.33/28 192.168.72.35 As you can see, the public and transit networks do not overlap and are created consecutively. Since I have enabled DHCP in every VPC subnet, the first and second IP addresses are occupied. The first is the gateway, the second is the DHCP server.\nTest scenarios I will perform certain tests for each VM from VPC-BLUE. First, I will test Internet connectivity, then intra-VPC connectivity, i.e., communication with all VMs in VPC-BLUE, and finally inter-VPC connectivity, i.e., communication with all VMs in VPC-RED. Finally, I will perform a connectivity test from outside the NSX environment. I will do all of this with simple ICMP tests. To do this, all firewalls on NSX and the VMs have been disabled.\nalpine01-blue-private Internet connectivity In my first test, I would like to see where the alpine01-blue-private can communicate. The VM has been assigned the IP address 192.168.5.3 by the DHCP. Since N-S Services and Default Outbound NAT are enabled in the VPC Connectivity Profile, alpine01-blue-private reaches the Internet and is nat-ed to the first public IP address of the public network IP for VPC SNAT.\nInfo\rTo make this work, NSX takes a subnet from the public network block in the background and reserves it for outbound NAT. Each VPC gets its own outbound NAT IP. VPC-Blue has been assigned the outbound NAT IP address 192.168.72.0/32, and VPC-RED has automatically been assigned the outbound NAT IP address 192.168.72.1/32. The public subnets should therefore be sufficiently large, as a maximum of five subnets can be specified per profile.\rVPC-Blue Auto SNAT Rule (click to enlarge)\nIntra VPC connectivity Next, I test the connectivity to the alpine02-blue-transit vm. This test is also successful, as the transit VM can also be accessed via the VPC gateway. Even though you might think that the SNAT rule applies here, it does not, because NAT takes place on the transit gateway and not on the VPC gateway. The traffic is also distributed routed between the two subnets. This can also be seen very clearly in the NSX Traceflow. The same applies to the connectivity to the alpine03-vpc-blue-public VM.\nInter VPC connectivity In this test, I first try to reach the VM alpine04-red-private. This is not possible because private networks are not routed via the Transit Gateway. In addition, the private networks overlap. Next, I perform a connection test to alpine05-red-transit. This is successful, but the traffic is nated via SNAT on the transit gateway. This also means that the traffic is not distributed routed and must run via the edge VM. The same applies to traffic to alpine06-red-public. TCPDUMP on alpine05-red-transit (click to enlarge)\nExternal connectivity The VM cannot be accessed externally. My core router also does not have a route for the 192.168.5.0/28 subnet. The routes are not announced to the T0 and therefore cannot be accessed by my physical test client on which I am currently writing this blog. To avoid writing a lengthy explanation, I will present the results in table form.\nTest # Source Destination Connect NAT Dist. Routing 1 blue-private Internet Yes Yes No 2 blue-private blue-transit Yes No Yes 3 blue-private blue-public Yes No Yes 4 blue-private red-private No - - 5 blue-private red-transit Yes Yes No 6 blue-private red-public Yes Yes No 7 External blue-private No - - alpine02-blue-transit Test # Source Destination Connect SNAT Dist. Routing 1 blue-transit Internet Yes Yes No 2 blue-transit blue-private Yes No Yes 3 blue-transit blue-public Yes No Yes 4 blue-transit red-private No - - 5 blue-transit red-transit Yes No No 6 blue-transit red-public Yes Yes No 7 External blue-transit No - - alpine03-blue-public Test # Source Destination Connect NAT Dist. Routing 1 blue-public Internet Yes Yes No 2 blue-public blue-private Yes No Yes 3 blue-public blue-transit Yes No Yes 4 blue-public red-private No - - 5 blue-public red-transit No - - 6 blue-public red-public Yes No No 7 External blue-public Yes - No Info\rSince N-S services are enabled in the VCP Connectivity Profile, traffic between VPCs cannot be distributed routed. Disabling N-S services would allow traffic to be distributed routed, but NAT would then no longer be possible. Test 5 is interesting because NAT is not used there, but since we have N-S services active, the traffic still has to pass through the Edge VM.\rI think I was able to clearly explain how VPC and the various subnets work. It opens up exciting possibilities. However, I would like to discuss one more feature, namely the option of assigning an external IP address to a VM from a private VPC subnet. This can be done via NSX as well as via vCenter.\nAssign External IP With this feature, you can make a VM from a private VPC network available with just two clicks via vCenter. You can think of it a bit like Elastic IP.\nAssign External IP (click to enlarge)\nAll you have to do is select the VM’s network adapter and confirm. The magic happens in the background. But let’s take a closer look. An external IP was created in NSX under VPC / Network Services. If we take a closer look, we see that an IP address from the public subnet of VPC Blue was assigned.\nAssign External IP VPC-Blue (click to enlarge)\nThe vm alpine01-blue-private is now accessible from anywhere via the IP address 192.168.72.2. Pretty cool. You can also cancel the assignment at any time, and the public IP will be returned to the IP address pool and can be used elsewhere.\nThis is implemented via a DNAT, which cannot be found in the NSX GUI. You can check this on the Active Edge by selecting the relevant interface with the command get firewall Interfaces and then displaying the NAT rules with get firewall \u003c uuid \u003e ruleset rules.\nvcf09-edge01\u003e get firewall 0bbcf4b5-1321-40b4-9325-f8023c06bdf2 ruleset rules Tue Jun 17 2025 UTC 16:10:06.440 DNAT rule count: 1 Rule ID : 536875009 Rule : in inet protocol any postnat from any to addrset {192.168.72.2} dnat EIP table id: b1274d77-e09e-4cf5-8377-4501f54e296e SNAT rule count: 2 Rule ID : 536875008 Rule : out inet protocol any prenat from addrset {192.168.5.3} to any snat EIP table id: b1274d77-e09e-4cf5-8377-4501f54e296e Rule ID : 536873996 Rule : out protocol any prenat from ip 192.168.5.0/24 to any snat ip 192.168.72.1 port 37001-65535 Firewall rule count: 0 Here we see that a DNAT is being performed, making our VM accessible from outside the network. And the best part is that it’s all completely simple and requires no network knowledge.\nConclusion VPCs are more prevalent than ever, and VMware is pursuing a clear path toward multi-tenancy in VCF9 and NSX9. Many familiar mechanisms have now been combined in NSX 9, and exciting developments are still on the way. In this article, I have only discussed centralized deployment. Distributed deployment is perhaps even more exciting, but it would have made this article too long. I also haven’t talked about security or NSX projects, because both deployment options can be combined to bring significant added value to an on-premises cloud. I will therefore be publishing further articles on VCF 9, NSX 9, and VPCs in the near future. I look forward to many more exciting topics with VCF9. In my opinion, VCF 9 is a really big leap forward, and a lot has really happened in NSX 9 in particular. One thing is clear: the next few weeks and months will not be boring.\nOne more thing Perhaps a little fun fact. Anyone who has read my article on MS-A2 will know that I wrote that I run a VCF installation on it – well, now I can reveal that my VCF 9 lab is currently running nested on my single Minisforum MS-A2 server.\n",
     "wordCount" : "3000",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2025-06-17T18:00:00+02:00",
+    "image":"http://localhost:1313/images/head.jpg","datePublished": "2025-06-17T18:00:00+02:00",
     "dateModified": "2025-06-17T18:00:00+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/vcf9-nsx-vpc/"
+      "@id": "http://localhost:1313/posts/vcf9-nsx-vpc/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -122,26 +122,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-nsx-vpc%2f&amp;text=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f&amp;text=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-nsx-vpc%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-nsx-vpc%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-nsx-vpc%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway&amp;summary=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway%2c%20by%20SDN-Warrior%0a%0aA%20short%20article%20about%20VPCs%20in%20NSX%209%20and%20VCF%209.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-nsx-vpc%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway&amp;summary=VCF%209%20-%20NSX%20VPC%20Part%201%20-%20centralized%20Transit%20Gateway%2c%20by%20SDN-Warrior%0a%0aA%20short%20article%20about%20VPCs%20in%20NSX%209%20and%20VCF%209.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -149,7 +149,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF 9 - NSX VPC Part 1 - centralized Transit Gateway&#34;,&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;,&#34;VCF 9 - NSX VPC Part 1 - centralized Transit Gateway, by SDN-Warrior\n\nA short article about VPCs in NSX 9 and VCF 9.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF 9 - NSX VPC Part 1 - centralized Transit Gateway&#34;,&#34;http://localhost:1313/posts/vcf9-nsx-vpc/&#34;,&#34;VCF 9 - NSX VPC Part 1 - centralized Transit Gateway, by SDN-Warrior\n\nA short article about VPCs in NSX 9 and VCF 9.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -167,10 +167,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -191,7 +191,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vpc">vpc</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/vpc">vpc</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -814,14 +814,14 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="https://sdn-warrior.org/posts/homelab-v6/">
+			<a class="next-post" href="http://localhost:1313/posts/homelab-v6/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</span>
 			</a>
-			<a class="prev-post" href="https://sdn-warrior.org/posts/ms-a2/">
+			<a class="prev-post" href="http://localhost:1313/posts/ms-a2/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -834,20 +834,14 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
-   <path d="M4 11a9 9 0 0 1 9 9"></path>
-   <path d="M4 4a16 16 0 0 1 16 16"></path>
-   <circle cx="5" cy="19" r="1"></circle>
-</svg></a></p>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

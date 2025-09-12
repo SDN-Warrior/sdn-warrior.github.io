@@ -2,53 +2,53 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Broadcom on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/broadcom/</link>
+    <link>http://localhost:1313/tags/broadcom/</link>
     <description>Recent content in Broadcom on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Sun, 31 Aug 2025 12:00:00 +0000</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/broadcom/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/broadcom/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMware Explore 2025</title>
-      <link>https://sdn-warrior.org/posts/explore-2025/</link>
+      <link>http://localhost:1313/posts/explore-2025/</link>
       <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+      <guid>http://localhost:1313/posts/explore-2025/</guid>
       <description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VMUG Connect St. Louis 2025</title>
-      <link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
+      <link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
       <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
-      <guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
+      <guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
       <description>&lt;h2 id=&#34;vmug-st-louis--between-tech-talks-and-travel-vibes&#34;&gt;VMUG St. Louis – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from &lt;a href=&#34;https://www.evoila.de&#34;&gt;evoila&lt;/a&gt;, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&amp;rsquo;m German after all.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF - How to use the Broadcom Download Token</title>
-      <link>https://sdn-warrior.org/posts/vcf-token/</link>
+      <link>http://localhost:1313/posts/vcf-token/</link>
       <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-token/</guid>
+      <guid>http://localhost:1313/posts/vcf-token/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Stretched Cluster</title>
-      <link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
+      <link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
       <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
+      <guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is my third article in my VCF Homelab series.&#xA;On second thought, I may have put the cart before the horse, because a stretched vSAN cluster requires a functioning management domain.&#xA;But ok, that shouldn&amp;rsquo;t bother us now. I&amp;rsquo;ll try to cover all the essentials of the deployment in this article.&lt;/p&gt;&#xA;&lt;h3 id=&#34;what-are-the-benefits-of-a-stretched-vsan-cluster-and-why-does-it-have-to-be-vsan&#34;&gt;What are the benefits of a stretched vSAN cluster and why does it have to be vSAN?&lt;/h3&gt;&#xA;&lt;p&gt;Well, first the obvious.&#xA;We have to use vSAN because we have a consolidated design here and VCF (version 5.2.1) does not allow any other principal storage in the consolidated design (also, this article is about a vSAN stretched cluster).&#xA;Secondly, we want to use the synchronous replication of vSAN to the second site. Another reason is “German Angst”. We want to have redundancy here and a muti AZ design. In Germany, there have traditionally been stretched clusters across multiple fire compartments or buildings for a long time. In the past, I myself have already implemented such scenarios with layer 2 over layer 3 (aka VxLAN).&#xA;The much more elegant way (and also the way supported by VCF) is the vSAN stretched cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-      <link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
+      <link>http://localhost:1313/posts/vcf-import-overlay/</link>
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
+      <guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
+      <link>http://localhost:1313/posts/vcf-import-cluster/</link>
       <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
+      <guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
     </item>
   </channel>

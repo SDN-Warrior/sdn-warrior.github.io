@@ -2,137 +2,144 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Nsx on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/nsx/</link>
+    <link>http://localhost:1313/tags/nsx/</link>
     <description>Recent content in Nsx on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 19 Aug 2025 09:21:00 +0200</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tails from the Lab – Lab setup</title>
+      <link>http://localhost:1313/posts/tails-from-the-lab-setup/</link>
+      <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
+      <guid>http://localhost:1313/posts/tails-from-the-lab-setup/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9 - Certificate exchange</title>
-      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+      <link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
       <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+      <guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
       <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 3 - Security</title>
-      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
+      <link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
       <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
+      <guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my two other VPC articles, I showed you the basics and the differences between &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;centralized deployment&lt;/a&gt; and &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/&#34;&gt;distributed deployment&lt;/a&gt;.&#xA;Today, I would like to write something about security, as VPCs offer various possibilities in this area.&#xA;VPCs provide a certain degree of isolation through their private networks, as these cannot be easily routed from outside the VPC.&#xA;But what if we want to protect a VM from the public network or a private VM that has been assigned a public IP? This is where the distributed firewall and gateway firewall come into play.&#xA;Let&amp;rsquo;s find out exactly how.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
+      <link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
       <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
+      <guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.&#xA;If you are not familiar with VPCs and have not yet come across this topic, I recommend reading &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;Part 1&lt;/a&gt; first.&#xA;I will not go into all the basics again in this article, as these were already explained in the first article.&#xA;In this article, I will look at the distributed deployment of VPCs and show how VPCs can also be used without an edge cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX - IDFW &amp; DFW Troubleshooting</title>
-      <link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
+      <link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
       <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+      <guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.&#xA;I&amp;rsquo;m sure everyone has been in this situation: you&amp;rsquo;ve written a nice new Identity firewall, but for some reason it doesn&amp;rsquo;t work.&#xA;If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn&amp;rsquo;t work with the Identity firewall.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-the-identity-firewall&#34;&gt;What is the Identity Firewall?&lt;/h2&gt;&#xA;&lt;p&gt;An identity firewall does not make firewall decisions based on IP addresses, but uses user and group information to apply security policies.&#xA;It identifies users based on their login credentials and dynamically assigns them appropriate access rights and firewall rules.&#xA;This enables more granular control and improved protection, as access permissions are directly linked to the actual identity of the user.&#xA;If you want to know how I used this for one of my customers, you can read about it &lt;a href=&#34;https://sdn-warrior.org/posts/nsx-idfw-vdi/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-      <link>https://sdn-warrior.org/posts/homelab-v6/</link>
+      <link>http://localhost:1313/posts/homelab-v6/</link>
       <pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+      <guid>http://localhost:1313/posts/homelab-v6/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.&#xA;On top of that, the Minisforum A2 was finally available. But first things first.&lt;/p&gt;&#xA;&lt;h2 id=&#34;25-gbs-lan---and-what-i-have-learned&#34;&gt;2.5 Gb/s LAN - and what I have learned&lt;/h2&gt;&#xA;&lt;p&gt;Well, where should I start? I bought the Mikrotik CRS326-4C+20G+2Q for my NUCs, which offered me 20x 2.5 GB/s ports and wasn&amp;rsquo;t exactly cheap at around 800 euros.&#xA;In hindsight, I can say that it wasn&amp;rsquo;t a good investment. Not that the switch is bad, it&amp;rsquo;s not, but as of today, I only use exactly 2 2.5G ports.&#xA;For this purpose, I utilize all 10G and 40G ports (with brakeout) as 10G ports are now in short supply. Following the recent upgrade, I have exactly one 10G port remaining in the entire lab.&#xA;That&amp;rsquo;s why I&amp;rsquo;m actually considering selling the Switch again.&#xA;But hey, that&amp;rsquo;s part of homelabbing. Sometimes you just make bad investments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
+      <link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
       <pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+      <guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!&lt;/p&gt;&#xA;&lt;p&gt;But wait, from the top, what are VPCs anyway?&#xA;VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tales from the Lab - Minisforum MS-A2</title>
-      <link>https://sdn-warrior.org/posts/ms-a2/</link>
+      <link>http://localhost:1313/posts/ms-a2/</link>
       <pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+      <guid>http://localhost:1313/posts/ms-a2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;After being impressed with the performance and form factor of the Minisforum &lt;strong&gt;MS-01&lt;/strong&gt;, I had to get my hands on their latest beast: the &lt;strong&gt;MS-A2&lt;/strong&gt;, powered by AMD&amp;rsquo;s latest Zen 5 architecture.&#xA;It&amp;rsquo;s also exciting to test a gadget before &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;. Thanks for letting me be the first (I&amp;rsquo;m just kidding, of course).&lt;/p&gt;&#xA;&lt;p&gt;In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.&lt;/p&gt;</description>
     </item>
     <item>
       <title>ReSTNSX with HCX</title>
-      <link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
+      <link>http://localhost:1313/posts/restnsx-with-hcx/</link>
       <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+      <guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&amp;rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.&lt;/p&gt;&#xA;&lt;p&gt;But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&amp;rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.&#xA;We will see in this post whether it is really that simple.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX Expiring Transport Node Certificates</title>
-      <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
+      <link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
       <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+      <guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Quick Tip - WLD with single NSX Manager</title>
-      <link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
+      <link>http://localhost:1313/posts/vcf-single-nsx/</link>
       <pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
+      <guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&amp;rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.&#xA;We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How Apply To works in NSX DFW</title>
-      <link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
+      <link>http://localhost:1313/posts/nsx-apply-to/</link>
       <pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
+      <guid>http://localhost:1313/posts/nsx-apply-to/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;When working with the &lt;strong&gt;NSX Distributed Firewall (DFW)&lt;/strong&gt;, one feature that often goes unnoticed or misunderstood is &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt;. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.&lt;/p&gt;&#xA;&lt;p&gt;In many VMware training courses, &lt;strong&gt;&amp;lsquo;Apply To&amp;rsquo;&lt;/strong&gt; is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>More performance trough NSX Edge TEP groups?</title>
-      <link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
+      <link>http://localhost:1313/posts/nsx-tep-groups/</link>
       <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
+      <guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My esteemed colleague, Steven Schramm, recently published an excellent article titled &lt;em&gt;&lt;a href=&#34;https://sdn-techtalk.com/posts/multitep-ha/&#34;&gt;Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability&lt;/a&gt;&lt;/em&gt;. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-tep-groups-and-why-are-they-interesting&#34;&gt;What Are TEP Groups and Why Are They Interesting?&lt;/h2&gt;&#xA;&lt;p&gt;With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redeploy an NSX Edge VM Appliance</title>
-      <link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
+      <link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
       <pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
+      <guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How to use QoS in NSX</title>
-      <link>https://sdn-warrior.org/posts/nsx-qos/</link>
+      <link>http://localhost:1313/posts/nsx-qos/</link>
       <pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
+      <guid>http://localhost:1313/posts/nsx-qos/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.&lt;/p&gt;&#xA;&lt;p&gt;In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&amp;rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX 4.2.1.1 Hotfix Update</title>
-      <link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
+      <link>http://localhost:1313/posts/nsx4_2_1_1/</link>
       <pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
+      <guid>http://localhost:1313/posts/nsx4_2_1_1/</guid>
       <description>&lt;p&gt;The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-enhanced-stability-for-virtual-environments&#34;&gt;1. Enhanced Stability for Virtual Environments&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Loss of IP Bindings after VMotion (Issue 3453866): Addressed the removal of IP bindings and logical ports associated with VMs during vMotion events.&lt;/li&gt;&#xA;&lt;li&gt;Critical ESXi Errors with UENS (Issue 3456283): Fixed intermittent PSODs caused by control priority filter lookups, ensuring smoother ESXi operations.&lt;/li&gt;&#xA;&lt;li&gt;Portgroup Creation Issue (Issue 3458111): Resolved the creation of additional portgroups during full sync, preventing potential vCenter crashes.&lt;/li&gt;&#xA;&lt;li&gt;Transport Zone Reference Issue (Issue 3454291): Fixed transport zone profile mismatches, restoring vMotion and service functionality.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;2-improved-network-performance&#34;&gt;2. Improved Network Performance&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;TCP Packet Drops in EDP (Issue 3457047): Resolved issues causing TCP connection drops when using Enhanced Datapath configurations.&lt;/li&gt;&#xA;&lt;li&gt;Packet Reordering with LRO (Issue 3456533): Fixed packet reordering issues when HW Large Receive Offload is enabled, improving TCP throughput.&lt;/li&gt;&#xA;&lt;li&gt;Reduced Traffic Performance with UENS and LRO (Issue 3456289): Addressed performance degradation in VSAN workloads.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;3-robust-security-and-monitoring&#34;&gt;3. Robust Security and Monitoring&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NSX UI Alarm for Metrics Delivery Failure (Issue 3456663): Fixed authentication issues following certificate changes to restore metrics delivery.&lt;/li&gt;&#xA;&lt;li&gt;IDPS and TLS Prevention (Issue 3458040): Enhanced malicious traffic prevention by resolving decryption issues with IDPS.&lt;/li&gt;&#xA;&lt;li&gt;IDPS Events and Certificate Verification (Issue 3458038): Restored the flow of IDPS events to Security Intelligence by fixing Kafka channel errors.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;4-stability-in-upgrades-and-configurations&#34;&gt;4. Stability in Upgrades and Configurations&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NSX Manager Slowness (Issue 3453882): Resolved slowness and instability in NSX Manager post-upgrade.&lt;/li&gt;&#xA;&lt;li&gt;Edge Node IP Table Rules (Issue 3452795): Ensured proper application of IP table rules on Edge nodes.&lt;/li&gt;&#xA;&lt;li&gt;NSX Configuration Realization (Issue 3452794): Fixed issues preventing configuration realization on Transport Nodes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;5-enhancements-in-distributed-firewall-and-flow-management&#34;&gt;5. Enhancements in Distributed Firewall and Flow Management&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;DFW Rules During Upgrade (Issue 3450247): Mitigated periods where DFW rules were disabled during the upgrade process.&lt;/li&gt;&#xA;&lt;li&gt;Flow Exporter Alarms (Issues 3429787, 3456644): Fixed alarms and restored flow export functionality for Security Intelligence.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;6-overlay-and-connectivity-improvements&#34;&gt;6. Overlay and Connectivity Improvements&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Overlay Segment Connectivity (Issue 3450019): Addressed connectivity loss in Overlay Segments when Edge TEP groups were enabled.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;&#xA;&lt;p&gt;This NSX update resolves critical issues to improve operational reliability, security, and performance in virtual environments. For a seamless experience, upgrading to this release is highly recommended. As always, thorough testing in a staging environment before deployment in production is advised.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX Integration Fortigate</title>
-      <link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+      <link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
       <pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+      <guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
       <description>&lt;h2 id=&#34;nsx-integration-for-fortinet-fortigate-firewalls&#34;&gt;NSX integration for Fortinet Fortigate Firewalls&lt;/h2&gt;&#xA;&lt;p&gt;Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.&lt;/p&gt;&#xA;&lt;h2 id=&#34;first-things-first&#34;&gt;First things first&lt;/h2&gt;&#xA;&lt;p&gt;The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups.&#xA;This allows us to use dynamic groups that were previously created in NSX using tags, for example.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-      <link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
+      <link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
       <pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
+      <guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
       <description>&lt;aside class=&#34;admonition info&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-info&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12.01&#34; y2=&#34;8&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Disclaimer&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;There are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&#xA;&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX 4.X Certificate exchange of the NSX Manager</title>
-      <link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
+      <link>http://localhost:1313/posts/nsx-cert-exchange/</link>
       <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
+      <guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
       <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
     </item>
   </channel>

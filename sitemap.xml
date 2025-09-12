@@ -2,265 +2,268 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://sdn-warrior.org/posts/</loc>
+    <loc>http://localhost:1313/tags/amd/</loc>
     <lastmod>2025-09-12T17:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/</loc>
+    <loc>http://localhost:1313/tags/homelab/</loc>
     <lastmod>2025-09-12T17:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/sddc/</loc>
+    <loc>http://localhost:1313/tags/intel/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/minisforum/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/nsx/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/tails-from-the-lab-setup/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/vcf/</loc>
+    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/sddc/</loc>
     <lastmod>2025-09-07T23:00:08+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
+    <loc>http://localhost:1313/tags/upgrade/</loc>
     <lastmod>2025-09-07T23:00:08+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/upgrade/</loc>
+    <loc>http://localhost:1313/tags/vcf9/</loc>
     <lastmod>2025-09-07T23:00:08+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf/</loc>
+    <loc>http://localhost:1313/posts/vcf5-to-9-upgrade/</loc>
     <lastmod>2025-09-07T23:00:08+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf9/</loc>
-    <lastmod>2025-09-07T23:00:08+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</loc>
-    <lastmod>2025-09-07T23:00:08+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/broadcom/</loc>
+    <loc>http://localhost:1313/tags/broadcom/</loc>
     <lastmod>2025-08-31T12:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vexperts/</loc>
+    <loc>http://localhost:1313/tags/vexperts/</loc>
     <lastmod>2025-08-31T12:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vmware/</loc>
+    <loc>http://localhost:1313/tags/vmware/</loc>
     <lastmod>2025-08-31T12:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/explore-2025/</loc>
+    <loc>http://localhost:1313/posts/explore-2025/</loc>
     <lastmod>2025-08-31T12:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/certificates/</loc>
+    <loc>http://localhost:1313/tags/certificates/</loc>
     <lastmod>2025-08-19T09:21:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/homelab/</loc>
+    <loc>http://localhost:1313/posts/vcf9-cert-exchange/</loc>
     <lastmod>2025-08-19T09:21:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2025-08-19T09:21:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf9-cert-exchange/</loc>
-    <lastmod>2025-08-19T09:21:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/security/</loc>
+    <loc>http://localhost:1313/tags/security/</loc>
     <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</loc>
+    <loc>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</loc>
     <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vpc/</loc>
+    <loc>http://localhost:1313/tags/vpc/</loc>
     <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/operations/</loc>
+    <loc>http://localhost:1313/tags/operations/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf-operations-migration/</loc>
+    <loc>http://localhost:1313/posts/vcf-operations-migration/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vvf/</loc>
+    <loc>http://localhost:1313/tags/vvf/</loc>
     <lastmod>2025-07-07T20:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</loc>
+    <loc>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</loc>
     <lastmod>2025-06-26T19:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</loc>
+    <loc>http://localhost:1313/posts/nsx-dfw-troubleshooting/</loc>
     <lastmod>2025-06-24T01:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/amd/</loc>
+    <loc>http://localhost:1313/posts/homelab-v6/</loc>
     <lastmod>2025-06-20T17:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/homelab-v6/</loc>
-    <lastmod>2025-06-20T17:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/intel/</loc>
-    <lastmod>2025-06-20T17:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/minisforum/</loc>
-    <lastmod>2025-06-20T17:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</loc>
+    <loc>http://localhost:1313/posts/vcf9-nsx-vpc/</loc>
     <lastmod>2025-06-17T18:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/ms-a2/</loc>
+    <loc>http://localhost:1313/posts/ms-a2/</loc>
     <lastmod>2025-06-14T10:14:45+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/hcx/</loc>
+    <loc>http://localhost:1313/tags/hcx/</loc>
     <lastmod>2025-05-20T18:00:16+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/restnsx-with-hcx/</loc>
+    <loc>http://localhost:1313/posts/restnsx-with-hcx/</loc>
     <lastmod>2025-05-20T18:00:16+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</loc>
+    <loc>http://localhost:1313/posts/nsx-expiring-tn-certificates/</loc>
     <lastmod>2025-05-06T18:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/travel/</loc>
+    <loc>http://localhost:1313/tags/travel/</loc>
     <lastmod>2025-04-26T16:00:10-05:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vmug/</loc>
+    <loc>http://localhost:1313/tags/vmug/</loc>
     <lastmod>2025-04-26T16:00:10-05:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</loc>
+    <loc>http://localhost:1313/posts/vmug-connect-stl-2025/</loc>
     <lastmod>2025-04-26T16:00:10-05:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf-token/</loc>
+    <loc>http://localhost:1313/posts/vcf-token/</loc>
     <lastmod>2025-04-10T22:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf-single-nsx/</loc>
+    <loc>http://localhost:1313/posts/vcf-single-nsx/</loc>
     <lastmod>2025-04-01T00:42:39+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf-stretched-cluster/</loc>
+    <loc>http://localhost:1313/posts/vcf-stretched-cluster/</loc>
     <lastmod>2025-03-13T23:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nfs/</loc>
+    <loc>http://localhost:1313/tags/nfs/</loc>
     <lastmod>2025-03-05T21:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf-import-overlay/</loc>
+    <loc>http://localhost:1313/posts/vcf-import-overlay/</loc>
     <lastmod>2025-03-05T21:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vcf-import-cluster/</loc>
+    <loc>http://localhost:1313/posts/vcf-import-cluster/</loc>
     <lastmod>2025-02-23T16:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/jetkvm/</loc>
+    <loc>http://localhost:1313/posts/jetkvm/</loc>
     <lastmod>2025-02-03T21:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/kickstarrter/</loc>
+    <loc>http://localhost:1313/tags/kickstarrter/</loc>
     <lastmod>2025-02-03T21:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/kvm/</loc>
+    <loc>http://localhost:1313/tags/kvm/</loc>
     <lastmod>2025-02-03T21:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/migration-with-hcx/</loc>
+    <loc>http://localhost:1313/posts/migration-with-hcx/</loc>
     <lastmod>2025-01-28T20:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-apply-to/</loc>
+    <loc>http://localhost:1313/posts/nsx-apply-to/</loc>
     <lastmod>2025-01-11T02:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-tep-groups/</loc>
+    <loc>http://localhost:1313/posts/nsx-tep-groups/</loc>
     <lastmod>2025-01-03T12:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/network/</loc>
+    <loc>http://localhost:1313/tags/network/</loc>
     <lastmod>2025-01-03T12:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/quicktip/</loc>
+    <loc>http://localhost:1313/tags/quicktip/</loc>
     <lastmod>2024-12-30T15:00:46+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-edge-redeploy/</loc>
+    <loc>http://localhost:1313/posts/nsx-edge-redeploy/</loc>
     <lastmod>2024-12-30T15:00:46+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/ansible/</loc>
+    <loc>http://localhost:1313/tags/ansible/</loc>
     <lastmod>2024-12-24T13:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/vlan-automation/</loc>
+    <loc>http://localhost:1313/posts/vlan-automation/</loc>
     <lastmod>2024-12-24T13:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/mikrotik/</loc>
+    <loc>http://localhost:1313/tags/mikrotik/</loc>
     <lastmod>2024-12-24T13:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/automation/</loc>
+    <loc>http://localhost:1313/tags/automation/</loc>
     <lastmod>2024-12-20T02:00:04+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/ipam-automation/</loc>
+    <loc>http://localhost:1313/posts/ipam-automation/</loc>
     <lastmod>2024-12-20T02:00:04+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/netbox/</loc>
+    <loc>http://localhost:1313/tags/netbox/</loc>
     <lastmod>2024-12-20T02:00:04+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/chatgpt/</loc>
+    <loc>http://localhost:1313/tags/chatgpt/</loc>
     <lastmod>2024-12-17T22:36:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/first-steps-ansible/</loc>
+    <loc>http://localhost:1313/posts/first-steps-ansible/</loc>
     <lastmod>2024-12-17T22:36:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/esxi/</loc>
+    <loc>http://localhost:1313/tags/esxi/</loc>
     <lastmod>2024-12-14T02:00:26+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/homelab-v5/</loc>
+    <loc>http://localhost:1313/posts/homelab-v5/</loc>
     <lastmod>2024-12-14T02:00:26+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/unraid/</loc>
+    <loc>http://localhost:1313/tags/unraid/</loc>
     <lastmod>2024-12-14T02:00:26+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-qos/</loc>
+    <loc>http://localhost:1313/posts/nsx-qos/</loc>
     <lastmod>2024-12-10T02:00:40+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/networking/</loc>
+    <loc>http://localhost:1313/tags/networking/</loc>
     <lastmod>2024-12-10T02:00:40+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/qos/</loc>
+    <loc>http://localhost:1313/tags/qos/</loc>
     <lastmod>2024-12-10T02:00:40+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx4_2_1_1/</loc>
+    <loc>http://localhost:1313/posts/nsx4_2_1_1/</loc>
     <lastmod>2024-12-09T14:55:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/update/</loc>
+    <loc>http://localhost:1313/tags/update/</loc>
     <lastmod>2024-12-09T14:55:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/iscsi/</loc>
+    <loc>http://localhost:1313/tags/iscsi/</loc>
     <lastmod>2024-12-08T12:21:20+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/iscsi-tuning/</loc>
+    <loc>http://localhost:1313/posts/iscsi-tuning/</loc>
     <lastmod>2024-12-08T12:21:20+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/mac-learning/</loc>
+    <loc>http://localhost:1313/posts/mac-learning/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nested-lab/</loc>
+    <loc>http://localhost:1313/tags/nested-lab/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/performance/</loc>
+    <loc>http://localhost:1313/tags/performance/</loc>
     <lastmod>2024-11-27T19:54:18+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/storage/</loc>
+    <loc>http://localhost:1313/tags/storage/</loc>
     <lastmod>2024-11-19T23:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/unraid-storage/</loc>
+    <loc>http://localhost:1313/posts/unraid-storage/</loc>
     <lastmod>2024-11-19T23:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nuc/</loc>
+    <loc>http://localhost:1313/posts/nuc/</loc>
     <lastmod>2024-11-17T11:57:43+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/memory-tiering/</loc>
+    <loc>http://localhost:1313/tags/memory-tiering/</loc>
     <lastmod>2024-11-17T11:57:43+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nuc/</loc>
+    <loc>http://localhost:1313/tags/nuc/</loc>
     <lastmod>2024-11-17T11:57:43+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/labv4/</loc>
+    <loc>http://localhost:1313/posts/labv4/</loc>
     <lastmod>2024-11-16T20:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/firewall/</loc>
+    <loc>http://localhost:1313/tags/firewall/</loc>
     <lastmod>2024-08-26T19:49:23+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/fortigate/</loc>
+    <loc>http://localhost:1313/tags/fortigate/</loc>
     <lastmod>2024-08-26T19:49:23+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-integration-fortigate/</loc>
+    <loc>http://localhost:1313/posts/nsx-integration-fortigate/</loc>
     <lastmod>2024-08-26T19:49:23+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-idfw-vdi/</loc>
+    <loc>http://localhost:1313/posts/nsx-idfw-vdi/</loc>
     <lastmod>2024-08-02T08:34:23+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vdi/</loc>
+    <loc>http://localhost:1313/tags/vdi/</loc>
     <lastmod>2024-08-02T08:34:23+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/nsx-cert-exchange/</loc>
+    <loc>http://localhost:1313/posts/nsx-cert-exchange/</loc>
     <lastmod>2024-04-05T23:22:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/tls/</loc>
+    <loc>http://localhost:1313/tags/tls/</loc>
     <lastmod>2024-04-05T23:22:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/about/</loc>
+    <loc>http://localhost:1313/about/</loc>
   </url><url>
-    <loc>https://sdn-warrior.org/lab-bom/</loc>
+    <loc>http://localhost:1313/lab-bom/</loc>
   </url><url>
-    <loc>https://sdn-warrior.org/links/</loc>
+    <loc>http://localhost:1313/links/</loc>
   </url>
 </urlset>

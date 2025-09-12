@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-01-28T20:00:00+01:00">
   <meta itemprop="dateModified" content="2025-01-28T20:00:00+01:00">
   <meta itemprop="wordCount" content="2629">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,HCX,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/migration-with-hcx/">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,HCX,Vmware"><meta property="og:url" content="http://localhost:1313/posts/migration-with-hcx/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Migration with HCX">
   <meta property="og:description" content="Live Migration of Workloads with VMware HCX: A Customer Story">
@@ -43,10 +43,10 @@
     <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="HCX">
     <meta property="article:tag" content="Vmware">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
   <meta name="twitter:title" content="Migration with HCX">
   <meta name="twitter:description" content="Live Migration of Workloads with VMware HCX: A Customer Story">
 
@@ -61,16 +61,16 @@
     "articleBody": "Introduction I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.\nWhat is HCX? VMware HCX is an application mobility platform designed to simplify application migration, workload redeployment, and disaster recovery in data centers and clouds.\nHCX covers several use cases:\nExtend Networks with HCX Seamlessly extend vSphere and NSX network segments and retain the IP and MAC addresses of migrated VMs to accelerate consumption of modernized resources. Network Extension minimizes the need for complicated networking changes.\nMigrating Virtual Machines Select from multiple HCX mobility technologies for optimized migrations at scale for both VMware and non-VMware workloads.\nVirtual Machine Disaster Recovery Protect data center applications and workloads through asynchronous replication and recovery of virtual machines, as well as integration with the VMware’s Site Recovery Manager suite of features and tools.\nIn short, HCX is the answer to my customer problem.\nFirst things first: what are the requirements for HCX? Since HCX has been part of VCF since version 5.1.1, many customers have the opportunity to benefit from HCX. For those who want to test VCF, here is the good news: an eval license comes with HCX. Eval License\rThe eval license has a runtime of 60 days and can migrate a maximum of 20 VMs per migration type.\rFor environments requiring NSX virtual networking, you must install and configure NSX, including integration with the vCenter Server, before deploying HCX Manager.\nIn the destination environment, the NSX Manager must be installed and connected to the vCenter Server.\nThe NSX Manager must be registered during the HCX Manager install with the admin user.\nIf the NSX Manager IP or FQDN uses self-signed certificates, it might be necessary to trust the NSX system manually using the Import Cert by URL interface in the HCX Appliance Management interface.\nHCX requires an NSX configured with an Overlay Transport Zone.\nWhen NSX-T is registered, both Overlay and VLAN segments can be used during the Network Profile creation.\nIn NSX-T deployments, the HCX supports integration with networking objects created with the NSX Simplified UI/API only.\nHCX Connector and HCX Cloud Installations In HCX, there is a notion of an HCX source and an HCX destination environment. Depending on the environment, HCX provides a separate installer.\nHCX Connector: Use the HCX Connector with the vCenter Server containing the virtual machines that will be migrated. The HCX Connector is always an HCX source that connects to an HCX Cloud. Note\rIf the environment is also used as a destination for site pairing and Network Extension, use the HCX Cloud instead. Installations using OS Assisted Migration require HCX Connector at the source.\rHCX Cloud: Use the HCX Cloud installer with the vCenter Server that is the target of site pairing requests, network extensions, and virtual machine migrations. The HCX Cloud can also serve as the source of a site pair in HCX cloud-to-cloud installations. Note\rOS Assisted Migration does not support cloud-to-cloud installations. For OS Assisted Migration, you must have HCX Connector installed as the source.\rAttention\rIf the HCX Cloud Manager is used at the source, NSX is required at the source. The HCX Cloud Manager installation carries higher requirements, but it can be both the source and the target for Site Pairing, HCX Network Extension operations and Service Mesh deployments.\rCompute Ressources Appliance vCPU Memory Disk Space/IOPS HCX Manager 4 12 GB 60 GB HCX Interconnect (HCX-IX) 8 6 GB 2 GB HCX Network Extension (HCX-NE) 8 3 GB 2 GB Network Ressources I need one HCX appliance per workload domain. This needs access to the respective vCenter and the associated NSX manager. In addition, the HCX appliance must be placed in the vMotion network of the respective workload domain. This can be done by routing or the HCX appliance can be given an IP address directly in the vMotion network. I also need at least one uplink VLAN for the HCX appliances to communicate via. This could be done via WAN, for example. For my customer, this is a VLAN in the underlay network.\nInfo\rOf course, I can’t cover all the migration scenarios that are possible with HCX in this article, which is why the requirements also vary. For my scenario at my customer’s site, we decided on vMotion migration between the two VCF stacks. In addition, the Network Extension is to be used to minimize downtime.\rDeploying and configuring HCX appliance After deploying the HCX appliance, it must be initially configured. To do this, you have to log in to the management interface via (https://hcx-ip-or-fqdn:9443) using the configured admin credentials. The HCX appliance must have access to the NSX manager, the vCenter must be configured, the public access URL (in my case only internally resolvable) and the SSO domain (vCenter). After successful configuration, you can log in to the HCX appliance with the vCenter credentials. The local admin account only works on the HCX management interface.\nHCX settings (click to enlarge)\nGet started with HCX HCX requires the following: at least one network profile, one compute profile, one or more service mesh and one or more site pairs.\nSite Pair A Site Pair establishes the connection needed for management, authentication, and orchestration of HCX services across a source and destination environment. To create a new site pair, we need the remote HCX URL, which was configured when deploying the HCX appliance. This must be resolvable via the management network. You also need a vCenter user in the target environment who has sufficient permissions. In my lab I use the vsphere.local administrator. This is of course not best practice and should be adapted in a productive environment.\nHCX Site Pair (click to enlarge)\nNetwork profiles After the Site Pair, I set up the network profiles for the interconnect. These profiles allow me to determine the IP addresses and networks. Depending on the setup and service, you need different networks here. In my customer scenario, I can manage with two networks. One profile for management traffic, which I use to access the vCenter and the NSX Manager from environment A. The second network is for the actual uplink connection. In my lab I have 2 uplink networks for testing, so the screenshots may differ slightly. I select the appropriate distributed port group and assign a free IP range. You can define the HCX traffic type, but this is only used as a suggestion in the compute profile. Just because I mark a network profile as an HCX uplink doesn’t mean it has to be used as an uplink. It only serves to mark the networks for easier configuration in the compute profile. The vMotion network is routed in my lab. If this is not possible, you can also configure direct access to the vMotion network for the HCX appliance via the network profiles. This is necessary if the vMotion network cannot be routed.\nHCX network profiles settings (click to enlarge)\nFree Ip Adresses\rNote: I need one free IP in the MGMT network for each of the following: Pro Network Extension, HCX Appliane and Servicemesh (3 IPs). In the vMotion network, 1 IP is required per service mesh (if the vMotion network is not routed) and at least 1 uplink IP is required per service mesh. The HCX interface offers a calculator for the IP planning.\rCompute Profiles The compute profiles in HCX are used to specify which HCX services, compute resources such as clusters or resource pools or networks are connected. You can also set CPU and memory reservations for the interconnect appliance. Depending on the HCX service, you have to assign several networks, e.g. management network, uplink networks, vMotion network and the network container. In my case, the network container is the overlay transport zone from my source NSX, as I want to migrate machines from one NSX environment to another NSX environment.\nHCX Compute profiles settings (click to enlarge)\nThe screenshot shows very clearly how the Interconnect appliance is later connected. The uplinks can be VLAN connections within a data center, public WAN connections, MPLS or VPN. There are very few restrictions here. The uplink networks only need to reach each other between the locations. It does not matter whether it is via Layer2 or Layer3.\nService Mesh In the service mesh, compute profiles, HCX services and advanced configurations such as MTU for uplink links or the number of appliances for the network extension are defined and assigned. After I have configured the service mesh, the interconnect VMs are automatically deployed at both HCX locations.\nHCX Service Mesh (click to enlarge)\nService Mesh\rThe service mesh cannot be created until both sides of the site pair are configured and have compute and network profiles.\rFirewall Settings for HCX After successfully setting up the interconnect compute profile, a firewall port matrix is created that you can easy copy and export over the HCX gui. Here is an example from my lab.\nSource Destination Services ANY ANY UDP(3784) 192.168.70.30-192.168.70.40 192.168.70.30-192.168.70.40 UDP(3784), TCP(8182) 192.168.70.30-192.168.70.40 192.168.70.10 TCP(9555) 192.168.70.30-192.168.70.40 192.168.12.100 TCP(443) 192.168.70.10 192.168.70.30-192.168.70.40 TCP(9443) 192.168.70.10 192.168.12.100 TCP(443) 192.168.70.10 192.168.12.203, 192.168.12.204 TCP(902), TCP(80), TCP(443) 192.168.12.203, 192.168.12.204 192.168.70.30-192.168.70.40 TCP(31031), TCP(32032), TCP(44046) 192.168.70.30-192.168.70.40 192.168.12.203, 192.168.12.204 TCP(902), TCP(80) 192.168.12.203, 192.168.12.204 192.168.70.30-192.168.70.40 TCP(8000) 192.168.70.30-192.168.70.40 192.168.12.203, 192.168.12.204 TCP(8000) 192.168.70.10 192.168.70.30-192.168.70.40 TCP(443), TCP(8123), TCP(9443) ANY 172.21.22.10-172.21.22.100, 172.21.21.10-172.21.21.100 TCP(5201), UDP(4500), UDP(5201) Network Extension With the network extension in HCX, layer-2 networks can be extended between the source and target environments without having to change the IP addressing of the workloads. This allows virtual machines to be seamlessly migrated while maintaining their existing network connection and connectivity, and is a prerequisite for a “zero” downtime migration. To create a layer 2 stretch via the network extension, I just have to click on Network Extension » Create a Network Extension and select my network that I want to stretch to the other location via HCX. Here I can only choose from networks in my previously configured network container. In my case, these are the networks from my NSX.\nHCX Network Extension (click to enlarge)\nThe stretched networks are created at the selected T1 router in the target environment and given a prefix. However, the segments are not connected to the T1. The north/south connection is via the T1 and T0 in the source environment. This ensures that no traffic for the VMs is routed into a black hole.\nAttention\rFor each network that is stretched across the network extension, a network adapter is required on the appliance. Since the appliance is subject to the same limits as all other VMs, a maximum of 10 network adapters can be used. In my case, I lose 1 adapter for management and two adapters for my uplinks. So I can stretch a maximum of 7 NSX networks over this appliance. If I want to stretch more networks, I need another network extension appliance.\rHow does Network Extension work? The sink port on the HCX Network Extension serves as the endpoint for the extended Layer 2 traffic between the source and target environments. It is configured on the source and target sides to receive and send the incoming traffic from the extended network. This can be easily seen on the segment ports in the NSX of the HCX appliance. This is where MAC/IP bindings are exchanged between VMs. If you look at the destination side, you will see (provided that the source VMs are generating traffic) the IP/MAC bindings of the VMs on the source segment on the sink port and vice versa for VMs that have already been migrated to the destination side.\nHCX Network Extension Bindings (click to enlarge)\nFor this to work, special port profiles are created for the segment ports of the HCX Network Extension appliance that allow MAC learning, MAC changing and unknown unicast flooding. By default, the NSX segment profile would prevent this and block it.\nMigrating VMs HCX supports a wide range of migration options. Since I aim for zero downtime, I use vMotion as my migration method. For less critical VMs with a maintenance window, a bulk migration with short downtime is also an option. Here you can plan a mass migration and make a controlled switchover at a certain point in time. To do this, a replica of the VMs is created and incrementally synchronized. During the cutover, the final delta data is synchronized and the VM is switched on again. After the migration, the VM is switched on again at the destination. Of course, there are several variants and not every variant is suitable.\nvMotion migration in VMware HCX allows me to migrate virtual machines live and without downtime from a source environment to a target environment. HCX uses the vMotion technology but extends it to include the option of migrating workloads in a scheduled manner and across geographically separate data centers.\nTo plan the migration, I go to Services » Migration and create a NEW Mobility Group. Here I can set all the relevant migration settings.\nHCX New Mobility Group (click to enlarge)\nThe settings are relatively self-explanatory. I select my VMs, choose the target cluster, storage and switchover time, and select my migration method. If the VM comes from a network stretched with the Network Extension, the target network is already preselected. I just have to perform the validation and the migration can start. It is also possible to perform a reverse migration.\nHCX New Mobility Group (click to enlarge)\nThe migration was successful and there was only one ping interruption during the entire migration. The VM was functional and accessible the whole time. Thanks to the network extension, both east/west and north/south traffic works.\n64 bytes from 10.10.20.20: icmp_seq=34 ttl=60 time=6.854 ms 64 bytes from 10.10.20.20: icmp_seq=35 ttl=60 time=2.144 ms Request timeout for icmp_seq 36 64 bytes from 10.10.20.20: icmp_seq=37 ttl=60 time=11.416 ms 64 bytes from 10.10.20.20: icmp_seq=38 ttl=60 time=4.916 ms 64 bytes from 10.10.20.20: icmp_seq=39 ttl=60 time=3.661 ms 64 bytes from 10.10.20.20: icmp_seq=40 ttl=60 time=3.842 ms --- 10.10.20.20 ping statistics --- 57 packets transmitted, 56 packets received, 1.8% packet loss After all VMs have been migrated from the source to the target, the network extension for the network via HCX can be removed. If desired, HCX can automatically connect the segments at the target to the T1 router. The segments at the source must then be manually disconnected from the source T1. As long as the same segment subnet is connected to the source and target at the local T1, routing problems may occur. This can be successfully prevented with local preference and AS-Path prepend, by making the segments on the source side less favorable if BGP is used. This only affects north/south connectivity. East/west connectivity is not affected.\nConclusion I am aware that I have not even touched on all the functions of HCX. The tool is extremely powerful and you always have to look at the scenario for which you are using the right HCX use case. So I have not addressed the WAN optimization or the MON feature, nor have I gone into detail about the other migration options. The whole thing would go beyond the scope by far and I wanted to write about a scenario that I have already implemented for a customer. I can advise everyone to take a closer look at HCX. With HCX, you have a powerful migration tool that can help you out of unpleasant situations or simply simplifies mass migrations from A to B. Since HCX is now part of the VCF product portfolio, there is no reason not to use the tool.\n",
     "wordCount" : "2629",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/net.jpg","datePublished": "2025-01-28T20:00:00+01:00",
+    "image":"http://localhost:1313/images/net.jpg","datePublished": "2025-01-28T20:00:00+01:00",
     "dateModified": "2025-01-28T20:00:00+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/migration-with-hcx/"
+      "@id": "http://localhost:1313/posts/migration-with-hcx/"
     },
     "publisher": {
       "@type": "Organization",
@@ -78,21 +78,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>Migration with HCX</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -121,26 +121,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fmigration-with-hcx%2f&amp;text=Migration%20with%20HCX" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmigration-with-hcx%2f&amp;text=Migration%20with%20HCX" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fmigration-with-hcx%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fmigration-with-hcx%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=Migration%20with%20HCX&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fmigration-with-hcx%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=Migration%20with%20HCX&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fmigration-with-hcx%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fmigration-with-hcx%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Migration%20with%20HCX&amp;summary=Migration%20with%20HCX%2c%20by%20SDN-Warrior%0a%0aLive%20Migration%20of%20Workloads%20with%20VMware%20HCX%3a%20A%20Customer%20Story%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmigration-with-hcx%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=Migration%20with%20HCX&amp;summary=Migration%20with%20HCX%2c%20by%20SDN-Warrior%0a%0aLive%20Migration%20of%20Workloads%20with%20VMware%20HCX%3a%20A%20Customer%20Story%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -148,7 +148,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;Migration with HCX&#34;,&#34;https://sdn-warrior.org/posts/migration-with-hcx/&#34;,&#34;Migration with HCX, by SDN-Warrior\n\nLive Migration of Workloads with VMware HCX: A Customer Story\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;Migration with HCX&#34;,&#34;http://localhost:1313/posts/migration-with-hcx/&#34;,&#34;Migration with HCX, by SDN-Warrior\n\nLive Migration of Workloads with VMware HCX: A Customer Story\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -166,10 +166,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -190,7 +190,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/hcx">hcx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/hcx">hcx</a></span><span class="tag"><a href="http://localhost:1313/tags/vmware">vmware</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -617,14 +617,14 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="https://sdn-warrior.org/posts/jetkvm/">
+			<a class="next-post" href="http://localhost:1313/posts/jetkvm/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>JetKVM - all show and no substance?</span>
 			</a>
-			<a class="prev-post" href="https://sdn-warrior.org/posts/nsx-apply-to/">
+			<a class="prev-post" href="http://localhost:1313/posts/nsx-apply-to/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -637,20 +637,14 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
-   <path d="M4 11a9 9 0 0 1 9 9"></path>
-   <path d="M4 4a16 16 0 0 1 16 16"></path>
-   <circle cx="5" cy="19" r="1"></circle>
-</svg></a></p>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>
