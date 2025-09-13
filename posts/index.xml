@@ -34,7 +34,7 @@ My NUC is its own cluster and runs my always-on workload, as the Minisforum serv
           </figcaption></figure>
 <p>As you can see in the image, two Minisforum servers are currently not part of my cluster for licensing reasons.
 This will change in the coming weeks, but Proxmox is currently running on them for testing purposes.</p>
-<h3 id="managemnet-nuc">Managemnet NUC</h3>
+<h3 id="management-nuc">Management NUC</h3>
 <p>This setup is the foundation for my entire lab.
 Most of my fleet runs on my small NUC, including a VKS Supervisor cluster as a single deployment. Important services provided by the NUC are:</p>
 <ul>
