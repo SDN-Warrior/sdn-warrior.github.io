@@ -343,7 +343,7 @@ For the upgrade scheduler, I use Immediate and Automatic for the switchover.</p>
           </figcaption></figure>
 <h3 id="esx---houston-we-have-a-problem">ESX - Houston, we have a problem!</h3>
 <p>The update ran successfully, but I have the problem that my vCenter simply does not want to display ESX9 images, which is essential because without ESX9 images, you cannot upgrade the ESX servers to 9.
-I thought I was being clever and forced the vCenter to search for new images. You can do this using the deprecated vCenter Lifecycle Manager and push <em><strong>Sync Updates</strong></em>.</p>
+I thought I was being clever and forced the vCenter to search for new images. You can do this using the vCenter Lifecycle Manager and push <em><strong>Sync Updates</strong></em>.</p>
 
 <figure><a href="08.png"><picture>
           <source srcset="/vcf5-to-vcf9/08_hu_d88b3bf8a837c129.webp" type="image/webp">
