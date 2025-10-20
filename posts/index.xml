@@ -6,15 +6,15 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Sun, 19 Oct 2025 21:02:18 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>Tails from the Lab – Lab setup</title>
-			<link>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</link>
+			<title>Tales from the Lab – Lab setup</title>
+			<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
 			
-			<guid>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</guid>
+			<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.

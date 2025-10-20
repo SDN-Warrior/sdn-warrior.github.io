@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-09-12T17:00:00+02:00">
   <meta itemprop="dateModified" content="2025-09-12T17:00:00+02:00">
   <meta itemprop="wordCount" content="1431">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tails-from-the-lab-setup/">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="http://localhost:1313/posts/tails-from-the-lab-setup/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Tails from the Lab – Lab setup">
   <meta property="og:description" content="A brief blog about setting up my nested lab.">
@@ -46,10 +46,10 @@
     <meta property="article:tag" content="Minisforum">
     <meta property="article:tag" content="Intel">
     <meta property="article:tag" content="Amd">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
   <meta name="twitter:title" content="Tails from the Lab – Lab setup">
   <meta name="twitter:description" content="A brief blog about setting up my nested lab.">
 
@@ -64,16 +64,16 @@
     "articleBody": "Introduction I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet. I want to change that here now, as I have received an increasing number of requests for more information.\nSo let’s jump right in. First things first, let’s take a look at the physical lab infrastructure. That’s my basis for everything else.\nPhysical lab infrastructure I currently own eight Minisforum servers and one NUC Ultra 7. The Minisforum servers are for workloads and are divided into two clusters, as some of the hardware has AMD CPUs and the other servers have Intel CPUs. My NUC is its own cluster and runs my always-on workload, as the Minisforum servers generate too much power and heat for 24/7 operation.\nLab vCenter (click to enlarge)\nAs you can see in the image, two Minisforum servers are currently not part of my cluster for licensing reasons. This will change in the coming weeks, but Proxmox is currently running on them for testing purposes.\nManagement NUC This setup is the foundation for my entire lab. Most of my fleet runs on my small NUC, including a VKS Supervisor cluster as a single deployment. Important services provided by the NUC are:\nActive Directory (Microsoft) Veeam Backup Server VCF Operations VCF Operations for Logs VCF Cloud Proxy VCF Fleetmanager Fortigate Logserver (for my Fortigate 40F) VKS Supervisor with Foundation Loadbalancer VCF Offline Repository vCenter for the Lab Netbox mDNS Repeater (It’s not relevant for the lab, but it is for my number one service owner, because without it, you can’t turn on the TV with Siri and watch Netflix.) Windows 11 Client (There are things I can’t do with my Mac.) Of course, the NUC is pretty busy, and I’m considering getting a second one, because the boxes don’t cost that much (used) and don’t take up much space. Bonus points for the fact that every NUC is certified for 24/7 operation.\nAlternatively, I could use memory tiering, but that would require reinstalling the little guy, and somehow I’m too lazy to do that. My self-built storage (which I’ve described here before) runs another domain controller, my root CA and my Ansible host.\nI obtain NTP globally from my ToR switch, as Mikrotik, the old Swiss Army knife, can do this wonderfully.\nStorage Let’s move on to the exciting topic of storage. Here, I have a combination of local and shared storage. Each server has a 2 TB local NVMe installed on which the hypervisor itself is located, and the rest of the NVMe is provided as VMFS storage. On my Unraid server, I provide 4 TB as iSCSI storage and 2x 4 TB as NFS storage. The storage on Unraid is implemented on NVMes, but without Raid. If a disk fails, I just lose a share.\nLab Storage (click to enlarge)\nNow you might ask yourself why I did it this way. Well, iSCSI has the advantage that I can implement a multi-path fabric and is basically my fastest storage, since I have 2x 10 Gb/s iSCSI and can utilize it to its full capacity. All my servers are equipped with 2x10 Gb/s networks (except for my small management NUC). My iSCSI storage runs VMs that require maximum storage performance. I use NFS for VCF nested labs where I don’t want to use vSAN, and most of the time I don’t want to use vSAN in my lab for resource reasons. Fortunately, this is now supported without any problems with VCF9. But why did I build two NFS shares and not just one large share?\nWell, that’s because my storage only supports NFS3 (NFS 4 keeps causing problems with Unraid, and VCF 9 requires NFS3 anyway if you want to use it as primary storage), which means multipathing is not possible. For maximum performance, the first NFS share uses the first physical adapter of my storage system and the second NFS share uses the second physical adapter. This means that the two shares do not interfere with each other. In addition, the PCIe bus to which the NVMes are connected does not exceed 10 Gb/s anyway.\nIf I want to use VCF with vSAN, I use the local storage of my hypervisors, as I have had problems with vSAN and nested ESXi on my shared storage from time to time.\nDRS and Network Let’s move on to my DRS and network settings. This is relatively simple. My DRS is set to fully automated but in conservative mode, as I don’t want any “unnecessary” DRS actions from nested ESX servers. As a rule, I think about where to place my VMs beforehand and then they should stay there.\nSince I don’t always test nested VCF labs in my lab, DRS is generally still enabled, as there are scenarios where it is checked whether DRS is enabled or not. For example, with VKS.\nMy network settings are currently still under construction. At the moment, I have a distributed switch for all three clusters, but last year showed that this is not the best setup when hosts are frequently down. My new plan is to have a separate vDS for each cluster. This is more flexible and I don’t constantly have the problem that my vDS is no longer in sync when I need a new network on my management NUC.\nMy port groups are usually active/active on both uplinks. There are three exceptions: my trunk port groups with MacLearning. Here, I have a trunk that only uses uplink 1 of the vDS and a trunk port group that uses uplink 2 of the vDS. This is important for NSX Labs if you want to test traffic steering of the NSX Teaming Policy. Another exception is my port group on which promiscuous mode is enabled. Here, I use active/standby, as otherwise I would have duplicated packets and performance losses.\nLab Network (click to enlarge)\nIf you want to know more about this topic, you can read my article on Mac Learning. Here, I address the problem and also show the differences in performance. For VCF 9 installation, promiscuous mode is required, otherwise the deployment will fail when the VCF installer attempts to migrate the ESX servers to the distributed switch.\nVCF Fleet My fleet setup is a bit of a hodgepodge. Since I need VCF Operations for licensing, this is already running on my management NUC, as mentioned, but my VCF Automation is on an MS-A2 as a VM and is only turned on when I really need it, as it is a real resource hog. In addition, a VKS cluster has recently been running for testing purposes. I want to use automation to automatically deploy VMs that are running in the vsphere Namespace - fancy new things.\nVCF Operations (click to enlarge)\nI have several VCF instances onboarded in my central VCF Operations. Since I only have a certain number of licenses, I delete Labs in VCF Operations that are not currently needed. This is a bit annoying, but with the current licensing model, there is unfortunately no other way to do this.\nVCF Operations for Network is currently no longer deployed because my vDS kept getting out of sync, which caused problems with IPFIX. I will address this issue when I rebuild the vDS. After that, I will try again to get netflow running on my Mikrotik so that I can get useful network insights. However, this is still a work in progress.\nVCF Operations Overview (click to enlarge)\nFinal thoughts My setup isn’t particularly complicated, and everything is designed so that I can save resources and minimize 24/7 use without sacrificing too much comfort—anyone who has ever looked at the procedure for shutting down a VKS-enabled cluster knows what I mean. But not everything is perfect, and there is certainly room for improvement. My Ansible playbooks need to be revised because they no longer run properly with the latest version. In the future, I would also like to deploy much more automatically, i.e., I would prefer to deploy my standard VCF deployments fully automatically.\nMy monitoring with uptime Kuma with Discord bot and notifications is a good start, but it was never really finished. I’m also not quite sure where I want to go with my VCF automation setup, but I think the next few weeks and months will show. If you have any suggestions, questions, or improvements, please feel free to contact me. Homelab thrives on exchange.\n",
     "wordCount" : "1431",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2025-09-12T17:00:00+02:00",
+    "image":"http://localhost:1313/images/disc.jpg","datePublished": "2025-09-12T17:00:00+02:00",
     "dateModified": "2025-09-12T17:00:00+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/tails-from-the-lab-setup/"
+      "@id": "http://localhost:1313/posts/tails-from-the-lab-setup/"
     },
     "publisher": {
       "@type": "Organization",
@@ -81,21 +81,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>Tails from the Lab – Lab setup</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.691b64f928c4a491d4338d0d411ad2bbba09852f74d2784509a03c109a91be56.css" integrity="sha256-aRtk+SjEpJHUM40NQRrSu7oJhS900nhFCaA8EJqRvlY=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -124,26 +124,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2ftails-from-the-lab-setup%2f&amp;text=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2ftails-from-the-lab-setup%2f&amp;text=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2ftails-from-the-lab-setup%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2ftails-from-the-lab-setup%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2ftails-from-the-lab-setup%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2ftails-from-the-lab-setup%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2ftails-from-the-lab-setup%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup&amp;summary=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup%2c%20by%20SDN-Warrior%0a%0aA%20brief%20blog%20about%20setting%20up%20my%20nested%20lab.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2ftails-from-the-lab-setup%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup&amp;summary=Tails%20from%20the%20Lab%20%e2%80%93%20Lab%20setup%2c%20by%20SDN-Warrior%0a%0aA%20brief%20blog%20about%20setting%20up%20my%20nested%20lab.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -151,7 +151,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;Tails from the Lab – Lab setup&#34;,&#34;https://sdn-warrior.org/posts/tails-from-the-lab-setup/&#34;,&#34;Tails from the Lab – Lab setup, by SDN-Warrior\n\nA brief blog about setting up my nested lab.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;Tails from the Lab – Lab setup&#34;,&#34;http://localhost:1313/posts/tails-from-the-lab-setup/&#34;,&#34;Tails from the Lab – Lab setup, by SDN-Warrior\n\nA brief blog about setting up my nested lab.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -169,10 +169,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+			<li><a href="http://localhost:1313/posts/">Posts</a></li>
+			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+			<li><a href="http://localhost:1313/links/">Links</a></li>
+			<li><a href="http://localhost:1313/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -193,7 +193,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/minisforum">minisforum</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/intel">intel</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/amd">amd</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/minisforum">minisforum</a></span><span class="tag"><a href="http://localhost:1313/tags/intel">intel</a></span><span class="tag"><a href="http://localhost:1313/tags/amd">amd</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -355,7 +355,14 @@ My Ansible playbooks need to be revised because they no longer run properly with
 
 		</article>
 		<div class="post-nav thin">
-			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf5-to-9-upgrade/">
+			<a class="next-post" href="http://localhost:1313/posts/vcf9-ms-a2-special/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</span>
+			</a>
+			<a class="prev-post" href="http://localhost:1313/posts/vcf5-to-9-upgrade/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -368,14 +375,14 @@ My Ansible playbooks need to be revised because they no longer run properly with
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

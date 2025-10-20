@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2025-10-19T21:02:18+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2025-10-19T21:02:18+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/amd/</loc>
     <lastmod>2025-09-12T17:00:00+02:00</lastmod>
   </url><url>
@@ -17,16 +23,10 @@
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
     <lastmod>2025-09-12T17:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2025-09-12T17:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/</loc>
     <lastmod>2025-09-12T17:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</loc>
+    <loc>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</loc>
     <lastmod>2025-09-12T17:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/vcf/</loc>

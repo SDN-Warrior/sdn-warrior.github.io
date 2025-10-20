@@ -10,10 +10,10 @@
     <lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/amd/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Tails from the Lab – Lab setup</title>
-      <link>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</link>
+      <title>Tales from the Lab – Lab setup</title>
+      <link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
       <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/tails-from-the-lab-setup/</guid>
+      <guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
     </item>
     <item>
