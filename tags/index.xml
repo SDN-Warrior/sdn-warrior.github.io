@@ -7,8 +7,36 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 24 Oct 2025 21:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Homelab</title>
+      <link>https://sdn-warrior.org/tags/homelab/</link>
+      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Minisforum</title>
+      <link>https://sdn-warrior.org/tags/minisforum/</link>
+      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/minisforum/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nsx</title>
+      <link>https://sdn-warrior.org/tags/nsx/</link>
+      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf</title>
+      <link>https://sdn-warrior.org/tags/vcf/</link>
+      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Amd</title>
       <link>https://sdn-warrior.org/tags/amd/</link>
@@ -17,38 +45,10 @@
       <description></description>
     </item>
     <item>
-      <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Intel</title>
       <link>https://sdn-warrior.org/tags/intel/</link>
       <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/intel/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Minisforum</title>
-      <link>https://sdn-warrior.org/tags/minisforum/</link>
-      <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/minisforum/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nsx</title>
-      <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/nsx/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf</title>
-      <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf/</guid>
       <description></description>
     </item>
     <item>

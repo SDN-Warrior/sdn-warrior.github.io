@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 24 Oct 2025 21:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/minisforum/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
+      <link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
+      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Tales from the Lab – Lab setup</title>
       <link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>

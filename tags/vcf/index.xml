@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 12 Sep 2025 17:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 24 Oct 2025 21:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
+      <link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
+      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Tales from the Lab – Lab setup</title>
       <link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
       <description>&lt;h2 id=&#34;my-homelab-journey-from-unraid-beginnings-to-version-5&#34;&gt;My Homelab Journey: From Unraid Beginnings to Version 5&lt;/h2&gt;&#xA;&lt;p&gt;Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-beginning-unraid-with-custom-hardware&#34;&gt;The Beginning: Unraid with Custom Hardware&lt;/h2&gt;&#xA;&lt;p&gt;My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>MAC Learning is your friend</title>
-      <link>https://sdn-warrior.org/posts/mac-learning/</link>
-      <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
-      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
