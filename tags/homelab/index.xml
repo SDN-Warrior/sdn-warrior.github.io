@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 24 Oct 2025 21:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 22 Nov 2025 00:30:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Dark Site Edge</title>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+      <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
       <link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
@@ -141,13 +148,6 @@
       <pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-automate-ipam-and-dns&#34;&gt;Why Automate IPAM and DNS?&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Consistency: Automation minimizes human errors and ensures uniformity.&lt;/li&gt;&#xA;&lt;li&gt;Efficiency: Automating repetitive tasks saves time and allows teams to focus on strategic activities.&lt;/li&gt;&#xA;&lt;li&gt;Scalability: As networks grow, automated solutions adapt more easily than manual processes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;my-goal&#34;&gt;My goal&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Get a free IP address is dynamically fetched from a defined subnet in NetBox.&lt;/li&gt;&#xA;&lt;li&gt;The IP address is immediately assigned to the specified FQDN in NetBox.&lt;/li&gt;&#xA;&lt;li&gt;A corresponding Host A record is created in your Windows DNS Server.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Before diving into the implementation, ensure the following:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-      <link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
-      <pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-chatgpt&#34;&gt;Why ChatGPT?&lt;/h2&gt;&#xA;&lt;p&gt;Let’s be honest: starting with Ansible can feel overwhelming, especially if you&amp;rsquo;re new to it. My last experience with something remotely similar was years ago, working with PowerShell scripts or even earlier with .NET 3 (yes, I’m &amp;ldquo;that old&amp;rdquo;).&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

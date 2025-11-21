@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short blog on how to deploy a Dark Site Edge in VCF9">
+
+  <meta itemprop="name" content="VCF9 - Dark Site Edge">
+  <meta itemprop="description" content="A short blog on how to deploy a Dark Site Edge in VCF9">
+  <meta itemprop="datePublished" content="2025-11-22T00:30:00+01:00">
+  <meta itemprop="dateModified" content="2025-11-22T00:30:00+01:00">
+  <meta itemprop="wordCount" content="2536">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Edge,Homelab,NUC"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="VCF9 - Dark Site Edge">
+  <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-22T00:30:00+01:00">
+    <meta property="article:modified_time" content="2025-11-22T00:30:00+01:00">
+    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="Edge">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="NUC">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:title" content="VCF9 - Dark Site Edge">
+  <meta name="twitter:description" content="A short blog on how to deploy a Dark Site Edge in VCF9">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF9 - Dark Site Edge",
+    "name": "VCF9 - Dark Site Edge",
+    "description": "A short blog on how to deploy a Dark Site Edge in VCF9",
+    "keywords": ["vcf", "edge", "homelab", "NUC"],
+    "articleBody": "Introduction I haven’t written anything in a while, and I need to change that here with another niche topic. I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance. VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.\nWelcome to the dark si(d)te The “Dark Site” has its own independent VCF instance, separate from the primary VCF Fleet. A dark site has limited or no external network connectivity. An independent VCF instance ensures full functionality and management within the isolated environment without relying on external services. Okay, cool, so what do I do with it now? Well, my plan is to deploy a VCF9 instance on a single NUC 14 with an Ultra 7 CPU. I want to run a VKS Supervisor and deploy VM workloads on the dark site using automation. The cool thing is that Dark Site Edge can also be used without the fleet. So I have a VCF instance with VKS, NSX, and vCenter in a case measuring approximately 0.7 liters, or for our friends who don’t use the metric system, with the volume of ¾ of a standard coffee cup. (The volume specifications come from an AI; unfortunately, I can’t work with the non-metric system.)\nPrerequisites In order to set everything up, I first need my NUC with memory tiering. This will initially be loaded with ESX 9.0.1. If you want to know which workarounds are needed for an Intel NUC, you can check here.\nFurthermore, an existing fleet is required. Even if the VCF instance works without a permanent connection to the fleet, the fleet is still required for licensing, and therefore the instance must also be in contact at least every 180 days.\nInfo\rThere is also another variant without connection, but then you have a local fleet on the edge, and so it is more of a licensing distinction from the normal VCF than a functional distinction.\rIn addition, an offline repository is required, as the software must be obtained from somewhere. In our scenario, we assume that I do not have a permanent or stable connection to the fleet.\nDesign In terms of design, the setup is intended to complement my VCF 9 setup as described here.\nDark Site Design (click to enlarge)\nLocal Management Domain:\nVCF Instance 2 includes its own Management Domain components (VCF Operation Collector, SDDC Manager, vCenter and NSX). Essential for the local management of the compute, network, and storage resources within the dark site’s VCF instance. It provides the necessary control plane for the dark site’s infrastructure.\nLocal Compute Cluster:\nThe VCF instance is set up as a single node cluster and thus shares resources for management and workload.\nVCF Operations Collector:\nData collected locally during offline mode and synchronized with VCF operations, when connectivity is established with central site. here might be periodically exported or analyzed locally.\nInfo\rWe wouldn’t be here on SDN-Warrior.org if workarounds weren’t needed again, because the original design isn’t actually intended to run on a single host. But more on that later.\rUsecase Strict Isolation and Security Requirements Unreliable or Intermittent Network Connectivity Autonomous Operations Requirement - Situations where the edge location needs to function independently for extended periods without external dependencies, including management, monitoring, and software updates. At least, those are Broadcom’s official best-fit scenarios. Personally, I have other use case. Since the dark site comes with its own NSX instance, I can also test things in NSX without turning on my MS-A2, saving around 150 watts.\nOkayyyyyyyy, let’s go! The whole thing can’t be that difficult, I thought, and naively set to work, and what can I say—I had no idea what wouldn’t work and where I would have to improvise.\nInfo\rA clear warning to everyone: this is not a productive setup, and it’s also a questionable setup. I’m doing this for fun and because you learn the most when you think outside the box.\rWilliam Lam has an article online where he writes about how to deploy VCF with a single host. I tried for several hours and failed repeatedly. Maybe I’m too stupid, maybe I overlooked something, but in the end it doesn’t matter, because we’re in unsupported territory here. Slight foreshadowing—this won’t be the last time a plan doesn’t work out. At this point, I’ll count the workarounds so I can get the setup to work.\nWorkaround 1 and 2: Activating E/P cores and memory tiering. These workarounds are well described and I use them all the time. You can find a description of the workaround in the introduction to the article.\nWorkaround 3: Since my NUC only has only one 2.5 Gb/s network connection and the VCF installer actually requires 2x10Gb/s networking, workaround 3 is used. The VCF Installer checks in the pre-checks whether suitable network adapters are configured; fortunately, this can be disabled.\nTo do this, log in to the VCF Installer via SSH, obtain root privileges with su, and then simply add the following to /etc/vmware/vcf/domainmanager/application.properties\necho \"enable.speed.of.physical.nics.validation=false\" \u003e\u003e /etc/vmware/vcf/domainmanager/application.properties Next, restart the service again and that’s it.\necho 'y' | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh Workaround 3.5 This is not a software workaround but a hardware workaround/ Since I use NFS storage, the VCF installer attempts to mount the NFS share during the precheck. Even if you have configured the VDS in the JSON to use a single NIC, this precheck is always performed with the second NIC. If the server does not have a second NIC, this will always fail. I used an old 1 Gb/s USB network card for this. It has an Intel chip and was recognized without any problems. However, the adapter does not support jumbo frames, and as soon as more than one VLAN is configured, the adapter no longer works. But that’s enough for the precheck.\nUSB Nic (click to enlarge)\nI just had to assign the USB adapter as an uplink to the temporarily created VDS on the ESX server at the right moment, and the NFS check was successful. The actual deployment ran via the onboard card.\nI will realize later that all the trouble with the USB NIC was actually unnecessary. Like many other things, but I want to write down the entire journey here.\nWorkaround 4: My first attempt was a greenfield deployment as a single host using the workaround described by William. The interactive GUI of the VCF installer does not allow greenfield deployment with a single host. This can be suppressed with two simple entries.\nFor VCF 9.0.1, the feature properties file must be modified on the VCF installer using the following command\necho \"feature.vcf.vgl-29121.single.host.domain=true\" \u003e\u003e /home/vcf/feature.properties For VCF 9.0, the feature properties file must be modified on the VCF installer using the following command\necho \"feature.vcf.internal.single.host.domain=true\" \u003e\u003e /home/vcf/feature.properties Finally, the services on the installer must be restarted.\necho 'y' | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh The workaround does not allow the interactive installer to be used; it only allows a single cluster to be deployed via a JSON file. The deployment looked fine at first, but then stalled after deploying the SDDC Manager.\nI found this lovely error message in the VCF Installer log.\n\"Failed to validate domain spec\", \"nestedErrors\": K\"errorCode\": \"INVALID_NUMBER_OF_MINIMUM_HOSTS\", \"arguments\": ['2\", \"vLCM\"], message':\"Minimum 2 hosts are required for vLCM cluster with external storage to be created.\" Since it didn’t work after several attempts, I needed a new idea. What if I built a 2-node cluster? The problem was that I didn’t have a second NUC available, and everything was supposed to run on one NUC. Then I had the idea of building a nested host (on one of my MS-01s), deploying VCF, and then turning off the nested host. Nice idea, but it leads me to\nWorkaround 5: Since VCF does not allow you to create a cluster when different manufacturers are involved (in my case, ASUTEK NUC and Minisforum MS-01), I had to find a way around this. Fortunately, it is possible to rewrite SMBIOS hardware strings. I found the information I needed here on William’s website. I must say that I have visited his site many times over the last few days.\nFirst, you must set an ESX kernel setting so that the default hardware SMBIOS information can be overwritten. To do this, edit the file /bootbank/boot.cfg and add the following to the line with kernelopt:\nkernelopt=autoPartition=FALSE ignoreHwSMBIOSInfo=TRUE After that, the server must be rebooted.\nNext, I use Williams Powershell Script to generate a vsish command that I can use to rewrite my ESXiSMBIOS.\nFunction Generate-CustomESXiSMBIOS { param( [Parameter(Mandatory=$true)][String]$Uuid, [Parameter(Mandatory=$true)][String]$Model, [Parameter(Mandatory=$true)][String]$Vendor, [Parameter(Mandatory=$true)][String]$Serial, [Parameter(Mandatory=$true)][String]$SKU, [Parameter(Mandatory=$true)][String]$Family ) $guid = [Guid]$Uuid $guidBytes = $guid.ToByteArray() $decimalPairs = foreach ($byte in $guidBytes) { \"{0:D2}\" -f $byte } $uuidPairs = $decimalPairs -join ', ' Write-Host -ForegroundColor Yellow \"`nvsish -e set /hardware/bios/dmiInfo {\\`\"${Model}\\`\", \\`\"${Vendor}\\`\", \\`\"${Serial}\\`\", [${uuidPairs}], \\`\"1.0.0\\`\", 6, \\`\"SKU=${SKU}\\`\", \\`\"${Family}\\`\"}`n\" } Generate-CustomESXiSMBIOS -Uuid \"43f32ef6-a3a8-44cb-9137-31cb4c6c520b\" -Model \"SDN-Warrior 3000\" -Vendor \"SDN-Warrior\" -Serial \"0816\" -SKU \"NUC\" -Family \"sdn-warrior.org\" The UUID and serial number should be unique. As a result, I now receive a string that I can simply send to the ESX server via SSH\nvsish -e set /hardware/bios/dmiInfo {\\\"SDN-Warrior 3000\\\", \\\"SDN-Warrior\\\", \\\"0815\\\", [246, 46, 243, 67, 168, 163, 203, 68, 145, 55, 49, 203, 76, 108, 82, 10], \\\"1.0.0\\\", 6, \\\"SKU=NUC\\\", \\\"sdn-warrior.org\\\"} /etc/init.d/hostd restart However, I have set the option to permanent, and for this to work, you simply need to insert the two lines into /etc/rc.local.d/local.sh. After that, ESXiSMBBios will be set after every reboot.\nMake your own Vendor (click to enlarge)\nCongratulations, I just became my own hardware manufacturer. May I introduce the SDN Warrior 3000!\nSDN-Warrior 3000 (click to enlarge)\nBut now the deployment should work, right? - NOPE!\nI hadn’t thought about the network. VCF actually requires two network adapters for good reason. The initial setup of ESX is with a standard switch and, after the SDDC has been deployed and the cluster has been formed, it is migrated to a VDS that is initially formed with the second network card. Of course, this is not possible without a second network card. That was also the moment when I decided against a greenfield deployment and switched to Converge.\nRedesign and Converge Actually, I’ve long since reached the point where the project should be considered a failure, but I really wanted a VCF cluster on a NUC. To make that work, however, I have to migrate to a VDS, otherwise Converge will fail. First, I manually deployed a vCenter and created my vSphere cluster with my two SDN Warrior 3000 servers (a NUC and a nested host—a dream team).\nAs far as migration to the VDS is concerned, it’s a chicken-and-egg problem. The VDS does offer the option of migrating all VMK adapters and the VM network at once, but as soon as I do that, there is a network interruption and shortly afterwards the vSphere protection mechanism kicks in and rolls back the configuration. Fortunately, you can disable this, which brings me to\nWorkaround 6 To disable this behavior, you can disable the function in vCenter under Advanced Settings. To do this, set config.vpxd.network.rollback to false.\nvCenter Advanced Settings (click to enlarge)\nHalf of the work is done. At least I could now migrate the VMK to the VDS, just like the VMK for NFS. However, my vCenter is then suspended in a vacuum on the standard switch and can no longer be connected to another port group. To make this possible directly via the ESX server, you have to change the port group where the vCenter is to be migrated from static binding to ephemeral. This allows the vCenter to be migrated directly via the ESX to the port group on the DVS and is then accessible again. Wonderful, the migration to the DVS with an adapter was successful. Perhaps just a quick note: the distributed port group should be reconfigured before the vCenter becomes unavailable.\nhappy little VDS (click to enlarge)\nNow the Converge could begin. Since I now had a 2-node cluster with VDS, vMotion, and so on, the Converge could begin without any further hacks via the VCF installer, right? Well, not quite. There was still a small error, but it was easy to fix. The installer checks whether the VDS has 2 uplinks, but it does not check whether they actually have a link. So the VDS is quickly given an uplink and lo and behold, the validation runs successfully.\nConverge precheck (click to enlarge)\nConverge The actual Converge process is relatively unspectacular. Broadcom and VMware have done a lot to make it as easy as possible (unless you have an adventurous setup like mine). You no longer need Python scripts, as was the case with VCF 5.x for brownfield imports. The process is relatively simple: the VCF installer first deploys the SDDC, then converts the existing vCenter to the new VCF instance, rolls out NSX and a cloud proxy, and then joins the instance to Fleet and VCF Operations. It can be that simple.\nConverge done! (click to enlarge)\nAre you lying to us? One might ask this question, because the plan was to build a single node cluster, and when it comes to that, I can only say mission successfully failed, but there is a but. The virtual ESX is only a temporary solution, and in future I will only activate it for the lifecycle, as the NUC’s performance is more than sufficient. I also simply removed the ESX server from the cluster and shut it down.\nInfo\rAt this point, I would like to reiterate my warning: do not simply remove servers from your cluster in a production environment from your VCF setup. This can lead to many sleepless nights. This is for entertainment purposes only.\rSingle node cluster (click to enlarge)\nSo, technically speaking, I cheated a little bit, but as you can see in the screenshot, I deployed a working VCF instance. What’s still missing are the NSX Edge and my supervisor cluster, but looking at the clock, that’s a topic for another blog article.\njust one more thing To ensure that I still have logs and metrics from my cluster in operation even when the cluster is disconnected or my operations are down, I have enabled data persistence on the cloud proxy. This means that logs are stored until the environment reaches my fleet again.\nFinal remarks and summary It was an exciting and thrilling project that definitely cost me a lot of sleep, as I worked tirelessly for the last three days and definitely didn’t get enough sleep. However, I couldn’t accept that it wasn’t possible or that I couldn’t do it. It also gave me back the motivation I had been lacking to write something again. I must also say that I learned a lot. And as always, I have to express my gratitude to William, because at times I was on the verge of despair.\nVCF Fleet (click to enlarge)\nI hope you enjoyed the article and maybe it will help some of you, or you can laugh at me and my journey through the valley of tears.\n",
+    "wordCount" : "2536",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2025-11-22T00:30:00+01:00",
+    "dateModified": "2025-11-22T00:30:00+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/vcf9-dark-site-edge/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>VCF9 - Dark Site Edge</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.4a710a7c0d2021c556818ee82d473cb9b2609d3edea5ab7e43529e3680d670ad.css" integrity="sha256-SnEKfA0gIcVWgY7oLUc8ubJgnT7epat+Q1KeNoDWcK0=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge%2f&amp;text=VCF9%20-%20Dark%20Site%20Edge" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF9%20-%20Dark%20Site%20Edge&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF9%20-%20Dark%20Site%20Edge&amp;summary=VCF9%20-%20Dark%20Site%20Edge%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF9 - Dark Site Edge&#34;,&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34;,&#34;VCF9 - Dark Site Edge, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Nov 22, 2025</span></div>
+				<h1>VCF9 - Dark Site Edge</h1>
+			</header>
+			<div class="post-info"><p>A short blog on how to deploy a Dark Site Edge in VCF9</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/edge">edge</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nuc">NUC</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>2536 Words
+     // ReadTime
+    
+    
+    
+    11 Minutes, 31 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2025-11-22 00:30 &#43;0100</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I haven&rsquo;t written anything in a while, and I need to change that here with another niche topic.
+I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.
+VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.</p>
+<h2 id="welcome-to-the-dark-sidte">Welcome to the dark si(d)te<a href="#welcome-to-the-dark-sidte" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The &ldquo;Dark Site&rdquo; has its own independent VCF instance, separate from the primary VCF Fleet.
+A dark site has limited or no external network connectivity. An independent VCF instance ensures full functionality and management within the isolated environment without relying on external services.
+Okay, cool, so what do I do with it now? Well, my plan is to deploy a VCF9 instance on a single NUC 14 with an Ultra 7 CPU. I want to run a VKS Supervisor and deploy VM workloads on the dark site using automation.
+The cool thing is that Dark Site Edge can also be used without the fleet. So I have a VCF instance with VKS, NSX, and vCenter in a case measuring approximately 0.7 liters, or for our friends who don&rsquo;t use the metric system, with the volume of  ¾ of a standard coffee cup.
+(The volume specifications come from an AI; unfortunately, I can&rsquo;t work with the non-metric system.)</p>
+<h2 id="prerequisites">Prerequisites<a href="#prerequisites" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In order to set everything up, I first need my NUC with memory tiering. This will initially be loaded with ESX 9.0.1.
+If you want to know which workarounds are needed for an Intel NUC, you can check <a href="https://sdn-warrior.org/posts/nuc">here</a>.</p>
+<p>Furthermore, an existing fleet is required.
+Even if the VCF instance works without a permanent connection to the fleet, the fleet is still required for licensing, and therefore the instance must also be in contact at least every 180 days.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">There is also another variant without connection, but then you have a local fleet on the edge, and so it is more of a licensing distinction from the normal VCF than a functional distinction.</div>
+    </aside>
+<p>In addition, an offline repository is required, as the software must be obtained from somewhere. In our scenario, we assume that I do not have a permanent or stable connection to the fleet.</p>
+<h2 id="design">Design<a href="#design" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In terms of design, the setup is intended to complement my VCF 9 setup as described <a href="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">here</a>.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-darksite/01_hu_fb674c46f3a80f9c.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/01_hu_2ed665e96533d125.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/01_hu_fb674c46f3a80f9c.webp"alt="Dark Site Design"  width="1796"  height="1423" />
+        </picture></a><figcaption>
+            <p>Dark Site Design (click to enlarge)</p>
+          </figcaption></figure>
+<ul>
+<li>
+<p>Local Management Domain:</p>
+<p>VCF Instance 2 includes its own Management Domain components (VCF Operation Collector, SDDC Manager, vCenter and NSX).
+Essential for the local management of the compute, network, and storage resources within the dark site&rsquo;s VCF instance. It provides the necessary control plane for the dark site&rsquo;s infrastructure.</p>
+</li>
+<li>
+<p>Local Compute Cluster:</p>
+<p>The VCF instance is set up as a single node cluster and thus shares resources for management and workload.</p>
+</li>
+<li>
+<p>VCF Operations Collector:</p>
+<p>Data collected locally during offline mode and synchronized with VCF operations, when connectivity is established with central site. here might be periodically exported or analyzed locally.</p>
+</li>
+</ul>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">We wouldn&rsquo;t be here on SDN-Warrior.org if workarounds weren&rsquo;t needed again, because the original design isn&rsquo;t actually intended to run on a single host.
+But more on that later.</div>
+    </aside>
+<h2 id="usecase">Usecase<a href="#usecase" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ul>
+<li>Strict Isolation and Security Requirements</li>
+<li>Unreliable or Intermittent Network Connectivity</li>
+<li>Autonomous Operations Requirement - Situations where the edge location needs to function independently for extended periods without external dependencies, including management, monitoring, and software updates.</li>
+</ul>
+<p>At least, those are Broadcom&rsquo;s official best-fit scenarios. Personally, I have other use case.
+Since the dark site comes with its own NSX instance, I can also test things in NSX without turning on my MS-A2, saving around 150 watts.</p>
+<h2 id="okayyyyyyyy-lets-go">Okayyyyyyyy, let&rsquo;s go!<a href="#okayyyyyyyy-lets-go" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The whole thing can&rsquo;t be that difficult, I thought, and naively set to work, and what can I say—I had no idea what wouldn&rsquo;t work and where I would have to improvise.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">A clear warning to everyone: this is not a productive setup, and it&rsquo;s also a questionable setup. I&rsquo;m doing this for fun and because you learn the most when you think outside the box.</div>
+    </aside>
+<p><a href="https://williamlam.com/2025/06/deploying-vcf-9-0-on-a-single-esxi-host.html">William Lam</a> has an article online where he writes about how to deploy VCF with a single host. I tried for several hours and failed repeatedly.
+Maybe I&rsquo;m too stupid, maybe I overlooked something, but in the end it doesn&rsquo;t matter, because we&rsquo;re in unsupported territory here.
+Slight foreshadowing—this won&rsquo;t be the last time a plan doesn&rsquo;t work out. At this point, I&rsquo;ll count the workarounds so I can get the setup to work.</p>
+<h2 id="workaround-1-and-2">Workaround 1 and 2:<a href="#workaround-1-and-2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Activating E/P cores and memory tiering. These workarounds are well described and I use them all the time.
+You can find a description of the workaround in the introduction to the article.</p>
+<h2 id="workaround-3">Workaround 3:<a href="#workaround-3" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Since my NUC only has only one 2.5 Gb/s network connection and the VCF installer actually requires 2x10Gb/s networking, workaround 3 is used.
+The VCF Installer checks in the pre-checks whether suitable network adapters are configured; fortunately, this can be disabled.</p>
+<p>To do this, log in to the VCF Installer via SSH, obtain root privileges with su, and then simply add the following to /etc/vmware/vcf/domainmanager/application.properties</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;enable.speed.of.physical.nics.validation=false&#34;</span> &gt;&gt; /etc/vmware/vcf/domainmanager/application.properties
+</span></span></code></pre></div><p>Next, restart the service again and that&rsquo;s it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;y&#39;</span> <span class="p">|</span> /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh
+</span></span></code></pre></div><h2 id="workaround-35">Workaround 3.5<a href="#workaround-35" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>This is not a software workaround but a hardware workaround/
+Since I use NFS storage, the VCF installer attempts to mount the NFS share during the precheck.
+Even if you have configured the VDS in the JSON to use a single NIC, this precheck is always performed with the second NIC.
+If the server does not have a second NIC, this will always fail. I used an old 1 Gb/s USB network card for this. It has an Intel chip and was recognized without any problems.
+However, the adapter does not support jumbo frames, and as soon as more than one VLAN is configured, the adapter no longer works. But that&rsquo;s enough for the precheck.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf9-darksite/04_hu_89cc8e323112d8b7.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/04_hu_a4c836d2e7b21e8c.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/04_hu_89cc8e323112d8b7.webp"alt="USB Nic"  width="1280"  height="1280" />
+        </picture></a><figcaption>
+            <p>USB Nic (click to enlarge)</p>
+          </figcaption></figure>
+<p>I just had to assign the USB adapter as an uplink to the temporarily created VDS on the ESX server at the right moment, and the NFS check was successful.
+The actual deployment ran via the onboard card.</p>
+<p>I will realize later that all the trouble with the USB NIC was actually unnecessary.
+Like many other things, but I want to write down the entire journey here.</p>
+<h2 id="workaround-4">Workaround 4:<a href="#workaround-4" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>My first attempt was a greenfield deployment as a single host using the workaround described by William. The interactive GUI of the VCF installer does not allow greenfield deployment with a single host. This can be suppressed with two simple entries.</p>
+<p>For VCF 9.0.1, the feature properties file must be modified on the VCF installer using the following command</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;feature.vcf.vgl-29121.single.host.domain=true&#34;</span> &gt;&gt; /home/vcf/feature.properties
+</span></span></code></pre></div><p>For VCF 9.0, the feature properties file must be modified on the VCF installer using the following command</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;feature.vcf.internal.single.host.domain=true&#34;</span> &gt;&gt; /home/vcf/feature.properties
+</span></span></code></pre></div><p>Finally, the services on the installer must be restarted.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;y&#39;</span> <span class="p">|</span> /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh
+</span></span></code></pre></div><p>The workaround does not allow the interactive installer to be used; it only allows a single cluster to be deployed via a JSON file.
+The deployment looked fine at first, but then stalled after deploying the SDDC Manager.</p>
+<p>I found this lovely error message in the VCF Installer log.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="s2">&#34;Failed to validate domain spec&#34;</span>, <span class="s2">&#34;nestedErrors&#34;</span>:
+</span></span><span class="line"><span class="cl">K<span class="s2">&#34;errorCode&#34;</span>: <span class="s2">&#34;INVALID_NUMBER_OF_MINIMUM_HOSTS&#34;</span>, <span class="s2">&#34;arguments&#34;</span>:
+</span></span><span class="line"><span class="cl"><span class="o">[</span><span class="s1">&#39;2&#34;, &#34;vLCM&#34;], message&#39;</span>:<span class="s2">&#34;Minimum 2 hosts are required for vLCM cluster with external storage to be created.&#34;</span>
+</span></span></code></pre></div><p>Since it didn&rsquo;t work after several attempts, I needed a new idea. What if I built a 2-node cluster? The problem was that I didn&rsquo;t have a second NUC available, and everything was supposed to run on one NUC. Then I had the idea of building a nested host (on one of my MS-01s), deploying VCF, and then turning off the nested host.
+Nice idea, but it leads me to</p>
+<h2 id="workaround-5">Workaround 5:<a href="#workaround-5" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Since VCF does not allow you to create a cluster when different manufacturers are involved (in my case, ASUTEK NUC and Minisforum MS-01), I had to find a way around this.
+Fortunately, it is possible to rewrite SMBIOS hardware strings.
+I found the information I needed here on William&rsquo;s website. I must say that I have visited his site many times over the last few days.</p>
+<p>First, you must set an ESX kernel setting so that the default hardware SMBIOS information can be overwritten.
+To do this, edit the file /bootbank/boot.cfg and add the following to the line with kernelopt:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">kernelopt</span><span class="o">=</span><span class="nv">autoPartition</span><span class="o">=</span>FALSE <span class="nv">ignoreHwSMBIOSInfo</span><span class="o">=</span>TRUE
+</span></span></code></pre></div><p>After that, the server must be rebooted.</p>
+<p>Next, I use Williams Powershell Script to generate a vsish command that I can use to rewrite my ESXiSMBIOS.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Function Generate-CustomESXiSMBIOS <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    param<span class="o">(</span>
+</span></span><span class="line"><span class="cl">        <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)][</span>String<span class="o">]</span><span class="nv">$Uuid</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)][</span>String<span class="o">]</span><span class="nv">$Model</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)][</span>String<span class="o">]</span><span class="nv">$Vendor</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)][</span>String<span class="o">]</span><span class="nv">$Serial</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)][</span>String<span class="o">]</span><span class="nv">$SKU</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)][</span>String<span class="o">]</span><span class="nv">$Family</span>
+</span></span><span class="line"><span class="cl">    <span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nv">$guid</span> <span class="o">=</span> <span class="o">[</span>Guid<span class="o">]</span><span class="nv">$Uuid</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nv">$guidBytes</span> <span class="o">=</span> <span class="nv">$guid</span>.ToByteArray<span class="o">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$decimalPairs</span> <span class="o">=</span> foreach <span class="o">(</span><span class="nv">$byte</span> in <span class="nv">$guidBytes</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;{0:D2}&#34;</span> -f <span class="nv">$byte</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$uuidPairs</span> <span class="o">=</span> <span class="nv">$decimalPairs</span> -join <span class="s1">&#39;, &#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    Write-Host -ForegroundColor Yellow <span class="s2">&#34;`nvsish -e set /hardware/bios/dmiInfo {\`&#34;</span><span class="si">${</span><span class="nv">Model</span><span class="si">}</span><span class="se">\`</span><span class="s2">&#34;, \`&#34;</span><span class="si">${</span><span class="nv">Vendor</span><span class="si">}</span><span class="se">\`</span><span class="s2">&#34;, \`&#34;</span><span class="si">${</span><span class="nv">Serial</span><span class="si">}</span><span class="se">\`</span><span class="s2">&#34;, [</span><span class="si">${</span><span class="nv">uuidPairs</span><span class="si">}</span><span class="s2">], \`&#34;</span>1.0.0<span class="se">\`</span><span class="s2">&#34;, 6, \`&#34;</span><span class="nv">SKU</span><span class="o">=</span><span class="si">${</span><span class="nv">SKU</span><span class="si">}</span><span class="se">\`</span><span class="s2">&#34;, \`&#34;</span><span class="si">${</span><span class="nv">Family</span><span class="si">}</span><span class="se">\`</span><span class="s2">&#34;}`n&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Generate-CustomESXiSMBIOS -Uuid <span class="s2">&#34;43f32ef6-a3a8-44cb-9137-31cb4c6c520b&#34;</span> -Model <span class="s2">&#34;SDN-Warrior 3000&#34;</span> -Vendor <span class="s2">&#34;SDN-Warrior&#34;</span> -Serial <span class="s2">&#34;0816&#34;</span> -SKU <span class="s2">&#34;NUC&#34;</span> -Family <span class="s2">&#34;sdn-warrior.org&#34;</span>
+</span></span></code></pre></div><p>The UUID and serial number should be unique. As a result, I now receive a string that I can simply send to the ESX server via SSH</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">vsish -e <span class="nb">set</span> /hardware/bios/dmiInfo <span class="o">{</span><span class="se">\&#34;</span>SDN-Warrior 3000<span class="se">\&#34;</span>, <span class="se">\&#34;</span>SDN-Warrior<span class="se">\&#34;</span>, <span class="se">\&#34;</span>0815<span class="se">\&#34;</span>, <span class="o">[</span>246, 46, 243, 67, 168, 163, 203, 68, 145, 55, 49, 203, 76, 108, 82, 10<span class="o">]</span>, <span class="se">\&#34;</span>1.0.0<span class="se">\&#34;</span>, 6, <span class="se">\&#34;</span><span class="nv">SKU</span><span class="o">=</span>NUC<span class="se">\&#34;</span>, <span class="se">\&#34;</span>sdn-warrior.org<span class="se">\&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/etc/init.d/hostd restart
+</span></span></code></pre></div><p>However, I have set the option to permanent, and for this to work, you simply need to insert the two lines into /etc/rc.local.d/local.sh.
+After that, ESXiSMBBios will be set after every reboot.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-darksite/02_hu_f21948b0d57806ea.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/02_hu_d26db1561a482492.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/02_hu_f21948b0d57806ea.webp"alt="Make your own Vendor"  width="1144"  height="806" />
+        </picture></a><figcaption>
+            <p>Make your own Vendor (click to enlarge)</p>
+          </figcaption></figure>
+<p>Congratulations, I just became my own hardware manufacturer. May I introduce the SDN Warrior 3000!</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-darksite/03_hu_2efa33568b3982e9.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/03_hu_35f97650fb485541.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/03_hu_2efa33568b3982e9.webp"alt="SDN-Warrior 3000"  width="1700"  height="982" />
+        </picture></a><figcaption>
+            <p>SDN-Warrior 3000 (click to enlarge)</p>
+          </figcaption></figure>
+<p>But now the deployment should work, right? - NOPE!</p>
+<p>I hadn&rsquo;t thought about the network. VCF actually requires two network adapters for good reason.
+The initial setup of ESX is with a standard switch and, after the SDDC has been deployed and the cluster has been formed, it is migrated to a VDS that is initially formed with the second network card.
+Of course, this is not possible without a second network card.
+That was also the moment when I decided against a greenfield deployment and switched to Converge.</p>
+<h2 id="redesign-and-converge">Redesign and Converge<a href="#redesign-and-converge" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Actually, I&rsquo;ve long since reached the point where the project should be considered a failure, but I really wanted a VCF cluster on a NUC.
+To make that work, however, I have to migrate to a VDS, otherwise Converge will fail.
+First, I manually deployed a vCenter and created my vSphere cluster with my two SDN Warrior 3000 servers (a NUC and a nested host—a dream team).</p>
+<p>As far as migration to the VDS is concerned, it&rsquo;s a chicken-and-egg problem. The VDS does offer the option of migrating all VMK adapters and the VM network at once, but as soon as I do that, there is a network interruption and shortly afterwards the vSphere protection mechanism kicks in and rolls back the configuration.
+Fortunately, you can disable this,  which brings me to</p>
+<h2 id="workaround-6">Workaround 6<a href="#workaround-6" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To disable this behavior, you can disable the function in vCenter under Advanced Settings. To do this, set config.vpxd.network.rollback to false.</p>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf9-darksite/05_hu_53d2223627f89a79.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/05_hu_c44b888cde8d6897.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/05_hu_53d2223627f89a79.webp"alt="vCenter"  width="1060"  height="666" />
+        </picture></a><figcaption>
+            <p>vCenter Advanced Settings (click to enlarge)</p>
+          </figcaption></figure>
+<p>Half of the work is done. At least I could now migrate the VMK to the VDS, just like the VMK for NFS.
+However, my vCenter is then suspended in a vacuum on the standard switch and can no longer be connected to another port group.
+To make this possible directly via the ESX server, you have to change the port group where the vCenter is to be migrated from static binding to ephemeral.
+This allows the vCenter to be migrated directly via the ESX to the port group on the DVS and is then accessible again. Wonderful, the migration to the DVS with an adapter was successful.
+Perhaps just a quick note: the distributed port group should be reconfigured before the vCenter becomes unavailable.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf9-darksite/06_hu_1cd9ef2dfa884eb0.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/06_hu_6fc4dad6e7334f21.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/06_hu_1cd9ef2dfa884eb0.webp"alt="VDS"  width="1281"  height="877" />
+        </picture></a><figcaption>
+            <p>happy little VDS (click to enlarge)</p>
+          </figcaption></figure>
+<p>Now the Converge could begin. Since I now had a 2-node cluster with VDS, vMotion, and so on, the Converge could begin without any further hacks via the VCF installer, right? Well, not quite.
+There was still a small error, but it was easy to fix. The installer checks whether the VDS has 2 uplinks, but it does not check whether they actually have a link.
+So the VDS is quickly given an uplink and lo and behold, the validation runs successfully.</p>
+
+<figure><a href="07.png"><picture>
+          <source srcset="/vcf9-darksite/07_hu_b76dfd3ebabfdcd9.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/07_hu_cd90b60d36268bbe.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/07_hu_b76dfd3ebabfdcd9.webp"alt="precheck"  width="1357"  height="694" />
+        </picture></a><figcaption>
+            <p>Converge precheck (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="converge">Converge<a href="#converge" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The actual Converge process is relatively unspectacular. Broadcom and VMware have done a lot to make it as easy as possible (unless you have an adventurous setup like mine).
+You no longer need Python scripts, as was the case with VCF 5.x for brownfield imports.
+The process is relatively simple: the VCF installer first deploys the SDDC, then converts the existing vCenter to the new VCF instance, rolls out NSX and a cloud proxy, and then joins the instance to Fleet and VCF Operations.
+It can be that simple.</p>
+
+<figure><a href="08.png"><picture>
+          <source srcset="/vcf9-darksite/08_hu_22c6f53b2c6c0275.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/08_hu_20e9d30031bf1386.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/08_hu_22c6f53b2c6c0275.webp"alt="Converge"  width="1717"  height="1000" />
+        </picture></a><figcaption>
+            <p>Converge done! (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="are-you-lying-to-us">Are you lying to us?<a href="#are-you-lying-to-us" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>One might ask this question, because the plan was to build a single node cluster, and when it comes to that, I can only say mission successfully failed, but there is a but.
+The virtual ESX is only a temporary solution, and in future I will only activate it for the lifecycle, as the NUC&rsquo;s performance is more than sufficient. I also simply removed the ESX server from the cluster and shut it down.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">At this point, I would like to reiterate my warning: do not simply remove servers from your cluster in a production environment from your VCF setup. This can lead to many sleepless nights. This is for entertainment purposes only.</div>
+    </aside>
+
+<figure><a href="09.png"><picture>
+          <source srcset="/vcf9-darksite/09_hu_9ea77cffc527df98.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/09_hu_eed2aa7d9017fe3f.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/09_hu_9ea77cffc527df98.webp"alt="single node cluster"  width="1494"  height="988" />
+        </picture></a><figcaption>
+            <p>Single node cluster (click to enlarge)</p>
+          </figcaption></figure>
+<p>So, technically speaking, I cheated a little bit, but as you can see in the screenshot, I deployed a working VCF instance. What&rsquo;s still missing are the NSX Edge and my supervisor cluster, but looking at the clock, that&rsquo;s a topic for another blog article.</p>
+<h2 id="just-one-more-thing">just one more thing<a href="#just-one-more-thing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To ensure that I still have logs and metrics from my cluster in operation even when the cluster is disconnected or my operations are down, I have enabled data persistence on the cloud proxy.
+This means that logs are stored until the environment reaches my fleet again.</p>
+<h2 id="final-remarks-and-summary">Final remarks and summary<a href="#final-remarks-and-summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>It was an exciting and thrilling project that definitely cost me a lot of sleep, as I worked tirelessly for the last three days and definitely didn&rsquo;t get enough sleep.
+However, I couldn&rsquo;t accept that it wasn&rsquo;t possible or that I couldn&rsquo;t do it. It also gave me back the motivation I had been lacking to write something again.
+I must also say that I learned a lot. And as always, I have to express my gratitude to William, because at times I was on the verge of despair.</p>
+
+<figure><a href="10.png"><picture>
+          <source srcset="/vcf9-darksite/10_hu_6fc85aa7b887c495.webp" type="image/webp">
+          <source srcset="/vcf9-darksite/10_hu_5a02ac7c6281dfb1.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite/10_hu_6fc85aa7b887c495.webp"alt="VCF Fleet"  width="1711"  height="1124" />
+        </picture></a><figcaption>
+            <p>VCF Fleet (click to enlarge)</p>
+          </figcaption></figure>
+<p>I hope you enjoyed the article and maybe it will help some of you, or you can laugh at me and my journey through the valley of tears.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf9-ms-a2-special/">VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</a></li>
+	
+	<li><a href="/posts/tales-from-the-lab-setup/">Tales from the Lab – Lab setup</a></li>
+	
+	<li><a href="/posts/vcf9-cert-exchange/">VCF 9 - Certificate exchange</a></li>
+	
+	<li><a href="/posts/vcf9-nsx-vpc-part3/">VCF 9 - NSX VPC Part 3 - Security</a></li>
+	
+	<li><a href="/posts/vcf-operations-migration/">VCF 9 - Migration to central VCF Operations instance</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

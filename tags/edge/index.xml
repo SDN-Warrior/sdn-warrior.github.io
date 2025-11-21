@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Edge on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/edge/</link>
+    <description>Recent content in Edge on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Sat, 22 Nov 2025 00:30:00 +0100</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/edge/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Dark Site Edge</title>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+      <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

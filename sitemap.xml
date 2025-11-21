@@ -2,25 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/edge/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2025-10-24T21:00:00+02:00</lastmod>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/nuc/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</loc>
+    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/minisforum/</loc>
     <lastmod>2025-10-24T21:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2025-10-24T21:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2025-10-24T21:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2025-10-24T21:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2025-10-24T21:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf/</loc>
     <lastmod>2025-10-24T21:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</loc>
@@ -234,9 +243,6 @@
     <lastmod>2024-11-17T11:57:43+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/memory-tiering/</loc>
-    <lastmod>2024-11-17T11:57:43+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/nuc/</loc>
     <lastmod>2024-11-17T11:57:43+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/labv4/</loc>

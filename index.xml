@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 24 Oct 2025 21:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 22 Nov 2025 00:30:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Dark Site Edge</title>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+      <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
       <link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
@@ -141,13 +148,6 @@
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
-      <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
