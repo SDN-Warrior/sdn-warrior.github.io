@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 22 Nov 2025 00:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
+      <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
+      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While preparing for an article that has not yet been published, I ran into an interesting VCF bug.&#xA;For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet.&#xA;Since I had to reinstall one of them, I removed it according to the official &lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html&#34;&gt;instructions&lt;/a&gt;, and that&amp;rsquo;s when the problems started.&lt;/p&gt;&#xA;&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;&#xA;&#xD;&#xA;    &lt;aside class=&#34;admonition warning&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-circle&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Warning&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so &lt;strong&gt;at your own risk.&lt;/strong&gt;&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&#xA;&lt;h2 id=&#34;error-pattern-and-impact&#34;&gt;Error pattern and impact&lt;/h2&gt;&#xA;&lt;p&gt;At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Dark Site Edge</title>
       <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
@@ -141,13 +148,6 @@
       <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is my third article in my VCF Homelab series.&#xA;On second thought, I may have put the cart before the horse, because a stretched vSAN cluster requires a functioning management domain.&#xA;But ok, that shouldn&amp;rsquo;t bother us now. I&amp;rsquo;ll try to cover all the essentials of the deployment in this article.&lt;/p&gt;&#xA;&lt;h3 id=&#34;what-are-the-benefits-of-a-stretched-vsan-cluster-and-why-does-it-have-to-be-vsan&#34;&gt;What are the benefits of a stretched vSAN cluster and why does it have to be vSAN?&lt;/h3&gt;&#xA;&lt;p&gt;Well, first the obvious.&#xA;We have to use vSAN because we have a consolidated design here and VCF (version 5.2.1) does not allow any other principal storage in the consolidated design (also, this article is about a vSAN stretched cluster).&#xA;Secondly, we want to use the synchronous replication of vSAN to the second site. Another reason is “German Angst”. We want to have redundancy here and a muti AZ design. In Germany, there have traditionally been stretched clusters across multiple fire compartments or buildings for a long time. In the past, I myself have already implemented such scenarios with layer 2 over layer 3 (aka VxLAN).&#xA;The much more elegant way (and also the way supported by VCF) is the vSAN stretched cluster.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-      <link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
-      <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

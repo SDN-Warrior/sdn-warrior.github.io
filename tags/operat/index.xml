@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Untagged on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/untagged/</link>
-    <description>Recent content in Untagged on SDN-Warrior | Daniel Krieger</description>
+    <title>Operat on SDN-Warrior | Daniel Krieger</title>
+    <link>http://localhost:1313/tags/operat/</link>
+    <description>Recent content in Operat on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/operat/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bug Vcf Onboarding</title>
       <link>http://localhost:1313/posts/bug-vcf-onboarding/</link>

@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 22 Nov 2025 00:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
+      <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
+      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While preparing for an article that has not yet been published, I ran into an interesting VCF bug.&#xA;For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet.&#xA;Since I had to reinstall one of them, I removed it according to the official &lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html&#34;&gt;instructions&lt;/a&gt;, and that&amp;rsquo;s when the problems started.&lt;/p&gt;&#xA;&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;&#xA;&#xD;&#xA;    &lt;aside class=&#34;admonition warning&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-circle&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Warning&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so &lt;strong&gt;at your own risk.&lt;/strong&gt;&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&#xA;&lt;h2 id=&#34;error-pattern-and-impact&#34;&gt;Error pattern and impact&lt;/h2&gt;&#xA;&lt;p&gt;At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Dark Site Edge</title>
       <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Migration with HCX</title>
-      <link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
-      <pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-hcx&#34;&gt;What is HCX?&lt;/h2&gt;&#xA;&lt;p&gt;VMware HCX is an application mobility platform designed to simplify application migration, workload redeployment, and disaster recovery in data centers and clouds.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

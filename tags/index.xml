@@ -7,8 +7,36 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 22 Nov 2025 00:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bugfix</title>
+      <link>https://sdn-warrior.org/tags/bugfix/</link>
+      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/bugfix/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Operations</title>
+      <link>https://sdn-warrior.org/tags/operations/</link>
+      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/operations/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sddc</title>
+      <link>https://sdn-warrior.org/tags/sddc/</link>
+      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/sddc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf</title>
+      <link>https://sdn-warrior.org/tags/vcf/</link>
+      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Edge</title>
       <link>https://sdn-warrior.org/tags/edge/</link>
@@ -28,13 +56,6 @@
       <link>https://sdn-warrior.org/tags/nuc/</link>
       <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/nuc/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf</title>
-      <link>https://sdn-warrior.org/tags/vcf/</link>
-      <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf/</guid>
       <description></description>
     </item>
     <item>
@@ -63,13 +84,6 @@
       <link>https://sdn-warrior.org/tags/intel/</link>
       <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/intel/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Sddc</title>
-      <link>https://sdn-warrior.org/tags/sddc/</link>
-      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/sddc/</guid>
       <description></description>
     </item>
     <item>
@@ -129,24 +143,10 @@
       <description></description>
     </item>
     <item>
-      <title>Operations</title>
-      <link>https://sdn-warrior.org/tags/operations/</link>
-      <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/operations/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Vvf</title>
       <link>https://sdn-warrior.org/tags/vvf/</link>
       <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vvf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>HCX</title>
-      <link>https://sdn-warrior.org/tags/hcx/</link>
-      <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/hcx/</guid>
       <description></description>
     </item>
   </channel>
