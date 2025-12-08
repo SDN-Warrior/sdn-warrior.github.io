@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -27,27 +27,27 @@
 
   <meta itemprop="name" content="VCF9 - Dark Site Edge - Part 2">
   <meta itemprop="description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
-  <meta itemprop="datePublished" content="2025-12-02T00:05:48+01:00">
-  <meta itemprop="dateModified" content="2025-12-02T00:05:48+01:00">
-  <meta itemprop="wordCount" content="126">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Edge,Homelab,NUC"><meta property="og:url" content="http://localhost:1313/posts/vcf9-dark-site-edge-part2/">
+  <meta itemprop="datePublished" content="2025-12-09T00:00:00+01:00">
+  <meta itemprop="dateModified" content="2025-12-09T00:00:00+01:00">
+  <meta itemprop="wordCount" content="1671">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Edge,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Dark Site Edge - Part 2">
   <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-12-02T00:05:48+01:00">
-    <meta property="article:modified_time" content="2025-12-02T00:05:48+01:00">
+    <meta property="article:published_time" content="2025-12-09T00:00:00+01:00">
+    <meta property="article:modified_time" content="2025-12-09T00:00:00+01:00">
     <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="Edge">
     <meta property="article:tag" content="Homelab">
-    <meta property="article:tag" content="NUC">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="article:tag" content="Minisforum">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="VCF9 - Dark Site Edge - Part 2">
   <meta name="twitter:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
 
@@ -58,20 +58,20 @@
     "headline": "VCF9 - Dark Site Edge - Part 2",
     "name": "VCF9 - Dark Site Edge - Part 2",
     "description": "A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2",
-    "keywords": ["vcf", "edge", "homelab", "NUC"],
-    "articleBody": "Introduction In my last article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host). However, this didn’t sit well with me, as I believe it should also be possible with just one host and without any additional tools. Spoiler alert: it works, and today I’m going to write down how to do it.\nOf course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS. So today I will use vSAN ESA, even though it requires significantly more resources than NFS.\nInfo\rAs always, please do not use in production. In addition, the ESA workaround requires VCF 9.0.1, but you can do without the vSAN ESA Mock VIB.\r",
-    "wordCount" : "126",
+    "keywords": ["vcf", "edge", "homelab", "Minisforum"],
+    "articleBody": "Introduction In my last Dark Site article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host). However, this didn’t sit well with me, as I believe it should also be possible with just one host and without any additional tools. Spoiler alert: it works, and today I’m going to write down how to do it.\nOf course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS. So today I will use vSAN ESA, even though it requires significantly more resources than NFS.\nInfo\rAs always, please do not use in production. In addition, the ESA workaround requires VCF 9.0.1, but you can do without the vSAN ESA Mock VIB.\rSo buckle up, we’re going in.\nHardware modification Since I want to use vSAN for this deployment, because a greenfield deployment with external storage is not possible with only one node, I first need to expand my hardware. Fortunately, I purchased my NVMes before the price chaos. I need a total of three NVMes. I have a 1 TB NVMe (PCIe4) for memory tiering, a 2 TB NVMe (PCIe3) for local storage and the actual ESX. This could be a much smaller disk, but I had it anyway. And finally, another 2 TB NVMe (PCIe3) for vSAN.\nNVMe - MS-01 (click to enlarge)\nI could have saved myself an NVMe and booted the ESX via a USB stick, because then you can share the memory tiering disk with the system disk, but I simply only have one USB stick left and I need it for firmware updates, plus I don’t particularly like USB sticks. Now you might ask why I have two PCIe3 disks—well, I don’t. However, the MS-01 only uses one slot with PCIe4 by default BIOS settings, and the others run with PCIe3, as otherwise there is a risk of overheating. In addition, the MS-01 will serve another purpose later on, as it will sooner or later become part of my Nutanix cluster, and I will need the disks for that anyway.\nPrerequisites As with my first attempt, a deployed fleet is required. This must consist of at least one VCF Operations, vCenter, NSX Manager, VCF Operations Cloud Proxy, and one Fleet Manager.\nWorkarounds What would an SDN-warrior deployment be without workarounds? That’s right, work and no fun.\nWorkaround 1 (E\u0026P Cores): Since I use the MS-01, the first thing that comes into play is the workaround for the Big.LITTLE architecture. I have described this here.\nWorkaround 2 (Memory Tiering): Memory tiering is also used, as described in the same article like the Big.LITTLE workaround.\nWorkaround 3 (Single host deployment): I have described this here. However, with my 9.0.1 setup, I needed both entries in the feature.properties file.\necho \"feature.vcf.vgl-29121.single.host.domain=true\" \u003e\u003e /home/vcf/feature.properties echo \"feature.vcf.internal.single.host.domain=true\" \u003e\u003e /home/vcf/feature.properties Workaround 4 (Bypass vSAN HCL): Now we finally come to something new—at least, something new for me. In VCF 9.0.1, you can finally bypass the HCL check for vSAN ESA. Gone are the days of custom JSON vSAN files and VIB installation on ESX.\nTo do this, simply log in to the installer via SSH and enter the following in the shell.\necho \"vsan.esa.sddc.managed.disk.claim=true\" \u003e\u003e /etc/vmware/vcf/domainmanager/application-prod.properties systemctl restart domainmanager Now that most of the work has been done, we can proceed with the deployment. Just a quick heads-up: there will be a small workaround after the SDDC Manager has been successfully deployed.\nDeployment Now comes the really exciting part. Unfortunately, deployment via the guided GUI is not possible with vSAN and single host, but that’s what JSON is for. There are a few good VCF JSON generators available online, such as this one, or you can simply use my JSON and modify it. As with the first Dark Site setup, I am using my existing Fleet, which means I don’t have to deploy VCF Operations, Automation, Operations for Logs, or even the Fleet Manager.\nInfo\rFQDNs, IP addresses, and passwords must be adjusted. To integrate existing resources, you need their SSL thumbprint. You need the thumbprint from VCF Operations, VCF Fleet Manager and the ESX Host. With “skipEsxThumbprintValidation”: true, you can skip the ESX host verification.\rTo obtain the SSL thumbprints, simply log in to the ESX server and use the following command. Adjust the FQDN in the query for each thumbprint.\necho | openssl s_client -connect vcf09-e01-esx01.lab.vcf:443 2\u003e/dev/null | openssl x509 -noout -fingerprint -sha256 | cut -d= -f2 Here is the JSON file I used for VCF 9.0.1. Maybe I should create a GitHub repository for things like this.\n{ \"sddcId\": \"dark-site03\", \"vcfInstanceName\": \"dark-site03\", \"workflowType\": \"VCF\", \"version\": \"9.0.1.0\", \"ceipEnabled\": false, \"skipEsxThumbprintValidation\": true, \"dnsSpec\": { \"nameservers\": [ \"192.168.11.2\", \" 192.168.100.254\" ], \"subdomain\": \"lab.vcf\" }, \"ntpServers\": [ \"192.168.12.1\" ], \"vcenterSpec\": { \"vcenterHostname\": \"vcf09-e03-vcsa.lab.vcf\", \"rootVcenterPassword\": \"xxx\", \"vmSize\": \"small\", \"storageSize\": \"\", \"dminUserSsoUserName\": \"administrator@vsphere.local\", \"adminUserSsoPassword\": \"xxx\", \"ssoDomain\": \"vsphere.local\", \"useExistingDeployment\": false }, \"clusterSpec\": { \"clusterName\": \"dark-site03\", \"datacenterName\": \"e03\" }, \"datastoreSpec\": { \"vsanSpec\": { \"failuresToTolerate\": 0, \"vsanDedup\": false, \"esaConfig\": { \"enabled\": true }, \"datastoreName\": \"vsanDatastore\" } }, \"nsxtSpec\": { \"nsxtManagerSize\": \"medium\", \"nsxtManagers\": [ { \"hostname\": \"vcf09-e03-nsxa.lab.vcf\" } ], \"vipFqdn\": \"vcf09-e03-nsx.lab.vcf\", \"useExistingDeployment\": false, \"nsxtAdminPassword\": \"xxx\", \"nsxtAuditPassword\": \"xxx\", \"rootNsxtManagerPassword\": \"xxx\", \"skipNsxOverlayOverManagementNetwork\": true, \"ipAddressPoolSpec\": { \"name\": \"host-overlay\", \"description\": \"\", \"subnets\": [ { \"cidr\": \"10.28.24.0/24\", \"gateway\": \"10.28.24.1\", \"ipAddressPoolRanges\": [ { \"start\": \"10.28.24.21\", \"end\": \"10.28.24.30\" } ] } ] }, \"transportVlanId\": \"2024\" }, \"vcfOperationsSpec\": { \"nodes\": [ { \"hostname\": \"vcf09-ops.lab.vcf\", \"rootUserPassword\": \"xxx\", \"type\": \"master\", \"sslThumbprint\": \"XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX\" } ], \"adminUserPassword\": \"xxx\", \"applianceSize\": \"xsmall\", \"useExistingDeployment\": true, \"loadBalancerFqdn\": null }, \"vcfOperationsFleetManagementSpec\": { \"hostname\": \"fleet.lab.vcf\", \"rootUserPassword\": \"xxx\", \"adminUserPassword\": \"xxx\", \"useExistingDeployment\": true, \"sslThumbprint\": \"XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX\" }, \"vcfOperationsCollectorSpec\": { \"hostname\": \"vcf09-e03-ops.lab.vcf\", \"applianceSize\": \"small\", \"rootUserPassword\": \"xxx\", \"useExistingDeployment\": false }, \"hostSpecs\": [ { \"hostname\": \"vcf09-e03-esx01.lab.vcf\", \"credentials\": { \"username\": \"root\", \"password\": \"xxx\" }, \"sslThumbprint\": \"XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX\" } ], \"networkSpecs\": [ { \"networkType\": \"MANAGEMENT\", \"subnet\": \"10.28.22.0/24\", \"gateway\": \"10.28.22.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": null, \"vlanId\": \"2022\", \"mtu\": \"1500\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-esx-mgmt\" }, { \"networkType\": \"VM_MANAGEMENT\", \"subnet\": \"10.28.13.0/24\", \"gateway\": \"10.28.13.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": null, \"vlanId\": \"2013\", \"mtu\": \"1500\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-vm-mgmt\" }, { \"networkType\": \"VMOTION\", \"subnet\": \"10.28.23.0/24\", \"gateway\": \"10.28.23.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": [ { \"startIpAddress\": \"10.28.23.20\", \"endIpAddress\": \"10.28.23.29\" } ], \"vlanId\": \"2023\", \"mtu\": \"1500\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-vmotion\" }, { \"networkType\": \"VSAN\", \"subnet\": \"10.28.16.0/24\", \"gateway\": \"10.28.16.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": [ { \"startIpAddress\": \"10.28.16.40\", \"endIpAddress\": \"10.28.16.50\" } ], \"vlanId\": \"2016\", \"mtu\": \"9000\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-vsan\" } ], \"dvsSpecs\": [ { \"dvsName\": \"e03-cl02-vds01\", \"networks\": [ \"MANAGEMENT\", \"VM_MANAGEMENT\", \"VMOTION\", \"VSAN\" ], \"mtu\": 9000, \"nsxtSwitchConfig\": { \"transportZones\": [ { \"transportType\": \"OVERLAY\", \"name\": \"VCF-Created-Overlay-Zone\" } ] }, \"vmnicsToUplinks\": [ { \"id\": \"vmnic0\", \"uplink\": \"uplink1\" }, { \"id\": \"vmnic1\", \"uplink\": \"uplink2\" } ], \"nsxTeamings\": [ { \"policy\": \"LOADBALANCE_SRCID\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standByUplinks\": [] } ], \"lagSpecs\": null } ], \"sddcManagerSpec\": { \"hostname\": \"vcf09-e03-sddc.lab.vcf\", \"useExistingDeployment\": false, \"rootPassword\": \"xxx\", \"sshPassword\": \"xxx\", \"localUserPassword\": \"xxx\" } } Once the typing is done, you can simply upload the JSON file via the installer’s GUI and start the validation. In the best case, it should now look like this.\nVCF Installer (click to enlarge)\nYou can ignore the DNS warning. I simply made a fat-finger mistake when deploying my vcf installer and mistyped one of the two DNS servers. The ESX Host vSAN warning is expected, as I am using 100% unsupported consumer hardware—server vendors hate this trick. The same applies to my vSAN Network Gateway. Since this network does not need to route, it does not have a gateway, so this message can also be ignored. So fill up your coffee cup and press deploy.\nAs I mentioned earlier, the installation will fail and we will have to perform a final workaround. The installer will abort at the “Configure the vSphere cluster” step because a Raid 1 vSAN policy is set by default, which we obviously cannot fulfill.\n(Final) Workaround 5 (vSAN Policy): The solution is super simple. Go to the Policies and Profiles settings via the burger menu in the vCenter and find the vSAN policy that the installer has set as default. This is usually a policy with the name of the VCF instance and Optimal Datasore Default Policy -Raid1. Lovely name. Edit this policy and set Failures to tolerate to “No data redundancy.” I don’t need to mention that this setting should never be used in production 99.9% of the time…\nDangerzone - vSAN Policy (click to enlarge)\nAfter that, you can simply restart the deployment in the VCF installer using retry. The deployment should now run without any problems. For me, the whole process took about 2 hours.\nVCF Installer (click to enlarge)\nNice, another successful deployment completed after a few workarounds, and this time really only on one host. I then deployed two more edge VMs and built my BGP peering. The Kubernetes cluster is still missing, but that’s a story for another blog. The finished VCF instance now looks like this.\nVCF Instance (click to enlarge)\nSummary Significantly fewer workarounds but also more RAM required than with NFS. That’s my feedback in a nutshell. Perhaps I should say a few words about performance, as I am using NVMes that are unfamiliar to me in this setup. At first glance, the Lexar EQ790s perform quite well. They have similar read values to a Samsung 990 Pro and slightly weaker write values than the aforementioned drive, but the bottom line is that I couldn’t get a Samsung 990 Pro at an affordable price.\nvSAN Crystal Disk Mark Performance (click to enlarge)\nI also did a quick test with a Windows Server VM and Crystal Disk Mark. As always, this isn’t a 100% accurate test, but it just to show that this setup is perfectly usable for a lab environment to run a few test VMs and Kubernetes workloads without me always having to turn on multiple servers. So I achieved my goal 100%. I hope I was able to give you some helpful ideas for your setups.\n",
+    "wordCount" : "1671",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/head.jpg","datePublished": "2025-12-02T00:05:48+01:00",
-    "dateModified": "2025-12-02T00:05:48+01:00",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2025-12-09T00:00:00+01:00",
+    "dateModified": "2025-12-09T00:00:00+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/vcf9-dark-site-edge-part2/"
+      "@id": "https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>VCF9 - Dark Site Edge - Part 2</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.4a710a7c0d2021c556818ee82d473cb9b2609d3edea5ab7e43529e3680d670ad.css" integrity="sha256-SnEKfA0gIcVWgY7oLUc8ubJgnT7epat+Q1KeNoDWcK0=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.4a710a7c0d2021c556818ee82d473cb9b2609d3edea5ab7e43529e3680d670ad.css" integrity="sha256-SnEKfA0gIcVWgY7oLUc8ubJgnT7epat+Q1KeNoDWcK0=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 	<header id="site-header">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 				</div>
-				<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 			</div>
 			<div class="hdr-right hdr-icons">
 				<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -122,26 +122,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;text=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;text=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;summary=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%20-%20Part%202%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;summary=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%20-%20Part%202%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -149,7 +149,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF9 - Dark Site Edge - Part 2&#34;,&#34;http://localhost:1313/posts/vcf9-dark-site-edge-part2/&#34;,&#34;VCF9 - Dark Site Edge - Part 2, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9 - Part 2\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF9 - Dark Site Edge - Part 2&#34;,&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/&#34;,&#34;VCF9 - Dark Site Edge - Part 2, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9 - Part 2\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -167,10 +167,10 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="http://localhost:1313/posts/">Posts</a></li>
-			<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-			<li><a href="http://localhost:1313/links/">Links</a></li>
-			<li><a href="http://localhost:1313/about/">About Me</a></li>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 		</ul>
 	</div>
 
@@ -178,7 +178,7 @@
 	<div class="bg-img"></div>
 	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
 			<header class="post-header">
-				<div class="post-meta"><span>Dec 2, 2025</span></div>
+				<div class="post-meta"><span>Dec 9, 2025</span></div>
 				<h1>VCF9 - Dark Site Edge - Part 2</h1>
 			</header>
 			<div class="post-info"><p>A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -191,7 +191,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/edge">edge</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/nuc">NUC</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/edge">edge</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/minisforum">Minisforum</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -199,23 +199,23 @@
       <line x1="16" y1="13" x2="8" y2="13"></line>
       <line x1="16" y1="17" x2="8" y2="17"></line>
       <polyline points="10 9 9 9 8 9"></polyline>
-   </svg>126 Words
+   </svg>1671 Words
      // ReadTime
     
     
     
-    34 Seconds</p>
+    7 Minutes, 35 Seconds</p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
       <line x1="16" y1="2" x2="16" y2="6"></line>
       <line x1="8" y1="2" x2="8" y2="6"></line>
       <line x1="3" y1="10" x2="21" y2="10"></line>
-   </svg>2025-12-02 00:05 &#43;0100</p></div>
+   </svg>2025-12-09 00:00 &#43;0100</p></div>
 			<hr class="post-end">
 			<div class="content">
 				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-<p>In my last article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).
+<p>In my last <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">Dark Site</a> article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).
 However, this didn&rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.
 Spoiler alert: it works, and today I&rsquo;m going to write down how to do it.</p>
 <p>Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.
@@ -232,6 +232,365 @@ So today I will use vSAN ESA, even though it requires significantly more resourc
         </div>
         <div class="admonition-content">As always, please do not use in production. In addition, the ESA workaround requires VCF 9.0.1, but you can do without the vSAN ESA Mock VIB.</div>
     </aside>
+<p>So buckle up, we&rsquo;re going in.</p>
+<h2 id="hardware-modification">Hardware modification<a href="#hardware-modification" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Since I want to use vSAN for this deployment, because a greenfield deployment with external storage is not possible with only one node,
+I first need to expand my hardware. Fortunately,
+I purchased my NVMes before the price chaos.
+I need a total of three NVMes. I have a 1 TB NVMe (PCIe4) for memory tiering, a 2 TB NVMe (PCIe3) for local storage and the actual ESX. This could be a much smaller disk, but I had it anyway. And finally, another 2 TB NVMe (PCIe3) for vSAN.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-darksite2/01_hu_e789d279bf65ab7f.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/01_hu_e4b5d4be363e6ec2.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/01_hu_e789d279bf65ab7f.webp"alt="NVMe"  width="756"  height="1008" />
+        </picture></a><figcaption>
+            <p>NVMe - MS-01 (click to enlarge)</p>
+          </figcaption></figure>
+<p>I could have saved myself an NVMe and booted the ESX via a USB stick, because then you can share the memory tiering disk with the system disk, but I simply only have one USB stick left and I need it for firmware updates, plus I don&rsquo;t particularly like USB sticks.
+Now you might ask why I have two PCIe3 disks—well, I don&rsquo;t. However, the MS-01 only uses one slot with PCIe4 by default BIOS settings, and the others run with PCIe3, as otherwise there is a risk of overheating.
+In addition, the MS-01 will serve another purpose later on, as it will sooner or later become part of my Nutanix cluster, and I will need the disks for that anyway.</p>
+<h2 id="prerequisites">Prerequisites<a href="#prerequisites" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>As with my first attempt, a deployed fleet is required. This must consist of at least one VCF Operations, vCenter, NSX Manager, VCF Operations Cloud Proxy, and one Fleet Manager.</p>
+<h2 id="workarounds">Workarounds<a href="#workarounds" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>What would an SDN-warrior deployment be without workarounds? That&rsquo;s right, work and no fun.</p>
+<h3 id="workaround-1-ep-cores">Workaround 1 (E&amp;P Cores):<a href="#workaround-1-ep-cores" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Since I use the MS-01, the first thing that comes into play is the workaround for the Big.LITTLE architecture. I have described this <a href="https://sdn-warrior.org/posts/nuc/#using-pe-cores">here</a>.</p>
+<h3 id="workaround-2-memory-tiering">Workaround 2 (Memory Tiering):<a href="#workaround-2-memory-tiering" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Memory tiering is also used, as described in the same article like the Big.LITTLE workaround.</p>
+<h3 id="workaround-3-single-host-deployment">Workaround 3 (Single host deployment):<a href="#workaround-3-single-host-deployment" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>I have described this <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/#workaround-4">here</a>.
+However, with my 9.0.1 setup, I needed both entries in the feature.properties file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;feature.vcf.vgl-29121.single.host.domain=true&#34;</span> &gt;&gt; /home/vcf/feature.properties
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;feature.vcf.internal.single.host.domain=true&#34;</span> &gt;&gt; /home/vcf/feature.properties
+</span></span></code></pre></div><h3 id="workaround-4-bypass-vsan-hcl">Workaround 4 (Bypass vSAN HCL):<a href="#workaround-4-bypass-vsan-hcl" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Now we finally come to something new—at least, something new for me.
+In VCF 9.0.1, you can finally bypass the HCL check for vSAN ESA. Gone are the days of custom JSON vSAN files and VIB installation on ESX.</p>
+<p>To do this, simply log in to the installer via SSH and enter the following in the shell.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;vsan.esa.sddc.managed.disk.claim=true&#34;</span> &gt;&gt; /etc/vmware/vcf/domainmanager/application-prod.properties
+</span></span><span class="line"><span class="cl">systemctl restart domainmanager
+</span></span></code></pre></div><p>Now that most of the work has been done, we can proceed with the deployment. Just a quick heads-up: there will be a small workaround after the SDDC Manager has been successfully deployed.</p>
+<h2 id="deployment">Deployment<a href="#deployment" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Now comes the really exciting part. Unfortunately, deployment via the guided GUI is not possible with vSAN and single host, but that&rsquo;s what JSON is for.
+There are a few good VCF JSON generators available online, such as this <a href="https://feardamhan.com/2025/08/14/introducing-the-vcf-jsongenerator-powershell-module-for-vmware-cloud-foundation/">one</a>, or you can simply use my JSON and modify it.
+As with the first Dark Site setup, I am using my existing Fleet, which means I don&rsquo;t have to deploy VCF Operations, Automation, Operations for Logs, or even the Fleet Manager.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">FQDNs, IP addresses, and passwords must be adjusted. To integrate existing resources, you need their SSL thumbprint.
+You need the thumbprint from VCF Operations, VCF Fleet Manager and the ESX Host. With “skipEsxThumbprintValidation”: true, you can skip the ESX host verification.</div>
+    </aside>
+<p>To obtain the SSL thumbprints, simply log in to the ESX server and use the following command.
+Adjust the FQDN in the query for each thumbprint.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="p">|</span> openssl s_client -connect vcf09-e01-esx01.lab.vcf:443 2&gt;/dev/null <span class="p">|</span> openssl x509 -noout -fingerprint -sha256 <span class="p">|</span> cut -d<span class="o">=</span> -f2
+</span></span></code></pre></div><p>Here is the JSON file I used for VCF 9.0.1. Maybe I should create a GitHub repository for things like this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;sddcId&#34;</span>: <span class="s2">&#34;dark-site03&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfInstanceName&#34;</span>: <span class="s2">&#34;dark-site03&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;workflowType&#34;</span>: <span class="s2">&#34;VCF&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;version&#34;</span>: <span class="s2">&#34;9.0.1.0&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ceipEnabled&#34;</span>: false,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;skipEsxThumbprintValidation&#34;</span>: true,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dnsSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nameservers&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;192.168.11.2&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34; 192.168.100.254&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;subdomain&#34;</span>: <span class="s2">&#34;lab.vcf&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ntpServers&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;192.168.12.1&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcenterSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vcenterHostname&#34;</span>: <span class="s2">&#34;vcf09-e03-vcsa.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootVcenterPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vmSize&#34;</span>: <span class="s2">&#34;small&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;storageSize&#34;</span>: <span class="s2">&#34;&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;dminUserSsoUserName&#34;</span>: <span class="s2">&#34;administrator@vsphere.local&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;adminUserSsoPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;ssoDomain&#34;</span>: <span class="s2">&#34;vsphere.local&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;clusterSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;clusterName&#34;</span>: <span class="s2">&#34;dark-site03&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;datacenterName&#34;</span>: <span class="s2">&#34;e03&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;datastoreSpec&#34;</span>: 
+</span></span><span class="line"><span class="cl">    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vsanSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;failuresToTolerate&#34;</span>: 0,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vsanDedup&#34;</span>: false,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;esaConfig&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;enabled&#34;</span>: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;datastoreName&#34;</span>: <span class="s2">&#34;vsanDatastore&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;nsxtSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtManagerSize&#34;</span>: <span class="s2">&#34;medium&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtManagers&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">            <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-nsxa.lab.vcf&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vipFqdn&#34;</span>: <span class="s2">&#34;vcf09-e03-nsx.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: false,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtAdminPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtAuditPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootNsxtManagerPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;skipNsxOverlayOverManagementNetwork&#34;</span>: true,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;ipAddressPoolSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;name&#34;</span>: <span class="s2">&#34;host-overlay&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;description&#34;</span>: <span class="s2">&#34;&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnets&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;cidr&#34;</span>: <span class="s2">&#34;10.28.24.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.24.1&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;ipAddressPoolRanges&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="s2">&#34;start&#34;</span>: <span class="s2">&#34;10.28.24.21&#34;</span>,
+</span></span><span class="line"><span class="cl">                            <span class="s2">&#34;end&#34;</span>: <span class="s2">&#34;10.28.24.30&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;transportVlanId&#34;</span>: <span class="s2">&#34;2024&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfOperationsSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nodes&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">            <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-ops.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;rootUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;type&#34;</span>: <span class="s2">&#34;master&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;sslThumbprint&#34;</span>: <span class="s2">&#34;XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;adminUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;applianceSize&#34;</span>: <span class="s2">&#34;xsmall&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: true,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;loadBalancerFqdn&#34;</span>: null
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfOperationsFleetManagementSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;fleet.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;adminUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: true,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;sslThumbprint&#34;</span>: <span class="s2">&#34;XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfOperationsCollectorSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-ops.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;applianceSize&#34;</span>: <span class="s2">&#34;small&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;hostSpecs&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-esx01.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;credentials&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;username&#34;</span>: <span class="s2">&#34;root&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;password&#34;</span>: <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;sslThumbprint&#34;</span>: <span class="s2">&#34;XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;networkSpecs&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.22.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.22.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2022&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;1500&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-esx-mgmt&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;VM_MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.13.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.13.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2013&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;1500&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-vm-mgmt&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;VMOTION&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.23.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.23.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;startIpAddress&#34;</span>: <span class="s2">&#34;10.28.23.20&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;endIpAddress&#34;</span>: <span class="s2">&#34;10.28.23.29&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2023&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;1500&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-vmotion&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;VSAN&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.16.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.16.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;startIpAddress&#34;</span>: <span class="s2">&#34;10.28.16.40&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;endIpAddress&#34;</span>: <span class="s2">&#34;10.28.16.50&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2016&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;9000&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-vsan&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dvsSpecs&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;dvsName&#34;</span>: <span class="s2">&#34;e03-cl02-vds01&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;VM_MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;VMOTION&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;VSAN&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: 9000,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;nsxtSwitchConfig&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;transportZones&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;transportType&#34;</span>: <span class="s2">&#34;OVERLAY&#34;</span>,
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;name&#34;</span>: <span class="s2">&#34;VCF-Created-Overlay-Zone&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vmnicsToUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;vmnic0&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;uplink&#34;</span>: <span class="s2">&#34;uplink1&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;vmnic1&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;uplink&#34;</span>: <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;nsxTeamings&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;policy&#34;</span>: <span class="s2">&#34;LOADBALANCE_SRCID&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;standByUplinks&#34;</span>: <span class="o">[]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;lagSpecs&#34;</span>: null
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;sddcManagerSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-sddc.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: false,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;sshPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;localUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><p>Once the typing is done, you can simply upload the JSON file via the installer&rsquo;s GUI and start the validation.
+In the best case, it should now look like this.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-darksite2/02_hu_65692ffdd9f33a0d.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/02_hu_b7d03522256ea0a6.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/02_hu_65692ffdd9f33a0d.webp"alt="VCF Installer"  width="1719"  height="1371" />
+        </picture></a><figcaption>
+            <p>VCF Installer (click to enlarge)</p>
+          </figcaption></figure>
+<p>You can ignore the DNS warning. I simply made a fat-finger mistake when deploying my vcf installer and mistyped one of the two DNS servers.
+The ESX Host vSAN warning is expected, as I am using 100% unsupported consumer hardware—server vendors hate this trick. The same applies to my vSAN Network Gateway.
+Since this network does not need to route, it does not have a gateway, so this message can also be ignored.
+So fill up your coffee cup and press deploy.</p>
+<p>As I mentioned earlier, the installation will fail and we will have to perform a final workaround. The installer will abort at the “Configure the vSphere cluster” step because a Raid 1 vSAN policy is set by default, which we obviously cannot fulfill.</p>
+<h3 id="final-workaround-5-vsan-policy">(Final) Workaround 5 (vSAN Policy):<a href="#final-workaround-5-vsan-policy" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The solution is super simple. Go to the Policies and Profiles settings via the burger menu in the vCenter and find the vSAN policy that the installer has set as default.
+This is usually a policy with the name of the VCF instance and Optimal Datasore Default Policy -Raid1.
+Lovely name. Edit this policy and set Failures to tolerate to “No data redundancy.”
+I don&rsquo;t need to mention that this setting should never be used in production 99.9% of the time&hellip;</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-darksite2/03_hu_e8c94c18c0746557.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/03_hu_9a8b632d206ffbff.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/03_hu_e8c94c18c0746557.webp"alt="vSAN Policy"  width="1177"  height="956" />
+        </picture></a><figcaption>
+            <p>Dangerzone - vSAN Policy (click to enlarge)</p>
+          </figcaption></figure>
+<p>After that, you can simply restart the deployment in the VCF installer using retry. The deployment should now run without any problems. For me, the whole process took about 2 hours.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf9-darksite2/04_hu_86192df2b1882511.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/04_hu_1e1341c08928cbb1.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/04_hu_86192df2b1882511.webp"alt="VCF Installer"  width="1707"  height="1099" />
+        </picture></a><figcaption>
+            <p>VCF Installer (click to enlarge)</p>
+          </figcaption></figure>
+<p>Nice, another successful deployment completed after a few workarounds, and this time really only on one host. I then deployed two more edge VMs and built my BGP peering. The Kubernetes cluster is still missing, but that&rsquo;s a story for another blog. The finished VCF instance now looks like this.</p>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf9-darksite2/05_hu_e2611b27bca56f55.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/05_hu_a909e86f20af90b7.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/05_hu_e2611b27bca56f55.webp"alt="VCF Instance"  width="2102"  height="1243" />
+        </picture></a><figcaption>
+            <p>VCF Instance (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Significantly fewer workarounds but also more RAM required than with NFS. That&rsquo;s my feedback in a nutshell.
+Perhaps I should say a few words about performance, as I am using NVMes that are unfamiliar to me in this setup.
+At first glance, the Lexar EQ790s perform quite well.
+They have similar read values to a Samsung 990 Pro and slightly weaker write values than the aforementioned drive, but the bottom line is that I couldn&rsquo;t get a Samsung 990 Pro at an affordable price.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf9-darksite2/06_hu_3159199b77279c19.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/06_hu_287e7f9ea9cca2af.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/06_hu_3159199b77279c19.webp"alt="Crystal Disk Mark"  width="1193"  height="792" />
+        </picture></a><figcaption>
+            <p>vSAN Crystal Disk Mark Performance (click to enlarge)</p>
+          </figcaption></figure>
+<p>I also did a quick test with a Windows Server VM and Crystal Disk Mark. As always, this isn&rsquo;t a 100% accurate test, but it just to show that this setup is perfectly usable for a lab environment to run a few test VMs and Kubernetes workloads without me always having to turn on multiple servers.
+So I achieved my goal 100%.
+I hope I was able to give you some helpful ideas for your setups.</p>
 
 			</div>
 			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
@@ -263,19 +622,12 @@ So today I will use vSAN ESA, even though it requires significantly more resourc
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/bug-vcf-onboarding/">
-				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
-      <line x1="19" y1="12" x2="5" y2="12"></line>
-      <polyline points="12 19 5 12 12 5"></polyline>
-   </svg>&nbsp;Newer</span><br><span>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</span>
-			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/vcf9-dark-site-edge/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/bug-vcf-onboarding/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
       <polyline points="12 5 19 12 12 19"></polyline>
-   </svg></span><br><span>VCF9 - Dark Site Edge</span>
+   </svg></span><br><span>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</span>
 			</a>
 		</div>
 		<div id="comments" class="thin"></div>
@@ -283,14 +635,14 @@ So today I will use vSAN ESA, even though it requires significantly more resourc
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2025 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2025 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger</p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

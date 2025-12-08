@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 09 Dec 2025 00:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Dark Site Edge - Part 2</title>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+      <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my last &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34;&gt;Dark Site&lt;/a&gt; article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).&#xA;However, this didn&amp;rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.&#xA;Spoiler alert: it works, and today I&amp;rsquo;m going to write down how to do it.&lt;/p&gt;&#xA;&lt;p&gt;Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.&#xA;So today I will use vSAN ESA, even though it requires significantly more resources than NFS.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
       <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
@@ -141,13 +148,6 @@
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
-      <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

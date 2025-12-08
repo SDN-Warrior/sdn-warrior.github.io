@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 09 Dec 2025 00:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Dark Site Edge - Part 2</title>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+      <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my last &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34;&gt;Dark Site&lt;/a&gt; article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).&#xA;However, this didn&amp;rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.&#xA;Spoiler alert: it works, and today I&amp;rsquo;m going to write down how to do it.&lt;/p&gt;&#xA;&lt;p&gt;Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.&#xA;So today I will use vSAN ESA, even though it requires significantly more resources than NFS.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
       <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
@@ -141,13 +148,6 @@
       <pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&amp;rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.&#xA;We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF Stretched Cluster</title>
-      <link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
-      <pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is my third article in my VCF Homelab series.&#xA;On second thought, I may have put the cart before the horse, because a stretched vSAN cluster requires a functioning management domain.&#xA;But ok, that shouldn&amp;rsquo;t bother us now. I&amp;rsquo;ll try to cover all the essentials of the deployment in this article.&lt;/p&gt;&#xA;&lt;h3 id=&#34;what-are-the-benefits-of-a-stretched-vsan-cluster-and-why-does-it-have-to-be-vsan&#34;&gt;What are the benefits of a stretched vSAN cluster and why does it have to be vSAN?&lt;/h3&gt;&#xA;&lt;p&gt;Well, first the obvious.&#xA;We have to use vSAN because we have a consolidated design here and VCF (version 5.2.1) does not allow any other principal storage in the consolidated design (also, this article is about a vSAN stretched cluster).&#xA;Secondly, we want to use the synchronous replication of vSAN to the second site. Another reason is “German Angst”. We want to have redundancy here and a muti AZ design. In Germany, there have traditionally been stretched clusters across multiple fire compartments or buildings for a long time. In the past, I myself have already implemented such scenarios with layer 2 over layer 3 (aka VxLAN).&#xA;The much more elegant way (and also the way supported by VCF) is the vSAN stretched cluster.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

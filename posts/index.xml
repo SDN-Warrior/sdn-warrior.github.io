@@ -6,8 +6,395 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
+		<lastBuildDate>Tue, 09 Dec 2025 00:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF9 - Dark Site Edge - Part 2</title>
+			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+			<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>In my last <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">Dark Site</a> article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).
+However, this didn&rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.
+Spoiler alert: it works, and today I&rsquo;m going to write down how to do it.</p>
+<p>Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.
+So today I will use vSAN ESA, even though it requires significantly more resources than NFS.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">As always, please do not use in production. In addition, the ESA workaround requires VCF 9.0.1, but you can do without the vSAN ESA Mock VIB.</div>
+    </aside>
+<p>So buckle up, we&rsquo;re going in.</p>
+<h2 id="hardware-modification">Hardware modification</h2>
+<p>Since I want to use vSAN for this deployment, because a greenfield deployment with external storage is not possible with only one node,
+I first need to expand my hardware. Fortunately,
+I purchased my NVMes before the price chaos.
+I need a total of three NVMes. I have a 1 TB NVMe (PCIe4) for memory tiering, a 2 TB NVMe (PCIe3) for local storage and the actual ESX. This could be a much smaller disk, but I had it anyway. And finally, another 2 TB NVMe (PCIe3) for vSAN.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-darksite2/01_hu_e789d279bf65ab7f.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/01_hu_e4b5d4be363e6ec2.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/01_hu_e789d279bf65ab7f.webp"alt="NVMe"  width="756"  height="1008" />
+        </picture></a><figcaption>
+            <p>NVMe - MS-01 (click to enlarge)</p>
+          </figcaption></figure>
+<p>I could have saved myself an NVMe and booted the ESX via a USB stick, because then you can share the memory tiering disk with the system disk, but I simply only have one USB stick left and I need it for firmware updates, plus I don&rsquo;t particularly like USB sticks.
+Now you might ask why I have two PCIe3 disks—well, I don&rsquo;t. However, the MS-01 only uses one slot with PCIe4 by default BIOS settings, and the others run with PCIe3, as otherwise there is a risk of overheating.
+In addition, the MS-01 will serve another purpose later on, as it will sooner or later become part of my Nutanix cluster, and I will need the disks for that anyway.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>As with my first attempt, a deployed fleet is required. This must consist of at least one VCF Operations, vCenter, NSX Manager, VCF Operations Cloud Proxy, and one Fleet Manager.</p>
+<h2 id="workarounds">Workarounds</h2>
+<p>What would an SDN-warrior deployment be without workarounds? That&rsquo;s right, work and no fun.</p>
+<h3 id="workaround-1-ep-cores">Workaround 1 (E&amp;P Cores):</h3>
+<p>Since I use the MS-01, the first thing that comes into play is the workaround for the Big.LITTLE architecture. I have described this <a href="https://sdn-warrior.org/posts/nuc/#using-pe-cores">here</a>.</p>
+<h3 id="workaround-2-memory-tiering">Workaround 2 (Memory Tiering):</h3>
+<p>Memory tiering is also used, as described in the same article like the Big.LITTLE workaround.</p>
+<h3 id="workaround-3-single-host-deployment">Workaround 3 (Single host deployment):</h3>
+<p>I have described this <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/#workaround-4">here</a>.
+However, with my 9.0.1 setup, I needed both entries in the feature.properties file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;feature.vcf.vgl-29121.single.host.domain=true&#34;</span> &gt;&gt; /home/vcf/feature.properties
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;feature.vcf.internal.single.host.domain=true&#34;</span> &gt;&gt; /home/vcf/feature.properties
+</span></span></code></pre></div><h3 id="workaround-4-bypass-vsan-hcl">Workaround 4 (Bypass vSAN HCL):</h3>
+<p>Now we finally come to something new—at least, something new for me.
+In VCF 9.0.1, you can finally bypass the HCL check for vSAN ESA. Gone are the days of custom JSON vSAN files and VIB installation on ESX.</p>
+<p>To do this, simply log in to the installer via SSH and enter the following in the shell.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;vsan.esa.sddc.managed.disk.claim=true&#34;</span> &gt;&gt; /etc/vmware/vcf/domainmanager/application-prod.properties
+</span></span><span class="line"><span class="cl">systemctl restart domainmanager
+</span></span></code></pre></div><p>Now that most of the work has been done, we can proceed with the deployment. Just a quick heads-up: there will be a small workaround after the SDDC Manager has been successfully deployed.</p>
+<h2 id="deployment">Deployment</h2>
+<p>Now comes the really exciting part. Unfortunately, deployment via the guided GUI is not possible with vSAN and single host, but that&rsquo;s what JSON is for.
+There are a few good VCF JSON generators available online, such as this <a href="https://feardamhan.com/2025/08/14/introducing-the-vcf-jsongenerator-powershell-module-for-vmware-cloud-foundation/">one</a>, or you can simply use my JSON and modify it.
+As with the first Dark Site setup, I am using my existing Fleet, which means I don&rsquo;t have to deploy VCF Operations, Automation, Operations for Logs, or even the Fleet Manager.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">FQDNs, IP addresses, and passwords must be adjusted. To integrate existing resources, you need their SSL thumbprint.
+You need the thumbprint from VCF Operations, VCF Fleet Manager and the ESX Host. With “skipEsxThumbprintValidation”: true, you can skip the ESX host verification.</div>
+    </aside>
+<p>To obtain the SSL thumbprints, simply log in to the ESX server and use the following command.
+Adjust the FQDN in the query for each thumbprint.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="p">|</span> openssl s_client -connect vcf09-e01-esx01.lab.vcf:443 2&gt;/dev/null <span class="p">|</span> openssl x509 -noout -fingerprint -sha256 <span class="p">|</span> cut -d<span class="o">=</span> -f2
+</span></span></code></pre></div><p>Here is the JSON file I used for VCF 9.0.1. Maybe I should create a GitHub repository for things like this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;sddcId&#34;</span>: <span class="s2">&#34;dark-site03&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfInstanceName&#34;</span>: <span class="s2">&#34;dark-site03&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;workflowType&#34;</span>: <span class="s2">&#34;VCF&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;version&#34;</span>: <span class="s2">&#34;9.0.1.0&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ceipEnabled&#34;</span>: false,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;skipEsxThumbprintValidation&#34;</span>: true,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dnsSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nameservers&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;192.168.11.2&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34; 192.168.100.254&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;subdomain&#34;</span>: <span class="s2">&#34;lab.vcf&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ntpServers&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;192.168.12.1&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcenterSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vcenterHostname&#34;</span>: <span class="s2">&#34;vcf09-e03-vcsa.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootVcenterPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vmSize&#34;</span>: <span class="s2">&#34;small&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;storageSize&#34;</span>: <span class="s2">&#34;&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;dminUserSsoUserName&#34;</span>: <span class="s2">&#34;administrator@vsphere.local&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;adminUserSsoPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;ssoDomain&#34;</span>: <span class="s2">&#34;vsphere.local&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;clusterSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;clusterName&#34;</span>: <span class="s2">&#34;dark-site03&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;datacenterName&#34;</span>: <span class="s2">&#34;e03&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;datastoreSpec&#34;</span>: 
+</span></span><span class="line"><span class="cl">    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vsanSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;failuresToTolerate&#34;</span>: 0,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vsanDedup&#34;</span>: false,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;esaConfig&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;enabled&#34;</span>: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;datastoreName&#34;</span>: <span class="s2">&#34;vsanDatastore&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;nsxtSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtManagerSize&#34;</span>: <span class="s2">&#34;medium&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtManagers&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">            <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-nsxa.lab.vcf&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;vipFqdn&#34;</span>: <span class="s2">&#34;vcf09-e03-nsx.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: false,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtAdminPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nsxtAuditPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootNsxtManagerPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;skipNsxOverlayOverManagementNetwork&#34;</span>: true,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;ipAddressPoolSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;name&#34;</span>: <span class="s2">&#34;host-overlay&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;description&#34;</span>: <span class="s2">&#34;&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnets&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;cidr&#34;</span>: <span class="s2">&#34;10.28.24.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.24.1&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;ipAddressPoolRanges&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="s2">&#34;start&#34;</span>: <span class="s2">&#34;10.28.24.21&#34;</span>,
+</span></span><span class="line"><span class="cl">                            <span class="s2">&#34;end&#34;</span>: <span class="s2">&#34;10.28.24.30&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;transportVlanId&#34;</span>: <span class="s2">&#34;2024&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfOperationsSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;nodes&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">            <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-ops.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;rootUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;type&#34;</span>: <span class="s2">&#34;master&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;sslThumbprint&#34;</span>: <span class="s2">&#34;XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;adminUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;applianceSize&#34;</span>: <span class="s2">&#34;xsmall&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: true,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;loadBalancerFqdn&#34;</span>: null
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfOperationsFleetManagementSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;fleet.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;adminUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: true,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;sslThumbprint&#34;</span>: <span class="s2">&#34;XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vcfOperationsCollectorSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-ops.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;applianceSize&#34;</span>: <span class="s2">&#34;small&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;hostSpecs&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-esx01.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;credentials&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;username&#34;</span>: <span class="s2">&#34;root&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;password&#34;</span>: <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;sslThumbprint&#34;</span>: <span class="s2">&#34;XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;networkSpecs&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.22.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.22.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2022&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;1500&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-esx-mgmt&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;VM_MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.13.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.13.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2013&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;1500&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-vm-mgmt&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;VMOTION&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.23.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.23.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;startIpAddress&#34;</span>: <span class="s2">&#34;10.28.23.20&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;endIpAddress&#34;</span>: <span class="s2">&#34;10.28.23.29&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2023&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;1500&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-vmotion&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networkType&#34;</span>: <span class="s2">&#34;VSAN&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnet&#34;</span>: <span class="s2">&#34;10.28.16.0/24&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;gateway&#34;</span>: <span class="s2">&#34;10.28.16.1&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;subnetMask&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddress&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;includeIpAddressRanges&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;startIpAddress&#34;</span>: <span class="s2">&#34;10.28.16.40&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;endIpAddress&#34;</span>: <span class="s2">&#34;10.28.16.50&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vlanId&#34;</span>: <span class="s2">&#34;2016&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: <span class="s2">&#34;9000&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;teamingPolicy&#34;</span>: <span class="s2">&#34;loadbalance_loadbased&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;standbyUplinks&#34;</span>: null,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;portGroupKey&#34;</span>: <span class="s2">&#34;e03-cl01-vds01-pg-vsan&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dvsSpecs&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">        <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;dvsName&#34;</span>: <span class="s2">&#34;e03-cl02-vds01&#34;</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;networks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;VM_MANAGEMENT&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;VMOTION&#34;</span>,
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;VSAN&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;mtu&#34;</span>: 9000,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;nsxtSwitchConfig&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;transportZones&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;transportType&#34;</span>: <span class="s2">&#34;OVERLAY&#34;</span>,
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;name&#34;</span>: <span class="s2">&#34;VCF-Created-Overlay-Zone&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vmnicsToUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;vmnic0&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;uplink&#34;</span>: <span class="s2">&#34;uplink1&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>,
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;vmnic1&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;uplink&#34;</span>: <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;nsxTeamings&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;policy&#34;</span>: <span class="s2">&#34;LOADBALANCE_SRCID&#34;</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;activeUplinks&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;uplink1&#34;</span>,
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;uplink2&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;standByUplinks&#34;</span>: <span class="o">[]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;lagSpecs&#34;</span>: null
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;sddcManagerSpec&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span>: <span class="s2">&#34;vcf09-e03-sddc.lab.vcf&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;useExistingDeployment&#34;</span>: false,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;rootPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;sshPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>,
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;localUserPassword&#34;</span>: <span class="s2">&#34;xxx&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><p>Once the typing is done, you can simply upload the JSON file via the installer&rsquo;s GUI and start the validation.
+In the best case, it should now look like this.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-darksite2/02_hu_65692ffdd9f33a0d.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/02_hu_b7d03522256ea0a6.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/02_hu_65692ffdd9f33a0d.webp"alt="VCF Installer"  width="1719"  height="1371" />
+        </picture></a><figcaption>
+            <p>VCF Installer (click to enlarge)</p>
+          </figcaption></figure>
+<p>You can ignore the DNS warning. I simply made a fat-finger mistake when deploying my vcf installer and mistyped one of the two DNS servers.
+The ESX Host vSAN warning is expected, as I am using 100% unsupported consumer hardware—server vendors hate this trick. The same applies to my vSAN Network Gateway.
+Since this network does not need to route, it does not have a gateway, so this message can also be ignored.
+So fill up your coffee cup and press deploy.</p>
+<p>As I mentioned earlier, the installation will fail and we will have to perform a final workaround. The installer will abort at the “Configure the vSphere cluster” step because a Raid 1 vSAN policy is set by default, which we obviously cannot fulfill.</p>
+<h3 id="final-workaround-5-vsan-policy">(Final) Workaround 5 (vSAN Policy):</h3>
+<p>The solution is super simple. Go to the Policies and Profiles settings via the burger menu in the vCenter and find the vSAN policy that the installer has set as default.
+This is usually a policy with the name of the VCF instance and Optimal Datasore Default Policy -Raid1.
+Lovely name. Edit this policy and set Failures to tolerate to “No data redundancy.”
+I don&rsquo;t need to mention that this setting should never be used in production 99.9% of the time&hellip;</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-darksite2/03_hu_e8c94c18c0746557.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/03_hu_9a8b632d206ffbff.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/03_hu_e8c94c18c0746557.webp"alt="vSAN Policy"  width="1177"  height="956" />
+        </picture></a><figcaption>
+            <p>Dangerzone - vSAN Policy (click to enlarge)</p>
+          </figcaption></figure>
+<p>After that, you can simply restart the deployment in the VCF installer using retry. The deployment should now run without any problems. For me, the whole process took about 2 hours.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf9-darksite2/04_hu_86192df2b1882511.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/04_hu_1e1341c08928cbb1.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/04_hu_86192df2b1882511.webp"alt="VCF Installer"  width="1707"  height="1099" />
+        </picture></a><figcaption>
+            <p>VCF Installer (click to enlarge)</p>
+          </figcaption></figure>
+<p>Nice, another successful deployment completed after a few workarounds, and this time really only on one host. I then deployed two more edge VMs and built my BGP peering. The Kubernetes cluster is still missing, but that&rsquo;s a story for another blog. The finished VCF instance now looks like this.</p>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf9-darksite2/05_hu_e2611b27bca56f55.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/05_hu_a909e86f20af90b7.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/05_hu_e2611b27bca56f55.webp"alt="VCF Instance"  width="2102"  height="1243" />
+        </picture></a><figcaption>
+            <p>VCF Instance (click to enlarge)</p>
+          </figcaption></figure>
+<h2 id="summary">Summary</h2>
+<p>Significantly fewer workarounds but also more RAM required than with NFS. That&rsquo;s my feedback in a nutshell.
+Perhaps I should say a few words about performance, as I am using NVMes that are unfamiliar to me in this setup.
+At first glance, the Lexar EQ790s perform quite well.
+They have similar read values to a Samsung 990 Pro and slightly weaker write values than the aforementioned drive, but the bottom line is that I couldn&rsquo;t get a Samsung 990 Pro at an affordable price.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf9-darksite2/06_hu_3159199b77279c19.webp" type="image/webp">
+          <source srcset="/vcf9-darksite2/06_hu_287e7f9ea9cca2af.jpg" type="image/jpeg">
+          <img src="/vcf9-darksite2/06_hu_3159199b77279c19.webp"alt="Crystal Disk Mark"  width="1193"  height="792" />
+        </picture></a><figcaption>
+            <p>vSAN Crystal Disk Mark Performance (click to enlarge)</p>
+          </figcaption></figure>
+<p>I also did a quick test with a Windows Server VM and Crystal Disk Mark. As always, this isn&rsquo;t a 100% accurate test, but it just to show that this setup is perfectly usable for a lab environment to run a few test VMs and Kubernetes workloads without me always having to turn on multiple servers.
+So I achieved my goal 100%.
+I hope I was able to give you some helpful ideas for your setups.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>

@@ -2,44 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/edge/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/homelab/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/minisforum/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</loc>
+    <lastmod>2025-12-09T00:00:00+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/bugfix/</loc>
     <lastmod>2025-12-03T20:54:20+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/operations/</loc>
     <lastmod>2025-12-03T20:54:20+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2025-12-03T20:54:20+01:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/sddc/</loc>
-    <lastmod>2025-12-03T20:54:20+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2025-12-03T20:54:20+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2025-12-03T20:54:20+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf/</loc>
     <lastmod>2025-12-03T20:54:20+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/bug-vcf-onboarding/</loc>
     <lastmod>2025-12-03T20:54:20+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/edge/</loc>
-    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2025-11-22T00:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/nuc/</loc>
     <lastmod>2025-11-22T00:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</loc>
     <lastmod>2025-11-22T00:30:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/minisforum/</loc>
-    <lastmod>2025-10-24T21:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
     <lastmod>2025-10-24T21:00:00+02:00</lastmod>
