@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 09 Dec 2025 00:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 20 Dec 2025 03:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Building VCF Operations Dashboard</title>
+      <link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+      <pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I currently have two different systems in my home lab for monitoring things.&#xA;I started everything but never really finished it.&#xA;I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.&#xA;As I have to run a VCF Operations anyway so that I can license my Baselab, I thought, why not use Operations for monitoring purposes, since it&amp;rsquo;s there anyway.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Dark Site Edge - Part 2</title>
       <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
@@ -141,13 +148,6 @@
       <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-token/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF Quick Tip - WLD with single NSX Manager</title>
-      <link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
-      <pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&amp;rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.&#xA;We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -6,8 +6,424 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 09 Dec 2025 00:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Sat, 20 Dec 2025 03:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF9 - Building VCF Operations Dashboard</title>
+			<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+			<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+			<description><![CDATA[A short blog about the joys of creating a dashboard in VCF 9 Operations.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>I currently have two different systems in my home lab for monitoring things.
+I started everything but never really finished it.
+I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.
+As I have to run a VCF Operations anyway so that I can license my Baselab, I thought, why not use Operations for monitoring purposes, since it&rsquo;s there anyway.</p>
+<p>How hard can it be? Spoiler alert: I never thought I&rsquo;d be building a Docker container, using a proxy, and converting things with Python, but let&rsquo;s dive down the rabbit hole.</p>
+<h2 id="first-things-first-where-do-we-start">First things first, where do we start?</h2>
+<p>In VCF 9, the Management Pack Builder is integrated into Operations. Management Pack Builder? Yes, that&rsquo;s the tool I&rsquo;ve probably seen the most over the last few days.
+The MP allows you to integrate external systems or data sources and use them to create metrics and properties. Sounds simple, and it is—in theory.
+But first you have to find the tool, because it has been well hidden in Operations.
+You can find the MP under Administration -&gt; Integrations -&gt; Marketplace and then access it via the Create Management Pack button or or Developer Center -&gt; Managment Pack Builder.</p>
+<h2 id="my-first-management-pack">My first management pack</h2>
+<p>I will describe the process using the Unraid API as an example.
+My UPS itself does not have an API, but my Unraid storage system can read my UPS data via a USB connection.
+Since Unraid 7.2, there is now also an API that provides me with the data - nice.</p>
+<p>In principle, however, it can be said that depending on the API, MP can be super easy or hellish. More on that later.
+Unraid relies on GraphQL, which is ideal for VCF operations and, after a brief period of familiarization with how to access the data, is very easy to use.
+The nice thing is that there is exactly one endpoint, namely <em><strong>/graphql</strong></em>, and Unraid has a built-in Apollo server where you can easily click together your queries.</p>
+<h3 id="define-sources">Define sources</h3>
+<p>First, a source must be defined in MP, which is usually relatively easy.
+But here&rsquo;s the first stumbling block: please use variables if you are using anything other than Basic Auth.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/01_hu_ef50244354bcbffa.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/01_hu_2aba7eaf680b6cfc.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/01_hu_ef50244354bcbffa.webp"alt="Data Source Connection"  width="1678"  height="1205" />
+        </picture></a><figcaption>
+            <p>Data Source Connection (click to enlarge)</p>
+          </figcaption></figure>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">If credentials are not provided via Basic Auth or variables, the access data is unencrypted in the Management Pack, especially when it is exported and made available to others. Basic Auth should also be avoided, as user data is transmitted unencrypted.</div>
+    </aside>
+<p>The data source serves as a template, which is used to develop the management pack.
+Once the management pack has been created, there are no more credentials in the data source, provided that you have followed the guidelines and not entered any credentials without variables.
+If you use basic authentication, variables are used automatically.</p>
+<p>The actual configuration is fairly straightforward. you have to select a collector, the API endpoint, and the port.
+I have disabled certificate verification, but in production it should of course remain enabled. The base path is optional; for Unraid, graphql would be a good choice.
+You don&rsquo;t have to specify a leading /, this is done automatically.
+Since Unraid uses API tokens, I created a variable called API-Toke via Custom Authentication.</p>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/02_hu_9f2e88b5413b4559.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/02_hu_13c6babf52ca145c.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/02_hu_9f2e88b5413b4559.webp"alt="Global Settings"  width="1328"  height="688" />
+        </picture></a><figcaption>
+            <p>Global Settings (click to enlarge)</p>
+          </figcaption></figure>
+<p>Next are the global settings, which are very API-specific, and I will show another variation with the Veeam API later on.
+Unraid is relatively simple here; content type - application/json is more or less standard for most APIs, and my token must be specified in the HTTP header with x-api-key.
+The small paste icon allows you to access the defined variables, and everything is automatically entered correctly so that the previously defined variable is used.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/03_hu_56de2f50feb94ba9.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/03_hu_5551334fd1006b03.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/03_hu_56de2f50feb94ba9.webp"alt="Test Connection"  width="1174"  height="1019" />
+        </picture></a><figcaption>
+            <p>Test Connection (click to enlarge)</p>
+          </figcaption></figure>
+<p>The final step is to test the connection. If the test is not successful, the connection cannot be saved.
+Any query can generally be used. In my example, I display the system version of my Unraid server.
+Unraid only uses POST queries. The global HTTP headers are added automatically.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Content-Type is always included by the MP, whether you want it or not.
+If Content-Type is not required, you can specify text/plain. The OPNSense API requires this.</div>
+    </aside>
+<p>To query data, you have to send a query in the body with Unraid. This is again very specific.</p>
+<p>If everything works, you will receive a valid response on the right-hand side and you can save the connection. Step 1 is now successfully complete.</p>
+<h3 id="create-requests">Create Requests</h3>
+<p>Next, the requests must be created. These requests will then be used later to retrieve the data.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/04_hu_a611acfb91e3a312.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/04_hu_a1f1b5a6359e16ef.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/04_hu_a611acfb91e3a312.webp"alt="Requests"  width="1442"  height="620" />
+        </picture></a><figcaption>
+            <p>Requests (click to enlarge)</p>
+          </figcaption></figure>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">If you need to create additional requests afterwards (after the management pack has been installed) because data is missing or the API has changed, you must uninstall the management pack and reinstall the updated version.
+Afterwards, existing dashboards must be adjusted again.</div>
+    </aside>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/05_hu_6a0835b35cd8a2ff.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/05_hu_759cd0e38f6096de.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/05_hu_6a0835b35cd8a2ff.webp"alt="API Requests"  width="1519"  height="1108" />
+        </picture></a><figcaption>
+            <p>API Requests (click to enlarge)</p>
+          </figcaption></figure>
+<p>In my example, I query the utilization of my UPS via the Unraid API so that I can use the data later in an object.
+And as you can see here, I didn&rsquo;t follow my own recommendation for this request and my API token is hardcoded in the request. Please do better.
+In my defense, that was my first request, and I will adjust it in the next update of the management pack.</p>
+<h3 id="create-objects">Create Objects</h3>
+<p>Next, the objects must be created. Each object needs at least one identifier, which must be unique, and an object can contain several metrics and/or properties.
+Metrics and properties are not mandatory. An object can therefore consist of metrics only or properties only.
+The difference between metrics and properties is quite simple: metrics can be calculated and must be of the decimal data type, while properties are strings.
+The unique ID is implemented via a property. Each object can only receive data via one request.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/06_hu_bb77c9141251fbc7.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/06_hu_6801113593f77d88.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/06_hu_bb77c9141251fbc7.webp"alt="Objects"  width="1669"  height="1064" />
+        </picture></a><figcaption>
+            <p>Objects (click to enlarge)</p>
+          </figcaption></figure>
+<p>When selecting the attributes, it is important to pay close attention to what is selected and always rely on the result of the API.
+In the end, clearly assignable values are required. Arrays such as upsDevices.* or data.* are not suitable for metrics.
+In this case, data.upsDevices.* must be selected, as all results always belong to exactly one upsDevice and can therefore ideally represent an object.
+If there are several UPS systems in upsDevices, several objects are automatically created.</p>
+
+<figure><a href="07.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/07_hu_22c6d4b1a7ddecf0.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/07_hu_3bc95d382b1d56b.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/07_hu_22c6d4b1a7ddecf0.webp"alt="Properties and Metrics"  width="1678"  height="906" />
+        </picture></a><figcaption>
+            <p>Properties and Metrics (click to enlarge)</p>
+          </figcaption></figure>
+<p>Selecting the metrics and properties is super simple, but at the same time it&rsquo;s the biggest problem when dealing with APIs.
+Unfortunately, you can&rsquo;t convert the results in any other way; it&rsquo;s either a string or a decimal.
+It&rsquo;s the same as when you only have a hammer, then suddenly everything looks like a nail.
+In my cases with different APIs, almost everything was a stirng. At least with Decimal, you can still specify the most common units, such as %, bit, byte, byte/s, and so on.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">A little tip: if you open the metric or property using the small &raquo; arrows, you will see a preview of the future metric or property.</div>
+    </aside>
+<p>Finally, you just need to select a property as the object instance name and an object ID, which must of course be unique. Since I only have one UPS, I can use the UPS name as both the object instance name and the object ID.</p>
+<p>Finally, a verification must be performed before the Management Pack can be installed.
+Relationshops and events are optional, and for my purposes, I do not need them at this time and will therefore leave them out.</p>
+
+<figure><a href="08.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/08_hu_c15c7013d2a656aa.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/08_hu_9ae2c0b23462a453.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/08_hu_c15c7013d2a656aa.webp"alt="Verify"  width="1442"  height="888" />
+        </picture></a><figcaption>
+            <p>Verify (click to enlarge)</p>
+          </figcaption></figure>
+<p>Congratulations, we have now created our first objects and metrics definition.</p>
+<h2 id="side-quest-incompatible-apis-or-rather-what-to-do-when-i-need-a-metric-but-only-get-properties">Side quest: Incompatible APIs, or rather, what to do when I need a metric but only get properties.</h2>
+<p>Well, friends, I had this problem with the OPNSense API.
+I can create objects perfectly well using the method described, but the API only returns a string with, for example, 6.7 ms for the latency.
+The Management Pack Builder can only interpret this as a string because of the unit that is attached, which means I can&rsquo;t use it for calculations or to display a metric history, for example.
+But there is a solution.</p>
+<h3 id="fastapi--phyton--beautiful-metrics">FastAPI + Phyton = beautiful metrics</h3>
+<p>What is FastAPI? FastAPI was created to build type-safe REST APIs quickly and easily with Python. I use uvicorn as a fast and lightweight web server.
+I did the development in PyCharm. The tool runs on my system as a docker. In PyCharm, I created a new project and created exactly two files: requirements.txt and my actual proxy.py.
+The required libraries are listed in requirements.txt.</p>
+<p>requirements.txt:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">fastapi
+</span></span><span class="line"><span class="cl">uvicorn<span class="o">[</span>standard<span class="o">]</span>
+</span></span><span class="line"><span class="cl">requests
+</span></span></code></pre></div><p>proxy.py:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">import os, re
+</span></span><span class="line"><span class="cl">import requests
+</span></span><span class="line"><span class="cl">from fastapi import FastAPI, Request, Response, HTTPException
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">UPSTREAM</span> <span class="o">=</span> os.environ.get<span class="o">(</span><span class="s2">&#34;UPSTREAM_BASE&#34;</span>, <span class="s2">&#34;https://xxx.xxx&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">VERIFY_TLS</span> <span class="o">=</span> os.environ.get<span class="o">(</span><span class="s2">&#34;VERIFY_TLS&#34;</span>, <span class="s2">&#34;false&#34;</span><span class="o">)</span>.lower<span class="o">()</span> <span class="o">==</span> <span class="s2">&#34;true&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TIMEOUT</span> <span class="o">=</span> float<span class="o">(</span>os.environ.get<span class="o">(</span><span class="s2">&#34;TIMEOUT&#34;</span>, <span class="s2">&#34;10&#34;</span><span class="o">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">app</span> <span class="o">=</span> FastAPI<span class="o">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">_ms</span> <span class="o">=</span> re.compile<span class="o">(</span>r<span class="s2">&#34;^\s*([0-9]+(?:\.[0-9]+)?)\s*ms\s*</span>$<span class="s2">&#34;</span>, re.I<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">_pct</span> <span class="o">=</span> re.compile<span class="o">(</span>r<span class="s2">&#34;^\s*([0-9]+(?:\.[0-9]+)?)\s*%\s*</span>$<span class="s2">&#34;</span>, re.I<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def parse_ms<span class="o">(</span>v<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">    <span class="nv">m</span> <span class="o">=</span> _ms.match<span class="o">(</span>v or <span class="s2">&#34;&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> float<span class="o">(</span>m.group<span class="o">(</span>1<span class="o">))</span> <span class="k">if</span> m <span class="k">else</span> None
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def parse_pct<span class="o">(</span>v<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">    <span class="nv">m</span> <span class="o">=</span> _pct.match<span class="o">(</span>v or <span class="s2">&#34;&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> float<span class="o">(</span>m.group<span class="o">(</span>1<span class="o">))</span> <span class="k">if</span> m <span class="k">else</span> None
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">@app.get<span class="o">(</span><span class="s2">&#34;/api/routing/settings/search_gateway&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">def search_gateway<span class="o">(</span>request: Request<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">    <span class="nv">auth</span> <span class="o">=</span> request.headers.get<span class="o">(</span><span class="s2">&#34;authorization&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> not auth:
+</span></span><span class="line"><span class="cl">        raise HTTPException<span class="o">(</span><span class="nv">status_code</span><span class="o">=</span>401, <span class="nv">detail</span><span class="o">=</span><span class="s2">&#34;Missing Authorization header&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nv">url</span> <span class="o">=</span> f<span class="s2">&#34;{UPSTREAM}/api/routing/settings/search_gateway&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">headers</span> <span class="o">=</span> <span class="o">{</span><span class="s2">&#34;Authorization&#34;</span>: auth, <span class="s2">&#34;Accept&#34;</span>: <span class="s2">&#34;application/json&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    try:
+</span></span><span class="line"><span class="cl">        <span class="nv">r</span> <span class="o">=</span> requests.get<span class="o">(</span>url, <span class="nv">headers</span><span class="o">=</span>headers, <span class="nv">timeout</span><span class="o">=</span>TIMEOUT, <span class="nv">verify</span><span class="o">=</span>VERIFY_TLS<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    except requests.RequestException as e:
+</span></span><span class="line"><span class="cl">        raise HTTPException<span class="o">(</span><span class="nv">status_code</span><span class="o">=</span>502, <span class="nv">detail</span><span class="o">=</span>f<span class="s2">&#34;Upstream request failed: {e}&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> r.status_code &gt;<span class="o">=</span> 400:
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> Response<span class="o">(</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">content</span><span class="o">=</span>r.text,
+</span></span><span class="line"><span class="cl">            <span class="nv">status_code</span><span class="o">=</span>r.status_code,
+</span></span><span class="line"><span class="cl">            <span class="nv">media_type</span><span class="o">=</span>r.headers.get<span class="o">(</span><span class="s2">&#34;content-type&#34;</span>, <span class="s2">&#34;text/plain&#34;</span><span class="o">)</span>,
+</span></span><span class="line"><span class="cl">        <span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    try:
+</span></span><span class="line"><span class="cl">        <span class="nv">data</span> <span class="o">=</span> r.json<span class="o">()</span>
+</span></span><span class="line"><span class="cl">    except ValueError:
+</span></span><span class="line"><span class="cl">        raise HTTPException<span class="o">(</span><span class="nv">status_code</span><span class="o">=</span>502, <span class="nv">detail</span><span class="o">=</span><span class="s2">&#34;Upstream returned invalid JSON&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> row in data.get<span class="o">(</span><span class="s2">&#34;rows&#34;</span>, <span class="o">[])</span>:
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> isinstance<span class="o">(</span>row.get<span class="o">(</span><span class="s2">&#34;delay&#34;</span><span class="o">)</span>, str<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">            <span class="nv">v</span> <span class="o">=</span> parse_ms<span class="o">(</span>row<span class="o">[</span><span class="s2">&#34;delay&#34;</span><span class="o">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> v is not None:
+</span></span><span class="line"><span class="cl">                row<span class="o">[</span><span class="s2">&#34;delay_ms&#34;</span><span class="o">]</span> <span class="o">=</span> v
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> isinstance<span class="o">(</span>row.get<span class="o">(</span><span class="s2">&#34;stddev&#34;</span><span class="o">)</span>, str<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">            <span class="nv">v</span> <span class="o">=</span> parse_ms<span class="o">(</span>row<span class="o">[</span><span class="s2">&#34;stddev&#34;</span><span class="o">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> v is not None:
+</span></span><span class="line"><span class="cl">                row<span class="o">[</span><span class="s2">&#34;stddev_ms&#34;</span><span class="o">]</span> <span class="o">=</span> v
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> isinstance<span class="o">(</span>row.get<span class="o">(</span><span class="s2">&#34;loss&#34;</span><span class="o">)</span>, str<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">            <span class="nv">v</span> <span class="o">=</span> parse_pct<span class="o">(</span>row<span class="o">[</span><span class="s2">&#34;loss&#34;</span><span class="o">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> v is not None:
+</span></span><span class="line"><span class="cl">                row<span class="o">[</span><span class="s2">&#34;loss_pct&#34;</span><span class="o">]</span> <span class="o">=</span> v
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> data
+</span></span></code></pre></div><p>The whole thing is started in my development environment with <em><strong>uvicorn proxy:app &ndash;host 0.0.0.0 &ndash;port 666</strong></em></p>
+
+<figure><a href="09.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/09_hu_b507e29e1ef8617f.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/09_hu_52b07fb97ea93539.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/09_hu_b507e29e1ef8617f.webp"alt="PyCharm"  width="1717"  height="1250" />
+        </picture></a><figcaption>
+            <p>PyCharm (click to enlarge)</p>
+          </figcaption></figure>
+<p>Of course, this is only intended for development purposes.
+Later, I built a Docker container from it that runs on my Unraid server, is backed up, and also starts automatically.
+It is important to note that authentication is not touched and is simply passed on.
+In Python, I parse the values for delay, stddev, and loss and remove the units.
+However, I keep the original values and simply output additional values that do not have units.
+FastAPI thus serves as an API proxy, and I no longer address my OPNSense directly, but rather the FastAPI Docker container, which then returns a usable API to me.</p>
+<p>But back to the actual topic.</p>
+<h2 id="building-dashboards">Building Dashboards</h2>
+<p>I now have my object definitions, and in order to actually receive data, I need to create an account under Administration -&gt; Integrations.
+Unraid (the created management pack) is now also available as an account type, and I need to enter the data for the API here.
+Host name, collector, port, SSL configuration, and so on.</p>
+<p>To view my objects now, you can find them under <em><strong>Inventory -&gt; Integrations</strong></em>.
+The object type <em><strong>UPSLoad</strong></em> that I created can be found in the Unraid integration.
+If the API returned more than one UPS here, there would be two objects of the object type <em><strong>UPSload</strong></em>.
+Within the object, you can find the queried values in the Metric Power Load Percentage.
+It takes at least 5 minutes for the first values to appear.</p>
+
+<figure><a href="10.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/10_hu_dd9223310a0880cb.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/10_hu_89e69928b6021437.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/10_hu_dd9223310a0880cb.webp"alt="UPS Object"  width="1715"  height="1239" />
+        </picture></a><figcaption>
+            <p>UPS Object (click to enlarge)</p>
+          </figcaption></figure>
+<p>You can now work with these values. However, I only have a percentage value and I would prefer to see the watts displayed, because I can imagine more under 300 watts than under 34% usage. But how does that work?</p>
+<h3 id="super-metrics">Super Metrics</h3>
+<p>Super metrics are values that can be calculated using other metrics.
+You can also use super metrics for super metrics. However, it is important to remember that the source metric must be available before the super metric can be calculated.
+It is also important that the super metric is assigned to the correct object type. In my case, the object type is UPSLoad.</p>
+<p>A Super Metric must also be assigned to a policy. If this is forgotten, there will be no values.
+I use the default policy that is used for every object here. However, you could also write a specific policy.</p>
+
+<figure><a href="11.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/11_hu_f4dcb9ed51f0c0e.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/11_hu_697027353d75e1f3.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/11_hu_f4dcb9ed51f0c0e.webp"alt="Super Metrics"  width="1719"  height="935" />
+        </picture></a><figcaption>
+            <p>Super Metrics (click to enlarge)</p>
+          </figcaption></figure>
+<p>The rest is simple math.
+Since I know the maximum power of the UPS, i.e., how many watts 100% is, I can easily convert the percentage into watts.</p>
+<p>After 1-2 intervals have passed, the Super Metric is displayed in the object and can be used. This can be checked via Inventory.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">The default interval is 5 minutes, but it can be adjusted to a minimum of 1 minute for objects. The query interval should be adjusted depending on the object and the data.</div>
+    </aside></p>
+<h3 id="building-the-dashboard">Building the Dashboard</h3>
+<p>Now that the basics are done and the first objects are appearing in Operations, I can start building a dashboard.
+A new dashboard can be created under <em><strong>Infrastructure Operations -&gt; Dashboards &amp; Reports</strong></em>.
+There are quite a few widgets available for displaying various metrics. For watts, a metric chart is useful, as it can show consumption over a certain period of time.
+Each widget has a refresh counter (which only determines the interval at which the widget is updated, not the object).
+Another important option is <em><strong>Self Provider</strong></em>. On means the widget is independent of other widgets.
+It does not take input from other widgets, hence it requires input to be configured in the widget itself.</p>
+
+<figure><a href="12.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/12_hu_b362953534c33348.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/12_hu_39845474428da7b9.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/12_hu_b362953534c33348.webp"alt="Output Data"  width="1053"  height="717" />
+        </picture></a><figcaption>
+            <p>Output Data (click to enlarge)</p>
+          </figcaption></figure>
+<p>Under Input Data, you can choose whether you want to have a complete object (or several) as input or just metrics.
+If I take the object as input, I can also display properties. The actual output of the widget is then configured under Output Data.
+Input and output must match. If I select an object as input that is not of the same object type as my output metric, no content will be displayed.</p>
+<p>The finished widget now looks something like this.</p>
+
+<figure><a href="13.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/13_hu_cc1fa8c744fbae35.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/13_hu_56c192af102874a9.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/13_hu_cc1fa8c744fbae35.webp"alt="Widget"  width="824"  height="349" />
+        </picture></a><figcaption>
+            <p>Widget (click to enlarge)</p>
+          </figcaption></figure>
+<p>It wasn&rsquo;t that difficult, and now all the basics are in place to build a nice dashboard.
+Of course, there&rsquo;s a lot more you can do, such as symptom definitions that trigger something when certain metrics occur or properties change.
+For example, I wrote a symptom definition that reduces the health value of a Veeam object if the backup status is not successful. This also triggers an alarm.</p>
+<p>But I think I&rsquo;d rather write about that separately, because it&rsquo;s a topic in its own right. The same goes for the Health Metric, which automatically assigns operations to each object.</p>
+<p>My final dashboard now looks like this.</p>
+
+<figure><a href="14.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/14_hu_941b71e441ee8942.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/14_hu_ee27144efb2f4804.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/14_hu_941b71e441ee8942.webp"alt="Final Dashboard"  width="1713"  height="1198" />
+        </picture></a><figcaption>
+            <p>Final Dashboard (click to enlarge)</p>
+          </figcaption></figure>
+<h3 id="side-quest---bearer-token">Side Quest - Bearer Token</h3>
+<p>The Veeam API uses bearer tokens with limited runtime, which means that an API request must first be created with a username and password to generate a token before a request to retrieve data can be made. Fortunately, the Management Pack Builder also supports this, but it&rsquo;s all a bit fiddly, so I&rsquo;ll describe it here.
+For Veeam to work, authentication in the Data Source Connection must be set to Custom, otherwise we will not be able to create a secure variable. It is also important to enable <em><strong>Use Session Authentication</strong></em>.</p>
+
+<figure><a href="15.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/15_hu_f66af423d454ab62.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/15_hu_51fff21a7078d0d9.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/15_hu_f66af423d454ab62.webp"alt="Veeam"  width="1677"  height="1208" />
+        </picture></a><figcaption>
+            <p>Veeam (click to enlarge)</p>
+          </figcaption></figure>
+<p>From here on, things change slightly, as we now have to perform two requests.
+It is also important to note that the username and password must be included in the body for Veeam. A variable is also used for the password here.
+From here on, things change slightly, as we now have to perform two requests. It is also important to note that Veeam also requires special headers. However, as Veeam uses Swagger, you can extract all of this information from there.</p>
+
+<figure><a href="16.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/16_hu_422e76b9a3b17443.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/16_hu_174a5cc7d92d9c8c.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/16_hu_422e76b9a3b17443.webp"alt="Veeam Session"  width="1668"  height="1037" />
+        </picture></a><figcaption>
+            <p>Veeam Session (click to enlarge)</p>
+          </figcaption></figure>
+<p>After successfully creating a session, we can now see the token under Global Settings in Session Fields.
+Session Fields are automatic variables that must be used for the Test Connection and also for the Release Session request.
+We don&rsquo;t need to change anything in Global Settings, and since I didn&rsquo;t want to censor another screenshot, I decided not to bother.</p>
+
+<figure><a href="17.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/17_hu_cf90ae3b0ef60a2.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/17_hu_d0707bbae649e748.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/17_hu_cf90ae3b0ef60a2.webp"alt="Release Session"  width="1684"  height="1210" />
+        </picture></a><figcaption>
+            <p>Release Session (click to enlarge)</p>
+          </figcaption></figure>
+<p>A release session request is nothing more than a logout command, after which the data is retrieved. This should be used to ensure that the session is closed properly.</p>
+<p>As a final step, a test connection must be performed so that the DataSource can be saved. I simply queried the session information for this, but ultimately it doesn&rsquo;t matter what is queried here as long as a valid result is returned.</p>
+
+<figure><a href="18.png"><picture>
+          <source srcset="/vcf9-ops-dashboard/18_hu_8d337ea4538b0de3.webp" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/18_hu_f7f04431662531c7.jpg" type="image/jpeg">
+          <img src="/vcf9-ops-dashboard/18_hu_8d337ea4538b0de3.webp"alt="Final Test"  width="1679"  height="1210" />
+        </picture></a><figcaption>
+            <p>Final Test (click to enlarge)</p>
+          </figcaption></figure>
+<p>If the data source is set up in this way, the Management Pack is also secure for export, as no credentials are stored. When integrating into Operations, the username and password must then be provided. The session is created, the token is generated, and the session is closed cleanly with each data retrieval cycle.
+Everything else is exactly the same as previously described for the Unraid API.</p>
+<h2 id="summary">Summary</h2>
+<p>VCF Operations is a powerful tool, albeit a little outdated in some areas, particularly when it comes to handling APIs, where you can still see the product&rsquo;s roots and age. Nevertheless, with a little work, Operations can be expanded wonderfully to monitor more than just the VMware environment. If you want, you can build a weather report into the dashboard – why not?</p>
+<p>Of course, this article only scratches the surface; we haven&rsquo;t talked about views yet, or how the whole Alarming works, or how to work with colors, and so on.
+Considering that it&rsquo;s already almost 3 a.m. and the topic is so extensive, I&rsquo;ll write a more in-depth article if there&rsquo;s interest.
+I hope I&rsquo;ve been able to help you make even better use of your operations.</p>
+<p>Looking at my final dashboard, I&rsquo;m quite excited about how much you can achieve with it in a short amount of time. I only looked into the topic about a week ago and have been cautiously playing around with it.
+My thanks also go to <a href="https://www.vcrocs.info/">Dale Hassinger</a>, who was kind enough to help me. Check out his blog.</p>
+<p>And now all that remains for me to say is, happy creating and Merry Christmas!</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF9 - Dark Site Edge - Part 2</title>

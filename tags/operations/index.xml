@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Wed, 03 Dec 2025 20:54:20 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 20 Dec 2025 03:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/operations/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Building VCF Operations Dashboard</title>
+      <link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+      <pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I currently have two different systems in my home lab for monitoring things.&#xA;I started everything but never really finished it.&#xA;I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.&#xA;As I have to run a VCF Operations anyway so that I can license my Baselab, I thought, why not use Operations for monitoring purposes, since it&amp;rsquo;s there anyway.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
       <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
