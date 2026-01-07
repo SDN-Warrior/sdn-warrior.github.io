@@ -928,6 +928,18 @@ I have tried this several times and was able to verify that it works. Would I do
             <p>Installation complete (click to enlarge)</p>
           </figcaption></figure>
 <p>Of course, I can&rsquo;t say for sure whether all hidden entries from the old SDDC have been removed from the environment. The only thing to do here is wait until the bug is officially fixed. As I already mentioned, I was able to reproduce the behavior several times. Now that this problem has been solved, I can get back to working on the article I had originally planned.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Broadcom published an official KB article on this topic on January 7, 2026: <a href="https://knowledge.broadcom.com/external/article/424495">https://knowledge.broadcom.com/external/article/424495</a></div>
+    </aside>
 ]]></content>
 		</item>
 		
