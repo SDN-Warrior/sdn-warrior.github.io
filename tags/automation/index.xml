@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 20 Dec 2024 02:00:04 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 02:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/automation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Automation in All Apps mode</title>
+      <link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
+      <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.&#xA;Anyway, over 60% wanted me to cover VCF9 automation in All Apps mode.&#xA;As most people know, there are two modes in VCF Automation: the so-called legacy mode, which is nothing more than VCF Automation 8.18, and the new and much more exciting All Apps mode.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
       <link>https://sdn-warrior.org/posts/ipam-automation/</link>

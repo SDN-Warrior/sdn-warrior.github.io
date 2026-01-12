@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 20 Dec 2025 03:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 02:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Automation in All Apps mode</title>
+      <link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
+      <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.&#xA;Anyway, over 60% wanted me to cover VCF9 automation in All Apps mode.&#xA;As most people know, there are two modes in VCF Automation: the so-called legacy mode, which is nothing more than VCF Automation 8.18, and the new and much more exciting All Apps mode.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Building a VCF Operations Dashboard</title>
       <link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
       <guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
       <description>&lt;h2 id=&#34;vmug-st-louis--between-tech-talks-and-travel-vibes&#34;&gt;VMUG St. Louis – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from &lt;a href=&#34;https://www.evoila.de&#34;&gt;evoila&lt;/a&gt;, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&amp;rsquo;m German after all.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF - How to use the Broadcom Download Token</title>
-      <link>https://sdn-warrior.org/posts/vcf-token/</link>
-      <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-token/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
