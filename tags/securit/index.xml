@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Securit on SDN-Warrior | Daniel Krieger</title>
+    <link>http://localhost:1313/tags/securit/</link>
+    <description>Recent content in Securit on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Mon, 26 Jan 2026 20:02:02 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/securit/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AVI - Connect Keycloak to vIDB and AVI Loadbalancer</title>
+      <link>http://localhost:1313/posts/vcf9-keycloak/</link>
+      <pubDate>Mon, 26 Jan 2026 20:02:02 +0100</pubDate>
+      <guid>http://localhost:1313/posts/vcf9-keycloak/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to address the topic of how Keycloak can be used as a central identity management system with VCF9 and the Advanced Load Balancer.&#xA;In theory, this is relatively easy to implement, but in practice, there are a few challenges.&#xA;Today, I would like to describe exactly what these are and also present a solution.&#xA;As a little bonus, I will also show you how to use a Fido Key to log in.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

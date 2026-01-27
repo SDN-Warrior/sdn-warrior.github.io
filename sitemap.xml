@@ -2,19 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/avi/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/avi-keycloak/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/homelab/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/security/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/sso/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vmware/</loc>
+    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/automation/</loc>
     <lastmod>2026-01-12T02:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/operations/</loc>
-    <lastmod>2026-01-12T02:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-01-12T02:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2026-01-12T02:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
     <lastmod>2026-01-12T02:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/vcf/</loc>
@@ -26,13 +44,7 @@
     <loc>https://sdn-warrior.org/tags/vks/</loc>
     <lastmod>2026-01-12T02:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2025-12-20T03:00:00+01:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</loc>
-    <lastmod>2025-12-20T03:00:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vmware/</loc>
     <lastmod>2025-12-20T03:00:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/edge/</loc>
@@ -97,9 +109,6 @@
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-cert-exchange/</loc>
     <lastmod>2025-08-19T09:21:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/security/</loc>
-    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</loc>
     <lastmod>2025-07-29T00:10:05+02:00</lastmod>

@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 12 Jan 2026 02:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AVI - Connect Keycloak to AVI Loadbalancer</title>
+      <link>https://sdn-warrior.org/posts/avi-keycloak/</link>
+      <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.&#xA;In theory, this is relatively easy to implement, but in practice, there are a few challenges.&#xA;I would like to describe exactly what these are and also present a solution.&#xA;As a little bonus, I will also show you how to use a Fido Key (Yubikey) to log in.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Automation in All Apps mode</title>
       <link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
@@ -141,13 +148,6 @@
       <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VMUG Connect St. Louis 2025</title>
-      <link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
-      <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
-      <guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
-      <description>&lt;h2 id=&#34;vmug-st-louis--between-tech-talks-and-travel-vibes&#34;&gt;VMUG St. Louis – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from &lt;a href=&#34;https://www.evoila.de&#34;&gt;evoila&lt;/a&gt;, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&amp;rsquo;m German after all.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

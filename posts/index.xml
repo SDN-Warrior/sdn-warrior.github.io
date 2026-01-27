@@ -6,8 +6,442 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Mon, 12 Jan 2026 02:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
+			<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
+			<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+			<description><![CDATA[A short blog post on how to connect Keycloak to the AVI load balancer.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.
+In theory, this is relatively easy to implement, but in practice, there are a few challenges.
+I would like to describe exactly what these are and also present a solution.
+As a little bonus, I will also show you how to use a Fido Key (Yubikey) to log in.</p>
+<p>I must admit, however, that I haven&rsquo;t had such a frustrating setup in a long time, and it involved a lot of trial and error.
+Now, OIDC isn&rsquo;t exactly one of my favorite topics, and I only had rudimentary experience with Keycloak, but that shouldn&rsquo;t stop me from trying something new. Right? Right! So let&rsquo;s get started.</p>
+<h2 id="setup-keycloak">Setup Keycloak</h2>
+<p>At this point, I made it relatively easy for myself by installing the official Keycloak Docker version 26.5.2 on my Unraid.
+Keycloak requires a Postgres DB, so I used an existing one—also on Unraid.
+If you were hoping that I would write instructions on how to install Keycloak here, I&rsquo;m afraid I have to disappoint you.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Passkeys will only be fully supported in version 26.4.0 and above. The feature has been available as a preview since version 23.0.0.</div>
+    </aside>
+<p>Since I want to use OKTA as a provider in my VCF setup later on, my Keycloak needs a valid certificate that can be publicly validated.
+Here, too, I have made it easy for myself and am using my NGINX proxy manager with Let&rsquo;s Encrypt support and a certificate from one of my domains.
+So that I don&rsquo;t have to store my private IPs in Cloudflare&rsquo;s DNS, I use SplitDNS at home. This means I can resolve keycloak.evilcorp.info, but you cannot.
+Since most of my Docker containers only run internally with HTTP, I have been using the proxy method for a long time and it has proven to be robust and reliable for me.</p>
+<h3 id="realm-setup">Realm Setup</h3>
+<p>Now that you have somehow deployed Keycloak on your system, we can start with the actual configuration. To do this, you first need to create a new realm.
+A realm is a client, you could say. A realm has its own users, groups, and so on.
+In addition, you can define your own identity provider for each realm. In my case, for the sake of simplicity, I use Microsoft AD (because it&rsquo;s there anyway), but I could also use LinkedIn, Facebook, GitHub, Google, and many other identity providers. A combination of several is also possible.
+The only important thing is that the username must be unique within the realm. No two identical usernames can exist.</p>
+<p>A new realm can be easily created under Manage realms and only requires a name. I named my realm lab-ad.</p>
+<h3 id="ldap-connection">LDAP Connection</h3>
+<p>I deliberately avoided using LDAPs in my lab because my container does not have persistent storage, which means I cannot easily link the RootCA of my domain.
+This is on my long to-do list, but you can build it properly.
+An AD is integrated under User federation and not under Identity providers. It sounds strange, but that&rsquo;s how it is.</p>
+<p>Here are my settings at a glance:</p>
+<p>General options</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">UI display name ldap
+</span></span><span class="line"><span class="cl">Vendor Active Directory
+</span></span></code></pre></div><p>Connection and authentication settings</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Connection URL ldap://home.lab
+</span></span><span class="line"><span class="cl">Enable StartTLS Off
+</span></span><span class="line"><span class="cl">Use Truststore SPI Never
+</span></span><span class="line"><span class="cl">Connection pooling On
+</span></span><span class="line"><span class="cl">Connection timeout 
+</span></span><span class="line"><span class="cl">Bind type simple
+</span></span><span class="line"><span class="cl">Bind DN CN=keycloak svc,OU=ServiceAccounts,DC=home,DC=lab
+</span></span><span class="line"><span class="cl">Bind credentials ••••••••••
+</span></span></code></pre></div><p>LDAP searching and updating</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Edit mode READ_ONLY
+</span></span><span class="line"><span class="cl">Users DN OU=User,DC=home,DC=lab
+</span></span><span class="line"><span class="cl">Relative user creation DN 
+</span></span><span class="line"><span class="cl">Username LDAP attribute sAMAccountName
+</span></span><span class="line"><span class="cl">RDN LDAP attribute cn
+</span></span><span class="line"><span class="cl">UUID LDAP attribute objectGUID
+</span></span><span class="line"><span class="cl">User object classes user
+</span></span><span class="line"><span class="cl">User LDAP filter (&amp;(objectClass=user)(!(objectClass=computer)))
+</span></span><span class="line"><span class="cl">Search scope One Level
+</span></span><span class="line"><span class="cl">Read timeout 
+</span></span><span class="line"><span class="cl">Pagination On
+</span></span><span class="line"><span class="cl">Referral 
+</span></span></code></pre></div><p>Synchronization settings</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Import users On
+</span></span><span class="line"><span class="cl">Sync Registrations On
+</span></span><span class="line"><span class="cl">Batch size 
+</span></span><span class="line"><span class="cl">Periodic full sync Off
+</span></span><span class="line"><span class="cl">Periodic changed users sync On
+</span></span><span class="line"><span class="cl">Changed users sync period 60
+</span></span><span class="line"><span class="cl">Remove invalid users during searches On
+</span></span></code></pre></div><p>Kerberos integration</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Allow Kerberos authentication Off
+</span></span><span class="line"><span class="cl">Use Kerberos for password authentication Off
+</span></span></code></pre></div><p>Cache settings</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Cache policy DEFAULT
+</span></span></code></pre></div><p>Advanced settings</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Enable the LDAPv3 password modify extended operation Off
+</span></span><span class="line"><span class="cl">Validate password policy Off
+</span></span><span class="line"><span class="cl">Trust Email Off
+</span></span><span class="line"><span class="cl">Connection trace Off
+</span></span></code></pre></div><p>This configuration connects Keycloak to an AD server at ldap://home.lab and authenticates there with a service account (CN=keycloak svc,OU=ServiceAccounts), allowing connection and read-only access.
+Only users in OU=User,DC=home,DC=lab are used, sAMAccountNameis used as the login name, computer objects are filtered out, and the users found are imported into the local database, with changes synchronized every 60 seconds and deleted AD users automatically removed.</p>
+<p>Next, a group-ldap-mapper must be created in the Mappers tab. To do this, simply click on create new mapper and then select the type group-ldap-mapper.</p>
+<p>My mapper is called ad-groups and these are the settings:
+ad-groups</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">LDAP Groups DN OU=SecGroups,DC=home,DC=lab
+</span></span><span class="line"><span class="cl">Relative creation DN 
+</span></span><span class="line"><span class="cl">Group Name LDAP Attribute cn
+</span></span><span class="line"><span class="cl">Group Object Classes group
+</span></span><span class="line"><span class="cl">Preserve Group Inheritance Off
+</span></span><span class="line"><span class="cl">Ignore Missing Groups Off
+</span></span><span class="line"><span class="cl">Membership LDAP Attribute member
+</span></span><span class="line"><span class="cl">Membership Attribute Type DN
+</span></span><span class="line"><span class="cl">Membership User LDAP Attribute sAMAccountName
+</span></span><span class="line"><span class="cl">LDAP Filter 
+</span></span><span class="line"><span class="cl">Mode READ_ONLY
+</span></span><span class="line"><span class="cl">User Groups Retrieve Strategy LOAD_GROUPS_BY_MEMBER_ATTRIBUTE
+</span></span><span class="line"><span class="cl">Member-Of LDAP Attribute memberOf
+</span></span><span class="line"><span class="cl">Mapped Group Attributes 
+</span></span><span class="line"><span class="cl">Drop non-existing groups during sync Off
+</span></span><span class="line"><span class="cl">Groups Path /
+</span></span></code></pre></div><p>These settings tell Keycloak where and how LDAP groups are read: It searches for groups under OU=SecGroups,DC=home,DC=lab, recognizes them as group objects with names from cn, and reads membership via the member attribute (DN-based, users via sAMAccountName).
+Keycloak works read-only, loads groups via the member attribute, does not automatically transfer missing/unmapped groups, and stores the imported groups under / in the Keycloak group tree.</p>
+<p>Once LDAP is connected, users should now be found when searching for a user under Users.</p>
+
+<figure><a href="01.png"><picture>
+          <source srcset="/avi-keycloak/01_hu_1bb1b99d2f1b3bd2.webp" type="image/webp">
+          <source srcset="/avi-keycloak/01_hu_f0087a59af78c34f.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/01_hu_1bb1b99d2f1b3bd2.webp"alt="User"  width="3448"  height="1972" />
+        </picture></a><figcaption>
+            <p>Imported AD User in Keycloak (click to enlarge)</p>
+          </figcaption></figure>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">For my test, I created two users, one named “daniel” and one named “dummy.” There are also two AD groups, one named “vcf-admin” and one named “vcf-avi.” My user “daniel” is in both groups. The dummy user is only in the vcf group and serves as a control instance.
+Access will be regulated later with the groups. Users in the VCF group have access to my vCenter, users without groups have no access, and users in the vcf-avi group have access to the AVI. Does that make sense?</div>
+    </aside>
+<p>Next, I create an Auth Profile in AVI. AVI is a bit special in this regard because the Keycloak client must be created with a very specific name.</p>
+<h3 id="auth-profile-avi">Auth Profile AVI</h3>
+<p>In AVI, navigate to Templates -&gt; Security -&gt; Auth Profile and create a new SAML profile.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">AVI also offers OAuth/OIDC, but I couldn&rsquo;t get it to work with any settings.
+The documentation only mentions that SAML should be used with Workspace One (which we don&rsquo;t want). OIDC is only described in the documentation for virtual services. Fortunately, the Swiss Army knife Keycloak also supports SAML.</div>
+    </aside>
+
+<figure><a href="02.png"><picture>
+          <source srcset="/avi-keycloak/02_hu_580b8a10a0c11376.webp" type="image/webp">
+          <source srcset="/avi-keycloak/02_hu_a7352be9040a7d3d.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/02_hu_580b8a10a0c11376.webp"alt="SAML"  width="1245"  height="1063" />
+        </picture></a><figcaption>
+            <p>SAML Settings AVI (click to enlarge)</p>
+          </figcaption></figure>
+<p>Two things are important here: first, that the IDP metadata URL is used, and second, that the service provider is switched to FQDN.
+The IDP metadata URL can be found in Keycloak under Realm settings -&gt; General -&gt; Endpoints SAML 2.0 Identity Provider Metadata.
+Simply click on the browser link and copy the URL from the browser into AVI.</p>
+<p>Once the profile has been saved, click on the context menu with the three dots in the Auth Profile overview and select Verify.
+The Verify view displays the Entity ID and the SSO URL—very intuitive—not.</p>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">There are now two very important parameters here.
+The Entity ID, which must become the Client ID in Keycloak, and the Single Sign-on URL. If either of these is incorrect in the Client Settings, SSO will not work.</div>
+    </aside>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Entity ID: AviController-vcf09-avi.lab.vcf
+</span></span><span class="line"><span class="cl">SSO URL: https://vcf09-avi.lab.vcf/sso/acs/
+</span></span></code></pre></div><h3 id="keycloak-client">Keycloak Client</h3>
+<p>Keycloak Clients are applications and services that can request authentication of a user.
+You can have multiple clients in one realm, and clients can have different settings.
+Such as client-specific roles, for example. I&rsquo;ll come back to that later, because AVI has a few more peculiarities.
+A client is created in the realm under Clients.</p>
+<p>Create client</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Client type SAML
+</span></span><span class="line"><span class="cl">Client ID AviController-vcf09-avi.lab.vcf
+</span></span><span class="line"><span class="cl">Name AVI - Test
+</span></span><span class="line"><span class="cl">Description 
+</span></span><span class="line"><span class="cl">Always display in UI Off
+</span></span><span class="line"><span class="cl">Root URL 
+</span></span><span class="line"><span class="cl">Home URL 
+</span></span><span class="line"><span class="cl">Valid redirect URIs https://vcf09-avi.lab.vcf/sso/acs/
+</span></span><span class="line"><span class="cl">Valid post logout redirect URIs https://vcf09-avi.lab.vcf/sso/acs/
+</span></span><span class="line"><span class="cl">IDP-Initiated SSO URL name 
+</span></span><span class="line"><span class="cl">IDP Initiated SSO Relay State 
+</span></span><span class="line"><span class="cl">Master SAML Processing URL 
+</span></span></code></pre></div><p>Those are the basic settings. Next, a few more settings need to be adjusted. To do this, open the client settings—the range of options is overwhelming at first, but fortunately, not much needs to be changed.</p>
+<p>The first setting must be made in Signature and Encryption. Here, Sign assertions must be set to On.
+In addition, the name ID format must be changed to email (every user must have an email address in the AD).</p>
+<p>A theme can also be selected under Loging settings.
+Next, in the Tab Keys, I had to disable the client signature. The problem only occurred when I changed the AVI SSL/TLS Profile and no longer allowed weak ciphers.
+I haven&rsquo;t yet figured out exactly where the problem lies.
+I imported the certificate as described in the AVI documentation, but it only works for me if I allow weak ciphers in AVI.
+If anyone has any ideas, I would be grateful for any input.</p>
+<p>Under Roles, I create a new client role called avi-access. I&rsquo;ll explain what this does a little later.
+Under Client Scopes, you have to create a Group Mapper, otherwise AVI won&rsquo;t know anything about the groups.
+To do this, it&rsquo;s important to go to the Dedicated scopes, which are named the same as the client, only with -dedicated.</p>
+
+<figure><a href="03.png"><picture>
+          <source srcset="/avi-keycloak/03_hu_e0f89724ac3518c9.webp" type="image/webp">
+          <source srcset="/avi-keycloak/03_hu_e4fdf97b6dac5d1a.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/03_hu_e0f89724ac3518c9.webp"alt="Client Scope - dedicvated"  width="3446"  height="1962" />
+        </picture></a><figcaption>
+            <p>Client Scope - dedicated  (click to enlarge)</p>
+          </figcaption></figure>
+<p>Here, a new mapper must be configured. To do this, press the Configure new mapper button and select a mapper of type Group list.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Group attribute name groups
+</span></span><span class="line"><span class="cl">Friendly Name AD Groups
+</span></span><span class="line"><span class="cl">SAML Attribute NameFormat Basic
+</span></span><span class="line"><span class="cl">Single Group Attribute On
+</span></span><span class="line"><span class="cl">Full group path Off
+</span></span></code></pre></div><p>The Group Mapper in the “Client Dedicated” area ensures that when logging in, the user&rsquo;s groups are written to the token/SAML assertion for that specific client.
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">So it is important to note that AVI expects a single group attribute. If this is not activated, a separate attribute will be written for each group that a user has in Keycloak. The login will then no longer work if the user is a member of more than one group.</div>
+    </aside></p>
+<p>AVI will need the attribute later for the mapping profile. In the mapping profile, the attribute must have the same name as it was created in Keycloak—in my case, that is “groups”.</p>
+<p>The SSO URL must be entered under Advanced.</p>
+<p>Fine Grain SAML Endpoint Configuration</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">This section to configure exact URLs for Assertion Consumer and Single Logout Service.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Logo URL 
+</span></span><span class="line"><span class="cl">Policy URL 
+</span></span><span class="line"><span class="cl">Terms of service URL 
+</span></span><span class="line"><span class="cl">Assertion Consumer Service POST Binding URL https://vcf09-avi.lab.vcf/sso/acs/
+</span></span><span class="line"><span class="cl">Assertion Consumer Service Redirect Binding URL https://vcf09-avi.lab.vcf/sso/acs/
+</span></span><span class="line"><span class="cl">Logout Service POST Binding URL 
+</span></span><span class="line"><span class="cl">Logout Service Redirect Binding URL 
+</span></span><span class="line"><span class="cl">Logout Service SOAP Binding URL 
+</span></span><span class="line"><span class="cl">Logout Service ARTIFACT Binding URL 
+</span></span><span class="line"><span class="cl">Artifact Binding URL 
+</span></span><span class="line"><span class="cl">Artifact Resolution Service 
+</span></span></code></pre></div><p>This completes the initial configuration of the client. However, do not be concerned, as we will need to configure more later on.</p>
+<h3 id="role-mapping-for-avi">Role mapping for AVI</h3>
+<p>Next, we use the aforementioned client role. This role can only be used in the AVI client in Keycloak.
+With this, we will prevent a peculiarity of AVI. AVI has a strange habit of creating a user in AVI as soon as authentication is complete, regardless of whether the user has access or not.
+Currently, all I have to do is create a valid Keycloak session for a user, who is then created in AVI and receives an error message because they are not authorized.
+The only problem is that this creates a defective SAML cookie and you can no longer log in to AVI, even if you try with a valid user. Great, I can already see the tickets coming in.
+The solution is to delete the cookie in the browser and end the session in Keycloak. After that, you can log in again. Of course, you now have a user without authorization in AVI, which you must delete manually.</p>
+
+<figure><a href="04.png"><picture>
+          <source srcset="/avi-keycloak/04_hu_cafe7f76754fb7cf.webp" type="image/webp">
+          <source srcset="/avi-keycloak/04_hu_b418f339ca25a99d.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/04_hu_cafe7f76754fb7cf.webp"alt="SAML Cookie broken"  width="1160"  height="737" />
+        </picture></a><figcaption>
+            <p>SAML Cookie broken (click to enlarge)</p>
+          </figcaption></figure>
+<p>In general, this behavior is not a security issue, but user complaints are inevitable.
+To prevent this, I am building in a check to see whether the user is authorized to access the AVI.
+The check is performed at the Keycloak level, and the request is not sent to the AVI at all if there is no authorization for AVI.</p>
+<p>To do this, a role mapping must be created in Keycloak. Under Groups -&gt; vcf-avi -&gt; Role Mapping, a role can be assigned to the group in Keycloak. The groups and user membership come from the AD, making it easy to manage centrally.
+To assign the role, click Assign role and select the appropriate client role avi-access via client roles.</p>
+<h3 id="auth-mapping-profile-for-avi">Auth Mapping Profile for AVI</h3>
+<p>I promise, we&rsquo;ll soon be able to log in with Keycloak. An Auth Mapping Profile is still required in AVI.
+This can be created under Templates -&gt; Security -&gt; Auth Mapping Profile. It must be a SAML type profile.
+The profile is given a descriptive name and requires a rule.
+I&rsquo;ll keep it simple in this example and say that all users whose SAML attribute contains vcf-avi become super users.
+Remember, the SAML attribute contains all Keycloak groups. You could also write a RegEX, because with Contains I have the problem that a group named vcf-avi-test would also match.
+But I&rsquo;ll leave that to the people who have to implement it in production.</p>
+
+<figure><a href="05.png"><picture>
+          <source srcset="/avi-keycloak/05_hu_f56d80f74c6b94c6.webp" type="image/webp">
+          <source srcset="/avi-keycloak/05_hu_4b9005acfde1af92.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/05_hu_f56d80f74c6b94c6.webp"alt="AVI Mapping Profile"  width="2802"  height="1964" />
+        </picture></a><figcaption>
+            <p>AVI Mapping Profile (click to enlarge)</p>
+          </figcaption></figure>
+<p>Finally, the Auth profile and the Mapping Profile just need to be assigned.</p>
+<h3 id="avi-authentication-settings">AVI Authentication settings</h3>
+<p>You can do this easily under Administration -&gt; System Settings and then edit them.
+Under Authentication, you must switch from Local to Remote.
+The Enable Local User Login checkbox should be selected, otherwise you will not be able to log in locally if SSO fails.
+Finally, map the Auth Profile with the Mapping Profile, and then we&rsquo;re done and can run our first test.</p>
+<h3 id="first-test">First Test</h3>
+<p>If everything works correctly, after accessing the AVI page, a message should automatically appear stating that you are not logged in, and the Keycloak login screen should appear directly via the login link.</p>
+
+<figure><a href="06.png"><picture>
+          <source srcset="/avi-keycloak/06_hu_5dfc1aebea067eb9.webp" type="image/webp">
+          <source srcset="/avi-keycloak/06_hu_520d49a6921746f3.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/06_hu_5dfc1aebea067eb9.webp"alt="Keycloak SSO"  width="3452"  height="1964" />
+        </picture></a><figcaption>
+            <p>Keycloak SSO (click to enlarge)</p>
+          </figcaption></figure>
+<p>You can log in with either your username or your email address.
+Because I was smart enough to use my private email address, you can only see the username here.</p>
+
+<figure><a href="07.png"><picture>
+          <source srcset="/avi-keycloak/07_hu_8d631eb35aca51b5.webp" type="image/webp">
+          <source srcset="/avi-keycloak/07_hu_8ad83fe99dc1799c.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/07_hu_8d631eb35aca51b5.webp"alt="AVI SSO"  width="3444"  height="1944" />
+        </picture></a><figcaption>
+            <p>AVI User (click to enlarge)</p>
+          </figcaption></figure>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content"><p>You can log in with a local user by using this link</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">https://avi-url/#!/login?local=1 
+</span></span></code></pre></div></div>
+    </aside>
+<h2 id="interim-conclusion">Interim conclusion</h2>
+<p>SSO login via Keycloak should work, but unfortunately it is not yet possible to log in with a FIDO key, and there is still no way to prevent the dummy user from logging in to AVI, or rather, from being rejected by AVI, which breaks our SAML cookie.
+Time to change that. So grab a coffee, because this article could go on for quite a while.</p>
+<h3 id="enable-fido-key">Enable Fido Key</h3>
+<p>To use a Yubikey or similar device, a few options need to be set in Keycloak.
+Passwordless login is also supported, but I&rsquo;m not personally a fan of this.
+However, the activation process is similar. First, in the Realm Settings under Authentication -&gt; Required actions -&gt; Webauth Register, set Enabled and Set as default action.
+For passwordless login, the corresponding option Webauthn Register Passwordless must be activated and set as the default action.
+Without the default action, users will not be asked to create a passkey when they log in for the first time.</p>
+
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Attention</b>
+        </div>
+        <div class="admonition-content">If you have already used users to log in, they must be deleted in Keycloak after you have activated the option.
+Thanks to AD sync, the users will be back in no time.</div>
+    </aside>
+<p>Then, under Authentication -&gt; Policies -&gt; WebAuthn Policy or WebAuthn Passwordless Policy, the policy must be activated. To do this, WebAuthn -&gt; Avoid same authenticator registration should be activated, or, in the case of WebAuthn Passwordless Policy, this option and enable passkeys in general.</p>
+
+<figure><a href="08.png"><picture>
+          <source srcset="/avi-keycloak/08_hu_8341e5833f220d26.webp" type="image/webp">
+          <source srcset="/avi-keycloak/08_hu_bfa6eb9a8360bd05.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/08_hu_8341e5833f220d26.webp"alt="Webauthn"  width="1719"  height="1358" />
+        </picture></a><figcaption>
+            <p>Webauthn Settings (click to enlarge)</p>
+          </figcaption></figure>
+<h3 id="flow">Flow</h3>
+<p>Finally, a flow must be created under Authentication -&gt; Flows. I use the built-in browser-based authentication flow as a basis and create a copy via the context menu.
+In order to use the client role in the flow, the flow must be assigned to the client. To do this, the flow you just created must be assigned under Clients -&gt; AviController-xxx -&gt; Advanced -&gt; Authentication flow overrides. This allows each client to have its own flow and different checks or login methods.</p>
+<p>A flow consists of three key elements. There are steps (executions), which are specific actions in the login process, such as deny access.
+Secondly, there are conditions, which are ways of checking something, such as whether the user has a certain role, and finally there are sub-flows, which can be used to group steps and conditions.
+In addition, each element has a requirement that determines whether the login continues or is terminated.
+In short, a flow is a chain of steps, conditions, and sub-flows with rules that control the login process.</p>
+
+<figure><a href="09.png"><picture>
+          <source srcset="/avi-keycloak/09_hu_9c062aaad32c052c.webp" type="image/webp">
+          <source srcset="/avi-keycloak/09_hu_4a5f08665e36a680.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/09_hu_9c062aaad32c052c.webp"alt="Flow"  width="1721"  height="1325" />
+        </picture></a><figcaption>
+            <p>Flow (click to enlarge)</p>
+          </figcaption></figure>
+<ul>
+<li>
+<ol>
+<li>To activate keypasses, WebAuthn must be configured in the flow and set to required.</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>Next, a subflow of type generel must be created. This can be done using the small plus sign. It is important that the subflow is in the correct position at the end and is indented correctly. The subflow is used to check role membership.</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>The subflow must be dragged and dropped into the correct position. It is sometimes easier to do this by dragging other elements upwards. The subflow must also be set to Conditional. The conditional block is only executed if the previous step is TRUE. In this flow, 2FA must have been successfully completed, otherwise the login will be canceled.</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>Next, a condition and a step must be created using the plus sign. Both must be defined as required, otherwise the check will not be performed and, in the event of a missing authorization, Access denied will not be executed.</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>The condition must be of type user role, and client roles must be selected under select role. Then I select the avi-access role and select Negate output. Negate Output ensures that the condition is set to TRUE if the user does not have the avi-access role. If the condition is TRUE, the step deny access is executed. If the user has the role, the condition is FALSE and the flow is terminated with the result that I have access.</li>
+</ol>
+</li>
+</ul>
+<p>If everything has been done correctly, the flow should look like the screenshot. &ldquo;Indentation&rdquo; is just as important here as it is in YAML.</p>
+
+<figure><a href="10.png"><picture>
+          <source srcset="/avi-keycloak/10_hu_28e513a10e9b0b95.webp" type="image/webp">
+          <source srcset="/avi-keycloak/10_hu_33f1094a40d7b874.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/10_hu_28e513a10e9b0b95.webp"alt="Flow details"  width="1712"  height="1319" />
+        </picture></a><figcaption>
+            <p>Flow details (click to enlarge)</p>
+          </figcaption></figure>
+<p>Now that everything is configured, it should work roughly as shown in this video.</p>
+<div class="video-container">
+  <iframe width="560" height="315"
+    src="https://www.youtube-nocookie.com/embed/MHD71gCeZMw"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Troubleshooting can be very time-consuming, and I had a few problems. I could bet that I logged into AVI at least 300 times in the last two days. So here are a few general tips.</p>
+<ul>
+<li>Delete your cookies. Even if it is open in an anonymous tab, cookie remnants may remain during runtime, and in case of doubt, this is a broken SAML cookie that then prevents even valid logins.</li>
+<li>Always delete the session in Keycloak. Just because you log out of AVI does not mean that the SSO session is also closed.</li>
+<li>When dragging and dropping in Flow, elements may automatically deactivate if they are moved to an invalid position, for example. Keycloak attempts to save immediately after moving. This nearly drove me to distraction. Sometimes it makes more sense to move other elements than the element you actually want to move.</li>
+<li>Enables logging in Keycloak. This is configured in the Realm Settings under Events.</li>
+<li>If parts of the flow were not executed, the position of the sub-flow should be checked to see if it was nested correctly.</li>
+<li>If “access denied” is displayed despite correct role assignment, the negation in the condition was probably forgotten.</li>
+</ul>
+
+<figure><a href="11.png"><picture>
+          <source srcset="/avi-keycloak/11_hu_a9ad6e42e7d25aaa.webp" type="image/webp">
+          <source srcset="/avi-keycloak/11_hu_d5215e44b63a8590.jpg" type="image/jpeg">
+          <img src="/avi-keycloak/11_hu_a9ad6e42e7d25aaa.webp"alt="Sorry"  width="2016"  height="1326" />
+        </picture></a><figcaption>
+            <p>We are sorry&hellip;(to be honest, I&rsquo;m not.)</p>
+          </figcaption></figure>
+<h2 id="summary">Summary</h2>
+<p>Keycloak or OIDC is a damn powerful toolkit. However, it is anything but simple and, unfortunately, extremely poorly documented for AVI load balancers. I actually wanted to write down the configuration for the VCF client, but the blog article is becoming so extensive that most people probably won&rsquo;t read it anyway, so I&rsquo;d rather pick up the whole thing again in a second article.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>VCF9 - Automation in All Apps mode</title>

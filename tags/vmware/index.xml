@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 20 Dec 2025 03:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AVI - Connect Keycloak to AVI Loadbalancer</title>
+      <link>https://sdn-warrior.org/posts/avi-keycloak/</link>
+      <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.&#xA;In theory, this is relatively easy to implement, but in practice, there are a few challenges.&#xA;I would like to describe exactly what these are and also present a solution.&#xA;As a little bonus, I will also show you how to use a Fido Key (Yubikey) to log in.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 - Building a VCF Operations Dashboard</title>
       <link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
@@ -141,13 +148,6 @@
       <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
       <guid>https://sdn-warrior.org/posts/labv4/</guid>
       <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>NSX 4.X Certificate exchange of the NSX Manager</title>
-      <link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
-      <pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
-      <description>&lt;h1 id=&#34;nsx-4x-certificate-exchange-of-the-nsx-manager&#34;&gt;NSX 4.X Certificate exchange of the NSX Manager&lt;/h1&gt;&#xA;&lt;h1 id=&#34;certificate-creation&#34;&gt;Certificate creation&lt;/h1&gt;&#xA;&lt;p&gt;First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
