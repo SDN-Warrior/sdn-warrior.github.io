@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-11-22T00:30:00+01:00">
   <meta itemprop="wordCount" content="2536">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Edge,Homelab,NUC"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">
+  <meta itemprop="keywords" content="VCF,Edge,Homelab,NUC"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Dark Site Edge">
   <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-11-22T00:30:00+01:00">
     <meta property="article:modified_time" content="2025-11-22T00:30:00+01:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Edge">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="NUC">
@@ -244,14 +244,13 @@ Even if the VCF instance works without a permanent connection to the fleet, the 
 <p>In addition, an offline repository is required, as the software must be obtained from somewhere. In our scenario, we assume that I do not have a permanent or stable connection to the fleet.</p>
 <h2 id="design">Design<a href="#design" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>In terms of design, the setup is intended to complement my VCF 9 setup as described <a href="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">here</a>.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf9-darksite/01_hu_fb674c46f3a80f9c.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/01_hu_2ed665e96533d125.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/01_hu_fb674c46f3a80f9c.webp"alt="Dark Site Design"  width="1796"  height="1423" />
-        </picture></a><figcaption>
-            <p>Dark Site Design (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/01_hu_d131c22619ceabce.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/01_hu_d131c22619ceabce.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/01_hu_d131c22619ceabce.jpg"alt="Dark Site Design"width="1796"
+            height="1423"/>
+        </picture></a><figcaption><p>Dark Site Design (click to enlarge)</p></figcaption></figure>
 <ul>
 <li>
 <p>Local Management Domain:</p>
@@ -321,14 +320,13 @@ Since I use NFS storage, the VCF installer attempts to mount the NFS share durin
 Even if you have configured the VDS in the JSON to use a single NIC, this precheck is always performed with the second NIC.
 If the server does not have a second NIC, this will always fail. I used an old 1 Gb/s USB network card for this. It has an Intel chip and was recognized without any problems.
 However, the adapter does not support jumbo frames, and as soon as more than one VLAN is configured, the adapter no longer works. But that&rsquo;s enough for the precheck.</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/vcf9-darksite/04_hu_89cc8e323112d8b7.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/04_hu_a4c836d2e7b21e8c.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/04_hu_89cc8e323112d8b7.webp"alt="USB Nic"  width="1280"  height="1280" />
-        </picture></a><figcaption>
-            <p>USB Nic (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/04_hu_7ca599284cff8fe8.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/04_hu_7ca599284cff8fe8.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/04_hu_7ca599284cff8fe8.jpg"alt="USB Nic"width="1280"
+            height="1280"/>
+        </picture></a><figcaption><p>USB Nic (click to enlarge)</p></figcaption></figure>
 <p>I just had to assign the USB adapter as an uplink to the temporarily created VDS on the ESX server at the right moment, and the NFS check was successful.
 The actual deployment ran via the onboard card.</p>
 <p>I will realize later that all the trouble with the USB NIC was actually unnecessary.
@@ -388,23 +386,21 @@ To do this, edit the file /bootbank/boot.cfg and add the following to the line w
 </span></span><span class="line"><span class="cl">/etc/init.d/hostd restart
 </span></span></code></pre></div><p>However, I have set the option to permanent, and for this to work, you simply need to insert the two lines into /etc/rc.local.d/local.sh.
 After that, ESXiSMBBios will be set after every reboot.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/vcf9-darksite/02_hu_f21948b0d57806ea.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/02_hu_d26db1561a482492.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/02_hu_f21948b0d57806ea.webp"alt="Make your own Vendor"  width="1144"  height="806" />
-        </picture></a><figcaption>
-            <p>Make your own Vendor (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/02_hu_1a73c260ed4bc01c.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/02_hu_1a73c260ed4bc01c.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/02_hu_1a73c260ed4bc01c.jpg"alt="Make your own Vendor"width="1144"
+            height="806"/>
+        </picture></a><figcaption><p>Make your own Vendor (click to enlarge)</p></figcaption></figure>
 <p>Congratulations, I just became my own hardware manufacturer. May I introduce the SDN Warrior 3000!</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/vcf9-darksite/03_hu_2efa33568b3982e9.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/03_hu_35f97650fb485541.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/03_hu_2efa33568b3982e9.webp"alt="SDN-Warrior 3000"  width="1700"  height="982" />
-        </picture></a><figcaption>
-            <p>SDN-Warrior 3000 (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/03_hu_35d5580079665305.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/03_hu_35d5580079665305.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/03_hu_35d5580079665305.jpg"alt="SDN-Warrior 3000"width="1700"
+            height="982"/>
+        </picture></a><figcaption><p>SDN-Warrior 3000 (click to enlarge)</p></figcaption></figure>
 <p>But now the deployment should work, right? - NOPE!</p>
 <p>I hadn&rsquo;t thought about the network. VCF actually requires two network adapters for good reason.
 The initial setup of ESX is with a standard switch and, after the SDDC has been deployed and the cluster has been formed, it is migrated to a VDS that is initially formed with the second network card.
@@ -418,51 +414,47 @@ First, I manually deployed a vCenter and created my vSphere cluster with my two 
 Fortunately, you can disable this,  which brings me to</p>
 <h2 id="workaround-6">Workaround 6<a href="#workaround-6" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>To disable this behavior, you can disable the function in vCenter under Advanced Settings. To do this, set config.vpxd.network.rollback to false.</p>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/vcf9-darksite/05_hu_53d2223627f89a79.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/05_hu_c44b888cde8d6897.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/05_hu_53d2223627f89a79.webp"alt="vCenter"  width="1060"  height="666" />
-        </picture></a><figcaption>
-            <p>vCenter Advanced Settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/05_hu_c5a089f74c3e03be.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/05_hu_c5a089f74c3e03be.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/05_hu_c5a089f74c3e03be.jpg"alt="vCenter"width="1060"
+            height="666"/>
+        </picture></a><figcaption><p>vCenter Advanced Settings (click to enlarge)</p></figcaption></figure>
 <p>Half of the work is done. At least I could now migrate the VMK to the VDS, just like the VMK for NFS.
 However, my vCenter is then suspended in a vacuum on the standard switch and can no longer be connected to another port group.
 To make this possible directly via the ESX server, you have to change the port group where the vCenter is to be migrated from static binding to ephemeral.
 This allows the vCenter to be migrated directly via the ESX to the port group on the DVS and is then accessible again. Wonderful, the migration to the DVS with an adapter was successful.
 Perhaps just a quick note: the distributed port group should be reconfigured before the vCenter becomes unavailable.</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf9-darksite/06_hu_1cd9ef2dfa884eb0.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/06_hu_6fc4dad6e7334f21.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/06_hu_1cd9ef2dfa884eb0.webp"alt="VDS"  width="1281"  height="877" />
-        </picture></a><figcaption>
-            <p>happy little VDS (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/06_hu_ee4a8dfaaf897634.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/06_hu_ee4a8dfaaf897634.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/06_hu_ee4a8dfaaf897634.jpg"alt="VDS"width="1281"
+            height="877"/>
+        </picture></a><figcaption><p>happy little VDS (click to enlarge)</p></figcaption></figure>
 <p>Now the Converge could begin. Since I now had a 2-node cluster with VDS, vMotion, and so on, the Converge could begin without any further hacks via the VCF installer, right? Well, not quite.
 There was still a small error, but it was easy to fix. The installer checks whether the VDS has 2 uplinks, but it does not check whether they actually have a link.
 So the VDS is quickly given an uplink and lo and behold, the validation runs successfully.</p>
-
 <figure><a href="07.png"><picture>
-          <source srcset="/vcf9-darksite/07_hu_b76dfd3ebabfdcd9.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/07_hu_cd90b60d36268bbe.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/07_hu_b76dfd3ebabfdcd9.webp"alt="precheck"  width="1357"  height="694" />
-        </picture></a><figcaption>
-            <p>Converge precheck (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/07_hu_95434268505cc8eb.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/07_hu_95434268505cc8eb.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/07_hu_95434268505cc8eb.jpg"alt="precheck"width="1357"
+            height="694"/>
+        </picture></a><figcaption><p>Converge precheck (click to enlarge)</p></figcaption></figure>
 <h2 id="converge">Converge<a href="#converge" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The actual Converge process is relatively unspectacular. Broadcom and VMware have done a lot to make it as easy as possible (unless you have an adventurous setup like mine).
 You no longer need Python scripts, as was the case with VCF 5.x for brownfield imports.
 The process is relatively simple: the VCF installer first deploys the SDDC, then converts the existing vCenter to the new VCF instance, rolls out NSX and a cloud proxy, and then joins the instance to Fleet and VCF Operations.
 It can be that simple.</p>
-
 <figure><a href="08.png"><picture>
-          <source srcset="/vcf9-darksite/08_hu_22c6f53b2c6c0275.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/08_hu_20e9d30031bf1386.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/08_hu_22c6f53b2c6c0275.webp"alt="Converge"  width="1717"  height="1000" />
-        </picture></a><figcaption>
-            <p>Converge done! (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/08_hu_4cd48a0ec7c9ac2b.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/08_hu_4cd48a0ec7c9ac2b.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/08_hu_4cd48a0ec7c9ac2b.jpg"alt="Converge"width="1717"
+            height="1000"/>
+        </picture></a><figcaption><p>Converge done! (click to enlarge)</p></figcaption></figure>
 <h2 id="are-you-lying-to-us">Are you lying to us?<a href="#are-you-lying-to-us" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>One might ask this question, because the plan was to build a single node cluster, and when it comes to that, I can only say mission successfully failed, but there is a but.
 The virtual ESX is only a temporary solution, and in future I will only activate it for the lifecycle, as the NUC&rsquo;s performance is more than sufficient. I also simply removed the ESX server from the cluster and shut it down.</p>
@@ -478,14 +470,13 @@ The virtual ESX is only a temporary solution, and in future I will only activate
         </div>
         <div class="admonition-content">At this point, I would like to reiterate my warning: do not simply remove servers from your cluster in a production environment from your VCF setup. This can lead to many sleepless nights. This is for entertainment purposes only.</div>
     </aside>
-
 <figure><a href="09.png"><picture>
-          <source srcset="/vcf9-darksite/09_hu_9ea77cffc527df98.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/09_hu_eed2aa7d9017fe3f.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/09_hu_9ea77cffc527df98.webp"alt="single node cluster"  width="1494"  height="988" />
-        </picture></a><figcaption>
-            <p>Single node cluster (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/09_hu_d209b87780360c3.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/09_hu_d209b87780360c3.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/09_hu_d209b87780360c3.jpg"alt="single node cluster"width="1494"
+            height="988"/>
+        </picture></a><figcaption><p>Single node cluster (click to enlarge)</p></figcaption></figure>
 <p>So, technically speaking, I cheated a little bit, but as you can see in the screenshot, I deployed a working VCF instance. What&rsquo;s still missing are the NSX Edge and my supervisor cluster, but looking at the clock, that&rsquo;s a topic for another blog article.</p>
 <h2 id="just-one-more-thing">just one more thing<a href="#just-one-more-thing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>To ensure that I still have logs and metrics from my cluster in operation even when the cluster is disconnected or my operations are down, I have enabled data persistence on the cloud proxy.
@@ -494,14 +485,13 @@ This means that logs are stored until the environment reaches my fleet again.</p
 <p>It was an exciting and thrilling project that definitely cost me a lot of sleep, as I worked tirelessly for the last three days and definitely didn&rsquo;t get enough sleep.
 However, I couldn&rsquo;t accept that it wasn&rsquo;t possible or that I couldn&rsquo;t do it. It also gave me back the motivation I had been lacking to write something again.
 I must also say that I learned a lot. And as always, I have to express my gratitude to William, because at times I was on the verge of despair.</p>
-
 <figure><a href="10.png"><picture>
-          <source srcset="/vcf9-darksite/10_hu_6fc85aa7b887c495.webp" type="image/webp">
-          <source srcset="/vcf9-darksite/10_hu_5a02ac7c6281dfb1.jpg" type="image/jpeg">
-          <img src="/vcf9-darksite/10_hu_6fc85aa7b887c495.webp"alt="VCF Fleet"  width="1711"  height="1124" />
-        </picture></a><figcaption>
-            <p>VCF Fleet (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-darksite/10_hu_aea86aab6671a019.jpg" type="image/webp">
+          <source srcset="/vcf9-darksite/10_hu_aea86aab6671a019.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-darksite/10_hu_aea86aab6671a019.jpg"alt="VCF Fleet"width="1711"
+            height="1124"/>
+        </picture></a><figcaption><p>VCF Fleet (click to enlarge)</p></figcaption></figure>
 <p>I hope you enjoyed the article and maybe it will help some of you, or you can laugh at me and my journey through the valley of tears.</p>
 
 			</div>

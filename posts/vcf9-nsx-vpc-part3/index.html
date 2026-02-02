@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-07-29T00:10:05+02:00">
   <meta itemprop="wordCount" content="3130">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Vpc,Security"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Vpc,Security"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF 9 - NSX VPC Part 3 - Security">
   <meta property="og:description" content="A short article about VPCs in NSX 9 and VCF 9 Part 3.">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-07-29T00:10:05+02:00">
     <meta property="article:modified_time" content="2025-07-29T00:10:05+02:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Vpc">
@@ -224,14 +224,13 @@ Let&rsquo;s find out exactly how.</p>
 <h2 id="nsx-project">NSX Project<a href="#nsx-project" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>When it comes to isolation, we must also briefly address the topic of NSX Project.
 A Project is nothing more than a tenant in NSX. The name is debatable; personally, I don&rsquo;t find it particularly apt.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/01_hu_ee89b652790cd061.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/01_hu_57df5625ce03e8a9.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/01_hu_ee89b652790cd061.webp"alt="NSX 9 Projects"  width="3712"  height="1681" />
-        </picture></a><figcaption>
-            <p>NSX 9 Projects (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/01_hu_7b2a3c65ea0d0b2b.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/01_hu_7b2a3c65ea0d0b2b.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/01_hu_7b2a3c65ea0d0b2b.jpg"alt="NSX 9 Projects"width="3712"
+            height="1681"/>
+        </picture></a><figcaption><p>NSX 9 Projects (click to enlarge)</p></figcaption></figure>
 <p>There is always the default project, and most of my customers only use that and are happy with it.
 However, I don&rsquo;t have any isolation (per default) through the distributed firewall in the default project.
 The default rule set initially allows all traffic, and in terms of VPCs, this means that everything that is routable can also be accessed.</p>
@@ -239,14 +238,13 @@ The default rule set initially allows all traffic, and in terms of VPCs, this me
 This can also be changed later. To do this, you must activate <em><strong>Activate Default Distributed Firewall Rules</strong></em> in the project settings.</p>
 <p>The default Distributed Firewall rules allow communication between workloads within a Project, including communication with the DHCP server.
 All other communication is blocked.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/02_hu_e79cc9cb4ed1d4e8.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/02_hu_31dc01d969b0b9bd.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/02_hu_e79cc9cb4ed1d4e8.webp"alt="NSX 9 Projects FW"  width="1502"  height="846" />
-        </picture></a><figcaption>
-            <p>NSX 9 Projects FW Rules (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/02_hu_b20f02898a9c5dec.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/02_hu_b20f02898a9c5dec.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/02_hu_b20f02898a9c5dec.jpg"alt="NSX 9 Projects FW"width="1502"
+            height="846"/>
+        </picture></a><figcaption><p>NSX 9 Projects FW Rules (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -262,14 +260,13 @@ The default project will continue to have the familiar default policy and, by de
     </aside>
 <p>The automatically generated rule set can be edited, expanded, and deactivated, but not deleted.
 A dynamic security group is automatically created, which includes all segments of the project. This security group creates an “allow any” rule within the project.</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/03_hu_6cf57f6d2a69ee06.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/03_hu_6d5d852640466742.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/03_hu_6cf57f6d2a69ee06.webp"alt="NSX 9 Projects FW Group"  width="692"  height="557" />
-        </picture></a><figcaption>
-            <p>NSX 9 Projects FW Group (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/03_hu_ccb3ef6c36a7193a.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/03_hu_ccb3ef6c36a7193a.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/03_hu_ccb3ef6c36a7193a.jpg"alt="NSX 9 Projects FW Group"width="692"
+            height="557"/>
+        </picture></a><figcaption><p>NSX 9 Projects FW Group (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition attention">
         <div class="admonition-title">
@@ -322,14 +319,13 @@ And the placement of the firewall rules is important for enforcing the rules or 
   </tbody>
 </table>
 <p>To better understand the table, it is important to know that rules can be created not only in the <em><strong>Security / Distributed Firewall</strong></em> tab, but also at the VPC level by going to the VPC settings and clicking <em><strong>E-W Firewall Rules</strong></em> for distributed firewall rules or <em><strong>N-S Firewall Rules</strong></em> for gateway firewall rules.</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/04_hu_f7b706b4827f827f.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/04_hu_fdf4454a4b60529.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/04_hu_f7b706b4827f827f.webp"alt="Firewall on VPC level"  width="1109"  height="697" />
-        </picture></a><figcaption>
-            <p>Firewall on VPC level (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/04_hu_a0aa0b25cdd1c88c.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/04_hu_a0aa0b25cdd1c88c.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/04_hu_a0aa0b25cdd1c88c.jpg"alt="Firewall on VPC level"width="1109"
+            height="697"/>
+        </picture></a><figcaption><p>Firewall on VPC level (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition attention">
         <div class="admonition-title">
@@ -344,36 +340,33 @@ And the placement of the firewall rules is important for enforcing the rules or 
 <h3 id="rule-order">Rule order<a href="#rule-order" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>It is important to note that if you create a firewall rule via the VPC and not via <em><strong>Security / Distributed Firewall</strong></em>, it will be created in the application category and will be applied according to the conventionally created Distributed Firewall rules, but will take precedence over the default Layer 3 policy.
 This means that the Project Admin or Enterprise Admin can override VPC rules at any time. By default, VPC rules are hidden in the Distributed Firewall. However, you can display the VPC objects in the DFW.</p>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/05_hu_e80a0390632d45f1.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/05_hu_b14b279755101bf2.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/05_hu_e80a0390632d45f1.webp"alt="NSX 9 Firewall rule order"  width="1778"  height="1230" />
-        </picture></a><figcaption>
-            <p>NSX 9 FW rule order (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/05_hu_7f7f64b2feadd493.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/05_hu_7f7f64b2feadd493.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/05_hu_7f7f64b2feadd493.jpg"alt="NSX 9 Firewall rule order"width="1778"
+            height="1230"/>
+        </picture></a><figcaption><p>NSX 9 FW rule order (click to enlarge)</p></figcaption></figure>
 <p>It is important to understand that the categories and apply to are still used to process the sequence.
 A deny all project rule in the Environment category takes precedence over a default project rule in the Application category with apply to dfw. However, the project rule is only valid within the project, even if apply to is set to dfw.
 A firewall rule from the default project with apply to set to dfw is enforced on all VMs.
 If rules from different sources are in the same firewall category, the default project rules are always processed first, then the project-specific rules, and only then the VPC rules – provided that the rules are relevant for the VM (apply to). If a default project rule is not enforced on the VPC VM via apply to, it is of course not processed.
 If no rule can be applied, our rule no. 2, also known as the default Layer 3 policy, comes into play. In production environments, this rule should always be a drop all and log rule.</p>
 <p>To make this clearer, I have prepared an example. In my default project policy, I block http for all VMs (apply to dfw). In the project-specific policy, I block the https port for all project-specific VMs, and in the policy for VPC3, I allow icmp on all VPC3 VMs.</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/06_hu_4ea8a10156021891.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/06_hu_74a9064dcec6f5ae.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/06_hu_4ea8a10156021891.webp"alt="NSX 9 Firewall rule set"  width="1450"  height="1066" />
-        </picture></a><figcaption>
-            <p>NSX 9 FW rule set (click to enlarge)</p>
-          </figcaption></figure>
-
+          <source srcset="/vcf9-nsx-vpc-3/06_hu_2b516f690bb406a2.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/06_hu_2b516f690bb406a2.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/06_hu_2b516f690bb406a2.jpg"alt="NSX 9 Firewall rule set"width="1450"
+            height="1066"/>
+        </picture></a><figcaption><p>NSX 9 FW rule set (click to enlarge)</p></figcaption></figure>
 <figure><a href="07.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/07_hu_18e175822c989af2.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/07_hu_60d35d0479714bcc.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/07_hu_18e175822c989af2.webp"alt="NSX 9 VPC Firewall rule set"  width="1152"  height="640" />
-        </picture></a><figcaption>
-            <p>NSX 9 VPC FW rule set (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/07_hu_52a2dc0a1f62a2d5.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/07_hu_52a2dc0a1f62a2d5.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/07_hu_52a2dc0a1f62a2d5.jpg"alt="NSX 9 VPC Firewall rule set"width="1152"
+            height="640"/>
+        </picture></a><figcaption><p>NSX 9 VPC FW rule set (click to enlarge)</p></figcaption></figure>
 <p>We can also view all of this on the CLI.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@vcf09-m01-esx01:~] vsipioctl getrules -f nic-1056617-eth0-vmware-sfw.2
 </span></span><span class="line"><span class="cl">ruleset mainrs {
@@ -433,14 +426,13 @@ The VPC admin cannot see whether the gateway firewall is still active or not.</d
     </aside>
 <p>The rules are configured in the VPC setup under <em><strong>N-S Firewall Rules</strong></em>.
 They are not visible under <em><strong>Security / Gateway Firewall</strong></em>, regardless of the permissions my user has.</p>
-
 <figure><a href="08.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/08_hu_998a187419efd027.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/08_hu_b175a12b8fd2abfb.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/08_hu_998a187419efd027.webp"alt="NSX 9 VPC Gateway Firewall"  width="1150"  height="544" />
-        </picture></a><figcaption>
-            <p>NSX 9 VPC Gateway Firewall (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/08_hu_d86b0aab678954e6.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/08_hu_d86b0aab678954e6.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/08_hu_d86b0aab678954e6.jpg"alt="NSX 9 VPC Gateway Firewall"width="1150"
+            height="544"/>
+        </picture></a><figcaption><p>NSX 9 VPC Gateway Firewall (click to enlarge)</p></figcaption></figure>
 <p>The configuration itself is very simple and straightforward.
 Of course, the gateway firewall does not work with the distributed transit gateway, as edge nodes are required for the gateway firewall.
 You also need to pay attention to the order in which they are processed.
@@ -461,14 +453,13 @@ Only when the final ACK packet from the client arrives is the connection conside
 Essentially, the firewall enforces clean TCP communication between the client and server and prevents half-open connections. Asymmetric routing is also blocked.
 This can cause problems with NSX in particular if you make the N/S peering of the edges to a firewall (this feature is called anti-spoofing in Checkpoint firewalls, for example).</p>
 <p>If you now look at the default firewall rules of NSX for VPCs, you will quickly see that TCP Strict would not make sense in the policy.</p>
-
 <figure><a href="09.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/09_hu_e5bb9446ebaa4a5e.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/09_hu_ca629311917e829d.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/09_hu_e5bb9446ebaa4a5e.webp"alt="NSX default VPC Rules"  width="1419"  height="348" />
-        </picture></a><figcaption>
-            <p>NSX 9 default VPC Firewall rules (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/09_hu_dc260006349044c0.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/09_hu_dc260006349044c0.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/09_hu_dc260006349044c0.jpg"alt="NSX default VPC Rules"width="1419"
+            height="348"/>
+        </picture></a><figcaption><p>NSX 9 default VPC Firewall rules (click to enlarge)</p></figcaption></figure>
 <p>This is because TCP Strict would not work with ICMP rules and the default DHCP rules (UDP) anyway, as there is no TCP traffic and TCP Strict does not apply with allow any/any or drop any/any.</p>
 <p>No problem, right, Daniel? That&rsquo;s exactly where my criticism comes in. Although you can&rsquo;t delete the policy or enable TCP Strict, you can add as many firewall rules as you like – it&rsquo;s so convenient and I don&rsquo;t need to create a new policy.
 The only problem is that the new rules (part of the default policy) don&rsquo;t have TCP Strict either, which weakens my firewall rules even though there&rsquo;s no reason for it.
@@ -484,24 +475,22 @@ Normally, if TCP Strict is enabled, ACK packets without a preceding and matching
 <li>-d 1200 Sets the payload size to 1200 bytes</li>
 <li>10.28.11.35 Target IP address</li>
 </ul>
-
 <figure><a href="10.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/10_hu_d4380fe8cdf83a8e.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/10_hu_a2912983f8623f67.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/10_hu_d4380fe8cdf83a8e.webp"alt="btop"  width="1717"  height="1131" />
-        </picture></a><figcaption>
-            <p>BTOP view of the victims vm (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/10_hu_a3cf04df05968b67.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/10_hu_a3cf04df05968b67.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/10_hu_a3cf04df05968b67.jpg"alt="btop"width="1717"
+            height="1131"/>
+        </picture></a><figcaption><p>BTOP view of the victims vm (click to enlarge)</p></figcaption></figure>
 <p>The result is quite spectacular in BTOP. 100% CPU utilization of the VM and approx. 10 Gb/s network traffic, and everything passes through the firewall to the VM.
 To double-check, I create a new firewall policy. NSX always has TCP Strict enabled by default for new policies. The rule will be the same, allow HTTPs, but this time with TCP Strict enabled.</p>
-
 <figure><a href="11.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-3/11_hu_9fb0e6efda757f0e.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-3/11_hu_4e46ce8b6e3286a0.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-3/11_hu_9fb0e6efda757f0e.webp"alt="hit count"  width="418"  height="451" />
-        </picture></a><figcaption>
-            <p>Firewall rule statistic  (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-3/11_hu_e2b95029b2498d33.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-3/11_hu_e2b95029b2498d33.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-3/11_hu_e2b95029b2498d33.jpg"alt="hit count"width="418"
+            height="451"/>
+        </picture></a><figcaption><p>Firewall rule statistic  (click to enlarge)</p></figcaption></figure>
 <p>As you can see in the rule statistics, the new rules receive a large number of hits, but since there is no valid TCP handshake, the distributed firewall discards all packets and no packets arrive at the VM.</p>
 
     <aside class="admonition attention">

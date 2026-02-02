@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-01-28T20:00:00+01:00">
   <meta itemprop="wordCount" content="2629">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,HCX,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/migration-with-hcx/">
+  <meta itemprop="keywords" content="VCF,HCX,VMware"><meta property="og:url" content="https://sdn-warrior.org/posts/migration-with-hcx/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Migration with HCX">
   <meta property="og:description" content="Live Migration of Workloads with VMware HCX: A Customer Story">
@@ -40,9 +40,9 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-01-28T20:00:00+01:00">
     <meta property="article:modified_time" content="2025-01-28T20:00:00+01:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="HCX">
-    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="VMware">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
@@ -369,36 +369,33 @@ The HCX Cloud Manager installation carries higher requirements, but it can be bo
 <h2 id="deploying-and-configuring-hcx-appliance">Deploying and configuring HCX appliance<a href="#deploying-and-configuring-hcx-appliance" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>After deploying the HCX appliance, it must be initially configured. To do this, you have to log in to the management interface via <strong>(https://hcx-ip-or-fqdn:9443)</strong> using the configured admin credentials.
 The HCX appliance must have access to the NSX manager, the vCenter must be configured, the public access URL (in my case only internally resolvable) and the SSO domain (vCenter). After successful configuration, you can log in to the HCX appliance with the vCenter credentials. The local admin account only works on the HCX management interface.</p>
-
 <figure><a href="hcx01.png"><picture>
-          <source srcset="/hcx/hcx01_hu_fa9d59191baaf0dd.webp" type="image/webp">
-          <source srcset="/hcx/hcx01_hu_bcdd838100517175.jpg" type="image/jpeg">
-          <img src="/hcx/hcx01_hu_fa9d59191baaf0dd.webp"alt="HCX settings"  width="1720"  height="804" />
-        </picture></a><figcaption>
-            <p>HCX settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx01_hu_ef51087adb3b11c9.jpg" type="image/webp">
+          <source srcset="/hcx/hcx01_hu_ef51087adb3b11c9.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx01_hu_ef51087adb3b11c9.jpg"alt="HCX settings"width="1720"
+            height="804"/>
+        </picture></a><figcaption><p>HCX settings (click to enlarge)</p></figcaption></figure>
 <h2 id="get-started-with-hcx">Get started with HCX<a href="#get-started-with-hcx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>HCX requires the following: at least one network profile, one compute profile, one or more service mesh and one or more site pairs.</p>
 <h3 id="site-pair">Site Pair<a href="#site-pair" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>A Site Pair establishes the connection needed for management, authentication, and orchestration of HCX services across a source and destination environment. To create a new site pair, we need the remote HCX URL, which was configured when deploying the HCX appliance. This must be resolvable via the management network. You also need a vCenter user in the target environment who has sufficient permissions. In my lab I use the vsphere.local administrator. This is of course not best practice and should be adapted in a productive environment.</p>
-
 <figure><a href="hcx04.png"><picture>
-          <source srcset="/hcx/hcx04_hu_507719aef7a6bb30.webp" type="image/webp">
-          <source srcset="/hcx/hcx04_hu_8dd9fb315ab85b69.jpg" type="image/jpeg">
-          <img src="/hcx/hcx04_hu_507719aef7a6bb30.webp"alt="HCX Site Pair"  width="1496"  height="641" />
-        </picture></a><figcaption>
-            <p>HCX Site Pair (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx04_hu_dd8de5f9c263e034.jpg" type="image/webp">
+          <source srcset="/hcx/hcx04_hu_dd8de5f9c263e034.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx04_hu_dd8de5f9c263e034.jpg"alt="HCX Site Pair"width="1496"
+            height="641"/>
+        </picture></a><figcaption><p>HCX Site Pair (click to enlarge)</p></figcaption></figure>
 <h3 id="network-profiles">Network profiles<a href="#network-profiles" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>After the Site Pair, I set up the network profiles for the interconnect. These profiles allow me to determine the IP addresses and networks. Depending on the setup and service, you need different networks here. In my customer scenario, I can manage with two networks. One profile for management traffic, which I use to access the vCenter and the NSX Manager from environment A. The second network is for the actual uplink connection. In my lab I have 2 uplink networks for testing, so the screenshots may differ slightly. I select the appropriate distributed port group and assign a free IP range. You can define the HCX traffic type, but this is only used as a suggestion in the compute profile. Just because I mark a network profile as an HCX uplink doesn&rsquo;t mean it has to be used as an uplink. It only serves to mark the networks for easier configuration in the compute profile. The vMotion network is routed in my lab. If this is not possible, you can also configure direct access to the vMotion network for the HCX appliance via the network profiles. This is necessary if the vMotion network cannot be routed.</p>
-
 <figure><a href="hcx02.png"><picture>
-          <source srcset="/hcx/hcx02_hu_27a68acf699f2ec.webp" type="image/webp">
-          <source srcset="/hcx/hcx02_hu_3291e40e92a3be10.jpg" type="image/jpeg">
-          <img src="/hcx/hcx02_hu_27a68acf699f2ec.webp"alt="HCX network profiles settings"  width="1504"  height="821" />
-        </picture></a><figcaption>
-            <p>HCX network profiles settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx02_hu_e50063abce9a282.jpg" type="image/webp">
+          <source srcset="/hcx/hcx02_hu_e50063abce9a282.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx02_hu_e50063abce9a282.jpg"alt="HCX network profiles settings"width="1504"
+            height="821"/>
+        </picture></a><figcaption><p>HCX network profiles settings (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -413,25 +410,23 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
     </aside>
 <h3 id="compute-profiles">Compute Profiles<a href="#compute-profiles" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The compute profiles in HCX are used to specify which HCX services, compute resources such as clusters or resource pools or networks are connected. You can also set CPU and memory reservations for the interconnect appliance. Depending on the HCX service, you have to assign several networks, e.g. management network, uplink networks, vMotion network and the network container. In my case, the network container is the overlay transport zone from my source NSX, as I want to migrate machines from one NSX environment to another NSX environment.</p>
-
 <figure><a href="hcx03.png"><picture>
-          <source srcset="/hcx/hcx03_hu_defde22a62987bc9.webp" type="image/webp">
-          <source srcset="/hcx/hcx03_hu_501be16b5d0f95e8.jpg" type="image/jpeg">
-          <img src="/hcx/hcx03_hu_defde22a62987bc9.webp"alt="HCX Compute profiles settings"  width="1355"  height="937" />
-        </picture></a><figcaption>
-            <p>HCX Compute profiles settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx03_hu_c1d263386beded90.jpg" type="image/webp">
+          <source srcset="/hcx/hcx03_hu_c1d263386beded90.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx03_hu_c1d263386beded90.jpg"alt="HCX Compute profiles settings"width="1355"
+            height="937"/>
+        </picture></a><figcaption><p>HCX Compute profiles settings (click to enlarge)</p></figcaption></figure>
 <p>The screenshot shows very clearly how the Interconnect appliance is later connected. The uplinks can be VLAN connections within a data center, public WAN connections, MPLS or VPN. There are very few restrictions here. The uplink networks only need to reach each other between the locations. It does not matter whether it is via Layer2 or Layer3.</p>
 <h3 id="service-mesh">Service Mesh<a href="#service-mesh" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>In the service mesh, compute profiles, HCX services and advanced configurations such as MTU for uplink links or the number of appliances for the network extension are defined and assigned. After I have configured the service mesh, the interconnect VMs are automatically deployed at both HCX locations.</p>
-
 <figure><a href="hcx05.png"><picture>
-          <source srcset="/hcx/hcx05_hu_cec88bd2f0a21050.webp" type="image/webp">
-          <source srcset="/hcx/hcx05_hu_b8c5cb0a35e994d6.jpg" type="image/jpeg">
-          <img src="/hcx/hcx05_hu_cec88bd2f0a21050.webp"alt="HCX Service Mesh"  width="2019"  height="611" />
-        </picture></a><figcaption>
-            <p>HCX Service Mesh (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx05_hu_a11d3995ef6632a1.jpg" type="image/webp">
+          <source srcset="/hcx/hcx05_hu_a11d3995ef6632a1.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx05_hu_a11d3995ef6632a1.jpg"alt="HCX Service Mesh"width="2019"
+            height="611"/>
+        </picture></a><figcaption><p>HCX Service Mesh (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -524,14 +519,13 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 </table>
 <h2 id="network-extension">Network Extension<a href="#network-extension" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>With the network extension in HCX, layer-2 networks can be extended between the source and target environments without having to change the IP addressing of the workloads. This allows virtual machines to be seamlessly migrated while maintaining their existing network connection and connectivity, and is a prerequisite for a “zero” downtime migration. To create a layer 2 stretch via the network extension, I just have to click on <strong>Network Extension</strong> &raquo; <strong>Create a Network Extension</strong> and select my network that I want to stretch to the other location via HCX. Here I can only choose from networks in my previously configured network container. In my case, these are the networks from my NSX.</p>
-
 <figure><a href="hcx06.png"><picture>
-          <source srcset="/hcx/hcx06_hu_875e10bf44e7af5c.webp" type="image/webp">
-          <source srcset="/hcx/hcx06_hu_911668d32bc13d86.jpg" type="image/jpeg">
-          <img src="/hcx/hcx06_hu_875e10bf44e7af5c.webp"alt="HCX Network Extension"  width="1651"  height="1043" />
-        </picture></a><figcaption>
-            <p>HCX Network Extension (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx06_hu_4a6b95a10ac42dcd.jpg" type="image/webp">
+          <source srcset="/hcx/hcx06_hu_4a6b95a10ac42dcd.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx06_hu_4a6b95a10ac42dcd.jpg"alt="HCX Network Extension"width="1651"
+            height="1043"/>
+        </picture></a><figcaption><p>HCX Network Extension (click to enlarge)</p></figcaption></figure>
 <p>The stretched  networks are created at the selected T1 router in the target environment and given a prefix. However, the segments are not connected to the T1. The north/south connection is via the T1 and T0 in the source environment. This ensures that no traffic for the VMs is routed into a black hole.</p>
 
     <aside class="admonition info">
@@ -547,36 +541,33 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
     </aside>
 <h3 id="how-does-network-extension-work">How does Network Extension work?<a href="#how-does-network-extension-work" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The sink port on the HCX Network Extension serves as the endpoint for the extended Layer 2 traffic between the source and target environments. It is configured on the source and target sides to receive and send the incoming traffic from the extended network. This can be easily seen on the segment ports in the NSX of the HCX appliance. This is where MAC/IP bindings are exchanged between VMs. If you look at the destination side, you will see (provided that the source VMs are generating traffic) the IP/MAC bindings of the VMs on the source segment on the sink port and vice versa for VMs that have already been migrated to the destination side.</p>
-
 <figure><a href="hcx07.png"><picture>
-          <source srcset="/hcx/hcx07_hu_64f82414d9d12333.webp" type="image/webp">
-          <source srcset="/hcx/hcx07_hu_e25d22050f838324.jpg" type="image/jpeg">
-          <img src="/hcx/hcx07_hu_64f82414d9d12333.webp"alt="HCX Network Extension Bindings"  width="1024"  height="271" />
-        </picture></a><figcaption>
-            <p>HCX Network Extension Bindings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx07_hu_a7f853b5fbb1f1e1.jpg" type="image/webp">
+          <source srcset="/hcx/hcx07_hu_a7f853b5fbb1f1e1.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx07_hu_a7f853b5fbb1f1e1.jpg"alt="HCX Network Extension Bindings"width="1024"
+            height="271"/>
+        </picture></a><figcaption><p>HCX Network Extension Bindings (click to enlarge)</p></figcaption></figure>
 <p>For this to work, special port profiles are created for the segment ports of the HCX Network Extension appliance that allow MAC learning, MAC changing and unknown unicast flooding. By default, the NSX segment profile would prevent this and block it.</p>
 <h2 id="migrating-vms">Migrating VMs<a href="#migrating-vms" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>HCX supports a wide range of migration options. Since I aim for zero downtime, I use vMotion as my migration method. For less critical VMs with a maintenance window, a bulk migration with short downtime is also an option. Here you can plan a mass migration and make a controlled switchover at a certain point in time. To do this, a replica of the VMs is created and incrementally synchronized. During the cutover, the final delta data is synchronized and the VM is switched on again. After the migration, the VM is switched on again at the destination. Of course, there are several variants and not every variant is suitable.</p>
 <p>vMotion migration in VMware HCX allows me to migrate virtual machines live and without downtime from a source environment to a target environment. HCX uses the vMotion technology but extends it to include the option of migrating workloads in a scheduled manner and across geographically separate data centers.</p>
 <p>To plan the migration, I go to <strong>Services</strong> &raquo; <strong>Migration</strong> and create a <strong>NEW Mobility Group</strong>. Here I can set all the relevant migration settings.</p>
-
 <figure><a href="hcx08.png"><picture>
-          <source srcset="/hcx/hcx08_hu_a68776fd1f04c796.webp" type="image/webp">
-          <source srcset="/hcx/hcx08_hu_449a60d132e36065.jpg" type="image/jpeg">
-          <img src="/hcx/hcx08_hu_a68776fd1f04c796.webp"alt="HCX New Mobility Group"  width="1627"  height="1157" />
-        </picture></a><figcaption>
-            <p>HCX New Mobility Group (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx08_hu_51347bbf7373221d.jpg" type="image/webp">
+          <source srcset="/hcx/hcx08_hu_51347bbf7373221d.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx08_hu_51347bbf7373221d.jpg"alt="HCX New Mobility Group"width="1627"
+            height="1157"/>
+        </picture></a><figcaption><p>HCX New Mobility Group (click to enlarge)</p></figcaption></figure>
 <p>The settings are relatively self-explanatory. I select my VMs, choose the target cluster, storage and switchover time, and select my migration method. If the VM comes from a network stretched with the Network Extension, the target network is already preselected. I just have to perform the validation and the migration can start. It is also possible to perform a reverse migration.</p>
-
 <figure><a href="hcx09.png"><picture>
-          <source srcset="/hcx/hcx09_hu_b6375f23e4a41374.webp" type="image/webp">
-          <source srcset="/hcx/hcx09_hu_e6a2cfed6dae1a48.jpg" type="image/jpeg">
-          <img src="/hcx/hcx09_hu_b6375f23e4a41374.webp"alt="HCX Migration"  width="1445"  height="604" />
-        </picture></a><figcaption>
-            <p>HCX New Mobility Group (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/hcx/hcx09_hu_a380d606ffe873be.jpg" type="image/webp">
+          <source srcset="/hcx/hcx09_hu_a380d606ffe873be.jpg" type="image/jpeg">
+          <img
+            src="/hcx/hcx09_hu_a380d606ffe873be.jpg"alt="HCX Migration"width="1445"
+            height="604"/>
+        </picture></a><figcaption><p>HCX New Mobility Group (click to enlarge)</p></figcaption></figure>
 <p>The migration was successful and there was only one ping interruption during the entire migration. The VM was functional and accessible the whole time. Thanks to the network extension, both east/west and north/south traffic works.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=34 ttl=60 time=6.854 ms
 </span></span><span class="line"><span class="cl">64 bytes from 10.10.20.20: icmp_seq=35 ttl=60 time=2.144 ms

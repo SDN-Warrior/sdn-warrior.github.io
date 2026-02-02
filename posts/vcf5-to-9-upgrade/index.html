@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-09-07T23:00:08+02:00">
   <meta itemprop="wordCount" content="2081">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Vcf9,Sddc,Upgrade"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf5-to-9-upgrade/">
+  <meta itemprop="keywords" content="VCF,Vcf9,Sddc,Upgrade"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf5-to-9-upgrade/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 -  VCF5.X to VCF9 upgrade">
   <meta property="og:description" content="A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-09-07T23:00:08+02:00">
     <meta property="article:modified_time" content="2025-09-07T23:00:08+02:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Vcf9">
     <meta property="article:tag" content="Sddc">
     <meta property="article:tag" content="Upgrade">
@@ -220,14 +220,13 @@ Well, here we are. I thought it would be relatively easy and that you could just
 But let&rsquo;s start at the beginning.</p>
 <p>As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&rsquo;s the bad news—it&rsquo;s not possible as of today.
 NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf5-to-vcf9/01_hu_1fe361378e33dccf.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/01_hu_b7e431a84b1e7477.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/01_hu_1fe361378e33dccf.webp"alt="Interoperability Matrix"  width="708"  height="367" />
-        </picture></a><figcaption>
-            <p>Interoperability Matrix (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/01_hu_383f4d87716198a6.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/01_hu_383f4d87716198a6.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/01_hu_383f4d87716198a6.jpg"alt="Interoperability Matrix"width="708"
+            height="367"/>
+        </picture></a><figcaption><p>Interoperability Matrix (click to enlarge)</p></figcaption></figure>
 <p>It is best to always check the Product Interoperability Matrix for this.</p>
 <p>Since my last available VCF 5 lab was unfortunately already patched to the latest NSX version, I had no choice but to deploy a fresh VCF 5.2.1, as the NSX version here is low enough.
 And oh my God, I really didn&rsquo;t miss the Excel or Json deployment of VCF 5.X, but for my readers&rsquo; sake, I&rsquo;ll struggle through it once again.</p>
@@ -317,23 +316,21 @@ I have already covered this process in my <a href="https://sdn-warrior.org/posts
     </aside>
 <h2 id="uprade-sddc">Uprade SDDC<a href="#uprade-sddc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>In my setup, the first step is to upgrade the SDDC Manager. As I mentioned above, after the upgrade, the setup will be added to my VCF Operations, which is already up to date.</p>
-<p>
-<figure><a href="02.png"><picture>
-          <source srcset="/vcf5-to-vcf9/02_hu_a69c7939fbfd71bc.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/02_hu_73ad07b82ebd1973.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/02_hu_a69c7939fbfd71bc.webp"alt="SDDC Manager"  width="1700"  height="874" />
-        </picture></a><figcaption>
-            <p>SDDC Manager upgrade (click to enlarge)</p>
-          </figcaption></figure>
+<p><figure><a href="02.png"><picture>
+          <source srcset="/vcf5-to-vcf9/02_hu_e0dedab2e99bbdce.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/02_hu_e0dedab2e99bbdce.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/02_hu_e0dedab2e99bbdce.jpg"alt="SDDC Manager"width="1700"
+            height="874"/>
+        </picture></a><figcaption><p>SDDC Manager upgrade (click to enlarge)</p></figcaption></figure>
 The process is relatively straightforward. The 2 GB of data must be downloaded from the network via the SDDC, after which the upgrade can be initiated.</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/vcf5-to-vcf9/03_hu_59508595ecf2682f.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/03_hu_5d6236c96eb553df.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/03_hu_59508595ecf2682f.webp"alt="SDDC Manager status"  width="1720"  height="1259" />
-        </picture></a><figcaption>
-            <p>SDDC Manager upgrade status (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/03_hu_5317c76a39ece2d2.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/03_hu_5317c76a39ece2d2.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/03_hu_5317c76a39ece2d2.jpg"alt="SDDC Manager status"width="1720"
+            height="1259"/>
+        </picture></a><figcaption><p>SDDC Manager upgrade status (click to enlarge)</p></figcaption></figure>
 <p>The SDDC is booted once during the upgrade. I had a minor problem with the SDDC in that it no longer displayed the upgrade status after rebooting.
 Instead, I only saw update status 0. I checked the log file /var/log/vmware/capengine/cap-update/workflow.log via SSH on the SDDC manager and looked to see if the following was visible:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">YYYY-MM-DDTHH:MM:SS.426528 workflow_manager.go:221: Task stage-cleanup completed
@@ -345,36 +342,33 @@ Finally, I configured my VCF9 offline repo in the SDDC as a repository, as I don
 <p>SDDC version 9 supports the Broadcom download token, so there is no need to change anything with a script on the SDDC, but I prefer my central offline repo.
 I built my own repo with the help of <a href="https://github.com/tsugliani/doc-vcf-offlinedepot">Timo Sugliani&rsquo;s instructions</a>.
 It is the easiest way to get your own offline repo, even if you have no Linux knowledge. However, you still need a valid download token.</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/vcf5-to-vcf9/04_hu_56d1d44bd577aad9.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/04_hu_35e79126558034eb.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/04_hu_56d1d44bd577aad9.webp"alt="Binary Management"  width="1704"  height="807" />
-        </picture></a><figcaption>
-            <p>Binary Management (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/04_hu_8137a1cd8f1e13c6.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/04_hu_8137a1cd8f1e13c6.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/04_hu_8137a1cd8f1e13c6.jpg"alt="Binary Management"width="1704"
+            height="807"/>
+        </picture></a><figcaption><p>Binary Management (click to enlarge)</p></figcaption></figure>
 <p>Next, I download the upgrade binaries for NSX, vCenter, and ESX to my SDDC manager.
 The download is faster than the validation. It took me about 30 minutes to get everything I needed.</p>
 <h2 id="starting-the-upgrade">Starting the upgrade<a href="#starting-the-upgrade" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>I start the upgrade with the SDDC for the management domain. To do this, go to Workload Domains —&gt; Management Domain —&gt; Updates in the SDDC manager and then click on the Plan Upgrades button.
 The process is actually exactly the same as for a normal VCF update.</p>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/vcf5-to-vcf9/05_hu_6b3f71366fb05a59.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/05_hu_e6f21e13449de908.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/05_hu_6b3f71366fb05a59.webp"alt="Paln Upgrade"  width="1721"  height="978" />
-        </picture></a><figcaption>
-            <p>Plan Upgrade (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/05_hu_26695b2970647894.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/05_hu_26695b2970647894.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/05_hu_26695b2970647894.jpg"alt="Paln Upgrade"width="1721"
+            height="978"/>
+        </picture></a><figcaption><p>Plan Upgrade (click to enlarge)</p></figcaption></figure>
 <p>I select VCF version 9.0.0.0 as the target version and confirm the version summary.</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf5-to-vcf9/06_hu_cf0c8d46e4bc7904.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/06_hu_1ee9600d63300db5.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/06_hu_cf0c8d46e4bc7904.webp"alt="Version summary"  width="1479"  height="685" />
-        </picture></a><figcaption>
-            <p>Version summary (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/06_hu_93727528cee0d38e.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/06_hu_93727528cee0d38e.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/06_hu_93727528cee0d38e.jpg"alt="Version summary"width="1479"
+            height="685"/>
+        </picture></a><figcaption><p>Version summary (click to enlarge)</p></figcaption></figure>
 <p>This completes the upgrade plan. It is important to note that the SDDC will only start the upgrade once we have clicked Configure Update.
 The order of the components is as follows:</p>
 <ul>
@@ -408,37 +402,34 @@ There are two options here: either I assign a static temporary IP address or I u
 Since I am working here in my lab without a firewall within the lab, I can use auto.
 This gives the old and new vCenter a temporary APIPA IP to communicate with each other.
 For the upgrade scheduler, I use Immediate and Automatic for the switchover.</p>
-
 <figure><a href="07.png"><picture>
-          <source srcset="/vcf5-to-vcf9/07_hu_64901a29b83c6af2.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/07_hu_d6220f1001c84026.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/07_hu_64901a29b83c6af2.webp"alt="vCenter update"  width="1714"  height="948" />
-        </picture></a><figcaption>
-            <p>vCenter update (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/07_hu_d651e369042c6b79.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/07_hu_d651e369042c6b79.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/07_hu_d651e369042c6b79.jpg"alt="vCenter update"width="1714"
+            height="948"/>
+        </picture></a><figcaption><p>vCenter update (click to enlarge)</p></figcaption></figure>
 <h3 id="esx---houston-we-have-a-problem">ESX - Houston, we have a problem!<a href="#esx---houston-we-have-a-problem" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The update ran successfully, but I have the problem that my vCenter simply does not want to display ESX9 images, which is essential because without ESX9 images, you cannot upgrade the ESX servers to 9.
 I thought I was being clever and forced the vCenter to search for new images. You can do this using the vCenter Lifecycle Manager and push <em><strong>Sync Updates</strong></em>.</p>
-
 <figure><a href="08.png"><picture>
-          <source srcset="/vcf5-to-vcf9/08_hu_d88b3bf8a837c129.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/08_hu_1d2df49c7ed27feb.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/08_hu_d88b3bf8a837c129.webp"alt="vCenter Lifecycle Manager"  width="1663"  height="1182" />
-        </picture></a><figcaption>
-            <p>vCenter Lifecycle Manager (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/08_hu_9ddf73e1bbb66535.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/08_hu_9ddf73e1bbb66535.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/08_hu_9ddf73e1bbb66535.jpg"alt="vCenter Lifecycle Manager"width="1663"
+            height="1182"/>
+        </picture></a><figcaption><p>vCenter Lifecycle Manager (click to enlarge)</p></figcaption></figure>
 <p>Interestingly, the process is not running correctly. I hadn&rsquo;t encountered this before, and after a quick check in the task log in vCenter, I saw the following error message, which wasn&rsquo;t really helpful.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">A general system error occurred: Down load patch definitions task failed while synci ng depots. 
 </span></span><span class="line"><span class="cl">Error: &#39;integrity.fault.Vclntegrityf ault: VMware Sphere Lifecycle Manager hi d an unknown error. 
 </span></span><span class="line"><span class="cl">Check the events and I og files for details.
-</span></span></code></pre></div>
-<figure><a href="09.png"><picture>
-          <source srcset="/vcf5-to-vcf9/09_hu_97bbce537a4e9f79.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/09_hu_28f3f8d4f30bc5bc.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/09_hu_97bbce537a4e9f79.webp"alt="vCenter Tasks"  width="1406"  height="451" />
-        </picture></a><figcaption>
-            <p>vCenter Tasks (click to enlarge)</p>
-          </figcaption></figure>
+</span></span></code></pre></div><figure><a href="09.png"><picture>
+          <source srcset="/vcf5-to-vcf9/09_hu_d0d29384192159b1.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/09_hu_d0d29384192159b1.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/09_hu_d0d29384192159b1.jpg"alt="vCenter Tasks"width="1406"
+            height="451"/>
+        </picture></a><figcaption><p>vCenter Tasks (click to enlarge)</p></figcaption></figure>
 <p>Of course, there is nothing specific in the logs either. So Google research&hellip;Because the second most important skill in my IT career is knowing how to Google properly—maybe it&rsquo;s even my most important skill.</p>
 <p>Turns out it&rsquo;s a known bug in vCenter 9 when performing a brownfield upgrade from 8 to 9.
 VMware has created a <a href="https://knowledge.broadcom.com/external/article?articleNumber=402037">KB article</a> on this topic.
@@ -462,14 +453,13 @@ The solution is relatively simple: you need to delete metadata from the vCenter 
 </ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">service-control --start updatemgr
 </span></span></code></pre></div><p>After the changes and the restart of the service, vCenter automatically syncs the image data. Now a new image can be created.</p>
-
 <figure><a href="10.png"><picture>
-          <source srcset="/vcf5-to-vcf9/10_hu_79a84f07dd3e4e71.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/10_hu_aaca4ea888e17137.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/10_hu_79a84f07dd3e4e71.webp"alt="vCenter Images"  width="1356"  height="682" />
-        </picture></a><figcaption>
-            <p>vCenter Lifecycle Manager after workaround (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/10_hu_4b56de969565e51e.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/10_hu_4b56de969565e51e.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/10_hu_4b56de969565e51e.jpg"alt="vCenter Images"width="1356"
+            height="682"/>
+        </picture></a><figcaption><p>vCenter Lifecycle Manager after workaround (click to enlarge)</p></figcaption></figure>
 <h3 id="esx-image">ESX Image<a href="#esx-image" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>For Image Mode, we still need to import an image into the SDDC; without this, the ESX servers cannot be upgraded to 9.
 After fixing the vCenter, I create a dummy cluster in the vCenter and select the correct image for VCF9.</p>
@@ -504,14 +494,13 @@ The process ran smoothly - easy, that&rsquo;s what I expected from the start.</p
 <p>The final step in the actual upgrade process is to update the vSAN storage.
 The process is straightforward, and all you need to do is press the upgrade button under cluster &ndash;&gt; configure &ndash;&gt; vSAN.
 Depending on the hardware and size of the vSAN storage, this process can take a relatively long time.</p>
-
 <figure><a href="11.png"><picture>
-          <source srcset="/vcf5-to-vcf9/11_hu_7ad3817b973e1cf1.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/11_hu_8210b3d3183aa80e.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/11_hu_7ad3817b973e1cf1.webp"alt="vSAN"  width="1715"  height="672" />
-        </picture></a><figcaption>
-            <p>vSAN upgrade (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/11_hu_c4f8cd62fdf0f7cc.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/11_hu_c4f8cd62fdf0f7cc.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/11_hu_c4f8cd62fdf0f7cc.jpg"alt="vSAN"width="1715"
+            height="672"/>
+        </picture></a><figcaption><p>vSAN upgrade (click to enlarge)</p></figcaption></figure>
 <p>Now everything is ready for me to start onboarding in Operations.</p>
 <h3 id="onboarding-in-vcf-operations">Onboarding in VCF Operations<a href="#onboarding-in-vcf-operations" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>I have a central VCF Operations because I don&rsquo;t want to deploy an entire fleet every time I need a new nested lab.
@@ -537,14 +526,13 @@ Once the environment appears under Integrations, you can select it and press the
 Optionally, you can install the ESX patch under Lifecycle.
 To do this, you must create a new image in vCenter and import it via Ops.
 The process is more or less identical to the previous update.</p>
-
 <figure><a href="12.png"><picture>
-          <source srcset="/vcf5-to-vcf9/12_hu_1ffe814a16b4c26c.webp" type="image/webp">
-          <source srcset="/vcf5-to-vcf9/12_hu_71a9bbdb012f71f6.jpg" type="image/jpeg">
-          <img src="/vcf5-to-vcf9/12_hu_1ffe814a16b4c26c.webp"alt="VCF Operations"  width="1437"  height="1049" />
-        </picture></a><figcaption>
-            <p>VCF Operations (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf5-to-vcf9/12_hu_451826d7d7f27d5b.jpg" type="image/webp">
+          <source srcset="/vcf5-to-vcf9/12_hu_451826d7d7f27d5b.jpg" type="image/jpeg">
+          <img
+            src="/vcf5-to-vcf9/12_hu_451826d7d7f27d5b.jpg"alt="VCF Operations"width="1437"
+            height="1049"/>
+        </picture></a><figcaption><p>VCF Operations (click to enlarge)</p></figcaption></figure>
 <h2 id="final-thoughts">Final thoughts<a href="#final-thoughts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The upgrade was more difficult than expected.
 The missing images in particular took me longer than I would like to admit.

@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-10-24T21:00:00+02:00">
   <meta itemprop="wordCount" content="2727">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs">
   <meta property="og:description" content="A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-10-24T21:00:00+02:00">
     <meta property="article:modified_time" content="2025-10-24T21:00:00+02:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
@@ -242,14 +242,13 @@ The lab does not claim to run on minimal resources, but rather to fulfill my use
 <p>My plan is to build a two-node cluster without vSAN and with memory tiering. NFS will be provided via my good old Unraid storage system.
 I also started directly with VCF 9.0.1 as a greenfield deployment. I will continue to build my workload domains nested.
 This allows me to set up a complete VCF9 setup with three physical hosts, including VCF Operations for Network, Operations for Logs, and Automation.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf9-special/01_hu_d419046a63d3a3da.webp" type="image/webp">
-          <source srcset="/vcf9-special/01_hu_5a65246760fdf939.jpg" type="image/jpeg">
-          <img src="/vcf9-special/01_hu_d419046a63d3a3da.webp"alt="MS-A2"  width="6048"  height="4536" />
-        </picture></a><figcaption>
-            <p>MS-A2 (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-special/01_hu_938728d4dee16756.jpg" type="image/webp">
+          <source srcset="/vcf9-special/01_hu_938728d4dee16756.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-special/01_hu_938728d4dee16756.jpg"alt="MS-A2"width="6048"
+            height="4536"/>
+        </picture></a><figcaption><p>MS-A2 (click to enlarge)</p></figcaption></figure>
 <p>First, I install a 1 Tb Samsung 990 Pro in the first slot of each MS-A2.
 The first slot in the MS-A2 is set to PCIe4x4 in the BIOS by default.
 The other slots are set to PCIe3x4 by default. You can change this in the BIOS, but you risk the NVMes overheating.
@@ -294,14 +293,13 @@ It simply refused to boot up. The VM was successfully turned on, and you could s
 My first suspicion was my NFS, as I had had a lot of problems with the reliability of my NFS shares after an Unraid update before my vacation. However, that turned out to be a dead end.</p>
 <p>I then tried to install the VCF Installer (aka SDDC Manager) manually on local storage and got the same result.
 The same thing happened with NSX Manager. It boots a little further than SDDC, but also stops quite early on with no error message.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/vcf9-special/02_hu_25e0ddf4672ebf48.webp" type="image/webp">
-          <source srcset="/vcf9-special/02_hu_cca62aee08194caa.jpg" type="image/jpeg">
-          <img src="/vcf9-special/02_hu_25e0ddf4672ebf48.webp"alt="NSX Manager"  width="3840"  height="2160" />
-        </picture></a><figcaption>
-            <p>MSX Manager stops booting (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-special/02_hu_ecccceca28a51b8f.jpg" type="image/webp">
+          <source srcset="/vcf9-special/02_hu_ecccceca28a51b8f.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-special/02_hu_ecccceca28a51b8f.jpg"alt="NSX Manager"width="3840"
+            height="2160"/>
+        </picture></a><figcaption><p>MSX Manager stops booting (click to enlarge)</p></figcaption></figure>
 <p>After a long search on Google, I found the solution at <a href="https://williamlam.com/2025/06/nvme-tiering-with-amd-ryzen-cpu-workaround-for-vcf-9-0.html">William&rsquo;s blog</a>.</p>
 <p>For memory tiering to work properly with AMD Ryzen, a VM advanced setting must be configured.
 Of course, this is not scalable if it has to be set for each individual VM, and it also does not work with the automatic deployment process of VCF.
@@ -351,14 +349,13 @@ Because the workload domain is nested, I still have enough capacity in my lab to
 This becomes interesting when you look at multi-tenancy with automation in a multi-instance single fleet design—something I would like to take a closer look at when I have the opportunity.</div>
     </aside>
 <p>Since pictures say more than a thousand words, I have created a design drawing here. The whole thing is based on Broadcom&rsquo;s official design blueprints.</p>
-
- <figure><a href="03.png"><picture>
-           <source srcset="/vcf9-special/03_hu_462fb1b71434f5c.webp" type="image/webp">
-           <source srcset="/vcf9-special/03_hu_a6214980929e68a7.jpg" type="image/jpeg">
-           <img src="/vcf9-special/03_hu_462fb1b71434f5c.webp"alt="Design"  width="4118"  height="4809" />
-         </picture></a><figcaption>
-             <p>Lab Design (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="03.png"><picture>
+           <source srcset="/vcf9-special/03_hu_44305aa271366aec.jpg" type="image/webp">
+           <source srcset="/vcf9-special/03_hu_44305aa271366aec.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-special/03_hu_44305aa271366aec.jpg"alt="Design"width="4118"
+             height="4809"/>
+         </picture></a><figcaption><p>Lab Design (click to enlarge)</p></figcaption></figure>
 <p>And here are the deployed components in the Managment Domain and the required resources:</p>
 <table>
   <thead>
@@ -522,14 +519,13 @@ My VMs from the management domain go into the first share, and my VMs from the w
 <h3 id="ram-resources">RAM resources<a href="#ram-resources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>My MS-A2s are each equipped with a 128 GB DDR5 kit. I also selected a factor of 200% for memory tiering.
 This means that each ESX server has a theoretical 384 GB of RAM. However, I am somewhat surprised that no Tier 1 memory (memory tiering) is currently being used in my management domain.</p>
-
- <figure><a href="04.png"><picture>
-           <source srcset="/vcf9-special/04_hu_59fab3ce9467ef26.webp" type="image/webp">
-           <source srcset="/vcf9-special/04_hu_c7adc5b2793cd656.jpg" type="image/jpeg">
-           <img src="/vcf9-special/04_hu_59fab3ce9467ef26.webp"alt="RAM Usage"  width="1622"  height="658" />
-         </picture></a><figcaption>
-             <p>RAM usage in Managment Domain (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="04.png"><picture>
+           <source srcset="/vcf9-special/04_hu_7bd8678c4ad09049.jpg" type="image/webp">
+           <source srcset="/vcf9-special/04_hu_7bd8678c4ad09049.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-special/04_hu_7bd8678c4ad09049.jpg"alt="RAM Usage"width="1622"
+             height="658"/>
+         </picture></a><figcaption><p>RAM usage in Managment Domain (click to enlarge)</p></figcaption></figure>
 <p>Let&rsquo;s take a closer look. If you look in vCenter, you can see that I currently have an approximate Tier 0 RAM allocation of 188 GB. A large part of this comes from automation.
 But even with automation, I still have physical Tier 0 RAM left over, which is why you can see in the screenshot that Tier 1 RAM is listed as -1 MB everywhere.</p>
 <p>Without the operation appliance, I have a RAM utilization of 130 GB, so I don&rsquo;t really need the factor of 200%. I chose it anyway because, among other things, SSP is to be deployed in the future and SSP requires 2x16 vCPUs and 64 GB RAM.
@@ -554,14 +550,13 @@ This primarily affects the Fleet, NSX, and vCenter components. If the workload d
 This should only happen if the environment is on and the port groups are 24 hours without a connected Edge VM.</p>
 <p>What is the result? Well, a huge mountain of error messages.
 The Edge VMs no longer have an uplink or a TEP network, meaning that all north-south communication is dead.</p>
-
- <figure><a href="05.png"><picture>
-           <source srcset="/vcf9-special/05_hu_7e0d347b03ce3d40.webp" type="image/webp">
-           <source srcset="/vcf9-special/05_hu_36b4c131bcf1ff70.jpg" type="image/jpeg">
-           <img src="/vcf9-special/05_hu_7e0d347b03ce3d40.webp"alt="NSX Edge"  width="1719"  height="811" />
-         </picture></a><figcaption>
-             <p>NSX Edge trouble (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="05.png"><picture>
+           <source srcset="/vcf9-special/05_hu_1fbbcc7c09d749cb.jpg" type="image/webp">
+           <source srcset="/vcf9-special/05_hu_1fbbcc7c09d749cb.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-special/05_hu_1fbbcc7c09d749cb.jpg"alt="NSX Edge"width="1719"
+             height="811"/>
+         </picture></a><figcaption><p>NSX Edge trouble (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -578,14 +573,13 @@ You can find the release notes <a href="https://techdocs.broadcom.com/us/en/vmwa
     </aside>
 <p>But first, let&rsquo;s take a step back. In VCF 9, a separate trunk port group is created for each Fastpath interface of the Edge VM.
 With two edges, each with two uplinks, you therefore have four port groups.</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf9-special/06_hu_8becc2b718d6bad8.webp" type="image/webp">
-          <source srcset="/vcf9-special/06_hu_4c940823fc7ff9ef.jpg" type="image/jpeg">
-          <img src="/vcf9-special/06_hu_8becc2b718d6bad8.webp"alt="NSX Edge Uplinks"  width="1078"  height="450" />
-        </picture></a><figcaption>
-            <p>NSX Edge Uplinks (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-special/06_hu_5b91b0d6aa9c1e68.jpg" type="image/webp">
+          <source srcset="/vcf9-special/06_hu_5b91b0d6aa9c1e68.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-special/06_hu_5b91b0d6aa9c1e68.jpg"alt="NSX Edge Uplinks"width="1078"
+            height="450"/>
+        </picture></a><figcaption><p>NSX Edge Uplinks (click to enlarge)</p></figcaption></figure>
 <p>If you take a closer look at the port groups, you will see that they are completely normal trunk port groups.
 To fix this error, you simply need to create two new trunk port groups (note the teaming policy—trunk 1 uplink 1 active/uplink 2 standby and vice versa for trunk 2).
 These port groups must then be assigned as Adapter 1 and Adapter 2 in the vCenter of the Edge VM. Apparently, only Edge VMs are affected by the error if they were created via the vCenter.</p>

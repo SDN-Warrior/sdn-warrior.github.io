@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2026-01-12T02:00:00+01:00">
   <meta itemprop="wordCount" content="4958">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Operations,Automation,Vks"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-automation-all-apps/">
+  <meta itemprop="keywords" content="VCF,Operations,Automation,Vks"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-automation-all-apps/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Automation in All Apps mode">
   <meta property="og:description" content="A quick introduction to VCF 9 Automation in All Apps mode">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2026-01-12T02:00:00+01:00">
     <meta property="article:modified_time" content="2026-01-12T02:00:00+01:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Operations">
     <meta property="article:tag" content="Automation">
     <meta property="article:tag" content="Vks">
@@ -260,36 +260,33 @@ I use the internal load balancer in my setup.</p>
         <div class="admonition-content">If you are using the internal load balancer, the FQDN of the cluster VIP must match the automation endpoint. In short, the automation appliance FQDN is the same as that of the cluster VIP.</div>
     </aside>
 <p>The actual setup is fairly straightforward. The component is installed via Operations Fleet Manager under Lifecycle.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf9-auto/01_hu_5d366125bc5c857e.webp" type="image/webp">
-          <source srcset="/vcf9-auto/01_hu_35188a37eba935fa.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/01_hu_5d366125bc5c857e.webp"alt="Auto deployment"  width="1718"  height="1321" />
-        </picture></a><figcaption>
-            <p>Automation Deployment (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/01_hu_fe947f4828f9f1ab.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/01_hu_fe947f4828f9f1ab.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/01_hu_fe947f4828f9f1ab.jpg"alt="Auto deployment"width="1718"
+            height="1321"/>
+        </picture></a><figcaption><p>Automation Deployment (click to enlarge)</p></figcaption></figure>
 <p>I won&rsquo;t go through every single step here, just the most important ones. When creating the certificate, I always create a wildcard certificate in the lab.
 It is important that the VIP IP address and the FQDN are entered in the SANs. In my lab, the SAN entries would be *.lab.vcf, 10.28.13.12.</p>
 <p>The network settings are also relatively self-explanatory. I deploy my automation to the VM MGMT Network, which was automatically created by VCF. I use the servers specified during the VCF installation as DNS and NTP servers.
 You don&rsquo;t have to enter these again separately; the Edit button gives you a selection of all DNS and NTP servers known to VCF. This is somewhat counterintuitive.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/vcf9-auto/02_hu_c636462e1b86c7f0.webp" type="image/webp">
-          <source srcset="/vcf9-auto/02_hu_af7f521a34b2a1a3.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/02_hu_c636462e1b86c7f0.webp"alt="Auto network"  width="1435"  height="1262" />
-        </picture></a><figcaption>
-            <p>Automation Network settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/02_hu_262af03a687e11c8.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/02_hu_262af03a687e11c8.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/02_hu_262af03a687e11c8.jpg"alt="Auto network"width="1435"
+            height="1262"/>
+        </picture></a><figcaption><p>Automation Network settings (click to enlarge)</p></figcaption></figure>
 <p>Now comes the component part, where many (like me) are probably a little confused at first.
 I don&rsquo;t find the description here very clear. Since the internal load balancer is used, the FQDN of the component and the cluster VIP must be identical.</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/vcf9-auto/03_hu_7d7333353d686f4d.webp" type="image/webp">
-          <source srcset="/vcf9-auto/03_hu_892afeaceca73f1f.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/03_hu_7d7333353d686f4d.webp"alt="Auto components"  width="1426"  height="1246" />
-        </picture></a><figcaption>
-            <p>Automation Comnponents (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/03_hu_d585d89ada4e7ca0.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/03_hu_d585d89ada4e7ca0.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/03_hu_d585d89ada4e7ca0.jpg"alt="Auto components"width="1426"
+            height="1246"/>
+        </picture></a><figcaption><p>Automation Comnponents (click to enlarge)</p></figcaption></figure>
 <p>The IP address created for the FQDN is entered under Primary VIP.
 The Internal Cluster CIDR is for internal communication and is 198.18.0.0/15 by default and should not overlap with existing networks.
 The range is from the reserved network and is not usually used in any network. The Cluster CIDR cannot be changed afterwards.</p>
@@ -319,35 +316,32 @@ If you want to read more about VKS, I recommend my colleague <a href="https://vi
 <p>To install VKS, you must first create a storage policy. To do this, you must first create a tag and a tag category.
 The quickest way to do this is via vCenter by clicking on Storage and selecting Assign Tag.
 Select Add Tag and then Create New Category to create a datastore tag category.</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/vcf9-auto/04_hu_5295a0bf6d1aa489.webp" type="image/webp">
-          <source srcset="/vcf9-auto/04_hu_e416318b76984a6e.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/04_hu_5295a0bf6d1aa489.webp"alt="TAG Category"  width="1734"  height="1208" />
-        </picture></a><figcaption>
-            <p>TAG Category (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/04_hu_89871956d651530.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/04_hu_89871956d651530.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/04_hu_89871956d651530.jpg"alt="TAG Category"width="1734"
+            height="1208"/>
+        </picture></a><figcaption><p>TAG Category (click to enlarge)</p></figcaption></figure>
 <p>It is important to select One Tag and Datastore here. Once the category has been created, a tag can be created and assigned to the storage.</p>
 <p>Then I create the appropriate storage policy under Policies and Profiles -&gt; VM Storage Policies. This is necessary to ensure that the correct storage is selected during VKS deployment. The storage policy is TAG-based and uses the previously created TAG.</p>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/vcf9-auto/05_hu_ae62c8d9ad583a87.webp" type="image/webp">
-          <source srcset="/vcf9-auto/05_hu_d735668b091a800a.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/05_hu_ae62c8d9ad583a87.webp"alt="Storage Policy"  width="2894"  height="1654" />
-        </picture></a><figcaption>
-            <p>Storage Policy (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/05_hu_b99922027e45db69.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/05_hu_b99922027e45db69.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/05_hu_b99922027e45db69.jpg"alt="Storage Policy"width="2894"
+            height="1654"/>
+        </picture></a><figcaption><p>Storage Policy (click to enlarge)</p></figcaption></figure>
 <p>Next, we start the VKS deployment via the vCenter Burger Menu and the Supervisor Management menu item.
 During deployment, a content library is automatically created on the VKS Storage Policy data store.
 If you want, you can also do this in advance, but since it should be as simple as possible, I use the automatically generated content library.</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf9-auto/06_hu_304df1aa0ee2edce.webp" type="image/webp">
-          <source srcset="/vcf9-auto/06_hu_bcb5e27c205c32a0.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/06_hu_304df1aa0ee2edce.webp"alt="VKS deployment"  width="3454"  height="1864" />
-        </picture></a><figcaption>
-            <p>VKS deployment (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/06_hu_875ba60c1f591962.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/06_hu_875ba60c1f591962.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/06_hu_875ba60c1f591962.jpg"alt="VKS deployment"width="3454"
+            height="1864"/>
+        </picture></a><figcaption><p>VKS deployment (click to enlarge)</p></figcaption></figure>
 <p>In my opinion, deployment via VPCs is the simplest method, as it requires the fewest parameters to be set during deployment.
 A new VPC must be created in advance for the supervisor cluster and a <em><strong>public VPC subnet</strong></em> for management.</p>
 
@@ -364,24 +358,22 @@ A new VPC must be created in advance for the supervisor cluster and a <em><stron
     </aside>
 <p>Next, the supervisor location is determined. Since this is a normal cluster deployment and not a vSphere with Zones setup, Cluster Deployment must be selected.
 In addition, a supervisor name is assigned (in lowercase letters) and, since this is to be a single node cluster, Control Plane HA remains disabled. As mentioned, I have two vSphere clusters in my setup and I want my supervisor to be in cluster m02-cl02.</p>
-
- <figure><a href="07.png"><picture>
-           <source srcset="/vcf9-auto/07_hu_a3027d0cb01fa3f6.webp" type="image/webp">
-           <source srcset="/vcf9-auto/07_hu_cfca9c339cd58198.jpg" type="image/jpeg">
-           <img src="/vcf9-auto/07_hu_a3027d0cb01fa3f6.webp"alt="VKS Supervisor location"  width="3444"  height="1856" />
-         </picture></a><figcaption>
-             <p>VKS Supervisor location (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="07.png"><picture>
+           <source srcset="/vcf9-auto/07_hu_774f46fc45345f58.jpg" type="image/webp">
+           <source srcset="/vcf9-auto/07_hu_774f46fc45345f58.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-auto/07_hu_774f46fc45345f58.jpg"alt="VKS Supervisor location"width="3444"
+             height="1856"/>
+         </picture></a><figcaption><p>VKS Supervisor location (click to enlarge)</p></figcaption></figure>
 <p>After that, the storage policy is assigned and you can proceed to the management network setup.
 Normally, a pool of at least 4 IP addresses (1 VIP, 3 supervisor nodes) is sufficient. In a simple deployment, even fewer IP addresses are required, but I have specified a larger range to enable scale-out in the future. The remaining details are fairly self-explanatory.</p>
-
- <figure><a href="08.png"><picture>
-           <source srcset="/vcf9-auto/08_hu_d5f7192942de39ae.webp" type="image/webp">
-           <source srcset="/vcf9-auto/08_hu_55db79ad9821517.jpg" type="image/jpeg">
-           <img src="/vcf9-auto/08_hu_d5f7192942de39ae.webp"alt="VKS Supervisor Managment Network"  width="3438"  height="1844" />
-         </picture></a><figcaption>
-             <p>VKS Supervisor Managment Network (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="08.png"><picture>
+           <source srcset="/vcf9-auto/08_hu_45cb4ec7202275ec.jpg" type="image/webp">
+           <source srcset="/vcf9-auto/08_hu_45cb4ec7202275ec.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-auto/08_hu_45cb4ec7202275ec.jpg"alt="VKS Supervisor Managment Network"width="3438"
+             height="1844"/>
+         </picture></a><figcaption><p>VKS Supervisor Managment Network (click to enlarge)</p></figcaption></figure>
 <p>The next setting is the workload network, and the nice thing about the VPC setup is that most of it is already pre-filled and was specified during the NSX setup of the VPCs.
 Since I want to keep this example simple, I am using the default project from NSX.
 It would of course also be possible to put the supervisor in its own NSX project with its own T0.</p>
@@ -390,23 +382,21 @@ Nevertheless, you should be careful not to enter any of your routable networks a
 The service CIDR is preselected and usually does not need to be adjusted, and again comes from a privately reserved range.</p>
 <p>DNS and NTP can be customized for the workers here, but this is not necessary in my case.
 These are addressed from the VPC with Auto SNAT, as a worker node cannot communicate directly via the private VPC CIDRs.</p>
-
- <figure><a href="09.png"><picture>
-           <source srcset="/vcf9-auto/09_hu_66c46295b0b093bc.webp" type="image/webp">
-           <source srcset="/vcf9-auto/09_hu_f350ce2bd810905d.jpg" type="image/jpeg">
-           <img src="/vcf9-auto/09_hu_66c46295b0b093bc.webp"alt="VKS Supervisor Workload Network"  width="1718"  height="1261" />
-         </picture></a><figcaption>
-             <p>VKS Supervisor Workload Network (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="09.png"><picture>
+           <source srcset="/vcf9-auto/09_hu_5231966091599e9c.jpg" type="image/webp">
+           <source srcset="/vcf9-auto/09_hu_5231966091599e9c.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-auto/09_hu_5231966091599e9c.jpg"alt="VKS Supervisor Workload Network"width="1718"
+             height="1261"/>
+         </picture></a><figcaption><p>VKS Supervisor Workload Network (click to enlarge)</p></figcaption></figure>
 <p>Finally, the supervisor control plane size is determined. I am using Small (4 vCPUs and 16 GB RAM per supervisor control node) here.</p>
-
- <figure><a href="10.png"><picture>
-           <source srcset="/vcf9-auto/10_hu_85c20da5e39bdf70.webp" type="image/webp">
-           <source srcset="/vcf9-auto/10_hu_b235a7f9932e54c6.jpg" type="image/jpeg">
-           <img src="/vcf9-auto/10_hu_85c20da5e39bdf70.webp"alt="VKS Supervisor Control Plane"  width="1721"  height="1317" />
-         </picture></a><figcaption>
-             <p>VKS Supervisor Control Plane (click to enlarge)</p>
-           </figcaption></figure>
+<figure><a href="10.png"><picture>
+           <source srcset="/vcf9-auto/10_hu_95f2666f41b6e195.jpg" type="image/webp">
+           <source srcset="/vcf9-auto/10_hu_95f2666f41b6e195.jpg" type="image/jpeg">
+           <img
+             src="/vcf9-auto/10_hu_95f2666f41b6e195.jpg"alt="VKS Supervisor Control Plane"width="1721"
+             height="1317"/>
+         </picture></a><figcaption><p>VKS Supervisor Control Plane (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -419,23 +409,22 @@ These are addressed from the VPC with Auto SNAT, as a worker node cannot communi
         </div>
         <div class="admonition-content">Depending on the hardware, the small form factor may be too small, and deployment will either be extremely slow or even result in errors. Especially on weak nucs, it is recommended to select medium. The NSX edge VMs should also be deployed with medium if you want to use the NSX load balancer. If the deployment runs into errors despite a correct network, the hardware sizing may not be sufficient—especially if you have a CPU with E and P cores.</div>
     </aside>
-
 <figure><a href="11.png"><picture>
-          <source srcset="/vcf9-auto/11_hu_6de50e041be70abd.webp" type="image/webp">
-          <source srcset="/vcf9-auto/11_hu_d47117e6148e374f.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/11_hu_6de50e041be70abd.webp"alt="VKS Supervisor"  width="3438"  height="1844" />
-        </picture></a><figcaption>
-            <p>VKS Supervisor (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/11_hu_cdd0146a2c3eefa9.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/11_hu_cdd0146a2c3eefa9.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/11_hu_cdd0146a2c3eefa9.jpg"alt="VKS Supervisor"width="3438"
+            height="1844"/>
+        </picture></a><figcaption><p>VKS Supervisor (click to enlarge)</p></figcaption></figure>
 <p>The VKS setup takes quite a bit of time. I think it took me at least 1 to 2 coffees—so a good 20 minutes.
 Yes, I should probably reconsider my coffee consumption.
 And while we&rsquo;re on the subject of consumption – what a transition – the LCI, or Local Consumption Interface, still needs to be installed.</p>
 <p>The LCI can be found in the Broadcom Support Portal under the Free Software category. It is a simple YAML file. If you don&rsquo;t want to search for it or deal with the Broadcom portal, you can copy version 9.0.2 (the current version at the time of publication) here.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">data.packaging.carvel.dev/v1alpha1</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Package</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Package</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">metadata</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cci-ns.vmware.com.9.0.2+f943fb89</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">refName</span><span class="p">:</span><span class="w"> </span><span class="l">cci-ns.vmware.com</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="m">9.0.2</span><span class="l">+f943fb89</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
@@ -472,12 +461,12 @@ And while we&rsquo;re on the subject of consumption – what a transition – th
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">IP address of the Kubernetes LoadBalancer type service fronting the apiservers.</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">data.packaging.carvel.dev/v1alpha1</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PackageMetadata</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">data.packaging.carvel.dev/v1alpha1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PackageMetadata</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">metadata</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cci-ns.vmware.com</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l">Local Consumption Interface</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">shortDescription</span><span class="p">:</span><span class="w"> </span><span class="l">Provides the Local Consumption Interface for Namespaces within vSphere Client.</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">longDescription</span><span class="p">:</span><span class="w"> </span><span class="l">Provides the Local Consumption Interface for Namespaces within vSphere Client.</span><span class="w">
@@ -485,23 +474,21 @@ And while we&rsquo;re on the subject of consumption – what a transition – th
 </span></span></span></code></pre></div><p>The LCI in VKS provides vSphere resources (VM Service) locally via the Kubernetes Supervisor.
 It makes virtual machines “consumable” for Kubernetes, as if they were native K8s objects. Automation uses the LCI for the deployment of VMs.</p>
 <p>To install the LCI, it must first be created as a supervisor service. To do this, go to the vCenter burger menu and select Supervisor Management -&gt; Namespaces -&gt; Services -&gt; Add.</p>
-
 <figure><a href="12.png"><picture>
-          <source srcset="/vcf9-auto/12_hu_12f063e532eeb3c4.webp" type="image/webp">
-          <source srcset="/vcf9-auto/12_hu_651220f2cabcecac.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/12_hu_12f063e532eeb3c4.webp"alt="LCI"  width="3438"  height="1844" />
-        </picture></a><figcaption>
-            <p>LCI (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/12_hu_497188c477735174.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/12_hu_497188c477735174.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/12_hu_497188c477735174.jpg"alt="LCI"width="3438"
+            height="1844"/>
+        </picture></a><figcaption><p>LCI (click to enlarge)</p></figcaption></figure>
 <p>After successful registration, another tile should now appear under Services, and we can roll out the service via Local Consumption Interface -&gt; Actions -&gt; Manage Service. The Supervisor Cluster must be selected, and then the dialog must be confirmed with Next until the end. No additional information is required. If everything has worked, the service is active on the Supervisor. This can be checked via Supervisor Management.</p>
-
 <figure><a href="13.png"><picture>
-          <source srcset="/vcf9-auto/13_hu_ef2b5496498d697.webp" type="image/webp">
-          <source srcset="/vcf9-auto/13_hu_f91e7130f23e3dda.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/13_hu_ef2b5496498d697.webp"alt="LCI status"  width="1706"  height="1092" />
-        </picture></a><figcaption>
-            <p>LCI Status (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/13_hu_5b9acce9412d04dc.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/13_hu_5b9acce9412d04dc.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/13_hu_5b9acce9412d04dc.jpg"alt="LCI status"width="1706"
+            height="1092"/>
+        </picture></a><figcaption><p>LCI Status (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -579,14 +566,13 @@ Then you run a Python script and get the supervisor&rsquo;s password.</p>
 <p>After redeploying my VKS three times due to some typos, I can now log in to the automation GUI.
 The organization name to log in to Provider Management is <em><strong>system</strong></em>. The username is admin and the password is the one you set during deployment.
 If you want, you can replace the TLS certificate with your own via VCF Operations. However, this is not a must.</p>
-
 <figure><a href="14.png"><picture>
-          <source srcset="/vcf9-auto/14_hu_eaecdbf86b6d15b3.webp" type="image/webp">
-          <source srcset="/vcf9-auto/14_hu_874f91a52a6f8a16.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/14_hu_eaecdbf86b6d15b3.webp"alt="Automation"  width="1718"  height="1320" />
-        </picture></a><figcaption>
-            <p>Hello Automation (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/14_hu_a25dff5ac4506a5f.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/14_hu_a25dff5ac4506a5f.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/14_hu_a25dff5ac4506a5f.jpg"alt="Automation"width="1718"
+            height="1320"/>
+        </picture></a><figcaption><p>Hello Automation (click to enlarge)</p></figcaption></figure>
 <p>If the Automation start screen looks different after logging in to the provider, the VKS cluster was probably not recognized.
 An inventory sync can help here.
 I use Quick Start for setup because it creates a complete organization with useful settings in a very simple way. An organization is the top level in automation and could also be described as a customer or tenant. An organization is implemented as an NSX project, which ensures separation at the network level.
@@ -594,38 +580,35 @@ Resources, cost control, and policies always apply across the entire organizatio
 <p>Using the Quick Start Wizard, the first thing I have to do is choose the name of my organization. In my setup, I name the organization SDN Warrior.
 Next, I have to create a region and assign at least one VKS Supervisor cluster. A region consists of one or more supervisors and provides organizations with a collection of compute, memory, storage, and networking resources.
 It can extend across multiple vCenter instances. An organization can contain one or more regions.</p>
-
 <figure><a href="15.png"><picture>
-          <source srcset="/vcf9-auto/15_hu_daf2a345590dc475.webp" type="image/webp">
-          <source srcset="/vcf9-auto/15_hu_5015bea41eb625f5.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/15_hu_daf2a345590dc475.webp"alt="Automation Region"  width="1719"  height="1320" />
-        </picture></a><figcaption>
-            <p>Automation Region (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/15_hu_ed79d6b38076efb1.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/15_hu_ed79d6b38076efb1.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/15_hu_ed79d6b38076efb1.jpg"alt="Automation Region"width="1719"
+            height="1320"/>
+        </picture></a><figcaption><p>Automation Region (click to enlarge)</p></figcaption></figure>
 <p>Next, a storage policy must be selected. Here, I select my VKS policy. This can be adjusted later under Region Quota.
 That was it, basically. The rest is created completely automatically.</p>
-
 <figure><a href="16.png"><picture>
-          <source srcset="/vcf9-auto/16_hu_a529f09870bfecc0.webp" type="image/webp">
-          <source srcset="/vcf9-auto/16_hu_de8c8443e9a23152.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/16_hu_a529f09870bfecc0.webp"alt="Automation Summary"  width="1720"  height="1318" />
-        </picture></a><figcaption>
-            <p>Automation Summary (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/16_hu_3f8e9345a4325680.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/16_hu_3f8e9345a4325680.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/16_hu_3f8e9345a4325680.jpg"alt="Automation Summary"width="1720"
+            height="1318"/>
+        </picture></a><figcaption><p>Automation Summary (click to enlarge)</p></figcaption></figure>
 <p>Pretty simple. But we&rsquo;re not quite done yet, and we should first go through the settings that were created automatically.</p>
 <p>If we now click on Organization in the Automation menu, we get a good overview of what has been set up, and it quickly becomes apparent that Quickstart has set up significantly more than we had to configure.
 A region quota has been configured, which we can use to configure the permitted VM classes.
 By default, all default classes are permitted. These VM classes are our T-shirt sizes.
 The existing VM classes can be customized in vCenter under Supervisor Management -&gt; Services.
 It takes some time before newly created VM classes can be selected in the Quota.</p>
-
 <figure><a href="17.png"><picture>
-          <source srcset="/vcf9-auto/17_hu_71850b5cf8b0ca14.webp" type="image/webp">
-          <source srcset="/vcf9-auto/17_hu_221d6ae72a5f3c6c.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/17_hu_71850b5cf8b0ca14.webp"alt="Quaota"  width="1718"  height="1111" />
-        </picture></a><figcaption>
-            <p>Quota with custom VM Class (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/17_hu_d8050c201eac49fb.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/17_hu_d8050c201eac49fb.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/17_hu_d8050c201eac49fb.jpg"alt="Quaota"width="1718"
+            height="1111"/>
+        </picture></a><figcaption><p>Quota with custom VM Class (click to enlarge)</p></figcaption></figure>
 <p>Under Networking in the organization, you can see that the VPC default settings have been used. If there are multiple edge clusters, a specific edge cluster can be selected. In the VPC Connectivity Profile, you can override the ingress and egress QoS settings.
 By default, these are unlimited. IP ranges cannot be configured in the Quota, but the public VPC network is used by default. However, these IP ranges are only used for external communication. IP ranges within the organization are managed by the organization itself and not by the provider.</p>
 <p>By far the most important setting for our lab is the first user. Currently, no user is stored here. We should change that now.
@@ -636,27 +619,25 @@ But who cares about security in the lab?</p>
 Under Networking -&gt; General -&gt; IP Blocks, we can customize or expand the public IP block.
 IP blocks represent IPs used both inside and outside this local data center, north and south of the provider gateway.
 IPs within this scope are used for configuring services and networks.</p>
-
 <figure><a href="18.png"><picture>
-          <source srcset="/vcf9-auto/18_hu_242f6c282fea63cb.webp" type="image/webp">
-          <source srcset="/vcf9-auto/18_hu_32858a640711812a.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/18_hu_242f6c282fea63cb.webp"alt="Network Settings"  width="1720"  height="1109" />
-        </picture></a><figcaption>
-            <p>Network settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/18_hu_f9a018a2bd1b12b3.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/18_hu_f9a018a2bd1b12b3.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/18_hu_f9a018a2bd1b12b3.jpg"alt="Network Settings"width="1720"
+            height="1109"/>
+        </picture></a><figcaption><p>Network settings (click to enlarge)</p></figcaption></figure>
 <p>Under Regions, you can customize the storage class or add more. Going through all the settings in detail would go beyond the scope of this blog, and we want to get results first.
 But I have at least highlighted the most important settings.</p>
 <h2 id="organization-portal">Organization Portal<a href="#organization-portal" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Everything else is done in the Organization Portal.  To do this, go to Organizations, select the organization, and click Launch Organization Portal.
 Alternatively, we log out of the provider portal, enter the name of our organization as the organization, and log in with the user we created earlier.</p>
-
 <figure><a href="19.png"><picture>
-          <source srcset="/vcf9-auto/19_hu_9f08d5da3cf883c2.webp" type="image/webp">
-          <source srcset="/vcf9-auto/19_hu_10985726108d23e1.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/19_hu_9f08d5da3cf883c2.webp"alt="Org Portal"  width="1720"  height="1300" />
-        </picture></a><figcaption>
-            <p>Organization Portal (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/19_hu_97e2124721144b66.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/19_hu_97e2124721144b66.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/19_hu_97e2124721144b66.jpg"alt="Org Portal"width="1720"
+            height="1300"/>
+        </picture></a><figcaption><p>Organization Portal (click to enlarge)</p></figcaption></figure>
 <h3 id="project">Project<a href="#project" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>We see that a project has already been created by default. This is done automatically when creating an organization.
 We edit this by clicking on Projects and then on the project name.
@@ -668,36 +649,33 @@ Then I edit the project again and create a namespace. This refers to a vSphere n
 It consists of one of the predefined namespace classes and can be customized under Manage &amp; Govern if necessary.
 In my case, small (best effort) is sufficient, which means that my project will not be allocated more than 10 GB of RAM and 10 GHz of CPU without reservations. Namespace classes can be used to manage resources effectively.
 In addition, the region, VPC, and zone must be specified. This is not difficult in my lab, as there is only one of each.</p>
-
 <figure><a href="20.png"><picture>
-          <source srcset="/vcf9-auto/20_hu_f25ecf34a852519d.webp" type="image/webp">
-          <source srcset="/vcf9-auto/20_hu_dd439d45f3195944.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/20_hu_f25ecf34a852519d.webp"alt="Project"  width="1715"  height="1321" />
-        </picture></a><figcaption>
-            <p>Project (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/20_hu_706aa785f405d931.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/20_hu_706aa785f405d931.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/20_hu_706aa785f405d931.jpg"alt="Project"width="1715"
+            height="1321"/>
+        </picture></a><figcaption><p>Project (click to enlarge)</p></figcaption></figure>
 <h3 id="dhcp-and-dns">DHCP and DNS<a href="#dhcp-and-dns" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Now we have almost everything we need to deploy a VM. However, I want to use DHCP in my lab, so I need to make a small adjustment in NSX.
 By default, DHCP can be used with automation, but the VPC service profile does not have a DNS server stored. This can be changed quickly. To do this, I log in to NSX and switch to the SDN-Warrior project (click on Default in the upper left corner of NSX to switch projects).
 The profile can be found under VPCs -&gt; Profiles -&gt; VPC Service Profile -&gt; Default VPC Service Profile. Here, I add my DNS server to the profile.</p>
-
 <figure><a href="21.png"><picture>
-          <source srcset="/vcf9-auto/21_hu_fbed5e3bbdf98bef.webp" type="image/webp">
-          <source srcset="/vcf9-auto/21_hu_93f4f3c508e0f8da.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/21_hu_fbed5e3bbdf98bef.webp"alt="NSX"  width="1712"  height="894" />
-        </picture></a><figcaption>
-            <p>NSX VPC Profile (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/21_hu_fb85d8f1306c3c59.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/21_hu_fb85d8f1306c3c59.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/21_hu_fb85d8f1306c3c59.jpg"alt="NSX"width="1712"
+            height="894"/>
+        </picture></a><figcaption><p>NSX VPC Profile (click to enlarge)</p></figcaption></figure>
 <p>Once that has been changed, I create a new subnet set in the Organization Portal. Under Build &amp; Deploy -&gt; Services -&gt; Network -&gt; vcf09-management-domain-default-vpc -&gt; SubnetSets, I create a new subnet set with the name vm and set the DHCP server.
 The subnet set is, so to speak, my blueprint for how I use my network. It determines the type of network the VM will be in (in this case, a private network) and how an IP address will be assigned.</p>
-
 <figure><a href="22.png"><picture>
-          <source srcset="/vcf9-auto/22_hu_f33991c51e3931cb.webp" type="image/webp">
-          <source srcset="/vcf9-auto/22_hu_e4d59f1c29fc499f.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/22_hu_f33991c51e3931cb.webp"alt="Subnet Set"  width="1715"  height="1226" />
-        </picture></a><figcaption>
-            <p>Subnet Set (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/22_hu_74066379e99f9df9.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/22_hu_74066379e99f9df9.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/22_hu_74066379e99f9df9.jpg"alt="Subnet Set"width="1715"
+            height="1226"/>
+        </picture></a><figcaption><p>Subnet Set (click to enlarge)</p></figcaption></figure>
 <h3 id="content-library">Content library<a href="#content-library" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>We also need a content library. I create this via Build &amp; Deploy -&gt; Content Libraries. The region must be specified and the storage policy selected. I can then upload my OVA template from Alpine Linux to the newly created content library.
 It is important to note that the space required is deducted from the configured quota created in the provider setup. You don&rsquo;t have to use Alpine Linux here; any other VM template you have created previously will also work. I use Alpine because of its small size and because it is super easy to configure.</p>
@@ -715,13 +693,13 @@ However, it can also be used with other VM templates.
 There is also a simple input form so that you can specify the VM name.
 This must be rfc dns compliant, and a simple regex is also included. The blueprint needs to be slightly modified so that it can be used.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">inputs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">textField_6e3db194</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l">VM Name</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">DNS-kompatibler Name (lowercase, RFC-konform)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l">^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">CCI_Supervisor_Namespace_1</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">CCI.Supervisor.Namespace</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w">
@@ -781,11 +759,11 @@ Alternatively, it can also be found in vCenter or under Manage &amp; Govern -&gt
 </li>
 </ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">className</span><span class="p">:</span><span class="w"> </span><span class="l">tiny</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">imageName</span><span class="p">:</span><span class="w"> </span><span class="l">vmi-bee6d37ed943e7fc7</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">powerState</span><span class="p">:</span><span class="w"> </span><span class="l">PoweredOn</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l">vks-storage-policy</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">network</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">className</span><span class="p">:</span><span class="w"> </span><span class="l">tiny</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">imageName</span><span class="p">:</span><span class="w"> </span><span class="l">vmi-bee6d37ed943e7fc7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">powerState</span><span class="p">:</span><span class="w"> </span><span class="l">PoweredOn</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l">vks-storage-policy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">network</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">interfaces</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">eth0</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">network</span><span class="p">:</span><span class="w">
@@ -800,14 +778,13 @@ I&rsquo;ve had this problem with various Linux distributions, but I can&rsquo;t 
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">runcmd</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;disable_vmware_customization</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="l">&#39;</span><span class="w">
 </span></span></span></code></pre></div><p>The Bluebrint should now look more or less like this.</p>
-
 <figure><a href="23.png"><picture>
-          <source srcset="/vcf9-auto/23_hu_bb8a3111579a0c6e.webp" type="image/webp">
-          <source srcset="/vcf9-auto/23_hu_eae4e730f960804a.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/23_hu_bb8a3111579a0c6e.webp"alt="Subnet Set"  width="1714"  height="1319" />
-        </picture></a><figcaption>
-            <p>Subnet Set (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/23_hu_758372081140968f.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/23_hu_758372081140968f.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/23_hu_758372081140968f.jpg"alt="Subnet Set"width="1714"
+            height="1319"/>
+        </picture></a><figcaption><p>Subnet Set (click to enlarge)</p></figcaption></figure>
 <p>Using the Test button, you can validate the YAML to ensure that at least the formatting is correct.
 Using Deploy, you can run a deployment test. Once this has been successful, you can use Version to publish the current version in the catalog and make it accessible to users.
 I recorded a short test video to show how it all works in practice. To do this, I used an advanced project user with limited rights to the project.</p>
@@ -822,13 +799,13 @@ I recorded a short test video to show how it all works in practice. To do this, 
 <h3 id="bonus-round---deploying-a-kubernetes-cluster">Bonus Round - deploying a Kubernetes Cluster<a href="#bonus-round---deploying-a-kubernetes-cluster" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Spoilers: this isn&rsquo;t a perfect blueprint, but it just shows that you can do more than just deploy VMs with VCF Automation in All Apps mode.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">inputs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">textField_6e3db193</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l">clustername</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">DNS-kompatibler Name (lowercase, RFC-konform)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l">^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">CCI_Supervisor_Namespace_1</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">CCI.Supervisor.Namespace</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w">
@@ -877,22 +854,20 @@ I recorded a short test video to show how it all works in practice. To do this, 
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">a-team-space-8sjpd</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">existing</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span></code></pre></div>
-<figure><a href="24.png"><picture>
-          <source srcset="/vcf9-auto/24_hu_2237b9f176b2a9bb.webp" type="image/webp">
-          <source srcset="/vcf9-auto/24_hu_6d7629e4ff10d138.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/24_hu_2237b9f176b2a9bb.webp"alt="Automation Instances"  width="1709"  height="1308" />
-        </picture></a><figcaption>
-            <p>Automation Instances Set (click to enlarge)</p>
-          </figcaption></figure>
-
+</span></span></span></code></pre></div><figure><a href="24.png"><picture>
+          <source srcset="/vcf9-auto/24_hu_390c04ded79d5d35.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/24_hu_390c04ded79d5d35.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/24_hu_390c04ded79d5d35.jpg"alt="Automation Instances"width="1709"
+            height="1308"/>
+        </picture></a><figcaption><p>Automation Instances Set (click to enlarge)</p></figcaption></figure>
 <figure><a href="25.png"><picture>
-          <source srcset="/vcf9-auto/25_hu_433d5cc3bef55ae4.webp" type="image/webp">
-          <source srcset="/vcf9-auto/25_hu_297218c4f12ce741.jpg" type="image/jpeg">
-          <img src="/vcf9-auto/25_hu_433d5cc3bef55ae4.webp"alt="Cluster in vCenter"  width="1045"  height="578" />
-        </picture></a><figcaption>
-            <p>Automation workload in vCenter (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-auto/25_hu_b532bc4b8ddcb8eb.jpg" type="image/webp">
+          <source srcset="/vcf9-auto/25_hu_b532bc4b8ddcb8eb.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-auto/25_hu_b532bc4b8ddcb8eb.jpg"alt="Cluster in vCenter"width="1045"
+            height="578"/>
+        </picture></a><figcaption><p>Automation workload in vCenter (click to enlarge)</p></figcaption></figure>
 <h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>VCF 9 Automation is not just a simple update to the familiar automation solution; it is a new product. In this blog, I have covered some super basic tasks, but there is much more that can be done, and I have only scratched the surface.
 A general rethink of how VMs are managed is needed, because if my VM has been deployed in a vSphere namespace, it is no longer managed via vCenter.

@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-09-12T17:00:00+02:00">
   <meta itemprop="wordCount" content="1431">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tales-from-the-lab-setup/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tales-from-the-lab-setup/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Tales from the Lab – Lab setup">
   <meta property="og:description" content="A brief blog about setting up my nested lab.">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-09-12T17:00:00+02:00">
     <meta property="article:modified_time" content="2025-09-12T17:00:00+02:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
@@ -224,14 +224,13 @@ I want to change that here now, as I have received an increasing number of reque
 <p>I currently own eight Minisforum servers and one NUC Ultra 7.
 The Minisforum servers are for workloads and are divided into two clusters, as some of the hardware has AMD CPUs and the other servers have Intel CPUs.
 My NUC is its own cluster and runs my always-on workload, as the Minisforum servers generate too much power and heat for 24/7 operation.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/lab-setup/01_hu_642fabb84874cd60.webp" type="image/webp">
-          <source srcset="/lab-setup/01_hu_52bf9cc9bcf9d141.jpg" type="image/jpeg">
-          <img src="/lab-setup/01_hu_642fabb84874cd60.webp"alt="vCenter"  width="2946"  height="1820" />
-        </picture></a><figcaption>
-            <p>Lab vCenter (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/lab-setup/01_hu_a1cc74d5a75248ff.jpg" type="image/webp">
+          <source srcset="/lab-setup/01_hu_a1cc74d5a75248ff.jpg" type="image/jpeg">
+          <img
+            src="/lab-setup/01_hu_a1cc74d5a75248ff.jpg"alt="vCenter"width="2946"
+            height="1820"/>
+        </picture></a><figcaption><p>Lab vCenter (click to enlarge)</p></figcaption></figure>
 <p>As you can see in the image, two Minisforum servers are currently not part of my cluster for licensing reasons.
 This will change in the coming weeks, but Proxmox is currently running on them for testing purposes.</p>
 <h3 id="management-nuc">Management NUC<a href="#management-nuc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
@@ -262,14 +261,13 @@ I obtain NTP globally from my ToR switch, as Mikrotik, the old Swiss Army knife,
 Each server has a 2 TB local NVMe installed on which the hypervisor itself is located, and the rest of the NVMe is provided as VMFS storage.
 On my Unraid server, I provide 4 TB as iSCSI storage and 2x 4 TB as NFS storage.
 The storage on Unraid is implemented on NVMes, but without Raid. If a disk fails, I just lose a share.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/lab-setup/02_hu_1f413fd79d53d368.webp" type="image/webp">
-          <source srcset="/lab-setup/02_hu_5b1de1340b1fd395.jpg" type="image/jpeg">
-          <img src="/lab-setup/02_hu_1f413fd79d53d368.webp"alt="Storage"  width="2946"  height="1820" />
-        </picture></a><figcaption>
-            <p>Lab Storage (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/lab-setup/02_hu_767c452a66c1b539.jpg" type="image/webp">
+          <source srcset="/lab-setup/02_hu_767c452a66c1b539.jpg" type="image/jpeg">
+          <img
+            src="/lab-setup/02_hu_767c452a66c1b539.jpg"alt="Storage"width="2946"
+            height="1820"/>
+        </picture></a><figcaption><p>Lab Storage (click to enlarge)</p></figcaption></figure>
 <p>Now you might ask yourself why I did it this way. Well, iSCSI has the advantage that I can implement a multi-path fabric and is basically my fastest storage, since I have 2x 10 Gb/s iSCSI and can utilize it to its full capacity.
 All my servers are equipped with 2x10 Gb/s networks (except for my small management NUC).  My iSCSI storage runs VMs that require maximum storage performance.
 I use NFS for VCF nested labs where I don&rsquo;t want to use vSAN, and most of the time I don&rsquo;t want to use vSAN in my lab for resource reasons. Fortunately, this is now supported without any problems with VCF9.
@@ -291,40 +289,37 @@ There are three exceptions: my trunk port groups with MacLearning.
 Here, I have a trunk that only uses uplink 1 of the vDS and a trunk port group that uses uplink 2 of the vDS.
 This is important for NSX Labs if you want to test traffic steering of the NSX Teaming Policy.
 Another exception is my port group on which promiscuous mode is enabled. Here, I use active/standby, as otherwise I would have duplicated packets and performance losses.</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/lab-setup/03_hu_8cbe0cef1bba158d.webp" type="image/webp">
-          <source srcset="/lab-setup/03_hu_f9fa89ee1a0e2866.jpg" type="image/jpeg">
-          <img src="/lab-setup/03_hu_8cbe0cef1bba158d.webp"alt="Network"  width="2946"  height="1820" />
-        </picture></a><figcaption>
-            <p>Lab Network (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/lab-setup/03_hu_70a3bf0d0e3bb6a2.jpg" type="image/webp">
+          <source srcset="/lab-setup/03_hu_70a3bf0d0e3bb6a2.jpg" type="image/jpeg">
+          <img
+            src="/lab-setup/03_hu_70a3bf0d0e3bb6a2.jpg"alt="Network"width="2946"
+            height="1820"/>
+        </picture></a><figcaption><p>Lab Network (click to enlarge)</p></figcaption></figure>
 <p>If you want to know more about this topic, you can read my article on <a href="https://sdn-warrior.org/posts/mac-learning/">Mac Learning</a>.
 Here, I address the problem and also show the differences in performance.
 For VCF 9 installation, promiscuous mode is required, otherwise the deployment will fail when the VCF installer attempts to migrate the ESX servers to the distributed switch.</p>
 <h2 id="vcf-fleet">VCF Fleet<a href="#vcf-fleet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>My fleet setup is a bit of a hodgepodge. Since I need VCF Operations for licensing, this is already running on my management NUC, as mentioned, but my VCF Automation is on an MS-A2 as a VM and is only turned on when I really need it, as it is a real resource hog. In addition, a VKS cluster has recently been running for testing purposes.
 I want to use automation to automatically deploy VMs that are running in the vsphere Namespace - fancy new things.</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/lab-setup/04_hu_a397720e80238736.webp" type="image/webp">
-          <source srcset="/lab-setup/04_hu_a5ada63d9073e7ca.jpg" type="image/jpeg">
-          <img src="/lab-setup/04_hu_a397720e80238736.webp"alt="VCF Operations"  width="2946"  height="1820" />
-        </picture></a><figcaption>
-            <p>VCF Operations (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/lab-setup/04_hu_ad78bed1b9fe816.jpg" type="image/webp">
+          <source srcset="/lab-setup/04_hu_ad78bed1b9fe816.jpg" type="image/jpeg">
+          <img
+            src="/lab-setup/04_hu_ad78bed1b9fe816.jpg"alt="VCF Operations"width="2946"
+            height="1820"/>
+        </picture></a><figcaption><p>VCF Operations (click to enlarge)</p></figcaption></figure>
 <p>I have several VCF instances onboarded in my central VCF Operations. Since I only have a certain number of licenses, I delete Labs in VCF Operations that are not currently needed.
 This is a bit annoying, but with the current licensing model, there is unfortunately no other way to do this.</p>
 <p>VCF Operations for Network is currently no longer deployed because my vDS kept getting out of sync, which caused problems with IPFIX. I will address this issue when I rebuild the vDS. After that, I will try again to get netflow running on my Mikrotik so that I can get useful network insights.
 However, this is still a work in progress.</p>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/lab-setup/05_hu_ef584aab90690b04.webp" type="image/webp">
-          <source srcset="/lab-setup/05_hu_86ded193906185d2.jpg" type="image/jpeg">
-          <img src="/lab-setup/05_hu_ef584aab90690b04.webp"alt="VCF Operations"  width="3376"  height="1418" />
-        </picture></a><figcaption>
-            <p>VCF Operations Overview (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/lab-setup/05_hu_94f583521082cc8b.jpg" type="image/webp">
+          <source srcset="/lab-setup/05_hu_94f583521082cc8b.jpg" type="image/jpeg">
+          <img
+            src="/lab-setup/05_hu_94f583521082cc8b.jpg"alt="VCF Operations"width="3376"
+            height="1418"/>
+        </picture></a><figcaption><p>VCF Operations Overview (click to enlarge)</p></figcaption></figure>
 <h2 id="final-thoughts">Final thoughts<a href="#final-thoughts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>My setup isn&rsquo;t particularly complicated, and everything is designed so that I can save resources and minimize 24/7 use without sacrificing too much comfort—anyone who has ever looked at the procedure for shutting down a VKS-enabled cluster knows what I mean. But not everything is perfect, and there is certainly room for improvement.
 My Ansible playbooks need to be revised because they no longer run properly with the latest version. In the future, I would also like to deploy much more automatically, i.e., I would prefer to deploy my standard VCF deployments fully automatically.</p>

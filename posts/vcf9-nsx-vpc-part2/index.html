@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-06-26T19:00:00+02:00">
   <meta itemprop="wordCount" content="2711">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Nsx,Homelab,Vpc"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Vpc"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF 9 - NSX VPC Part 2 - distributed Transit Gateway">
   <meta property="og:description" content="A short article about VPCs in NSX 9 and VCF 9 Part 2.">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-06-26T19:00:00+02:00">
     <meta property="article:modified_time" content="2025-06-26T19:00:00+02:00">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Vpc">
@@ -241,14 +241,13 @@ Since our default tenant (aka default project) has a transit gateway in centrali
         <div class="admonition-content">A small addition: whenever I refer to “tenant” in this article, I actually mean NSX project, but I find the name NSX project a bit cumbersome.</div>
     </aside>
 <p>To create a new tenant, click on the Project drop-down menu in the NSX GUI and then click on Manage.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/01_hu_53d822ddc525f.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/01_hu_37420b69267c8cfe.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/01_hu_53d822ddc525f.webp"alt="NSX 9 VPC Manhatten"  width="1151"  height="1120" />
-        </picture></a><figcaption>
-            <p>NSX 9 project Manhatten (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/01_hu_a93cff1adacc1e33.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/01_hu_a93cff1adacc1e33.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/01_hu_a93cff1adacc1e33.jpg"alt="NSX 9 VPC Manhatten"width="1151"
+            height="1120"/>
+        </picture></a><figcaption><p>NSX 9 project Manhatten (click to enlarge)</p></figcaption></figure>
 <p>The most important setting besides the name (yes, I recently watched Oppenheimer) is the External Connection.
 These settings determine whether the transit gateway is distributed or centralized.
 The External IP Block defines the public VPC network (I explained the different networks in VPCs in <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a>).
@@ -272,14 +271,13 @@ We also have the option of setting distributed firewall rules directly, which on
 We save our Manhattan project and now we have a fresh new tenant.</p>
 <h2 id="external-connection---the-distributed-version">External Connection - the distributed version<a href="#external-connection---the-distributed-version" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>We should take another closer look at the topic of external connections.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/02_hu_e4bcb1bf559da5b7.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/02_hu_aaf66fae63630a47.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/02_hu_e4bcb1bf559da5b7.webp"alt="Manhatten External Connection"  width="1669"  height="826" />
-        </picture></a><figcaption>
-            <p>NSX 9 project Manhatten external connection (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/02_hu_cc6c8627315cc7a3.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/02_hu_cc6c8627315cc7a3.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/02_hu_cc6c8627315cc7a3.jpg"alt="Manhatten External Connection"width="1669"
+            height="826"/>
+        </picture></a><figcaption><p>NSX 9 project Manhatten external connection (click to enlarge)</p></figcaption></figure>
 <p>Since we have a distributed connection here, we need a VLAN and a gateway in my physical network.
 In my lab, it is VLAN 1011 and my Mikrotik Core Router has 10.28.11.1/24. My external IP block also comes from the network area of VLAN 1011, as my physical router has to route to this network.</p>
 
@@ -296,14 +294,13 @@ In my lab, it is VLAN 1011 and my Mikrotik Core Router has 10.28.11.1/24. My ext
     </aside>
 <h2 id="lets-build-a-vpc-or-two-or">Let&rsquo;s build a VPC, or two, or&hellip;<a href="#lets-build-a-vpc-or-two-or" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Readers of <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a> should now be quite familiar with all of this.</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/03_hu_48978bf52479495.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/03_hu_120896229c7b9a23.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/03_hu_48978bf52479495.webp"alt="VCP"  width="1715"  height="1211" />
-        </picture></a><figcaption>
-            <p>get started with VPC (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/03_hu_34b60ab543ddb721.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/03_hu_34b60ab543ddb721.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/03_hu_34b60ab543ddb721.jpg"alt="VCP"width="1715"
+            height="1211"/>
+        </picture></a><figcaption><p>get started with VPC (click to enlarge)</p></figcaption></figure>
 <p>First, we set up our private transit gateway IP block in the VPC Connectivity Profile or create one. Remember, this is an unrouted network, but it must not overlap with the other private VPC networks for all tenants.
 This network is used to connect VPCs to each other and is an NSX overlay network.
 Next, I configure the service profile, which is where I can configure a DHCP service for my VPC, and finally I create the private PVC IP CIDRs.
@@ -374,23 +371,21 @@ In addition, I will create the VPC Core in the same way. I hope the Demon Core d
   </tbody>
 </table>
 <p>The final VPC structure of the Manhattan tenant looks like this:</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/04_hu_935b24fe0e6af886.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/04_hu_904d3b981763cd18.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/04_hu_935b24fe0e6af886.webp"alt="VCP Manhatten"  width="1560"  height="916" />
-        </picture></a><figcaption>
-            <p>VPCs tenant Manhatten (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/04_hu_263c9af036b5bc7.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/04_hu_263c9af036b5bc7.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/04_hu_263c9af036b5bc7.jpg"alt="VCP Manhatten"width="1560"
+            height="916"/>
+        </picture></a><figcaption><p>VPCs tenant Manhatten (click to enlarge)</p></figcaption></figure>
 <p>We can also test the interconnectivity between the VPCs from <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a>. The overall network topology looks like this:</p>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/05_hu_433eec8d2e4efae9.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/05_hu_552462bf996a85fc.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/05_hu_433eec8d2e4efae9.webp"alt="VCP all projects"  width="2922"  height="1002" />
-        </picture></a><figcaption>
-            <p>VPCs of all tenants (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/05_hu_498de606e942be04.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/05_hu_498de606e942be04.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/05_hu_498de606e942be04.jpg"alt="VCP all projects"width="2922"
+            height="1002"/>
+        </picture></a><figcaption><p>VPCs of all tenants (click to enlarge)</p></figcaption></figure>
 <p>Here are the test VMs from the first article:</p>
 <table>
   <thead>
@@ -756,14 +751,13 @@ There is a special case, but I will deal with that later.</p>
 </span></span><span class="line"><span class="cl"> 2  100.64.0.0 (100.64.0.0)  0.064 ms  0.079 ms  0.038 ms
 </span></span><span class="line"><span class="cl"> 3  192.168.11.1 (192.168.11.1)  0.265 ms  0.168 ms  0.188 ms
 </span></span></code></pre></div><p>In NSX, it looks like this:</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/06_hu_c49da3aea9aaf425.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/06_hu_e078d513e4c3977a.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/06_hu_c49da3aea9aaf425.webp"alt="VCP traceflow"  width="1450"  height="925" />
-        </picture></a><figcaption>
-            <p>NSX Traceflow (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/06_hu_6eab0d98e9d9773c.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/06_hu_6eab0d98e9d9773c.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/06_hu_6eab0d98e9d9773c.jpg"alt="VCP traceflow"width="1450"
+            height="925"/>
+        </picture></a><figcaption><p>NSX Traceflow (click to enlarge)</p></figcaption></figure>
 <p>Maybe we should take a look at the trace flow from my router.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[admin@ToR.lab.home] &gt; tool/traceroute 10.28.11.19
 </span></span><span class="line"><span class="cl">ADDRESS                          LOSS SENT    LAST     AVG    BEST   WORST STD-DEV STATUS                                                       
@@ -829,14 +823,13 @@ gateway.</p>
 <p>Similar to centralized deployment, it is possible to expose a VM from a private VPC network. However, since we do not have an edge, this is only possible via reflexive (stateless) NAT.
 The procedure is the same: we go to the settings of the VPC demon under Additional Configurations and select External IPs.
 In the dialog, we can only select VMs that have not yet been assigned an external IP and that have a connection in either a transit or private VPC network.</p>
-
 <figure><a href="07.png"><picture>
-          <source srcset="/vcf9-nsx-vpc-2/07_hu_4334ecadd18cf838.webp" type="image/webp">
-          <source srcset="/vcf9-nsx-vpc-2/07_hu_b33e3abdaf27debb.jpg" type="image/jpeg">
-          <img src="/vcf9-nsx-vpc-2/07_hu_4334ecadd18cf838.webp"alt="VCP external IPs"  width="1158"  height="724" />
-        </picture></a><figcaption>
-            <p>VPC-Demon External IPs(click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-nsx-vpc-2/07_hu_1b68066a6dd7e44.jpg" type="image/webp">
+          <source srcset="/vcf9-nsx-vpc-2/07_hu_1b68066a6dd7e44.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-nsx-vpc-2/07_hu_1b68066a6dd7e44.jpg"alt="VCP external IPs"width="1158"
+            height="724"/>
+        </picture></a><figcaption><p>VPC-Demon External IPs(click to enlarge)</p></figcaption></figure>
 <p>As we can see in the screenshot, an IP address from the public VPC network range has been assigned.
 The VM alpine01-demon-private can be accessed directly via the IP 10.28.11.2 and can also communicate with the Internet via this address.
 The complete communication is as follows:</p>

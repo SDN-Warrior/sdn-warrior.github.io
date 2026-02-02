@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-12-20T03:00:00+01:00">
   <meta itemprop="wordCount" content="3044">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Vmware,Operations,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-operations-dashboard/">
+  <meta itemprop="keywords" content="VCF,VMware,Operations,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-operations-dashboard/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Building a VCF Operations Dashboard">
   <meta property="og:description" content="A short blog about the joys of creating a dashboard in VCF 9 Operations.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-12-20T03:00:00+01:00">
     <meta property="article:modified_time" content="2025-12-20T03:00:00+01:00">
-    <meta property="article:tag" content="Vcf">
-    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="VMware">
     <meta property="article:tag" content="Operations">
     <meta property="article:tag" content="Homelab">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -235,14 +235,13 @@ The nice thing is that there is exactly one endpoint, namely <em><strong>/graphq
 <h3 id="define-sources">Define sources<a href="#define-sources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>First, a source must be defined in MP, which is usually relatively easy.
 But here&rsquo;s the first stumbling block: please use variables if you are using anything other than Basic Auth.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/01_hu_ef50244354bcbffa.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/01_hu_2aba7eaf680b6cfc.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/01_hu_ef50244354bcbffa.webp"alt="Data Source Connection"  width="1678"  height="1205" />
-        </picture></a><figcaption>
-            <p>Data Source Connection (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/01_hu_d8dd807f5e1509e0.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/01_hu_d8dd807f5e1509e0.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/01_hu_d8dd807f5e1509e0.jpg"alt="Data Source Connection"width="1678"
+            height="1205"/>
+        </picture></a><figcaption><p>Data Source Connection (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition warning">
         <div class="admonition-title">
@@ -262,25 +261,23 @@ If you use basic authentication, variables are used automatically.</p>
 I have disabled certificate verification, but in production it should of course remain enabled. The base path is optional; for Unraid, graphql would be a good choice.
 You don&rsquo;t have to specify a leading /, this is done automatically.
 Since Unraid uses API tokens, I created a variable called API-Toke via Custom Authentication.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/02_hu_9f2e88b5413b4559.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/02_hu_13c6babf52ca145c.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/02_hu_9f2e88b5413b4559.webp"alt="Global Settings"  width="1328"  height="688" />
-        </picture></a><figcaption>
-            <p>Global Settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/02_hu_1b842104a5a27d2d.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/02_hu_1b842104a5a27d2d.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/02_hu_1b842104a5a27d2d.jpg"alt="Global Settings"width="1328"
+            height="688"/>
+        </picture></a><figcaption><p>Global Settings (click to enlarge)</p></figcaption></figure>
 <p>Next are the global settings, which are very API-specific, and I will show another variation with the Veeam API later on.
 Unraid is relatively simple here; content type - application/json is more or less standard for most APIs, and my token must be specified in the HTTP header with x-api-key.
 The small paste icon allows you to access the defined variables, and everything is automatically entered correctly so that the previously defined variable is used.</p>
-
 <figure><a href="03.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/03_hu_56de2f50feb94ba9.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/03_hu_5551334fd1006b03.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/03_hu_56de2f50feb94ba9.webp"alt="Test Connection"  width="1174"  height="1019" />
-        </picture></a><figcaption>
-            <p>Test Connection (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/03_hu_70d5604cbc7fad7d.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/03_hu_70d5604cbc7fad7d.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/03_hu_70d5604cbc7fad7d.jpg"alt="Test Connection"width="1174"
+            height="1019"/>
+        </picture></a><figcaption><p>Test Connection (click to enlarge)</p></figcaption></figure>
 <p>The final step is to test the connection. If the test is not successful, the connection cannot be saved.
 Any query can generally be used. In my example, I display the system version of my Unraid server.
 Unraid only uses POST queries. The global HTTP headers are added automatically.</p>
@@ -301,14 +298,13 @@ If Content-Type is not required, you can specify text/plain. The OPNSense API re
 <p>If everything works, you will receive a valid response on the right-hand side and you can save the connection. Step 1 is now successfully complete.</p>
 <h3 id="create-requests">Create Requests<a href="#create-requests" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Next, the requests must be created. These requests will then be used later to retrieve the data.</p>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/04_hu_a611acfb91e3a312.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/04_hu_a1f1b5a6359e16ef.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/04_hu_a611acfb91e3a312.webp"alt="Requests"  width="1442"  height="620" />
-        </picture></a><figcaption>
-            <p>Requests (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/04_hu_f8841c17ab11fc3f.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/04_hu_f8841c17ab11fc3f.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/04_hu_f8841c17ab11fc3f.jpg"alt="Requests"width="1442"
+            height="620"/>
+        </picture></a><figcaption><p>Requests (click to enlarge)</p></figcaption></figure>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -322,14 +318,13 @@ If Content-Type is not required, you can specify text/plain. The OPNSense API re
         <div class="admonition-content">If you need to create additional requests afterwards (after the management pack has been installed) because data is missing or the API has changed, you must uninstall the management pack and reinstall the updated version.
 Afterwards, existing dashboards must be adjusted again.</div>
     </aside>
-
 <figure><a href="05.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/05_hu_6a0835b35cd8a2ff.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/05_hu_759cd0e38f6096de.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/05_hu_6a0835b35cd8a2ff.webp"alt="API Requests"  width="1519"  height="1108" />
-        </picture></a><figcaption>
-            <p>API Requests (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/05_hu_76a3588e45ed81da.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/05_hu_76a3588e45ed81da.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/05_hu_76a3588e45ed81da.jpg"alt="API Requests"width="1519"
+            height="1108"/>
+        </picture></a><figcaption><p>API Requests (click to enlarge)</p></figcaption></figure>
 <p>In my example, I query the utilization of my UPS via the Unraid API so that I can use the data later in an object.
 And as you can see here, I didn&rsquo;t follow my own recommendation for this request and my API token is hardcoded in the request. Please do better.
 In my defense, that was my first request, and I will adjust it in the next update of the management pack.</p>
@@ -338,26 +333,24 @@ In my defense, that was my first request, and I will adjust it in the next updat
 Metrics and properties are not mandatory. An object can therefore consist of metrics only or properties only.
 The difference between metrics and properties is quite simple: metrics can be calculated and must be of the decimal data type, while properties are strings.
 The unique ID is implemented via a property. Each object can only receive data via one request.</p>
-
 <figure><a href="06.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/06_hu_bb77c9141251fbc7.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/06_hu_6801113593f77d88.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/06_hu_bb77c9141251fbc7.webp"alt="Objects"  width="1669"  height="1064" />
-        </picture></a><figcaption>
-            <p>Objects (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/06_hu_8d843ba9beebebee.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/06_hu_8d843ba9beebebee.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/06_hu_8d843ba9beebebee.jpg"alt="Objects"width="1669"
+            height="1064"/>
+        </picture></a><figcaption><p>Objects (click to enlarge)</p></figcaption></figure>
 <p>When selecting the attributes, it is important to pay close attention to what is selected and always rely on the result of the API.
 In the end, clearly assignable values are required. Arrays such as upsDevices.* or data.* are not suitable for metrics.
 In this case, data.upsDevices.* must be selected, as all results always belong to exactly one upsDevice and can therefore ideally represent an object.
 If there are several UPS systems in upsDevices, several objects are automatically created.</p>
-
 <figure><a href="07.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/07_hu_22c6d4b1a7ddecf0.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/07_hu_3bc95d382b1d56b.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/07_hu_22c6d4b1a7ddecf0.webp"alt="Properties and Metrics"  width="1678"  height="906" />
-        </picture></a><figcaption>
-            <p>Properties and Metrics (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/07_hu_1279879fa19d7ebc.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/07_hu_1279879fa19d7ebc.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/07_hu_1279879fa19d7ebc.jpg"alt="Properties and Metrics"width="1678"
+            height="906"/>
+        </picture></a><figcaption><p>Properties and Metrics (click to enlarge)</p></figcaption></figure>
 <p>Selecting the metrics and properties is super simple, but at the same time it&rsquo;s the biggest problem when dealing with APIs.
 Unfortunately, you can&rsquo;t convert the results in any other way; it&rsquo;s either a string or a decimal.
 It&rsquo;s the same as when you only have a hammer, then suddenly everything looks like a nail.
@@ -377,14 +370,13 @@ In my cases with different APIs, almost everything was a stirng. At least with D
 <p>Finally, you just need to select a property as the object instance name and an object ID, which must of course be unique. Since I only have one UPS, I can use the UPS name as both the object instance name and the object ID.</p>
 <p>Finally, a verification must be performed before the Management Pack can be installed.
 Relationshops and events are optional, and for my purposes, I do not need them at this time and will therefore leave them out.</p>
-
 <figure><a href="08.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/08_hu_c15c7013d2a656aa.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/08_hu_9ae2c0b23462a453.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/08_hu_c15c7013d2a656aa.webp"alt="Verify"  width="1442"  height="888" />
-        </picture></a><figcaption>
-            <p>Verify (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/08_hu_4b4b22aad81eccb0.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/08_hu_4b4b22aad81eccb0.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/08_hu_4b4b22aad81eccb0.jpg"alt="Verify"width="1442"
+            height="888"/>
+        </picture></a><figcaption><p>Verify (click to enlarge)</p></figcaption></figure>
 <p>Congratulations, we have now created our first objects and metrics definition.</p>
 <h2 id="side-quest-incompatible-apis-or-rather-what-to-do-when-i-need-a-metric-but-only-get-properties">Side quest: Incompatible APIs, or rather, what to do when I need a metric but only get properties.<a href="#side-quest-incompatible-apis-or-rather-what-to-do-when-i-need-a-metric-but-only-get-properties" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Well, friends, I had this problem with the OPNSense API.
@@ -465,14 +457,13 @@ The required libraries are listed in requirements.txt.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> data
 </span></span></code></pre></div><p>The whole thing is started in my development environment with <em><strong>uvicorn proxy:app &ndash;host 0.0.0.0 &ndash;port 666</strong></em></p>
-
 <figure><a href="09.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/09_hu_b507e29e1ef8617f.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/09_hu_52b07fb97ea93539.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/09_hu_b507e29e1ef8617f.webp"alt="PyCharm"  width="1717"  height="1250" />
-        </picture></a><figcaption>
-            <p>PyCharm (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/09_hu_6cf1677c85c3788.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/09_hu_6cf1677c85c3788.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/09_hu_6cf1677c85c3788.jpg"alt="PyCharm"width="1717"
+            height="1250"/>
+        </picture></a><figcaption><p>PyCharm (click to enlarge)</p></figcaption></figure>
 <p>Of course, this is only intended for development purposes.
 Later, I built a Docker container from it that runs on my Unraid server, is backed up, and also starts automatically.
 It is important to note that authentication is not touched and is simply passed on.
@@ -489,14 +480,13 @@ The object type <em><strong>UPSLoad</strong></em> that I created can be found in
 If the API returned more than one UPS here, there would be two objects of the object type <em><strong>UPSload</strong></em>.
 Within the object, you can find the queried values in the Metric Power Load Percentage.
 It takes at least 5 minutes for the first values to appear.</p>
-
 <figure><a href="10.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/10_hu_dd9223310a0880cb.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/10_hu_89e69928b6021437.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/10_hu_dd9223310a0880cb.webp"alt="UPS Object"  width="1715"  height="1239" />
-        </picture></a><figcaption>
-            <p>UPS Object (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/10_hu_8c81eceede2a9f92.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/10_hu_8c81eceede2a9f92.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/10_hu_8c81eceede2a9f92.jpg"alt="UPS Object"width="1715"
+            height="1239"/>
+        </picture></a><figcaption><p>UPS Object (click to enlarge)</p></figcaption></figure>
 <p>You can now work with these values. However, I only have a percentage value and I would prefer to see the watts displayed, because I can imagine more under 300 watts than under 34% usage. But how does that work?</p>
 <h3 id="super-metrics">Super Metrics<a href="#super-metrics" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Super metrics are values that can be calculated using other metrics.
@@ -504,14 +494,13 @@ You can also use super metrics for super metrics. However, it is important to re
 It is also important that the super metric is assigned to the correct object type. In my case, the object type is UPSLoad.</p>
 <p>A Super Metric must also be assigned to a policy. If this is forgotten, there will be no values.
 I use the default policy that is used for every object here. However, you could also write a specific policy.</p>
-
 <figure><a href="11.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/11_hu_f4dcb9ed51f0c0e.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/11_hu_697027353d75e1f3.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/11_hu_f4dcb9ed51f0c0e.webp"alt="Super Metrics"  width="1719"  height="935" />
-        </picture></a><figcaption>
-            <p>Super Metrics (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/11_hu_a5d7fa9b199a9e2d.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/11_hu_a5d7fa9b199a9e2d.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/11_hu_a5d7fa9b199a9e2d.jpg"alt="Super Metrics"width="1719"
+            height="935"/>
+        </picture></a><figcaption><p>Super Metrics (click to enlarge)</p></figcaption></figure>
 <p>The rest is simple math.
 Since I know the maximum power of the UPS, i.e., how many watts 100% is, I can easily convert the percentage into watts.</p>
 <p>After 1-2 intervals have passed, the Super Metric is displayed in the object and can be used. This can be checked via Inventory.
@@ -534,82 +523,75 @@ There are quite a few widgets available for displaying various metrics. For watt
 Each widget has a refresh counter (which only determines the interval at which the widget is updated, not the object).
 Another important option is <em><strong>Self Provider</strong></em>. On means the widget is independent of other widgets.
 It does not take input from other widgets, hence it requires input to be configured in the widget itself.</p>
-
 <figure><a href="12.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/12_hu_b362953534c33348.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/12_hu_39845474428da7b9.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/12_hu_b362953534c33348.webp"alt="Output Data"  width="1053"  height="717" />
-        </picture></a><figcaption>
-            <p>Output Data (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/12_hu_b2313f0978a3c345.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/12_hu_b2313f0978a3c345.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/12_hu_b2313f0978a3c345.jpg"alt="Output Data"width="1053"
+            height="717"/>
+        </picture></a><figcaption><p>Output Data (click to enlarge)</p></figcaption></figure>
 <p>Under Input Data, you can choose whether you want to have a complete object (or several) as input or just metrics.
 If I take the object as input, I can also display properties. The actual output of the widget is then configured under Output Data.
 Input and output must match. If I select an object as input that is not of the same object type as my output metric, no content will be displayed.</p>
 <p>The finished widget now looks something like this.</p>
-
 <figure><a href="13.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/13_hu_cc1fa8c744fbae35.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/13_hu_56c192af102874a9.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/13_hu_cc1fa8c744fbae35.webp"alt="Widget"  width="824"  height="349" />
-        </picture></a><figcaption>
-            <p>Widget (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/13_hu_c437be801899535a.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/13_hu_c437be801899535a.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/13_hu_c437be801899535a.jpg"alt="Widget"width="824"
+            height="349"/>
+        </picture></a><figcaption><p>Widget (click to enlarge)</p></figcaption></figure>
 <p>It wasn&rsquo;t that difficult, and now all the basics are in place to build a nice dashboard.
 Of course, there&rsquo;s a lot more you can do, such as symptom definitions that trigger something when certain metrics occur or properties change.
 For example, I wrote a symptom definition that reduces the health value of a Veeam object if the backup status is not successful. This also triggers an alarm.</p>
 <p>But I think I&rsquo;d rather write about that separately, because it&rsquo;s a topic in its own right. The same goes for the Health Metric, which automatically assigns operations to each object.</p>
 <p>My final dashboard now looks like this.</p>
-
 <figure><a href="14.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/14_hu_941b71e441ee8942.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/14_hu_ee27144efb2f4804.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/14_hu_941b71e441ee8942.webp"alt="Final Dashboard"  width="1713"  height="1198" />
-        </picture></a><figcaption>
-            <p>Final Dashboard (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/14_hu_90c6e18bf7407c71.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/14_hu_90c6e18bf7407c71.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/14_hu_90c6e18bf7407c71.jpg"alt="Final Dashboard"width="1713"
+            height="1198"/>
+        </picture></a><figcaption><p>Final Dashboard (click to enlarge)</p></figcaption></figure>
 <h3 id="side-quest---bearer-token">Side Quest - Bearer Token<a href="#side-quest---bearer-token" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The Veeam API uses bearer tokens with limited runtime, which means that an API request must first be created with a username and password to generate a token before a request to retrieve data can be made. Fortunately, the Management Pack Builder also supports this, but it&rsquo;s all a bit fiddly, so I&rsquo;ll describe it here.
 For Veeam to work, authentication in the Data Source Connection must be set to Custom, otherwise we will not be able to create a secure variable. It is also important to enable <em><strong>Use Session Authentication</strong></em>.</p>
-
 <figure><a href="15.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/15_hu_f66af423d454ab62.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/15_hu_51fff21a7078d0d9.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/15_hu_f66af423d454ab62.webp"alt="Veeam"  width="1677"  height="1208" />
-        </picture></a><figcaption>
-            <p>Veeam (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/15_hu_aa803ced626adb37.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/15_hu_aa803ced626adb37.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/15_hu_aa803ced626adb37.jpg"alt="Veeam"width="1677"
+            height="1208"/>
+        </picture></a><figcaption><p>Veeam (click to enlarge)</p></figcaption></figure>
 <p>From here on, things change slightly, as we now have to perform two requests.
 It is also important to note that the username and password must be included in the body for Veeam. A variable is also used for the password here.
 From here on, things change slightly, as we now have to perform two requests. It is also important to note that Veeam also requires special headers. However, as Veeam uses Swagger, you can extract all of this information from there.</p>
-
 <figure><a href="16.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/16_hu_422e76b9a3b17443.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/16_hu_174a5cc7d92d9c8c.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/16_hu_422e76b9a3b17443.webp"alt="Veeam Session"  width="1668"  height="1037" />
-        </picture></a><figcaption>
-            <p>Veeam Session (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/16_hu_59b70d45bf00e053.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/16_hu_59b70d45bf00e053.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/16_hu_59b70d45bf00e053.jpg"alt="Veeam Session"width="1668"
+            height="1037"/>
+        </picture></a><figcaption><p>Veeam Session (click to enlarge)</p></figcaption></figure>
 <p>After successfully creating a session, we can now see the token under Global Settings in Session Fields.
 Session Fields are automatic variables that must be used for the Test Connection and also for the Release Session request.
 We don&rsquo;t need to change anything in Global Settings, and since I didn&rsquo;t want to censor another screenshot, I decided not to bother.</p>
-
 <figure><a href="17.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/17_hu_cf90ae3b0ef60a2.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/17_hu_d0707bbae649e748.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/17_hu_cf90ae3b0ef60a2.webp"alt="Release Session"  width="1684"  height="1210" />
-        </picture></a><figcaption>
-            <p>Release Session (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/17_hu_1f302ca2f5be6e54.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/17_hu_1f302ca2f5be6e54.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/17_hu_1f302ca2f5be6e54.jpg"alt="Release Session"width="1684"
+            height="1210"/>
+        </picture></a><figcaption><p>Release Session (click to enlarge)</p></figcaption></figure>
 <p>A release session request is nothing more than a logout command, after which the data is retrieved. This should be used to ensure that the session is closed properly.</p>
 <p>As a final step, a test connection must be performed so that the DataSource can be saved. I simply queried the session information for this, but ultimately it doesn&rsquo;t matter what is queried here as long as a valid result is returned.</p>
-
 <figure><a href="18.png"><picture>
-          <source srcset="/vcf9-ops-dashboard/18_hu_8d337ea4538b0de3.webp" type="image/webp">
-          <source srcset="/vcf9-ops-dashboard/18_hu_f7f04431662531c7.jpg" type="image/jpeg">
-          <img src="/vcf9-ops-dashboard/18_hu_8d337ea4538b0de3.webp"alt="Final Test"  width="1679"  height="1210" />
-        </picture></a><figcaption>
-            <p>Final Test (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf9-ops-dashboard/18_hu_23017795afc94e62.jpg" type="image/webp">
+          <source srcset="/vcf9-ops-dashboard/18_hu_23017795afc94e62.jpg" type="image/jpeg">
+          <img
+            src="/vcf9-ops-dashboard/18_hu_23017795afc94e62.jpg"alt="Final Test"width="1679"
+            height="1210"/>
+        </picture></a><figcaption><p>Final Test (click to enlarge)</p></figcaption></figure>
 <p>If the data source is set up in this way, the Management Pack is also secure for export, as no credentials are stored. When integrating into Operations, the username and password must then be provided. The session is created, the token is generated, and the session is closed cleanly with each data retrieval cycle.
 Everything else is exactly the same as previously described for the Unraid API.</p>
 <h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>

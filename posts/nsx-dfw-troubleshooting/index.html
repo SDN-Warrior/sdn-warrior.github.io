@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-06-24T01:00:00+02:00">
   <meta itemprop="wordCount" content="1162">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Homelab,Vcf"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/">
+  <meta itemprop="keywords" content="Nsx,Homelab,VCF"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="NSX - IDFW & DFW Troubleshooting">
   <meta property="og:description" content="A brief guide to troubleshooting the IdFW and dFW">
@@ -42,7 +42,7 @@
     <meta property="article:modified_time" content="2025-06-24T01:00:00+02:00">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
@@ -238,14 +238,13 @@ You can create Identity Firewall Rules and groups, push the policy, and then fin
 You don&rsquo;t get an error message or notification. If this is the case, the Identity Firewall may not be allowed for the cluster on which the source VMs are located. To do this, go to Security - Distributed Firewall and under Settings, you can enable or disable the Identity Firewall for each cluster.</p>
 </li>
 </ul>
-
 <figure><a href="04.png"><picture>
-          <source srcset="/nsx-ts-idfw/04_hu_6591a39dfa9db7c9.webp" type="image/webp">
-          <source srcset="/nsx-ts-idfw/04_hu_f702c348226f62bd.jpg" type="image/jpeg">
-          <img src="/nsx-ts-idfw/04_hu_6591a39dfa9db7c9.webp"alt="iDFW"  width="1705"  height="972" />
-        </picture></a><figcaption>
-            <p>iDFW Settings (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/nsx-ts-idfw/04_hu_96deedbe51b5b0e3.jpg" type="image/webp">
+          <source srcset="/nsx-ts-idfw/04_hu_96deedbe51b5b0e3.jpg" type="image/jpeg">
+          <img
+            src="/nsx-ts-idfw/04_hu_96deedbe51b5b0e3.jpg"alt="iDFW"width="1705"
+            height="972"/>
+        </picture></a><figcaption><p>iDFW Settings (click to enlarge)</p></figcaption></figure>
 <ul>
 <li>
 <p>Guest Introspection not installed</p>
@@ -257,14 +256,13 @@ The source of the error is of course eliminated if you do log scraping (which I 
 <h2 id="what-should-you-do-if-you-want-to-know-whether-rules-have-actually-been-implemented-for-a-vm">What should you do if you want to know whether rules have actually been implemented for a VM?<a href="#what-should-you-do-if-you-want-to-know-whether-rules-have-actually-been-implemented-for-a-vm" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>As mentioned at the beginning, unfortunately you cannot use the Traceflow tool to check a firewall rule.
 However, there are ways to see if there are Identity Firewall user sessions and which rules have been implemented.</p>
-
 <figure><a href="01.png"><picture>
-          <source srcset="/nsx-ts-idfw/01_hu_a9cf205d56b09ab1.webp" type="image/webp">
-          <source srcset="/nsx-ts-idfw/01_hu_d63dea7af385105a.jpg" type="image/jpeg">
-          <img src="/nsx-ts-idfw/01_hu_a9cf205d56b09ab1.webp"alt="iDFW Sessions"  width="1190"  height="995" />
-        </picture></a><figcaption>
-            <p>IDFW User Sessions (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/nsx-ts-idfw/01_hu_fda8a5bf4443ab46.jpg" type="image/webp">
+          <source srcset="/nsx-ts-idfw/01_hu_fda8a5bf4443ab46.jpg" type="image/jpeg">
+          <img
+            src="/nsx-ts-idfw/01_hu_fda8a5bf4443ab46.jpg"alt="iDFW Sessions"width="1190"
+            height="995"/>
+        </picture></a><figcaption><p>IDFW User Sessions (click to enlarge)</p></figcaption></figure>
 <p>The easiest way to check the sessions is in the GUI under Security - Security Overview and then scroll all the way down to Identity Firewall User Sessions.
 The VM is not displayed in plain text, but Universal Search in NSX resolves the VM.</p>
 
@@ -325,25 +323,23 @@ First, we use a simple CLI command to find the network card of our VM.</p>
 </span></span><span class="line"><span class="cl">  # FILTER rules
 </span></span><span class="line"><span class="cl">  rule 1 at 1 inout ethertype any stateless from any to any accept;
 </span></span><span class="line"><span class="cl">}
-</span></span></code></pre></div>
-<figure><a href="05.png"><picture>
-          <source srcset="/nsx-ts-idfw/05_hu_c79000b0c9a4c0f8.webp" type="image/webp">
-          <source srcset="/nsx-ts-idfw/05_hu_1d457e0eb2c2e7aa.jpg" type="image/jpeg">
-          <img src="/nsx-ts-idfw/05_hu_c79000b0c9a4c0f8.webp"alt="Firewallrules"  width="1450"  height="789" />
-        </picture></a><figcaption>
-            <p>Firewall Rules (click to enlarge)</p>
-          </figcaption></figure>
+</span></span></code></pre></div><figure><a href="05.png"><picture>
+          <source srcset="/nsx-ts-idfw/05_hu_ef709e55573cd32a.jpg" type="image/webp">
+          <source srcset="/nsx-ts-idfw/05_hu_ef709e55573cd32a.jpg" type="image/jpeg">
+          <img
+            src="/nsx-ts-idfw/05_hu_ef709e55573cd32a.jpg"alt="Firewallrules"width="1450"
+            height="789"/>
+        </picture></a><figcaption><p>Firewall Rules (click to enlarge)</p></figcaption></figure>
 <p>We can see in the output that firewall rule 16360 has been implemented on my test VM and is therefore active. This firewall rule is my identity firewall rule, and a user who is enabled for this rule is logged in.</p>
 <p>We can also see that the VM has implemented two additional rules, namely 14312 and 14316. Although these rules have nothing to do with the VM, the VM is still assigned these rules because the Apply to field is set to dfw, meaning that all VMs receive these rules. I have described the importance of the Apply to field <a href="https://sdn-warrior.org/posts/nsx-apply-to/">here</a>.</p>
 <p>Theoretically, you can also see this in the GUI, but with a delay, and in my experience it was more unreliable than reliable. Nevertheless, I want to show it. If you look at the firewall rule and then go to the group and look at the effective members, a VM should be implemented. As I said, the GUI is very slow here, and if I have problems with the IDFW, I prefer to rely on the CLI.</p>
-
 <figure><a href="02.png"><picture>
-          <source srcset="/nsx-ts-idfw/02_hu_f5890197874403e5.webp" type="image/webp">
-          <source srcset="/nsx-ts-idfw/02_hu_3026bd4bdb273dc8.jpg" type="image/jpeg">
-          <img src="/nsx-ts-idfw/02_hu_f5890197874403e5.webp"alt="Effectiv Members"  width="1188"  height="970" />
-        </picture></a><figcaption>
-            <p>Effectiv Members (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/nsx-ts-idfw/02_hu_3d25009991e2a8d6.jpg" type="image/webp">
+          <source srcset="/nsx-ts-idfw/02_hu_3d25009991e2a8d6.jpg" type="image/jpeg">
+          <img
+            src="/nsx-ts-idfw/02_hu_3d25009991e2a8d6.jpg"alt="Effectiv Members"width="1188"
+            height="970"/>
+        </picture></a><figcaption><p>Effectiv Members (click to enlarge)</p></figcaption></figure>
 <p>This method allows you to quickly check whether an IDFW / DFW rule has been realized on the VM. If, as in the example above, the IDFW is disabled for the cluster, I can see the FW rule in the GUI, but it is not displayed in the CLI.
 The same would be the case if I had an error with the apply to field. The rule would not be realized on my VM and also not shown in the cli.</p>
 <h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>

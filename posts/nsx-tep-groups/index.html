@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-01-03T12:00:00+01:00">
   <meta itemprop="wordCount" content="1977">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Vmware,Network"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-tep-groups/">
+  <meta itemprop="keywords" content="Nsx,VMware,Network"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-tep-groups/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="More performance trough NSX Edge TEP groups?">
   <meta property="og:description" content="How to use Edge TEP groups in NSX">
@@ -41,7 +41,7 @@
     <meta property="article:published_time" content="2025-01-03T12:00:00+01:00">
     <meta property="article:modified_time" content="2025-01-03T12:00:00+01:00">
     <meta property="article:tag" content="Nsx">
-    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="VMware">
     <meta property="article:tag" content="Network">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
@@ -406,12 +406,12 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 </span></span></code></pre></div><p>JSON Payload</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nt">&#34;tep_group_config&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="nt">&#34;tep_group_config&#34;</span><span class="p">:</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="nt">&#34;enable_tep_grouping_on_edge&#34;</span><span class="p">:</span> <span class="kc">true</span>
 </span></span><span class="line"><span class="cl">    <span class="p">},</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;resource_type&#34;</span><span class="p">:</span> <span class="s2">&#34;GlobalConfig&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>The full global config looks like this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="nt">&#34;fips&#34;</span><span class="p">:</span> <span class="p">{</span>
@@ -510,14 +510,13 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 <li>Both physical interfaces (<code>vmnic0</code> and <code>vmnic1</code>) show significant traffic, indicating effective utilization and load balancing.</li>
 <li>This behavior aligns with the expected performance of the TEP Groups feature, ensuring that traffic is distributed across multiple interfaces for maximum throughput.</li>
 </ul>
-
 <figure><picture>
-          <source srcset="/nsx-tep-groups/switch_hu_1c77bd0b8863d565.webp" type="image/webp">
-          <source srcset="/nsx-tep-groups/switch_hu_baae85ba4d0da563.jpg" type="image/jpeg">
-          <img src="/nsx-tep-groups/switch_hu_1c77bd0b8863d565.webp"alt="Switch Port View"  width="1958"  height="184" />
-        </picture><figcaption>
-            <p>Switch port view</p>
-          </figcaption></figure>
+          <source srcset="/nsx-tep-groups/switch_hu_2e78ba2273319b39.jpg" type="image/webp">
+          <source srcset="/nsx-tep-groups/switch_hu_2e78ba2273319b39.jpg" type="image/jpeg">
+          <img
+            src="/nsx-tep-groups/switch_hu_2e78ba2273319b39.jpg"alt="Switch Port View"width="1958"
+            height="184"/>
+        </picture><figcaption><p>Switch port view</p></figcaption></figure>
 <p>The screenshot demonstrates how the Multi-TEP HA configuration efficiently balances the load across both physical NICs, validating the setup and confirming the improvements in traffic handling.</p>
 <h2 id="final-thoughts">Final Thoughts<a href="#final-thoughts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>TEP Groups can be easily integrated into any environment with a Multi-TEP setup without requiring significant modifications. The adjustments are minimal and pose a low risk to production environments.</p>

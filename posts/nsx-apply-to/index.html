@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-01-11T02:00:00+01:00">
   <meta itemprop="wordCount" content="3321">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Security,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-apply-to/">
+  <meta itemprop="keywords" content="Nsx,Security,VMware"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-apply-to/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="How Apply To works in NSX DFW">
   <meta property="og:description" content="How Apply To works in NSX DFW and you can use it.">
@@ -42,7 +42,7 @@
     <meta property="article:modified_time" content="2025-01-11T02:00:00+01:00">
     <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Security">
-    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="VMware">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
@@ -554,14 +554,13 @@ All traffic is rejected at the main ruleset level (rule 2), confirming that the 
 <p>Understanding this double-enforcement logic is crucial for troubleshooting and optimizing NSX Distributed Firewall configurations.</p>
 </div>
     </aside>
-
 <figure><a href="traceflow.png"><picture>
-          <source srcset="/nsx-apply-to/traceflow_hu_b59aaa99da4de8f8.webp" type="image/webp">
-          <source srcset="/nsx-apply-to/traceflow_hu_ba67bca5ba73ad6e.jpg" type="image/jpeg">
-          <img src="/nsx-apply-to/traceflow_hu_b59aaa99da4de8f8.webp"alt="Traceflow"  width="1335"  height="849" />
-        </picture></a><figcaption>
-            <p>NSX Traceflow (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/nsx-apply-to/traceflow_hu_611892290ff4536f.jpg" type="image/webp">
+          <source srcset="/nsx-apply-to/traceflow_hu_611892290ff4536f.jpg" type="image/jpeg">
+          <img
+            src="/nsx-apply-to/traceflow_hu_611892290ff4536f.jpg"alt="Traceflow"width="1335"
+            height="849"/>
+        </picture></a><figcaption><p>NSX Traceflow (click to enlarge)</p></figcaption></figure>
 <h2 id="answering-question-4-does-the-rule-applied-to-field-or-the-policy-applied-to-field-take-precedence">Answering Question 4: Does the Rule <code>&lt;Applied To&gt;</code> Field or the Policy <code>&lt;Applied To&gt;</code> Field Take Precedence?<a href="#answering-question-4-does-the-rule-applied-to-field-or-the-policy-applied-to-field-take-precedence" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Through our tests, we can confidently answer this question: <strong>The policy <code>&lt;Applied To&gt;</code> field takes precedence over the rule <code>&lt;Applied To&gt;</code> field</strong>.</p>
 <h3 id="key-findings">Key Findings:<a href="#key-findings" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>

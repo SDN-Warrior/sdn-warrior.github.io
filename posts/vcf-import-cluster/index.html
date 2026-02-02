@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-02-23T16:00:00+01:00">
   <meta itemprop="wordCount" content="2114">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vmware,Vcf,Homelab,Broadcom,Nfs"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-import-cluster/">
+  <meta itemprop="keywords" content="VMware,VCF,Homelab,Broadcom,Nfs"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-import-cluster/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF Import Tool - Run VCF with NFS as principal Storage ">
   <meta property="og:description" content="Importing from a vSphere cluster with NFS 3 as principal storage without losing support.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-02-23T16:00:00+01:00">
     <meta property="article:modified_time" content="2025-02-23T16:00:00+01:00">
-    <meta property="article:tag" content="Vmware">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VMware">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Broadcom">
     <meta property="article:tag" content="Nfs">
@@ -333,14 +333,13 @@ NFS 4.1, VVOLs, and native iSCSI are not supported</p>
 10 Gb/s network is not necessary in a nested environment. The exact requirements can be found in the current <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/considerations-before-converting-or-importing-existing-vsphere-environments-into-vcf-admin.html">VCF 5.2 Administration Guide</a>.</div>
     </aside>
 <p>So after I have prepared my future management domain, it should look similar to the screenshot below.</p>
-
 <figure><a href="vcf01.png"><picture>
-          <source srcset="/vcf-import/vcf01_hu_c95dd8930db031a9.webp" type="image/webp">
-          <source srcset="/vcf-import/vcf01_hu_63424ee8bc073bac.jpg" type="image/jpeg">
-          <img src="/vcf-import/vcf01_hu_c95dd8930db031a9.webp"alt="ESXi Cluster"  width="1257"  height="550" />
-        </picture></a><figcaption>
-            <p>ESXi Cluster with NFS Storage (click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf-import/vcf01_hu_b0470e4da05a564c.jpg" type="image/webp">
+          <source srcset="/vcf-import/vcf01_hu_b0470e4da05a564c.jpg" type="image/jpeg">
+          <img
+            src="/vcf-import/vcf01_hu_b0470e4da05a564c.jpg"alt="ESXi Cluster"width="1257"
+            height="550"/>
+        </picture></a><figcaption><p>ESXi Cluster with NFS Storage (click to enlarge)</p></figcaption></figure>
 <h2 id="convert-the-cluster-to-a-management-domain">Convert the cluster to a management domain<a href="#convert-the-cluster-to-a-management-domain" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>After I have prepared my cluster, the real fun can begin. To do this, I first need to download the SDDC Manager, the VCF Import Tool and the appropriate NSX bundle.
 In my case, it was the following software versions:</p>
@@ -511,22 +510,20 @@ The upgrade bundle is placed in the directory specified in the NSX spec. In my c
 You can view the progress at any time in the SDDC or in the vCenter. In between, there are queries, such as whether you have taken a snapshot at the SDDC manager. So it&rsquo;s not easy to run completely unattended. So grab a coffee and enjoy the show.</div>
     </aside>
 <p>After the convert has hopefully been successful, the whole thing should now look like on my screenshot.</p>
-
 <figure><a href="vcf02.png"><picture>
-          <source srcset="/vcf-import/vcf02_hu_ff8c78de8946466a.webp" type="image/webp">
-          <source srcset="/vcf-import/vcf02_hu_984d7722d590294a.jpg" type="image/jpeg">
-          <img src="/vcf-import/vcf02_hu_ff8c78de8946466a.webp"alt="Convert successfully"  width="2188"  height="773" />
-        </picture></a><figcaption>
-            <p>Convert successfully(click to enlarge)</p>
-          </figcaption></figure>
-
+          <source srcset="/vcf-import/vcf02_hu_c24da62c25e6de98.jpg" type="image/webp">
+          <source srcset="/vcf-import/vcf02_hu_c24da62c25e6de98.jpg" type="image/jpeg">
+          <img
+            src="/vcf-import/vcf02_hu_c24da62c25e6de98.jpg"alt="Convert successfully"width="2188"
+            height="773"/>
+        </picture></a><figcaption><p>Convert successfully(click to enlarge)</p></figcaption></figure>
 <figure><a href="vcf03.png"><picture>
-          <source srcset="/vcf-import/vcf03_hu_cc37f997f9abfa79.webp" type="image/webp">
-          <source srcset="/vcf-import/vcf03_hu_11edb348f99072ba.jpg" type="image/jpeg">
-          <img src="/vcf-import/vcf03_hu_cc37f997f9abfa79.webp"alt="MGMT Domain with NFS Storage"  width="1489"  height="534" />
-        </picture></a><figcaption>
-            <p>MGMT Domain with NFS Storage(click to enlarge)</p>
-          </figcaption></figure>
+          <source srcset="/vcf-import/vcf03_hu_f085e09bba099ee9.jpg" type="image/webp">
+          <source srcset="/vcf-import/vcf03_hu_f085e09bba099ee9.jpg" type="image/jpeg">
+          <img
+            src="/vcf-import/vcf03_hu_f085e09bba099ee9.jpg"alt="MGMT Domain with NFS Storage"width="1489"
+            height="534"/>
+        </picture></a><figcaption><p>MGMT Domain with NFS Storage(click to enlarge)</p></figcaption></figure>
 <p>Congratulations, we now have a supported workload domain with NFS storage.
 Of course, we still have some fine-tuning to do. For example, no NSX Edges have been deployed yet and the ESX servers have been made transport nodes, but they do not yet have TEP addresses.
 This is work that we have to do manually in the NSX Manager.
