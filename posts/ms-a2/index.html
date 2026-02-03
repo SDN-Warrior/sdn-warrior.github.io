@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-06-14T10:14:45+02:00">
   <meta itemprop="wordCount" content="3155">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/ms-a2/">
+  <meta itemprop="keywords" content="Vcf,NSX,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/ms-a2/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Tales from the Lab - Minisforum MS-A2">
   <meta property="og:description" content="A quick test of the new MS-A2 and how it compares to the MS-01.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-06-14T10:14:45+02:00">
     <meta property="article:modified_time" content="2025-06-14T10:14:45+02:00">
-    <meta property="article:tag" content="VCF">
-    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="NSX">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -219,11 +219,9 @@
 It&rsquo;s also exciting to test a gadget before <a href="https://williamlam.com/">William Lam</a>. Thanks for letting me be the first (I&rsquo;m just kidding, of course).</p>
 <p>In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.</p>
 <p>A quick disclaimer first: I am not a hardware tester and do not have any real measuring equipment. Everything I report here is based on my experience with both devices in my environment.</p>
-<figure><a href="01.jpg"><picture>
-          <source srcset="/ms-a2/01_hu_dbfd4cab593c863a.jpg" type="image/webp">
-          <source srcset="/ms-a2/01_hu_dbfd4cab593c863a.jpg" type="image/jpeg">
+<figure><a href="01.jpg"><picture><source srcset="/ms-a2/01_hu_6cc83136bb904261.jpg" type="image/jpeg">
           <img
-            src="/ms-a2/01_hu_dbfd4cab593c863a.jpg"alt="MS-A2"width="2200"
+            src="/ms-a2/01_hu_6cc83136bb904261.jpg"alt="MS-A2"width="2200"
             height="1650"/>
         </picture></a><figcaption><p>MS-A2 (click to enlarge)</p></figcaption></figure>
 <h2 id="use-case">Use Case<a href="#use-case" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
@@ -305,11 +303,9 @@ The VCF setup I used to perform the more practical tests allows me to change the
 </table>
 <p>At first glance, the two devices have a lot in common. Fortunately, the form factor is the same, so I don&rsquo;t have to buy a new rack mount. The exciting details are in the small print. The MS-01 only officially supports 64 GB RAM, while the A2 only supports up to 96 GB RAM.
 Nevertheless, I have installed 128 GB of RAM in both systems. I am using the Crucial DDR5 RAM 128GB Kit (2x64GB 5600MHz SODIMM).</p>
-<figure><a href="02.jpg"><picture>
-          <source srcset="/ms-a2/02_hu_7f9c9fec41409d00.jpg" type="image/webp">
-          <source srcset="/ms-a2/02_hu_7f9c9fec41409d00.jpg" type="image/jpeg">
+<figure><a href="02.jpg"><picture><source srcset="/ms-a2/02_hu_48b66bf40d13bfa1.jpg" type="image/jpeg">
           <img
-            src="/ms-a2/02_hu_7f9c9fec41409d00.jpg"alt="RAM"width="1621"
+            src="/ms-a2/02_hu_48b66bf40d13bfa1.jpg"alt="RAM"width="1621"
             height="1216"/>
         </picture></a><figcaption><p>MS-A2 - RAM (click to enlarge)</p></figcaption></figure>
 
@@ -345,11 +341,9 @@ What I find a little strange is the network card selection. While the MS-01 has 
         </div>
         <div class="admonition-content">Since I use my iSCSI as storage for both systems, I don&rsquo;t need to compare storage. However, since both servers are equipped with a 2TB Samsung 990 Pro in the PCIe 4 slot, the values should be identical.</div>
     </aside>
-<figure><a href="03.jpg"><picture>
-          <source srcset="/ms-a2/03_hu_98f173a332deded9.jpg" type="image/webp">
-          <source srcset="/ms-a2/03_hu_98f173a332deded9.jpg" type="image/jpeg">
+<figure><a href="03.jpg"><picture><source srcset="/ms-a2/03_hu_887134cc52d151bc.jpg" type="image/jpeg">
           <img
-            src="/ms-a2/03_hu_98f173a332deded9.jpg"alt="RAM"width="1815"
+            src="/ms-a2/03_hu_887134cc52d151bc.jpg"alt="RAM"width="1815"
             height="1361"/>
         </picture></a><figcaption><p>MS-A2 - Inside (click to enlarge)</p></figcaption></figure>
 <h2 id="cinebench-multicore-test--ms-01-vs-ms-a2">Cinebench Multicore Test – MS-01 vs MS-A2<a href="#cinebench-multicore-test--ms-01-vs-ms-a2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
@@ -359,11 +353,9 @@ What I find a little strange is the network card selection. While the MS-01 has 
 <li><strong>MS-A2</strong>: 32 vCPUs (max useeable cores on Ryzen 9 9955HX)</li>
 </ul>
 <p>Both ESXi server had the <strong>power policy set to High Performance</strong>, and Cinebench 2024.01 was executed in a continuous loop for 30 minutes to simulate thermal and sustained performance under load.</p>
-<figure><a href="04.png"><picture>
-          <source srcset="/ms-a2/04_hu_6569c2e665edb057.jpg" type="image/webp">
-          <source srcset="/ms-a2/04_hu_6569c2e665edb057.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/ms-a2/04_hu_be80f4599837500a.png" type="image/png">
           <img
-            src="/ms-a2/04_hu_6569c2e665edb057.jpg"alt="Cinebench"width="2189"
+            src="/ms-a2/04_hu_be80f4599837500a.png"alt="Cinebench"width="2189"
             height="781"/>
         </picture></a><figcaption><p>Cinebench on MS-A2 (click to enlarge)</p></figcaption></figure>
 <p>This may not be a perfect test, but since the MS-01 is already in lab operation, I didn&rsquo;t want to install Windows 11 natively. Of course, the Windows 11 test VM ran exclusively on the two hosts so as not to distort the results.</p>
@@ -492,11 +484,9 @@ The background noise in my homeoffice ranges from quiet whispering to the gentle
 <p>In idle mode, the MS-A2 is completely inaudible in my environment. I haven&rsquo;t noticed any real change in the dB meter. The fan is drowned out by the rustling of the Mikrotik router – I really should replace the fans in that box.
 I started my VCF Lab on the MS-A2 and waited about 10 minutes. The noise level rises to 35-36 dB but regularly reaches up to 42,3-43 dB. I have the fan curve set to performance, which means that the MS-A2 spins up quickly and then calms down again quickly, which results in a wave-like background noise with the noise constantly rising and falling.
 I need to see if I can set the fan curve and response behavior in the same way as on an ASUS NUC. The NUC has an incredible number of options for fan management.</p>
-<figure><picture>
-          <source srcset="/ms-a2/08_hu_e9d7d29e9282075c.jpg" type="image/webp">
-          <source srcset="/ms-a2/08_hu_e9d7d29e9282075c.jpg" type="image/jpeg">
+<figure><picture><source srcset="/ms-a2/08_hu_550da8e561c48231.jpg" type="image/jpeg">
           <img
-            src="/ms-a2/08_hu_e9d7d29e9282075c.jpg"alt="A2 noise"width="589"
+            src="/ms-a2/08_hu_550da8e561c48231.jpg"alt="A2 noise"width="589"
             height="1042"/>
         </picture><figcaption><p>MS-A2 noise level</p></figcaption></figure>
 <p>The blue curve is the average, and you can see a clear increase in the high frequencies, which are the frequencies that most people find disturbing.
@@ -513,11 +503,9 @@ The 3 nested ESXi hosts each have 8 vCPUs, 45 GB RAM, and a small boot disk.
 The principal storage is NFS. If you&rsquo;re wondering how that works, I wrote a blog post about it <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">here</a>.</p>
 <p>If you&rsquo;re good at math, you&rsquo;ll have noticed that 3x 45 GB RAM is more than 128 GB RAM, but a little oversubscription never hurt anyone (except when it comes to licenses).</p>
 <p>After everything had been migrated offline, since Intel and AMD are not compatible at all and therefore no live migration between the two systems is possible, I started VCF and the poor MS-A2 immediately went into full load.</p>
-<figure><picture>
-          <source srcset="/ms-a2/05_hu_c13dc0dff55c94bb.jpg" type="image/webp">
-          <source srcset="/ms-a2/05_hu_c13dc0dff55c94bb.jpg" type="image/jpeg">
+<figure><picture><source srcset="/ms-a2/05_hu_fd3a693a75c2dbc1.png" type="image/png">
           <img
-            src="/ms-a2/05_hu_c13dc0dff55c94bb.jpg"alt="A2 full load"width="1098"
+            src="/ms-a2/05_hu_fd3a693a75c2dbc1.png"alt="A2 full load"width="1098"
             height="384"/>
         </picture><figcaption><p>MS-A2 on full load</p></figcaption></figure>
 <p>Poor sweet summer child - the MS-A2 becomes slightly louder and the temperatures rise.</p>
@@ -533,21 +521,17 @@ Only NSX Manager is taking its time. But we are already familiar with that.</li>
 <h2 id="wheres-the-poop-robin">Where&rsquo;s the poop, Robin?<a href="#wheres-the-poop-robin" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>I&rsquo;m not sure which of my readers are familiar with the series, but never mind. AMD and NSX is one of those things. Officially, NSX does not work on Ryzen or other AMD consumer CPUs.</p>
 <p>At first, I was a little surprised, because I knew that NSX Edges cause problems during installation or upgrade on AMD consumer CPUs, but I deployed my Edges on Intel. A quick look at the console of one of my Edge VMs revealed the following.</p>
-<figure><picture>
-          <source srcset="/ms-a2/06_hu_30427ba317813c85.jpg" type="image/webp">
-          <source srcset="/ms-a2/06_hu_30427ba317813c85.jpg" type="image/jpeg">
+<figure><picture><source srcset="/ms-a2/06_hu_a5f1805ef7776353.png" type="image/png">
           <img
-            src="/ms-a2/06_hu_30427ba317813c85.jpg"alt="Edge VM"width="1490"
+            src="/ms-a2/06_hu_a5f1805ef7776353.png"alt="Edge VM"width="1490"
             height="1021"/>
         </picture><figcaption><p>Stress on the EdgeVM</p></figcaption></figure>
 <p>So, at first, I was pretty clueless. Luckily, there&rsquo;s the awesome vExpert community, because a) I&rsquo;m getting older and forgetting more than I want to admit, and b) I don&rsquo;t always know everything.
 My thanks go to <a href="https://www.linkedin.com/in/abbed-sedkaoui-678718151/">Abbed Sedkaoui</a> for his quick help. He put me on the right track. By the way, he has a great <a href="https://strivevirtually.net/">blog</a>.</p>
 <p>The problem is that when the Edge VM is started, a Python script is executed that checks whether an AMD CPU is installed and, if it is not an AMD EPYC, simply throws an error and prevents DPDK from starting. This leaves Edge offline.
-<figure><picture>
-          <source srcset="/ms-a2/07_hu_75a675abb4c5e381.jpg" type="image/webp">
-          <source srcset="/ms-a2/07_hu_75a675abb4c5e381.jpg" type="image/jpeg">
+<figure><picture><source srcset="/ms-a2/07_hu_31702297df6582ba.jpg" type="image/jpeg">
           <img
-            src="/ms-a2/07_hu_75a675abb4c5e381.jpg"alt="Edge VM Error"width="1496"
+            src="/ms-a2/07_hu_31702297df6582ba.jpg"alt="Edge VM Error"width="1496"
             height="617"/>
         </picture><figcaption><p>EdgeVM - Here&rsquo;s the problem</p></figcaption></figure></p>
 <p>The solution is simple: log in to EdgeVM with root and edit the following script /opt/vmware/nsx-edge/bin/config.py.</p>

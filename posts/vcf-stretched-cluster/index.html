@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-03-13T23:00:00+01:00">
   <meta itemprop="wordCount" content="2210">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VMware,VCF,Homelab,Broadcom"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
+  <meta itemprop="keywords" content="Vmware,Vcf,Homelab,Broadcom"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF Stretched Cluster">
   <meta property="og:description" content="A short article on how to build a stretched vSAN cluster in the VCF.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-03-13T23:00:00+01:00">
     <meta property="article:modified_time" content="2025-03-13T23:00:00+01:00">
-    <meta property="article:tag" content="VMware">
-    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Broadcom">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -400,21 +400,17 @@ There are a few adjustments to be made to the witness host:</p>
 <p>As I already wrote in the intro, I assume for the article that a management domain is already deployed, but that it is not yet a stretched cluster.
 The physical network is configured and all VLANs and IP networks are available.
 Another network pool is also required. The vSAN and vMotion network is defined in this network pool.</p>
-<figure><a href="02.png"><picture>
-          <source srcset="/vcf-stretch/02_hu_79d7a5121e40cb8e.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/02_hu_79d7a5121e40cb8e.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/vcf-stretch/02_hu_fc62138f57b4e37e.png" type="image/png">
           <img
-            src="/vcf-stretch/02_hu_79d7a5121e40cb8e.jpg"alt="Network Pool"width="1251"
+            src="/vcf-stretch/02_hu_fc62138f57b4e37e.png"alt="Network Pool"width="1251"
             height="875"/>
         </picture></a><figcaption><p>Network Pool (click to enlarge)</p></figcaption></figure>
 <p>Now that the preparations are complete, I can add the additional hosts in the sddc manager.
 These must have the same build as the existing hosts in the cluster.
 If, for example, the MGMT domain has been patched with ESXi patches to a different build than is in the BoM of VCF 5.2.1, then the additional hosts must be updated to the same version before they are provisioned.</p>
-<figure><a href="01.png"><picture>
-          <source srcset="/vcf-stretch/01_hu_fbc18c441f14cb88.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/01_hu_fbc18c441f14cb88.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/vcf-stretch/01_hu_60316a2c1ca53db7.png" type="image/png">
           <img
-            src="/vcf-stretch/01_hu_fbc18c441f14cb88.jpg"alt="SDDC Manager"width="1496"
+            src="/vcf-stretch/01_hu_60316a2c1ca53db7.png"alt="SDDC Manager"width="1496"
             height="891"/>
         </picture></a><figcaption><p>SDDC Manager (click to enlarge)</p></figcaption></figure>
 <p>After the hosts have been successfully put into operation in the SDDC Manager, they must not be added to the management domain, as stretching the cluster is not possible via the GUI.
@@ -433,11 +429,9 @@ Next, the cluster stretch spec must be created – this is the fun part of the d
         <div class="admonition-content">The ESXi hosts that you are adding to availability zone 2 must use the same vmnic to vSphere Distributed Switch mapping as the existing hosts in availability zone 1.</div>
     </aside>
 <p>The ESXi host ID is required for the JSON. This can be read out via an API call. The easiest way to do this is to use the Developer Center in the SDDC. Of course, any API tool will also work. At this point, I was just too lazy to generate an API token and did all the queries in the developer center of the SDDC manager.</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/vcf-stretch/03_hu_670af9d661b7e636.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/03_hu_670af9d661b7e636.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/vcf-stretch/03_hu_76e7587064ca4935.png" type="image/png">
           <img
-            src="/vcf-stretch/03_hu_670af9d661b7e636.jpg"alt="Developer Center"width="1112"
+            src="/vcf-stretch/03_hu_76e7587064ca4935.png"alt="Developer Center"width="1112"
             height="798"/>
         </picture></a><figcaption><p>Developer Center (click to enlarge)</p></figcaption></figure>
 <p>The answer contains the IDs of the ESX servers, which can be easily transferred to the cluster stretch spec. My cluster stretch spec looks like this:</p>
@@ -607,35 +601,27 @@ Next, the cluster stretch spec must be created – this is the fun part of the d
 </span></span></code></pre></div><p>To perform the validate cluster stretch spec, I&rsquo;ll expand the “APIs for managing clusters” section and expand <em><strong>POST /v1/clusters/{id}/validations</strong></em>.
 I enter the unique ID for the management cluster in the id text field.
 In addition, the cluster stretch spec must be copied into the body field.</p>
-<figure><a href="05.png"><picture>
-          <source srcset="/vcf-stretch/05_hu_4c4d926cecddce69.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/05_hu_4c4d926cecddce69.jpg" type="image/jpeg">
+<figure><a href="05.png"><picture><source srcset="/vcf-stretch/05_hu_214227fba3f19feb.png" type="image/png">
           <img
-            src="/vcf-stretch/05_hu_4c4d926cecddce69.jpg"alt="Validation"width="1094"
+            src="/vcf-stretch/05_hu_214227fba3f19feb.png"alt="Validation"width="1094"
             height="867"/>
         </picture></a><figcaption><p>cluster stretch spec Validation (click to enlarge)</p></figcaption></figure>
 <p>After the validation has been successfully completed, the cluster can be stretched.
 To start the actual task, another API call must be made. This time <em><strong>PATCH /v1/clusters/{id}</strong></em>. The process is the same as for the validation. I copy the cluster ID into the ID field and copy the cluster stretch spec into the body field. After executing, the cluster stretch begins. This can be followed in the SDDC in the task bar.</p>
-<figure><a href="04.png"><picture>
-          <source srcset="/vcf-stretch/04_hu_62b1e218ffe18586.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/04_hu_62b1e218ffe18586.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/vcf-stretch/04_hu_e81f538bbc49fa08.png" type="image/png">
           <img
-            src="/vcf-stretch/04_hu_62b1e218ffe18586.jpg"alt="Cluster Stretch"width="1720"
+            src="/vcf-stretch/04_hu_e81f538bbc49fa08.png"alt="Cluster Stretch"width="1720"
             height="1200"/>
         </picture></a><figcaption><p>Cluster Stretch (click to enlarge)</p></figcaption></figure>
 <p>Depending on the performance of the environment, the process may take some time. For me, it was comparable to the duration of the bring-up of the unstretched management domain. If the task has been completed successfully, the SDDC and the vCenter should look like the following screenshots.</p>
-<p><figure><a href="06.png"><picture>
-          <source srcset="/vcf-stretch/06_hu_6ca4139be5a95401.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/06_hu_6ca4139be5a95401.jpg" type="image/jpeg">
+<p><figure><a href="06.png"><picture><source srcset="/vcf-stretch/06_hu_435487497bd721f5.png" type="image/png">
           <img
-            src="/vcf-stretch/06_hu_6ca4139be5a95401.jpg"alt="Stretched Cluster SDDC"width="1487"
+            src="/vcf-stretch/06_hu_435487497bd721f5.png"alt="Stretched Cluster SDDC"width="1487"
             height="683"/>
         </picture></a><figcaption><p>Stretched Cluster SDDC (click to enlarge)</p></figcaption></figure>
-<figure><a href="07.png"><picture>
-          <source srcset="/vcf-stretch/07_hu_31a9621b76617a9e.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/07_hu_31a9621b76617a9e.jpg" type="image/jpeg">
+<figure><a href="07.png"><picture><source srcset="/vcf-stretch/07_hu_a00d36f09c5e7264.png" type="image/png">
           <img
-            src="/vcf-stretch/07_hu_31a9621b76617a9e.jpg"alt="Stretched Cluster vCenter"width="1716"
+            src="/vcf-stretch/07_hu_a00d36f09c5e7264.png"alt="Stretched Cluster vCenter"width="1716"
             height="1084"/>
         </picture></a><figcaption><p>Stretched Cluster vCenter (click to enlarge)</p></figcaption></figure></p>
 
@@ -676,11 +662,9 @@ My next attempt will be to build the setup as resource-efficient as possible.</p
 Each of the 8 ESXi virtual servers has 10 cores, 40GB of RAM and 3 hard disks. 16GB for the OS, 40 GB as an OSA cache tier and 400 GB as an OSA capacity tier. I use 2 network cards.</p>
 <p>The virtual ESX servers run on 4 Minisforum MS-01 with 2x10 Gb network and 96 GB Ram each. I have 2 virtual servers running on each MS-01. The VMs run on local NVMe storage so that they are not unnecessarily moved via DRS.
 I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witness Appliance runs on my management ESX server.</p>
-<figure><a href="08.png"><picture>
-          <source srcset="/vcf-stretch/08_hu_3ff4289da2ea6dee.jpg" type="image/webp">
-          <source srcset="/vcf-stretch/08_hu_3ff4289da2ea6dee.jpg" type="image/jpeg">
+<figure><a href="08.png"><picture><source srcset="/vcf-stretch/08_hu_4939e63a0da844ba.png" type="image/png">
           <img
-            src="/vcf-stretch/08_hu_3ff4289da2ea6dee.jpg"alt="Lab Usage"width="552"
+            src="/vcf-stretch/08_hu_4939e63a0da844ba.png"alt="Lab Usage"width="552"
             height="373"/>
         </picture></a><figcaption><p>Lab usage (click to enlarge)</p></figcaption></figure>
 <p>After the lab has booted and all services are running as they should, the resource requirements calm down a bit. I still have 200GB of RAM free on my physical hosts, so there is room for expansion and further tests.</p>

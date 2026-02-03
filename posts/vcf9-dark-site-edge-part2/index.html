@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-12-09T00:00:00+01:00">
   <meta itemprop="wordCount" content="1671">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VCF,Edge,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/">
+  <meta itemprop="keywords" content="Vcf,Edge,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Dark Site Edge - Part 2">
   <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-12-09T00:00:00+01:00">
     <meta property="article:modified_time" content="2025-12-09T00:00:00+01:00">
-    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="Edge">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
@@ -238,11 +238,9 @@ So today I will use vSAN ESA, even though it requires significantly more resourc
 I first need to expand my hardware. Fortunately,
 I purchased my NVMes before the price chaos.
 I need a total of three NVMes. I have a 1 TB NVMe (PCIe4) for memory tiering, a 2 TB NVMe (PCIe3) for local storage and the actual ESX. This could be a much smaller disk, but I had it anyway. And finally, another 2 TB NVMe (PCIe3) for vSAN.</p>
-<figure><a href="01.png"><picture>
-          <source srcset="/vcf9-darksite2/01_hu_ca35a6a792cfcaa9.jpg" type="image/webp">
-          <source srcset="/vcf9-darksite2/01_hu_ca35a6a792cfcaa9.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/vcf9-darksite2/01_hu_2ffa5e1037e1582.png" type="image/png">
           <img
-            src="/vcf9-darksite2/01_hu_ca35a6a792cfcaa9.jpg"alt="NVMe"width="756"
+            src="/vcf9-darksite2/01_hu_2ffa5e1037e1582.png"alt="NVMe"width="756"
             height="1008"/>
         </picture></a><figcaption><p>NVMe - MS-01 (click to enlarge)</p></figcaption></figure>
 <p>I could have saved myself an NVMe and booted the ESX via a USB stick, because then you can share the memory tiering disk with the system disk, but I simply only have one USB stick left and I need it for firmware updates, plus I don&rsquo;t particularly like USB sticks.
@@ -530,11 +528,9 @@ Adjust the FQDN in the query for each thumbprint.</p>
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></div><p>Once the typing is done, you can simply upload the JSON file via the installer&rsquo;s GUI and start the validation.
 In the best case, it should now look like this.</p>
-<figure><a href="02.png"><picture>
-          <source srcset="/vcf9-darksite2/02_hu_3f93b47c61a2097d.jpg" type="image/webp">
-          <source srcset="/vcf9-darksite2/02_hu_3f93b47c61a2097d.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/vcf9-darksite2/02_hu_b8079c13fb57208e.png" type="image/png">
           <img
-            src="/vcf9-darksite2/02_hu_3f93b47c61a2097d.jpg"alt="VCF Installer"width="1719"
+            src="/vcf9-darksite2/02_hu_b8079c13fb57208e.png"alt="VCF Installer"width="1719"
             height="1371"/>
         </picture></a><figcaption><p>VCF Installer (click to enlarge)</p></figcaption></figure>
 <p>You can ignore the DNS warning. I simply made a fat-finger mistake when deploying my vcf installer and mistyped one of the two DNS servers.
@@ -547,27 +543,21 @@ So fill up your coffee cup and press deploy.</p>
 This is usually a policy with the name of the VCF instance and Optimal Datasore Default Policy -Raid1.
 Lovely name. Edit this policy and set Failures to tolerate to “No data redundancy.”
 I don&rsquo;t need to mention that this setting should never be used in production 99.9% of the time&hellip;</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/vcf9-darksite2/03_hu_cc1d84e339be9207.jpg" type="image/webp">
-          <source srcset="/vcf9-darksite2/03_hu_cc1d84e339be9207.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/vcf9-darksite2/03_hu_d3db1a6450c81862.png" type="image/png">
           <img
-            src="/vcf9-darksite2/03_hu_cc1d84e339be9207.jpg"alt="vSAN Policy"width="1177"
+            src="/vcf9-darksite2/03_hu_d3db1a6450c81862.png"alt="vSAN Policy"width="1177"
             height="956"/>
         </picture></a><figcaption><p>Dangerzone - vSAN Policy (click to enlarge)</p></figcaption></figure>
 <p>After that, you can simply restart the deployment in the VCF installer using retry. The deployment should now run without any problems. For me, the whole process took about 2 hours.</p>
-<figure><a href="04.png"><picture>
-          <source srcset="/vcf9-darksite2/04_hu_8878f1111cb9604b.jpg" type="image/webp">
-          <source srcset="/vcf9-darksite2/04_hu_8878f1111cb9604b.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/vcf9-darksite2/04_hu_beee2fa0a4114af8.png" type="image/png">
           <img
-            src="/vcf9-darksite2/04_hu_8878f1111cb9604b.jpg"alt="VCF Installer"width="1707"
+            src="/vcf9-darksite2/04_hu_beee2fa0a4114af8.png"alt="VCF Installer"width="1707"
             height="1099"/>
         </picture></a><figcaption><p>VCF Installer (click to enlarge)</p></figcaption></figure>
 <p>Nice, another successful deployment completed after a few workarounds, and this time really only on one host. I then deployed two more edge VMs and built my BGP peering. The Kubernetes cluster is still missing, but that&rsquo;s a story for another blog. The finished VCF instance now looks like this.</p>
-<figure><a href="05.png"><picture>
-          <source srcset="/vcf9-darksite2/05_hu_b61f59a492be8384.jpg" type="image/webp">
-          <source srcset="/vcf9-darksite2/05_hu_b61f59a492be8384.jpg" type="image/jpeg">
+<figure><a href="05.png"><picture><source srcset="/vcf9-darksite2/05_hu_3ff971829c12e3c7.png" type="image/png">
           <img
-            src="/vcf9-darksite2/05_hu_b61f59a492be8384.jpg"alt="VCF Instance"width="2102"
+            src="/vcf9-darksite2/05_hu_3ff971829c12e3c7.png"alt="VCF Instance"width="2102"
             height="1243"/>
         </picture></a><figcaption><p>VCF Instance (click to enlarge)</p></figcaption></figure>
 <h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
@@ -575,11 +565,9 @@ I don&rsquo;t need to mention that this setting should never be used in producti
 Perhaps I should say a few words about performance, as I am using NVMes that are unfamiliar to me in this setup.
 At first glance, the Lexar EQ790s perform quite well.
 They have similar read values to a Samsung 990 Pro and slightly weaker write values than the aforementioned drive, but the bottom line is that I couldn&rsquo;t get a Samsung 990 Pro at an affordable price.</p>
-<figure><a href="06.png"><picture>
-          <source srcset="/vcf9-darksite2/06_hu_248ff15d855dccf7.jpg" type="image/webp">
-          <source srcset="/vcf9-darksite2/06_hu_248ff15d855dccf7.jpg" type="image/jpeg">
+<figure><a href="06.png"><picture><source srcset="/vcf9-darksite2/06_hu_91c7462abe72b798.png" type="image/png">
           <img
-            src="/vcf9-darksite2/06_hu_248ff15d855dccf7.jpg"alt="Crystal Disk Mark"width="1193"
+            src="/vcf9-darksite2/06_hu_91c7462abe72b798.png"alt="Crystal Disk Mark"width="1193"
             height="792"/>
         </picture></a><figcaption><p>vSAN Crystal Disk Mark Performance (click to enlarge)</p></figcaption></figure>
 <p>I also did a quick test with a Windows Server VM and Crystal Disk Mark. As always, this isn&rsquo;t a 100% accurate test, but it just to show that this setup is perfectly usable for a lab environment to run a few test VMs and Kubernetes workloads without me always having to turn on multiple servers.

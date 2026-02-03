@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2024-08-02T08:34:23+01:00">
   <meta itemprop="wordCount" content="2060">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Nsx,Security,Vdi"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-idfw-vdi/">
+  <meta itemprop="keywords" content="NSX,Security,Vdi"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-idfw-vdi/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="NSX Identity Firewall – A Case Study With the Flavour VDI">
   <meta property="og:description" content="IDFW with NSX and Windows Clients">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-08-02T08:34:23+01:00">
     <meta property="article:modified_time" content="2024-08-02T08:34:23+01:00">
-    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="NSX">
     <meta property="article:tag" content="Security">
     <meta property="article:tag" content="Vdi">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -260,37 +260,29 @@
 </ul>
 <h2 id="first-things-first">First things first<a href="#first-things-first" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Identity based groups can only be used as a source for a firewall rule. In addition, the rules only come into effect after a successful logon to the client. Thus, normal dFW rules must be written for all communication that happens before the user logs on. This applies, for example, to Windows AD communication. The NSX Manager synchronises cyclically with the domain controllers. The default interval is 180 minutes. If changes are made to the group membership at short notice, a manual sync can be performed. Alternatively, the sync interval can also be shortened or extended. Using network introspection, the NSX Manager recognises when a user logs on to a client and can perform matching with the AD groups and thus add the client dynamically to the security group of the IDFW firewall rule.</p>
-<figure><picture>
-          <source srcset="/idfw/00_idfw_hu_ffb98d187b214b7e.jpg" type="image/webp">
-          <source srcset="/idfw/00_idfw_hu_ffb98d187b214b7e.jpg" type="image/jpeg">
+<figure><picture><source srcset="/idfw/00_idfw_hu_b9b82cb505a9ed72.jpg" type="image/jpeg">
           <img
-            src="/idfw/00_idfw_hu_ffb98d187b214b7e.jpg"alt="Idendity Firewall function"width="1782"
+            src="/idfw/00_idfw_hu_b9b82cb505a9ed72.jpg"alt="Idendity Firewall function"width="1782"
             height="1164"/>
         </picture><figcaption><p>Idendity Firewall function</p></figcaption></figure>
 <h2 id="getting-started">Getting started<a href="#getting-started" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Firstly, I start by customising the golden images of the VDI and installing NSX Guest Introspection. These are not installed by default and have to be installed explicitly. You can find them under VMware Device Driver – NSX Network Introspection. File Introspection is installed automatically.</p>
-<figure><picture>
-          <source srcset="/idfw/01_vmwaretools_hu_8f5da88544339ada.jpeg" type="image/webp">
-          <source srcset="/idfw/01_vmwaretools_hu_8f5da88544339ada.jpeg" type="image/jpeg">
+<figure><picture><source srcset="/idfw/01_vmwaretools_hu_88dbb65feab63900.jpeg" type="image/jpeg">
           <img
-            src="/idfw/01_vmwaretools_hu_8f5da88544339ada.jpeg"alt="VMware Tools"width="555"
+            src="/idfw/01_vmwaretools_hu_88dbb65feab63900.jpeg"alt="VMware Tools"width="555"
             height="417"/>
         </picture><figcaption><p>VMware Tools</p></figcaption></figure>
 <p>Once Guestintrospection has been successfully installed, we no longer need to do anything on our Windows clients. Next, the domain must be integrated.</p>
 <p>This is done in the NSX Manager under System -&gt; Identity Firewall AD. Several domains can be entered so that multi-tenant setups can also be realised. The NSX Manager requires firewall activations and must be able to reach the domain controllers via LDAP or LDAPS. I strongly recommend the use of LDAPS. These settings can also be used to perform a manual sync or check the synchronisation status.</p>
-<figure><a href="02_nsx_idfw.jpeg"><picture>
-          <source srcset="/idfw/02_nsx_idfw_hu_107560ae223ca3f1.jpeg" type="image/webp">
-          <source srcset="/idfw/02_nsx_idfw_hu_107560ae223ca3f1.jpeg" type="image/jpeg">
+<figure><a href="02_nsx_idfw.jpeg"><picture><source srcset="/idfw/02_nsx_idfw_hu_1cd4b4c2f476db5.jpeg" type="image/jpeg">
           <img
-            src="/idfw/02_nsx_idfw_hu_107560ae223ca3f1.jpeg"alt="Idetity firewall AD settings"width="1452"
+            src="/idfw/02_nsx_idfw_hu_1cd4b4c2f476db5.jpeg"alt="Idetity firewall AD settings"width="1452"
             height="465"/>
         </picture></a><figcaption><p>Idetity firewall AD settings (click to enlarge)</p></figcaption></figure>
 <p>Under LDAP Server you can set several domain controllers for the previously set up domain. The protocol used is also selected here. I use the Domain Administrator in my lab. In a productive environment, an LDAP bind user should always be used.</p>
-<figure><a href="03.jpeg"><picture>
-          <source srcset="/idfw/03_hu_ff5578a0c7c6208c.jpeg" type="image/webp">
-          <source srcset="/idfw/03_hu_ff5578a0c7c6208c.jpeg" type="image/jpeg">
+<figure><a href="03.jpeg"><picture><source srcset="/idfw/03_hu_3f980145c1b8fca6.jpeg" type="image/jpeg">
           <img
-            src="/idfw/03_hu_ff5578a0c7c6208c.jpeg"alt="LDAP Server settings"width="1160"
+            src="/idfw/03_hu_3f980145c1b8fca6.jpeg"alt="LDAP Server settings"width="1160"
             height="460"/>
         </picture></a><figcaption><p>LDAP Server settings (click to enlarge)</p></figcaption></figure>
 
@@ -305,40 +297,32 @@
         <div class="admonition-content">If LDAPS is used, NSX imports the SHA thumbprint of the domain controller certificate. As the certificate is usually renewed automatically after 2 years at the latest, NSX loses the trust with the domain controller. In this case, the trust must be established manually. To do this, delete the thumbprint and reconnect to the bind user.  It has proven to be practical to monitor certificate expiry times and to enter at least 2 domain controllers that exchange their certificates with a 4-week time lag. If the trust fails completely, no more identity rules are applied and the default firewall rule comes into effect. In practice, this should be an any/any default drop and log rule.</div>
     </aside>
 <p>After we have successfully setup and synchronised our domain, we only need to activate the Identity Firewall. By default, this feature is disabled (it is a free feature that is available with the NSX Firewall VCF add-on). To activate the Identity Firewall, go to Security -&gt; Distributed Firewall -&gt; Settings -&gt; Identity Firewall Settings and activate the identity firewall service button. Then we select the cluster on which we want to activate the service. Now we can get started.</p>
-<figure><a href="04.webp"><picture>
-          <source srcset="/idfw/04_hu_eda444085e27d29.jpg" type="image/webp">
-          <source srcset="/idfw/04_hu_eda444085e27d29.jpg" type="image/jpeg">
+<figure><a href="04.webp"><picture><source srcset="/idfw/04_hu_3501ba0bfbdac83b.webp" type="image/webp">
           <img
-            src="/idfw/04_hu_eda444085e27d29.jpg"alt="Distributed Firewall Settings"width="1699"
+            src="/idfw/04_hu_3501ba0bfbdac83b.webp"alt="Distributed Firewall Settings"width="1699"
             height="792"/>
         </picture></a><figcaption><p>Distributed Firewall Settings (click to enlarge)</p></figcaption></figure>
 <h2 id="identity-firewall-rules">Identity Firewall Rules<a href="#identity-firewall-rules" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>A general recommendation that applies to all firewalls is to think about a naming concept. At my customer, we have different name prefixes for the various security groups in NSX or in the other firewalls. For my part, I prefer the following naming convention, for example:</p>
 <p>Distributed firewall groups start with dFW_XXX, an LDAP backed security group with dFWU_XXX (the U stands for user). For a group that contains an NSX segment it would be dFWS_XXX and for the gateway firewall a gWF_XXX and so on.</p>
 <p>So we create our first LDAP user group. As with any group, we can do this either when creating the rules or in the inventory under Groups. The process is the same as for a normal Distributed Firewall Group, except that we don’t use tags but Distinguished Names, which can be conveniently selected or filtered from the synchronised AD elements.</p>
-<figure><a href="05.webp"><picture>
-          <source srcset="/idfw/05_hu_bde456b9d1002eaa.jpg" type="image/webp">
-          <source srcset="/idfw/05_hu_bde456b9d1002eaa.jpg" type="image/jpeg">
+<figure><a href="05.webp"><picture><source srcset="/idfw/05_hu_bea79e3bbb4bd7e8.webp" type="image/webp">
           <img
-            src="/idfw/05_hu_bde456b9d1002eaa.jpg"alt="Security Groups"width="1164"
+            src="/idfw/05_hu_bea79e3bbb4bd7e8.webp"alt="Security Groups"width="1164"
             height="977"/>
         </picture></a><figcaption><p>Security Groups (click to enlarge)</p></figcaption></figure>
 <p>I also need at least one segment group and at least one group containing my target servers. The target servers are assigned to their groups via tags. The same applies to the segment group. To do this, I set one or more tags on the overlay segment and use this tag as a condition for group membership.</p>
-<figure><a href="06.webp"><picture>
-          <source srcset="/idfw/06_hu_4fcc2d0fd6f937c1.jpg" type="image/webp">
-          <source srcset="/idfw/06_hu_4fcc2d0fd6f937c1.jpg" type="image/jpeg">
+<figure><a href="06.webp"><picture><source srcset="/idfw/06_hu_336449cf75078643.webp" type="image/webp">
           <img
-            src="/idfw/06_hu_4fcc2d0fd6f937c1.jpg"alt="Member selection"width="1156"
+            src="/idfw/06_hu_336449cf75078643.webp"alt="Member selection"width="1156"
             height="964"/>
         </picture></a><figcaption><p>Member selection (click to enlarge)</p></figcaption></figure>
 <p>Our goal will be that we authorise our users assigned to dFWU_UserGroup1 to access our fileserver with SMB and the users of the group dFWU_UserGroup2 must not receive any authorisation. I have two domain users in my lab, User1 is in the AD group assigned to dFWU_UserGroup1 and User2 is only assigned to dFWU_UserGroup2.</p>
 <h2 id="creating-the-firewall-rules">Creating the firewall rules<a href="#creating-the-firewall-rules" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>For each identity firewall rule that allows traffic from a group of users to a destination, there must be a corresponding distributed firewall rule that allows traffic from a group of computers to the same destination specified in the identity firewall rule. We therefore need two firewall rules.</p>
-<figure><a href="07.webp"><picture>
-          <source srcset="/idfw/07_hu_d0c5ac42d80fc184.jpg" type="image/webp">
-          <source srcset="/idfw/07_hu_d0c5ac42d80fc184.jpg" type="image/jpeg">
+<figure><a href="07.webp"><picture><source srcset="/idfw/07_hu_248d0614bcc88974.webp" type="image/webp">
           <img
-            src="/idfw/07_hu_d0c5ac42d80fc184.jpg"alt="Firewall Rules"width="1630"
+            src="/idfw/07_hu_248d0614bcc88974.webp"alt="Firewall Rules"width="1630"
             height="226"/>
         </picture></a><figcaption><p>Firewall Rules (click to enlarge)</p></figcaption></figure>
 <p>The first rule is pretty straight forward, as source we have our dFWU_UserGroup1, the target is our dFG_Fileserver and the service is SMB. The Applied To Field is even more important than usual for the Identity Firewall. We may only apply this rule to our VDIs. Since my customer has different pools that are named according to a specific naming scheme, I can further restrict the scope based on the computer name. Each pool has different rules and we only want the rules to be realised on VMs where they are needed. The second rule is a bit more interesting. As a source, we have our VDI segment or segments. As in the first rule, the target is our file server. Logically, the service is also the same.</p>
@@ -356,29 +340,23 @@
 <h2 id="testing-and-verifying">Testing and verifying<a href="#testing-and-verifying" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The test is considered successful if User1 on the TestVDI can establish a successful SMB connection to the file server. If User2 is used instead of User1, the traffic to the file server must be blocked by the firewall.</p>
 <p>For testing, I log in to my VDI with the credentials of User1 and perform a TestNetConnection with Powershell. This is a simple and quick way to test TCP connections. I also open a share on the file server.</p>
-<figure><a href="08.webp"><picture>
-          <source srcset="/idfw/08_hu_b74f3098b376266.jpg" type="image/webp">
-          <source srcset="/idfw/08_hu_b74f3098b376266.jpg" type="image/jpeg">
+<figure><a href="08.webp"><picture><source srcset="/idfw/08_hu_7b077c01d487e9a5.webp" type="image/webp">
           <img
-            src="/idfw/08_hu_b74f3098b376266.jpg"alt="Network test user 1"width="1072"
+            src="/idfw/08_hu_7b077c01d487e9a5.webp"alt="Network test user 1"width="1072"
             height="627"/>
         </picture></a><figcaption><p>Network test user 1 (click to enlarge)</p></figcaption></figure>
 <p>The test was successful, both the TNC command and the actual opening of the file share worked. Now I’m running the same test on the same VDI (after it was recreated, because non-persistent VDI), only this time I’m using User2, which has no explicit firewall rules and is therefore blocked by my default cleanup rule. As expected, the traffic was successfully blocked.</p>
-<figure><a href="09.png"><picture>
-          <source srcset="/idfw/09_hu_dfd9e85fa3a82da8.jpg" type="image/webp">
-          <source srcset="/idfw/09_hu_dfd9e85fa3a82da8.jpg" type="image/jpeg">
+<figure><a href="09.png"><picture><source srcset="/idfw/09_hu_af37365be7ab176f.png" type="image/png">
           <img
-            src="/idfw/09_hu_dfd9e85fa3a82da8.jpg"alt="Network test user 2"width="993"
+            src="/idfw/09_hu_af37365be7ab176f.png"alt="Network test user 2"width="993"
             height="499"/>
         </picture></a><figcaption><p>Network test user 2 (click to enlarge)</p></figcaption></figure>
 <h2 id="lessons-learned">Lessons learned<a href="#lessons-learned" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>This is where I would like to add a few more thoughts on the subject. Troubleshooting is more difficult in practice than I thought. Tools such as NSX Traceflow cannot be used because you cannot add an AD user to the request. This means that the traffic in the traceflow is always dropped or the identity rule is maybe configured incorrectly.</p>
 <p>But there is light at the end of the tunnel. In NSX 4.X there is a session view of the active IDFW user session under Security -&gt; Security Overview -&gt; Configuration. All active sessions, UserIDs and VMs are displayed here, as well as the source of the information.</p>
-<figure><a href="10.png"><picture>
-          <source srcset="/idfw/10_hu_a2c8e1e472e36cc2.jpg" type="image/webp">
-          <source srcset="/idfw/10_hu_a2c8e1e472e36cc2.jpg" type="image/jpeg">
+<figure><a href="10.png"><picture><source srcset="/idfw/10_hu_6e27531d51e5c107.png" type="image/png">
           <img
-            src="/idfw/10_hu_a2c8e1e472e36cc2.jpg"alt="Active Sessions"width="979"
+            src="/idfw/10_hu_6e27531d51e5c107.png"alt="Active Sessions"width="979"
             height="278"/>
         </picture></a><figcaption><p>Active Sessions (click to enlarge)</p></figcaption></figure>
 <p>Next tip would be to always check the sync status with the AD. Ask your AD admin when the user was added to the group. If the user has several accounts, ask for the user name used. Experience has shown that this is where most problems occur.</p>

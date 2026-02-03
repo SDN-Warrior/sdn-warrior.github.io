@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2024-11-16T20:00:00+00:00">
   <meta itemprop="wordCount" content="142">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Unraid,VMware,Esxi,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/labv4/">
+  <meta itemprop="keywords" content="Unraid,Vmware,Esxi,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/labv4/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Homelab V4">
   <meta property="og:description" content="Homelab v4">
@@ -41,7 +41,7 @@
     <meta property="article:published_time" content="2024-11-16T20:00:00+00:00">
     <meta property="article:modified_time" content="2024-11-16T20:00:00+00:00">
     <meta property="article:tag" content="Unraid">
-    <meta property="article:tag" content="VMware">
+    <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Esxi">
     <meta property="article:tag" content="Homelab">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -221,18 +221,14 @@ These have a 13th generation i9 and are equipped with fast NVMes for memory tier
 They also have 2x10G and 2x2.5G networking on board for various VM workloads.
 Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.
 I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.</p>
-<figure><picture>
-          <source srcset="/bench1_hu_7f03c29c176a28ea.jpg" type="image/webp">
-          <source srcset="/bench1_hu_7f03c29c176a28ea.jpg" type="image/jpeg">
+<figure><picture><source srcset="/bench1_hu_c7391d1663624761.jpg" type="image/jpeg">
           <img
-            src="/bench1_hu_7f03c29c176a28ea.jpg"alt="Disk Performance iSCSI Multipathing"width="483"
+            src="/bench1_hu_c7391d1663624761.jpg"alt="Disk Performance iSCSI Multipathing"width="483"
             height="351"/>
         </picture><figcaption><p>Disk Performance iSCSI Multipathing</p></figcaption></figure>
-<figure><picture>
-          <source srcset="/bench2_hu_722a29f2f4f08b6a.jpg" type="image/webp">
-          <source srcset="/bench2_hu_722a29f2f4f08b6a.jpg" type="image/jpeg">
+<figure><picture><source srcset="/bench2_hu_e20ae71514f46813.jpg" type="image/jpeg">
           <img
-            src="/bench2_hu_722a29f2f4f08b6a.jpg"alt="IOPS iSCSI Multipathing"width="483"
+            src="/bench2_hu_e20ae71514f46813.jpg"alt="IOPS iSCSI Multipathing"width="483"
             height="356"/>
         </picture><figcaption><p>IOPS iSCSI Multipathing</p></figcaption></figure>
 <p>Pretty impressive for my setup. I still have to customize the rack a bit so that I can add the 10G Mikrotik switch and clean up the VLANs from old labs.

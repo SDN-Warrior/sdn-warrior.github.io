@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-03-05T21:00:00+01:00">
   <meta itemprop="wordCount" content="1377">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VMware,VCF,Homelab,Broadcom,Nfs"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-import-overlay/">
+  <meta itemprop="keywords" content="Vmware,Vcf,Homelab,Broadcom,Nfs"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-import-overlay/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF Import Tool - Enable Overlay in an imported VCF Domain">
   <meta property="og:description" content="Part 2 VCF Import Cluster with NFS and activating the overlay.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-03-05T21:00:00+01:00">
     <meta property="article:modified_time" content="2025-03-05T21:00:00+01:00">
-    <meta property="article:tag" content="VMware">
-    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Broadcom">
     <meta property="article:tag" content="Nfs">
@@ -234,11 +234,9 @@
     </aside>
 <p>To create an IP pool, we go to <strong>IP Address Pools</strong> under <strong>Networking</strong> in the NSX Gui and click the <strong>ADD IP ADDRESS POOL</strong> button.</p>
 <p>Under Subnet we click on the IP RANGES button and configure our IP range, our network CIDR and a gateway. The TEP network must be routed, as the Edge Transport Nodes normally have their TEP IP addresses in a different network and VLAN. While it is possible for the Edge Transport Nodes to be on the same VLAN and network as our Host Transport Nodes, this is a less common scenario and requires the Edge Transport Nodes to either run on non-NSX enabled hosts or use NSX backed VLAN segments. I have already writte a <a href="https://evoila.com/blog/nsx-sharing-overlay-transport-vlan-between-esxi-teps-edge-teps/">blog</a> for Evoila about this.</p>
-<figure><a href="01.png"><picture>
-          <source srcset="/vcf-import-overlay/01_hu_5fdf263822ca47b3.jpg" type="image/webp">
-          <source srcset="/vcf-import-overlay/01_hu_5fdf263822ca47b3.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/vcf-import-overlay/01_hu_f02e8477ba7ed9c6.png" type="image/png">
           <img
-            src="/vcf-import-overlay/01_hu_5fdf263822ca47b3.jpg"alt="IP Pool"width="2302"
+            src="/vcf-import-overlay/01_hu_f02e8477ba7ed9c6.png"alt="IP Pool"width="2302"
             height="1434"/>
         </picture></a><figcaption><p>IP Pool configuration (click to enlarge)</p></figcaption></figure>
 <p>Finally, we define a name for the IP pool and save the configuration.</p>
@@ -293,21 +291,17 @@ The following TAGs must be attached to the overlay transport zone:</p>
   </tbody>
 </table>
 <p>The transport zone type cannot be changed afterwards. We can and must only add tags here.</p>
-<figure><a href="02.png"><picture>
-          <source srcset="/vcf-import-overlay/02_hu_d158679de1047ed0.jpg" type="image/webp">
-          <source srcset="/vcf-import-overlay/02_hu_d158679de1047ed0.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/vcf-import-overlay/02_hu_b57b5be6cd8eca87.png" type="image/png">
           <img
-            src="/vcf-import-overlay/02_hu_d158679de1047ed0.jpg"alt="Transport Zone"width="2870"
+            src="/vcf-import-overlay/02_hu_b57b5be6cd8eca87.png"alt="Transport Zone"width="2870"
             height="980"/>
         </picture></a><figcaption><p>Transport Zone configuration (click to enlarge)</p></figcaption></figure>
 <h2 id="edit-the-transport-node-profiles">Edit the Transport Node Profiles<a href="#edit-the-transport-node-profiles" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The next step is to customize the transport node profile so that we can use overlay networks and create NSX TEP interfaces on our ESXi servers.</p>
 <p>Since NSX 3.1.x, the Transport Node profile can be found under <em><strong>Fabric</strong></em> - <em><strong>Hosts</strong></em> - <em><strong>Transport Node Profile</strong></em>. The VCF Import Tool has already created a profile for us. As is so often the case with VCF, the profile has a cryptic name that consists of an ID + domain and the text autoconf-tnp. You can safely ignore the name. We need to go to the profile&rsquo;s host switch config and add the overlay transport zone to the profile. As soon as we have added this TZ, additional options for IP assignment will appear. The previously created IP pool is selected here. We save the whole thing and that&rsquo;s it for the changes in the NSX.</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/vcf-import-overlay/03_hu_ebcfbc21e19b6ff3.jpg" type="image/webp">
-          <source srcset="/vcf-import-overlay/03_hu_ebcfbc21e19b6ff3.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/vcf-import-overlay/03_hu_c60198b4f4daa890.png" type="image/png">
           <img
-            src="/vcf-import-overlay/03_hu_ebcfbc21e19b6ff3.jpg"alt="TNP"width="2308"
+            src="/vcf-import-overlay/03_hu_c60198b4f4daa890.png"alt="TNP"width="2308"
             height="1708"/>
         </picture></a><figcaption><p>Transport Node Profile configuration (click to enlarge)</p></figcaption></figure>
 <p>After everything has been saved, NSX starts customizing the cluster and configuring TEP IP addresses for each of our ESXi servers.</p>
@@ -317,11 +311,9 @@ We can look it up in the vCenter, where each host should now have 2 VMK adapters
 VKM10 and VMK11 are responsible for processing our TEP traffic in the dual TEP setup. The second option is in NSX itself.
 To do this, go to <em><strong>System</strong></em> - <em><strong>Fabric</strong></em> - <em><strong>Hosts</strong></em> and look at our cluster.
 In the TEP IP Addresses column, each ESXi in the cluster should have two IP addresses.</p>
-<figure><a href="04.png"><picture>
-          <source srcset="/vcf-import-overlay/04_hu_cbeb67606e077c98.jpg" type="image/webp">
-          <source srcset="/vcf-import-overlay/04_hu_cbeb67606e077c98.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/vcf-import-overlay/04_hu_1f3317844a57c088.png" type="image/png">
           <img
-            src="/vcf-import-overlay/04_hu_cbeb67606e077c98.jpg"alt="TEP IP"width="2888"
+            src="/vcf-import-overlay/04_hu_1f3317844a57c088.png"alt="TEP IP"width="2888"
             height="1486"/>
         </picture></a><figcaption><p>Transport Node TEP IPs (click to enlarge)</p></figcaption></figure>
 <p>The third option is to ping from one ESXi server to another. To do this, the VMK ping command must be executed as follows:</p>

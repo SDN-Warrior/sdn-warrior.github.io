@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-07-07T20:00:00+02:00">
   <meta itemprop="wordCount" content="2041">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VCF,Vvf,Homelab,Operations"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-operations-migration/">
+  <meta itemprop="keywords" content="Vcf,Vvf,Homelab,Operations"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-operations-migration/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF 9 - Migration to central VCF Operations instance">
   <meta property="og:description" content="A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-07-07T20:00:00+02:00">
     <meta property="article:modified_time" content="2025-07-07T20:00:00+02:00">
-    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="Vvf">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Operations">
@@ -259,51 +259,41 @@ I also didn&rsquo;t want to onboard my physical lab in the nested VCF operations
 <p>The actual deployment is done using standard OVAs that you download from the Broadcom portal beforehand. So far, so unspectacular.
 I won&rsquo;t go into detail about the basic setup of the individual appliances, as this is fairly straightforward.
 I also won&rsquo;t explain how to integrate a cloud proxy, as this is fairly self-explanatory and can be done via Operations under <em><strong>Administration -&gt; Cloud Proxies</strong></em>.</p>
-<figure><a href="01.png"><picture>
-          <source srcset="/vcf-operations-migration/01_hu_76bfe1aeef911c79.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/01_hu_76bfe1aeef911c79.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/vcf-operations-migration/01_hu_edd7de637b2abe66.png" type="image/png">
           <img
-            src="/vcf-operations-migration/01_hu_76bfe1aeef911c79.jpg"alt="Fleet Manager"width="2016"
+            src="/vcf-operations-migration/01_hu_edd7de637b2abe66.png"alt="Fleet Manager"width="2016"
             height="1394"/>
         </picture></a><figcaption><p>Fleet Manager OVA (click to enlarge)</p></figcaption></figure>
 <p>Perhaps one more note: the fleet manager OVA is called  VCF-OPS-Lifecycle-Manager-Appliance.</p>
 <p>Now that we have deployed our VCF Operation and Fleet Manager, we need to bring the VCF Operation Cluster online and connect our Fleet Manager.
 To do this, open the Operations admin interface using the following URL: https://&lt; VCFOPS FQDN &gt;/admin</p>
-<figure><a href="02.png"><picture>
-          <source srcset="/vcf-operations-migration/02_hu_ad8d03666dd60dc6.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/02_hu_ad8d03666dd60dc6.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/vcf-operations-migration/02_hu_2cd03a6ad5011b47.png" type="image/png">
           <img
-            src="/vcf-operations-migration/02_hu_ad8d03666dd60dc6.jpg"alt="VCF OPS Admin"width="1726"
+            src="/vcf-operations-migration/02_hu_2cd03a6ad5011b47.png"alt="VCF OPS Admin"width="1726"
             height="878"/>
         </picture></a><figcaption><p>VCF Operations Admin Interface (click to enlarge)</p></figcaption></figure>
 <p>This is where the “cluster” is put into operation.
 The process is straightforward. The operating system is also updated if necessary, provided that an Internet connection is available.</p>
 <p>Since we deployed VCF Operations manually, no Fleet Manager is connected yet, of course.</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/vcf-operations-migration/03_hu_8f2a149216765870.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/03_hu_8f2a149216765870.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/vcf-operations-migration/03_hu_30210f74da8fa062.png" type="image/png">
           <img
-            src="/vcf-operations-migration/03_hu_8f2a149216765870.jpg"alt="VCF Fleet"width="1723"
+            src="/vcf-operations-migration/03_hu_30210f74da8fa062.png"alt="VCF Fleet"width="1723"
             height="982"/>
         </picture></a><figcaption><p>Fleet Management onboarding (click to enlarge)</p></figcaption></figure>
 <p>Here you need the fleet manager FQDN and the admin password. In addition, the admin password for VCF Operations is required; without it, the process cannot be completed.</p>
 <p>The admin password must comply with the new complexity rules.
 The days of <em><strong>VMware1!</strong></em> are over. If a password that is too weak was set during deployment, onboarding will now fail.
 Okay, I could have written that earlier, but you are warned about this during OVA deployment, and I&rsquo;m sure my readers would never just click “continue” without thinking – not that this would have happened to the author here.</p>
-<figure><a href="04.png"><picture>
-          <source srcset="/vcf-operations-migration/04_hu_6d67fb3cb9c00885.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/04_hu_6d67fb3cb9c00885.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/vcf-operations-migration/04_hu_4bf037df2246e76.png" type="image/png">
           <img
-            src="/vcf-operations-migration/04_hu_6d67fb3cb9c00885.jpg"alt="VCF Fleet sucess"width="1727"
+            src="/vcf-operations-migration/04_hu_4bf037df2246e76.png"alt="VCF Fleet sucess"width="1727"
             height="900"/>
         </picture></a><figcaption><p>Fleet Management onboarding successfull (click to enlarge)</p></figcaption></figure>
 <p>Of course, I was able to connect to the Fleet Manager right away the first time—at least that&rsquo;s what I&rsquo;m going to say. The whole process takes a little time, so it&rsquo;s best to have a cup of coffee ready.</p>
 <p>When the Fleet Manager is connected, a VCF operation instance with Pending Import is now displayed in Operations under Fleet <em><strong>Management -&gt; Lifecycle</strong></em>.</p>
-<figure><a href="05.png"><picture>
-          <source srcset="/vcf-operations-migration/05_hu_e099a2e704aff738.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/05_hu_e099a2e704aff738.jpg" type="image/jpeg">
+<figure><a href="05.png"><picture><source srcset="/vcf-operations-migration/05_hu_a36c0a1a72d7b5c7.png" type="image/png">
           <img
-            src="/vcf-operations-migration/05_hu_e099a2e704aff738.jpg"alt="Pending Operations"width="1726"
+            src="/vcf-operations-migration/05_hu_a36c0a1a72d7b5c7.png"alt="Pending Operations"width="1726"
             height="903"/>
         </picture></a><figcaption><p>Pending VCF Operations (click to enlarge)</p></figcaption></figure>
 <p>This should not cause us any concern and is completely normal. Before we can continue here, we need to onboard our future environments so that the Fleet Manager can do its job.</p>
@@ -316,11 +306,9 @@ For my ESX 9 servers, I select vCenter as the account type and specify the appro
 You need the login details for the SDDC Manager and not the vCenter.
 It is recommended to create separate credentials in Operations, even if you use the same password multiple times.
 I decided to enable “Domain Monitoring when creating” under Advanced Settings.</p>
-<figure><a href="06.png"><picture>
-          <source srcset="/vcf-operations-migration/06_hu_9c667dd47828206f.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/06_hu_9c667dd47828206f.jpg" type="image/jpeg">
+<figure><a href="06.png"><picture><source srcset="/vcf-operations-migration/06_hu_b1266a9719366d31.png" type="image/png">
           <img
-            src="/vcf-operations-migration/06_hu_9c667dd47828206f.jpg"alt="Account Integration"width="1724"
+            src="/vcf-operations-migration/06_hu_b1266a9719366d31.png"alt="Account Integration"width="1724"
             height="898"/>
         </picture></a><figcaption><p>Account Integration (click to enlarge)</p></figcaption></figure>
 
@@ -336,11 +324,9 @@ I decided to enable “Domain Monitoring when creating” under Advanced Setting
         <div class="admonition-content">By default, this setting is set to false. If you configure a VCF account with the default setting, data collection and monitoring of domains is disabled. If you edit the VCF account and change this setting to true, data collection and monitoring is enabled but it is done only for the newly discovered domains.</div>
     </aside>
 <p>Under <em><strong>Collector / Group</strong></em>, you can select the collector you want to use for collecting data. The default collector group contains the VCF operations.</p>
-<figure><a href="07.png"><picture>
-          <source srcset="/vcf-operations-migration/07_hu_ca890d8656d1243d.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/07_hu_ca890d8656d1243d.jpg" type="image/jpeg">
+<figure><a href="07.png"><picture><source srcset="/vcf-operations-migration/07_hu_a000a27448596e27.png" type="image/png">
           <img
-            src="/vcf-operations-migration/07_hu_ca890d8656d1243d.jpg"alt="Collector"width="1725"
+            src="/vcf-operations-migration/07_hu_a000a27448596e27.png"alt="Collector"width="1725"
             height="900"/>
         </picture></a><figcaption><p>Collecting Status (click to enlarge)</p></figcaption></figure>
 <p>After successfully adding our accounts, data collection must also be activated.</p>
@@ -356,11 +342,9 @@ I decided to enable “Domain Monitoring when creating” under Advanced Setting
         </div>
         <div class="admonition-content">It&rsquo;s easy to overlook, but if you want to integrate the VCF environment so that you can manage and license it rather than just monitor it, you need to click the Activate Management button in this dialog box for the vCenter. The process takes about 15 minutes. If you don&rsquo;t do this, licensing will not be possible later. The settings can be changed at any time.</div>
     </aside>
-<figure><a href="08.png"><picture>
-          <source srcset="/vcf-operations-migration/08_hu_33142634771725c.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/08_hu_33142634771725c.jpg" type="image/jpeg">
+<figure><a href="08.png"><picture><source srcset="/vcf-operations-migration/08_hu_b2ce45f4680a7125.png" type="image/png">
           <img
-            src="/vcf-operations-migration/08_hu_33142634771725c.jpg"alt="License"width="1229"
+            src="/vcf-operations-migration/08_hu_b2ce45f4680a7125.png"alt="License"width="1229"
             height="794"/>
         </picture></a><figcaption><p>vSphere Client Plugin (click to enlarge)</p></figcaption></figure>
 <h2 id="licensing">Licensing<a href="#licensing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
@@ -384,22 +368,18 @@ Instead, I can assign the same license to all of my added vCenter9 instances, as
 To do this, I select the vCenter instances and assign a primary license.
 This license is then imported into vCenter and used to license all other VCF products, such as NSX.
 vSAN must be assigned to the vCenters as a so-called add-on license.</p>
-<figure><a href="12.png"><picture>
-          <source srcset="/vcf-operations-migration/12_hu_bd4721209d644c56.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/12_hu_bd4721209d644c56.jpg" type="image/jpeg">
+<figure><a href="12.png"><picture><source srcset="/vcf-operations-migration/12_hu_b225deb4bd5247cf.png" type="image/png">
           <img
-            src="/vcf-operations-migration/12_hu_bd4721209d644c56.jpg"alt="License"width="1723"
+            src="/vcf-operations-migration/12_hu_b225deb4bd5247cf.png"alt="License"width="1723"
             height="895"/>
         </picture></a><figcaption><p>VCF License (click to enlarge)</p></figcaption></figure>
 <p>Now all that&rsquo;s missing is the VCF lifecycle. Remember, we still had one point left to cover.</p>
 <h2 id="vcf-lifecycle">VCF Lifecycle<a href="#vcf-lifecycle" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>We still had our fleet manager who hadn&rsquo;t been fully onboarded yet.
 First, we need to create deployment targets. These can be found under <em><strong>Fleet Management -&gt; Lifecycle -&gt; VCF Management -&gt; Deployment Targets</strong></em>.</p>
-<figure><a href="09.png"><picture>
-          <source srcset="/vcf-operations-migration/09_hu_b68bfa31df79487.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/09_hu_b68bfa31df79487.jpg" type="image/jpeg">
+<figure><a href="09.png"><picture><source srcset="/vcf-operations-migration/09_hu_32a498b7c15eb3a1.png" type="image/png">
           <img
-            src="/vcf-operations-migration/09_hu_b68bfa31df79487.jpg"alt="Deployment targets"width="1726"
+            src="/vcf-operations-migration/09_hu_32a498b7c15eb3a1.png"alt="Deployment targets"width="1726"
             height="896"/>
         </picture></a><figcaption><p>VCF License (click to enlarge)</p></figcaption></figure>
 <p>The deployment target is important so that the Lifecycle Manager can deploy components.
@@ -417,11 +397,9 @@ The connection is then validated and the deployment target is configured.</p>
         <div class="admonition-content">As a deployment target, you need to add every vCenter where you want to deploy stuff or where VCF Operations components are running. In my case, my VCF Operations, Cloud Proxy, and Fleet Manager are running on my management host, which is still in my vSphere 8 environment. That&rsquo;s why this environment also needs to be saved as a deployment target, otherwise the next steps won&rsquo;t work.</div>
     </aside>
 <p>Finally, we take care of our operation that is still displayed as Pending Import. To do this, we click on the Import button under <em><strong>Fleet Management -&gt; Lifecycle -&gt; VCF Management -&gt; Overview for VCF Operations</strong></em>.
-<figure><a href="10.png"><picture>
-          <source srcset="/vcf-operations-migration/10_hu_1aba056381d3d16c.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/10_hu_1aba056381d3d16c.jpg" type="image/jpeg">
+<figure><a href="10.png"><picture><source srcset="/vcf-operations-migration/10_hu_d17614a7dedb8fd.png" type="image/png">
           <img
-            src="/vcf-operations-migration/10_hu_1aba056381d3d16c.jpg"alt="Import"width="1713"
+            src="/vcf-operations-migration/10_hu_d17614a7dedb8fd.png"alt="Import"width="1713"
             height="825"/>
         </picture></a><figcaption><p>Import Operations  (click to enlarge)</p></figcaption></figure></p>
 <p>Most of it is already preselected; you just need to enter the root password for the vCenter instance where my components are located (VCF Operations and Cloud Proxies). After confirming with Next, you need to do the same for the Cloud Proxy.</p>
@@ -438,11 +416,9 @@ The connection is then validated and the deployment target is configured.</p>
         <div class="admonition-content">SSH must be enabled on the cloud proxy (if one is used). If this was forgotten during deployment, it can be easily enabled via the VM console. To do this, log in with root and enter systemctl start sshd and systemctl enable sshd.</div>
     </aside>
 <p>Congratulations, our deployment should now look like this.</p>
-<figure><a href="11.png"><picture>
-          <source srcset="/vcf-operations-migration/11_hu_3e318664e83a6d60.jpg" type="image/webp">
-          <source srcset="/vcf-operations-migration/11_hu_3e318664e83a6d60.jpg" type="image/jpeg">
+<figure><a href="11.png"><picture><source srcset="/vcf-operations-migration/11_hu_ccd6fd1068272b11.png" type="image/png">
           <img
-            src="/vcf-operations-migration/11_hu_3e318664e83a6d60.jpg"alt="Import"width="1728"
+            src="/vcf-operations-migration/11_hu_ccd6fd1068272b11.png"alt="Import"width="1728"
             height="892"/>
         </picture></a><figcaption><p>Import Operations  (click to enlarge)</p></figcaption></figure>
 <p>We are now able to deploy an operation for logs via the Fleet Manager.

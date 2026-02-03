@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-05-20T18:00:16+02:00">
   <meta itemprop="wordCount" content="1668">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VMware,HCX,Nsx,VCF"><meta property="og:url" content="https://sdn-warrior.org/posts/restnsx-with-hcx/">
+  <meta itemprop="keywords" content="Vmware,Hcx,NSX,Vcf"><meta property="og:url" content="https://sdn-warrior.org/posts/restnsx-with-hcx/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="ReSTNSX with HCX">
   <meta property="og:description" content="How can ReSTNSX help me with the migration with HCX">
@@ -40,10 +40,10 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-05-20T18:00:16+02:00">
     <meta property="article:modified_time" content="2025-05-20T18:00:16+02:00">
-    <meta property="article:tag" content="VMware">
-    <meta property="article:tag" content="HCX">
-    <meta property="article:tag" content="Nsx">
-    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Vmware">
+    <meta property="article:tag" content="Hcx">
+    <meta property="article:tag" content="NSX">
+    <meta property="article:tag" content="Vcf">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
@@ -223,11 +223,9 @@ In this post, I’ll walk you through how RESTNSX complements HCX, especially wh
 <h2 id="why-combine-hcx-with-restnsx">Why Combine HCX with ReSTNSX?<a href="#why-combine-hcx-with-restnsx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>While HCX handles the <strong>heavy lifting</strong> of vMotion, replication, and network extension, it doesn’t touch NSX security rules or segment tagging. That’s where RESTNSX comes in.
 ReSTNSX can access various systems via API, including Checkpoint and Palo Alto firewalls (which are not the focus of this article), as well as external resources such as Active Directory and SMTP servers. The architecture is relatively simple: there is a Cloud Control OVA, and that&rsquo;s it. It really is that simple.</p>
-<figure><a href="01.png"><picture>
-          <source srcset="/restnsx-hcx/01_hu_709b0c2af977a851.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/01_hu_709b0c2af977a851.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/restnsx-hcx/01_hu_ac2c28ccbe374737.png" type="image/png">
           <img
-            src="/restnsx-hcx/01_hu_709b0c2af977a851.jpg"alt="ReSTNSX"width="1476"
+            src="/restnsx-hcx/01_hu_ac2c28ccbe374737.png"alt="ReSTNSX"width="1476"
             height="783"/>
         </picture></a><figcaption><p>ReSTNSX Architecture taken from ReSTNSX Website (click to enlarge)</p></figcaption></figure>
 <p>Some key benefits:</p>
@@ -252,19 +250,15 @@ Once the CloudControl OVA has been successfully deployed and registered, you nee
         </div>
         <div class="admonition-content">The default credentials are admin and the password is default, which should of course be changed.</div>
     </aside>
-<figure><a href="02.png"><picture>
-          <source srcset="/restnsx-hcx/02_hu_eadfa83559deb645.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/02_hu_eadfa83559deb645.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/restnsx-hcx/02_hu_def51b1f8c08029d.png" type="image/png">
           <img
-            src="/restnsx-hcx/02_hu_eadfa83559deb645.jpg"alt="ReSTNSX"width="1383"
+            src="/restnsx-hcx/02_hu_def51b1f8c08029d.png"alt="ReSTNSX"width="1383"
             height="626"/>
         </picture></a><figcaption><p>Datasources in ReSTNSX (click to enlarge)</p></figcaption></figure>
 <p>As you can see here, I have set up two NSX environments as data sources. NSXB is a pure NSX lab, and VCF02 is my VCF stretched cluster, which I have already discussed in my blog.</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/restnsx-hcx/03_hu_ab96883011305e3.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/03_hu_ab96883011305e3.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/restnsx-hcx/03_hu_107bd90accd3d9ff.png" type="image/png">
           <img
-            src="/restnsx-hcx/03_hu_ab96883011305e3.jpg"alt="ReSTNSX"width="1393"
+            src="/restnsx-hcx/03_hu_107bd90accd3d9ff.png"alt="ReSTNSX"width="1393"
             height="349"/>
         </picture></a><figcaption><p>Datasources in ReSTNSX (click to enlarge)</p></figcaption></figure>
 <p>Then I got this test setup ready:</p>
@@ -311,11 +305,9 @@ Drop all other traffic originating from the VMs within the <code>dfg_all_Alpine<
 <strong>Applied to:</strong> All distributed firewall (DFW) VMs</p>
 </li>
 </ol>
-<figure><a href="04.png"><picture>
-          <source srcset="/restnsx-hcx/04_hu_57760450f80d05f9.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/04_hu_57760450f80d05f9.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/restnsx-hcx/04_hu_95d6dd1a85e88b4a.png" type="image/png">
           <img
-            src="/restnsx-hcx/04_hu_57760450f80d05f9.jpg"alt="ReSTNSX Policy"width="1425"
+            src="/restnsx-hcx/04_hu_95d6dd1a85e88b4a.png"alt="ReSTNSX Policy"width="1425"
             height="407"/>
         </picture></a><figcaption><p>ReSTNSX Firewall policy (click to enlarge)</p></figcaption></figure>
 <h3 id="migration-of-the-firewall-rules-and-vms">Migration of the firewall rules and VMs<a href="#migration-of-the-firewall-rules-and-vms" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
@@ -338,11 +330,9 @@ But in my case, I save myself additional steps here. ReSTNSX can, of course, pro
 <p>There are several ways to migrate my firewall ruleset to the target environment.
 I could import a ruleset using bulk provisioning and a CSV file, but in my opinion, the charm of this solution lies in the Policy Engine.
 Using the Policy Engine, which can be found under Tools in the menu, you can easily create a sync task that can synchronize a wide variety of tasks on a cyclical basis.</p>
-<figure><a href="06.png"><picture>
-          <source srcset="/restnsx-hcx/06_hu_b31fa062b41a1f01.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/06_hu_b31fa062b41a1f01.jpg" type="image/jpeg">
+<figure><a href="06.png"><picture><source srcset="/restnsx-hcx/06_hu_7122dd76231dd2ec.png" type="image/png">
           <img
-            src="/restnsx-hcx/06_hu_b31fa062b41a1f01.jpg"alt="ReSTNSX Policy"width="1387"
+            src="/restnsx-hcx/06_hu_7122dd76231dd2ec.png"alt="ReSTNSX Policy"width="1387"
             height="970"/>
         </picture></a><figcaption><p>Policy Engine in ReSTNSX (click to enlarge)</p></figcaption></figure>
 <p>The screenshot shows my finished policy.
@@ -387,29 +377,23 @@ This mode allows us to obtain our dynamic groups, but if TAGs are used as criter
         </div>
         <div class="admonition-content">It is not possible to change the behavior after the first synchronization. The policy must be deleted and recreated. When deleting the policy, you can also delete all objects created by the policy.</div>
     </aside>
-<figure><a href="07.png"><picture>
-          <source srcset="/restnsx-hcx/07_hu_4f4846caedebf7df.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/07_hu_4f4846caedebf7df.jpg" type="image/jpeg">
+<figure><a href="07.png"><picture><source srcset="/restnsx-hcx/07_hu_94a8317950e81dab.png" type="image/png">
           <img
-            src="/restnsx-hcx/07_hu_4f4846caedebf7df.jpg"alt="NSX Firewall Policy"width="1701"
+            src="/restnsx-hcx/07_hu_94a8317950e81dab.png"alt="NSX Firewall Policy"width="1701"
             height="922"/>
         </picture></a><figcaption><p>Firewall Policy in the target NSX (click to enlarge)</p></figcaption></figure>
 <p>A policy does not have to be activated; you can also start it manually with a forced sync and use this policy as a one-time synchronization. For long migration scenarios, performing the synchronization cyclically is invaluable, especially if there are rule adjustments during the migration phase.
 After successful synchronization, the complete policy is available 1:1 in my VCF02 and the migrated VMs alpine 3 and 4 are automatically in the dFG_all_Alpine group, as they retained their NSX security tags during the HCX migration and the groups created by ReSTNSX use the same definitions as in the source environment.</p>
-<figure><a href="08.png"><picture>
-          <source srcset="/restnsx-hcx/08_hu_2ea00540d0e78bc5.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/08_hu_2ea00540d0e78bc5.jpg" type="image/jpeg">
+<figure><a href="08.png"><picture><source srcset="/restnsx-hcx/08_hu_4040506d127059ad.png" type="image/png">
           <img
-            src="/restnsx-hcx/08_hu_2ea00540d0e78bc5.jpg"alt="NSX Firewall groups"width="1473"
+            src="/restnsx-hcx/08_hu_4040506d127059ad.png"alt="NSX Firewall groups"width="1473"
             height="1240"/>
         </picture></a><figcaption><p>Firewall groups in the target NSX (click to enlarge)</p></figcaption></figure>
 <h2 id="additional-features-of-restnsx">Additional features of ReSTNSX<a href="#additional-features-of-restnsx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>ReSTNSX is not just a simple migration tool, although that was certainly the first use that came to mind. It can do much more than that. ReSTNSX has a very good, customizable dashboard that provides me with long-term information about my NSX environment.</p>
-<figure><a href="05.png"><picture>
-          <source srcset="/restnsx-hcx/05_hu_4abff3350822eaa9.jpg" type="image/webp">
-          <source srcset="/restnsx-hcx/05_hu_4abff3350822eaa9.jpg" type="image/jpeg">
+<figure><a href="05.png"><picture><source srcset="/restnsx-hcx/05_hu_f166d5db24afbd14.png" type="image/png">
           <img
-            src="/restnsx-hcx/05_hu_4abff3350822eaa9.jpg"alt="Restnsx Dashboard"width="1692"
+            src="/restnsx-hcx/05_hu_f166d5db24afbd14.png"alt="Restnsx Dashboard"width="1692"
             height="880"/>
         </picture></a><figcaption><p>ReSTNSX Dashboard (click to enlarge)</p></figcaption></figure>
 <p>Of course, the dashboard in my lab doesn&rsquo;t show much, because I don&rsquo;t have Aria Operations for Networks running, and I also shut down my labs after successful testing so as not to drive up my electricity bill even more.

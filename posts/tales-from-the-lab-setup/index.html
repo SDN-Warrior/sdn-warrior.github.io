@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-09-12T17:00:00+02:00">
   <meta itemprop="wordCount" content="1431">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tales-from-the-lab-setup/">
+  <meta itemprop="keywords" content="Vcf,NSX,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tales-from-the-lab-setup/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Tales from the Lab – Lab setup">
   <meta property="og:description" content="A brief blog about setting up my nested lab.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-09-12T17:00:00+02:00">
     <meta property="article:modified_time" content="2025-09-12T17:00:00+02:00">
-    <meta property="article:tag" content="VCF">
-    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="NSX">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
     <meta property="article:tag" content="Intel">
@@ -224,11 +224,9 @@ I want to change that here now, as I have received an increasing number of reque
 <p>I currently own eight Minisforum servers and one NUC Ultra 7.
 The Minisforum servers are for workloads and are divided into two clusters, as some of the hardware has AMD CPUs and the other servers have Intel CPUs.
 My NUC is its own cluster and runs my always-on workload, as the Minisforum servers generate too much power and heat for 24/7 operation.</p>
-<figure><a href="01.png"><picture>
-          <source srcset="/lab-setup/01_hu_a1cc74d5a75248ff.jpg" type="image/webp">
-          <source srcset="/lab-setup/01_hu_a1cc74d5a75248ff.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/lab-setup/01_hu_1e12ec72089f5c66.png" type="image/png">
           <img
-            src="/lab-setup/01_hu_a1cc74d5a75248ff.jpg"alt="vCenter"width="2946"
+            src="/lab-setup/01_hu_1e12ec72089f5c66.png"alt="vCenter"width="2946"
             height="1820"/>
         </picture></a><figcaption><p>Lab vCenter (click to enlarge)</p></figcaption></figure>
 <p>As you can see in the image, two Minisforum servers are currently not part of my cluster for licensing reasons.
@@ -261,11 +259,9 @@ I obtain NTP globally from my ToR switch, as Mikrotik, the old Swiss Army knife,
 Each server has a 2 TB local NVMe installed on which the hypervisor itself is located, and the rest of the NVMe is provided as VMFS storage.
 On my Unraid server, I provide 4 TB as iSCSI storage and 2x 4 TB as NFS storage.
 The storage on Unraid is implemented on NVMes, but without Raid. If a disk fails, I just lose a share.</p>
-<figure><a href="02.png"><picture>
-          <source srcset="/lab-setup/02_hu_767c452a66c1b539.jpg" type="image/webp">
-          <source srcset="/lab-setup/02_hu_767c452a66c1b539.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/lab-setup/02_hu_808cbbf288df33e5.png" type="image/png">
           <img
-            src="/lab-setup/02_hu_767c452a66c1b539.jpg"alt="Storage"width="2946"
+            src="/lab-setup/02_hu_808cbbf288df33e5.png"alt="Storage"width="2946"
             height="1820"/>
         </picture></a><figcaption><p>Lab Storage (click to enlarge)</p></figcaption></figure>
 <p>Now you might ask yourself why I did it this way. Well, iSCSI has the advantage that I can implement a multi-path fabric and is basically my fastest storage, since I have 2x 10 Gb/s iSCSI and can utilize it to its full capacity.
@@ -289,11 +285,9 @@ There are three exceptions: my trunk port groups with MacLearning.
 Here, I have a trunk that only uses uplink 1 of the vDS and a trunk port group that uses uplink 2 of the vDS.
 This is important for NSX Labs if you want to test traffic steering of the NSX Teaming Policy.
 Another exception is my port group on which promiscuous mode is enabled. Here, I use active/standby, as otherwise I would have duplicated packets and performance losses.</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/lab-setup/03_hu_70a3bf0d0e3bb6a2.jpg" type="image/webp">
-          <source srcset="/lab-setup/03_hu_70a3bf0d0e3bb6a2.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/lab-setup/03_hu_a602a93e6500ef42.png" type="image/png">
           <img
-            src="/lab-setup/03_hu_70a3bf0d0e3bb6a2.jpg"alt="Network"width="2946"
+            src="/lab-setup/03_hu_a602a93e6500ef42.png"alt="Network"width="2946"
             height="1820"/>
         </picture></a><figcaption><p>Lab Network (click to enlarge)</p></figcaption></figure>
 <p>If you want to know more about this topic, you can read my article on <a href="https://sdn-warrior.org/posts/mac-learning/">Mac Learning</a>.
@@ -302,22 +296,18 @@ For VCF 9 installation, promiscuous mode is required, otherwise the deployment w
 <h2 id="vcf-fleet">VCF Fleet<a href="#vcf-fleet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>My fleet setup is a bit of a hodgepodge. Since I need VCF Operations for licensing, this is already running on my management NUC, as mentioned, but my VCF Automation is on an MS-A2 as a VM and is only turned on when I really need it, as it is a real resource hog. In addition, a VKS cluster has recently been running for testing purposes.
 I want to use automation to automatically deploy VMs that are running in the vsphere Namespace - fancy new things.</p>
-<figure><a href="04.png"><picture>
-          <source srcset="/lab-setup/04_hu_ad78bed1b9fe816.jpg" type="image/webp">
-          <source srcset="/lab-setup/04_hu_ad78bed1b9fe816.jpg" type="image/jpeg">
+<figure><a href="04.png"><picture><source srcset="/lab-setup/04_hu_b74ef2ac2ea7eee5.png" type="image/png">
           <img
-            src="/lab-setup/04_hu_ad78bed1b9fe816.jpg"alt="VCF Operations"width="2946"
+            src="/lab-setup/04_hu_b74ef2ac2ea7eee5.png"alt="VCF Operations"width="2946"
             height="1820"/>
         </picture></a><figcaption><p>VCF Operations (click to enlarge)</p></figcaption></figure>
 <p>I have several VCF instances onboarded in my central VCF Operations. Since I only have a certain number of licenses, I delete Labs in VCF Operations that are not currently needed.
 This is a bit annoying, but with the current licensing model, there is unfortunately no other way to do this.</p>
 <p>VCF Operations for Network is currently no longer deployed because my vDS kept getting out of sync, which caused problems with IPFIX. I will address this issue when I rebuild the vDS. After that, I will try again to get netflow running on my Mikrotik so that I can get useful network insights.
 However, this is still a work in progress.</p>
-<figure><a href="05.png"><picture>
-          <source srcset="/lab-setup/05_hu_94f583521082cc8b.jpg" type="image/webp">
-          <source srcset="/lab-setup/05_hu_94f583521082cc8b.jpg" type="image/jpeg">
+<figure><a href="05.png"><picture><source srcset="/lab-setup/05_hu_6df6be8da61cddc6.png" type="image/png">
           <img
-            src="/lab-setup/05_hu_94f583521082cc8b.jpg"alt="VCF Operations"width="3376"
+            src="/lab-setup/05_hu_6df6be8da61cddc6.png"alt="VCF Operations"width="3376"
             height="1418"/>
         </picture></a><figcaption><p>VCF Operations Overview (click to enlarge)</p></figcaption></figure>
 <h2 id="final-thoughts">Final thoughts<a href="#final-thoughts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>

@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-12-03T20:54:20+01:00">
   <meta itemprop="wordCount" content="820">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VCF,Operations,Sddc,Bugfix"><meta property="og:url" content="https://sdn-warrior.org/posts/bug-vcf-onboarding/">
+  <meta itemprop="keywords" content="Vcf,Operations,Sddc,Bugfix"><meta property="og:url" content="https://sdn-warrior.org/posts/bug-vcf-onboarding/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore">
   <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
@@ -40,7 +40,7 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-12-03T20:54:20+01:00">
     <meta property="article:modified_time" content="2025-12-03T20:54:20+01:00">
-    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Vcf">
     <meta property="article:tag" content="Operations">
     <meta property="article:tag" content="Sddc">
     <meta property="article:tag" content="Bugfix">
@@ -237,11 +237,9 @@ Since I had to reinstall one of them, I removed it according to the official <a 
 <li>Inventory Sync fails with the message that SDDC from instance X is not reachable</li>
 <li>Deployment of a new VCF instance to the existing instance of VCF Operations fails</li>
 </ul>
-<figure><a href="01.png"><picture>
-          <source srcset="/bug-sddc/01_hu_be89ce3cdc025779.jpg" type="image/webp">
-          <source srcset="/bug-sddc/01_hu_be89ce3cdc025779.jpg" type="image/jpeg">
+<figure><a href="01.png"><picture><source srcset="/bug-sddc/01_hu_8fecfa6fce911ae4.png" type="image/png">
           <img
-            src="/bug-sddc/01_hu_be89ce3cdc025779.jpg"alt="Error VCF deployment"width="1720"
+            src="/bug-sddc/01_hu_8fecfa6fce911ae4.png"alt="Error VCF deployment"width="1720"
             height="896"/>
         </picture></a><figcaption><p>Error VCF Installer (click to enlarge)</p></figcaption></figure>
 <p>The error shown in the screenshot occurs during the “Join the existing fleet management appliance” step in the VCF deployment.
@@ -252,11 +250,9 @@ A search in Operations revealed that there were still configuration remnants in 
 Even after deleting these remnants, the error persisted—you don&rsquo;t want to know how many times I deployed and deleted a VCF instance in the last two days.</p>
 <h2 id="troubleshooting">Troubleshooting<a href="#troubleshooting" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>After searching forever, I found an entry in the Fleet Manager database that explains the behavior, and that&rsquo;s also the point where we end up in the danger zone. So buckle up, take a snapshot of the Fleet Manager, and jump into the SSH session.</p>
-<figure><a href="02.png"><picture>
-          <source srcset="/bug-sddc/02_hu_15526af2f8d1f481.jpg" type="image/webp">
-          <source srcset="/bug-sddc/02_hu_15526af2f8d1f481.jpg" type="image/jpeg">
+<figure><a href="02.png"><picture><source srcset="/bug-sddc/02_hu_1d6ab8a1e62e3534.png" type="image/png">
           <img
-            src="/bug-sddc/02_hu_15526af2f8d1f481.jpg"alt="vLCM DB"width="2474"
+            src="/bug-sddc/02_hu_1d6ab8a1e62e3534.png"alt="vLCM DB"width="2474"
             height="529"/>
         </picture></a><figcaption><p>SDDC in the vCLM DB (click to enlarge)</p></figcaption></figure>
 <p>I must apologize for the screenshots, but I&rsquo;m glad I took them at all. What you can see in the screenshot is that the old SDDC Manager is listed in the <strong>vm_lcops_sddc_manager</strong> table.
@@ -312,11 +308,9 @@ I have tried this several times and was able to verify that it works. Would I do
 </span></span></code></pre></div><p>Reboot the fleet manager.</p>
 <h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Congratulations, we have hopefully survived the open-heart surgery. After that, I was able to simply press resume in the VCF installer and the VCF Instanc installation ran smoothly.</p>
-<figure><a href="03.png"><picture>
-          <source srcset="/bug-sddc/03_hu_a800f6fddc2b13d7.jpg" type="image/webp">
-          <source srcset="/bug-sddc/03_hu_a800f6fddc2b13d7.jpg" type="image/jpeg">
+<figure><a href="03.png"><picture><source srcset="/bug-sddc/03_hu_502148647c67f613.png" type="image/png">
           <img
-            src="/bug-sddc/03_hu_a800f6fddc2b13d7.jpg"alt="Installation finished"width="1707"
+            src="/bug-sddc/03_hu_502148647c67f613.png"alt="Installation finished"width="1707"
             height="1099"/>
         </picture></a><figcaption><p>Installation complete (click to enlarge)</p></figcaption></figure>
 <p>Of course, I can&rsquo;t say for sure whether all hidden entries from the old SDDC have been removed from the environment. The only thing to do here is wait until the bug is officially fixed. As I already mentioned, I was able to reproduce the behavior several times. Now that this problem has been solved, I can get back to working on the article I had originally planned.</p>
