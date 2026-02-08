@@ -7,20 +7,27 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 08 Feb 2026 19:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Homelab</title>
+      <link>https://sdn-warrior.org/tags/homelab/</link>
+      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nutanix</title>
+      <link>https://sdn-warrior.org/tags/nutanix/</link>
+      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/nutanix/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Avi</title>
       <link>https://sdn-warrior.org/tags/avi/</link>
       <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/avi/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Homelab</title>
-      <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
@@ -38,7 +45,7 @@
       <description></description>
     </item>
     <item>
-      <title>Vmware</title>
+      <title>VMware</title>
       <link>https://sdn-warrior.org/tags/vmware/</link>
       <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/vmware/</guid>
@@ -59,7 +66,7 @@
       <description></description>
     </item>
     <item>
-      <title>Vcf</title>
+      <title>VCF</title>
       <link>https://sdn-warrior.org/tags/vcf/</link>
       <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf/</guid>
@@ -101,7 +108,7 @@
       <description></description>
     </item>
     <item>
-      <title>NUC</title>
+      <title>Nuc</title>
       <link>https://sdn-warrior.org/tags/nuc/</link>
       <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/nuc/</guid>
@@ -140,13 +147,6 @@
       <link>https://sdn-warrior.org/tags/vcf9/</link>
       <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf9/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Broadcom</title>
-      <link>https://sdn-warrior.org/tags/broadcom/</link>
-      <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/tags/broadcom/</guid>
       <description></description>
     </item>
   </channel>

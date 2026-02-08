@@ -2,28 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/homelab/</loc>
+    <lastmod>2026-02-08T19:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/nutanix/</loc>
+    <lastmod>2026-02-08T19:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/nutanix-install-ce/</loc>
+    <lastmod>2026-02-08T19:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2026-02-08T19:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-02-08T19:00:00+01:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-02-08T19:00:00+01:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/avi/</loc>
     <lastmod>2026-01-27T21:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/avi-keycloak/</loc>
     <lastmod>2026-01-27T21:30:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/homelab/</loc>
-    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/security/</loc>
     <lastmod>2026-01-27T21:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/sso/</loc>
-    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
     <lastmod>2026-01-27T21:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/vmware/</loc>

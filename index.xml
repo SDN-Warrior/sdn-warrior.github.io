@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 08 Feb 2026 19:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nutanix - Get started with the CE Edition</title>
+      <link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
+      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.&lt;/p&gt;&#xA;&lt;figure&gt;&lt;picture&gt;&lt;source srcset=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img&#xD;&#xA;            src=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34;alt=&#34;Yes, this is my happy face&#34;width=&#34;1988&#34;&#xD;&#xA;            height=&#34;1491&#34;/&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&lt;p&gt;Yes, this is my happy face&lt;/p&gt;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;p&gt;Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>AVI - Connect Keycloak to AVI Loadbalancer</title>
       <link>https://sdn-warrior.org/posts/avi-keycloak/</link>
@@ -141,13 +148,6 @@
       <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&amp;rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.&lt;/p&gt;&#xA;&lt;p&gt;But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&amp;rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.&#xA;We will see in this post whether it is really that simple.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>NSX Expiring Transport Node Certificates</title>
-      <link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
-      <pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In NSX versions &lt;strong&gt;4.1.x&lt;/strong&gt; and &lt;strong&gt;4.2.0&lt;/strong&gt;, &lt;strong&gt;edge transport nodes&lt;/strong&gt; and &lt;strong&gt;host transport nodes&lt;/strong&gt; are instantiated using certificates with a &lt;strong&gt;validity period of only 825 days&lt;/strong&gt;.&#xA;This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&amp;rsquo;t seen anything about this in the changelog.&#xA;In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

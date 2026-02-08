@@ -7,13 +7,13 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 26 Jan 2026 20:02:02 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 08 Feb 2026 14:35:11 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Vcf9 Keycloak</title>
-      <link>http://localhost:1313/posts/vcf9-keycloak/</link>
-      <pubDate>Mon, 26 Jan 2026 20:02:02 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-keycloak/</guid>
+      <title>Nutanix Install Ce</title>
+      <link>http://localhost:1313/posts/nutanix-install-ce/</link>
+      <pubDate>Sun, 08 Feb 2026 14:35:11 +0100</pubDate>
+      <guid>http://localhost:1313/posts/nutanix-install-ce/</guid>
       <description></description>
     </item>
   </channel>

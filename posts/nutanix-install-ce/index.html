@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior">
+
+  <meta itemprop="name" content="Nutanix - Get started with the CE Edition">
+  <meta itemprop="description" content="Introduction In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.
+Yes, this is my happy face
+Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.">
+  <meta itemprop="datePublished" content="2026-02-08T19:00:00+01:00">
+  <meta itemprop="dateModified" content="2026-02-08T19:00:00+01:00">
+  <meta itemprop="wordCount" content="4093">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Nutanix,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/nutanix-install-ce/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="Nutanix - Get started with the CE Edition">
+  <meta property="og:description" content="Introduction In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.
+Yes, this is my happy face
+Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-08T19:00:00+01:00">
+    <meta property="article:modified_time" content="2026-02-08T19:00:00+01:00">
+    <meta property="article:tag" content="Nutanix">
+    <meta property="article:tag" content="Homelab">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:title" content="Nutanix - Get started with the CE Edition">
+  <meta name="twitter:description" content="Introduction In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.
+Yes, this is my happy face
+Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Nutanix - Get started with the CE Edition",
+    "name": "Nutanix - Get started with the CE Edition",
+    "description": "Introduction In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.\nYes, this is my happy face\nHaving worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.\n",
+    "keywords": ["nutanix", "homelab"],
+    "articleBody": "Introduction In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.\nYes, this is my happy face\nHaving worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.\nIn any case, NEXT was decisive enough for me to take another closer look at Nutanix, because after all, there is a Community Edition that should cover most of the features. I would have liked to test the “real” Nutanix version, but unfortunately that’s not easily possible. However, I am in talks with one or two Nutanix employees and perhaps a way can be found. That’s why this isn’t a feature comparison, because it would be like comparing apples and oranges if I were to compare the Community Edition of Nutanix with VCF9.\nAfter all, there is a Community Edition of Nutanix, but VMware currently only offers ESXi8 Free. Personally, I would welcome a Community Edition from VMware. I know you can get licenses for VCF through VMUG Advantage and by passing an exam, but it’s not the same. Phew, that was quite a long introduction, but let’s get started.\nGetting started At first, it wasn’t that easy to find the CE Edition. You need a free Nutanix account, and then you can download the CE here. Of course, the CE version has a few limitations, and of course I had to implement a few workarounds with my hardware to ensure that everything runs smoothly. But we are already used to that here, and it should come as no surprise to readers.\nOne limitation, for example, is the cluster size; Nutanix CE can only be deployed as a one, three, or four node cluster. Larger clusters or even two node clusters are reserved for the full version. The same applies to stretched clusters. In addition, the CE version only comes with AHV, which I personally don’t find problematic; if I want to use ESX, I deploy VCF or VVF. I first tried Nutanix as a nested deployment, which worked fine, but the storage was really slow. That’s not Nutanix’s fault, though; it’s the same with a nested vSAN cluster.\nIf you want to install the CE Edition bare metal, you unfortunately have to use a specific version of Rufus, otherwise Nutanix will not boot from a USB stick. I don’t know exactly why this is the case. I tried Mac alternatives because I no longer have a Windows PC, but it didn’t work. In the end, I got the image to run in a Windows 11 VM with USB passthrough and Rufus 3.21. Rufus 3.2.2 or newer do not work.\nAnother limitation of the CE Edition is that you must be online and have a Nutanix account. This must be entered after creating the cluster. Nutanix CE cannot be used without free online activation.\nHardware To install Nutanix, you need at least three hard drives: one for booting, one for the CVM (hot tier must be flash), and one for cold data. I used NVMe storage for all three drives. I used three MS-01s with Intel i9 13th generation CPUs, 96 GB RAM, and 1x1TB and 2x2TB storage. Before the question arises, unfortunately I cannot use all 20 cores of the i9. Nutanix is the same as ESX in this respect; only the P+E cores without HT work. That makes a total of 14 vCPUs. I use 2x10Gb/s for the network, but less is also possible. However, you should not expect miracles in terms of performance if the network connection is less than 10Gb/s.\nNetwork While we’re on the subject of networks, Nutanix uses the 192.168.5.0/24 network internally for communication between the hypervisor and CVM. I haven’t found a way to change this (yet). If you have important external services such as DNS or NTP in this network area, it becomes difficult. Furthermore, the CVM and the hypervisor host must be in the same L2 network, and unfortunately, the CE Edition does not support VLANs for this. I managed to get my AHV host and my CVM to have a management VLAN, but the VLAN of the CVM is not persistent. After each reboot, the VLAN tag disappeared again. The problem seems to be that the VLAN tag settings are not written to cvm_config.json. I tried to do this manually, but I don’t seem to be using the correct syntax. I need to test this further, and if I figure out how to do it, I will update this article. Another thing that may seem unusual to VMware users is that Nutanix initially uses all network adapters after installation, and this cannot be configured during installation.\nInstallation The installation is so simple and straightforward that I briefly considered not writing anything at all. But that’s mainly because there’s virtually nothing to configure.\nInstallation\nWhat you see in this screenshot is exactly what you can configure in the CE version. I use my smallest disk as the boot disk (H) and both 2TB NVMes as data or CVM disks. The installer usually selects the appropriate option. If you have different disk sizes (all flash), I would select the largest one as the data disk. Ideally, the cluster should be uniformly equipped, but this is not a must.\nCVM - What is that anyway? I should perhaps add a brief comment on this. One of my biggest criticisms was the complicated structure—why is there such a thing as a CVM, and why can’t it be like vSAN? I had a very good conversation about this topic with Bas Raayman at Next and if anyone can explain it, it’s him.\nI hope I can summarize everything briefly. But on the one hand, the issue is historical. Nutanix started with ESXi as its hypervisor, and it was simply not allowed to bring the functionalities into the kernel via its own extensions. On the other hand, it also makes the platform hypervisor agnostic. Among other things, the CVM serves as a storage controller, provides IO paths, contains the cluster logic, and can provide a file server and certainly much more. The big advantage is that it is flexible. Nutanix runs on AHV, VMware, and the cloud. The CVM code base is always the same. Furthermore, VM metadata is stored in the CVM. This means I can easily migrate VMs between hypervisors. But where there is light, there is also shadow. Of course, this comes at the cost of some latency. According to Bas, it’s hardly noticeable, but if I need to squeeze out every last bit of latency, then ESX is probably faster. The second problem, which I consider much more significant, is that users can log in to the CVM at any time and, in the case of the CE Edition, must do so. With a lot of root privileges comes a lot of responsibility. If you shut down the CVM or break it, the storage node will also fail. Overall, however, the advantages outweigh the disadvantages if you want to be hypervisor agnostic. And I must admit that at first I didn’t understand the necessity of CVM and found the whole thing unnecessarily complicated. However, my opinion has actually changed in the meantime and I can now appreciate the charm of this solution.\nRegardless, I will continue to favor NFS/iSCSI as the primary storage in my home lab wherever possible. Maybe I’m just a little stubborn and old-fashioned in that regard.\nCreating the cluster After installing all three hosts, I was faced with the problem that my servers were not accessible. Since it is not officially possible to configure a VLAN for management, I configured my switch ports to untagged. However, the reason why the servers were not accessible was not because of this, but because my first adapter on the MS-01 is also used for the integrated IPMI. By default, Nutanix builds an active/standby bond with all adapters and prefers ETH0 as the active adapter. Even if it only has 1 Gb/s. Since my IPMI also does not support VLAN tags and is located in a different LAN than my Nutanix cluster, I had a problem.\nThe solution is obvious: reconfigure the open vswitch. But how?\nChanging the OVS Switch uplinks Now this is where the CVM comes into play, but how can you access the CVM if you can’t reach it via the network? Thanks to IPMI, I have console access to my server, and I mentioned the 192.168.5.0/24 network earlier. Each CVM has the same internal IP, so you can jump to the CVM via SSH to 192.168.5.2. Each AHV host has 192.168.5.1. Each CVM has two interfaces. The external interface is assigned to the OVS on the default bridge br0, and the internal interface runs via a Linux bridge virbr0. To log in to the AHV host, you need the root user, and the CVM must be addressed with the user nutanix. Both users have the default password nutanix/4u.\nAfter logging in, you can change the uplinks of the default br0 using the following command. In my case, I only want to use the two 10 Gb/s interfaces of my MS-01.\nmanage_ovs --bridge_name br0 --interfaces eth2,eth3 --bond_mode active-backup update_uplinks Modifying the network\rIf the host is assigned to an existing cluster, the host should be in maintenance mode and the CVM should be shut down. Otherwise, significant problems may occur. Since no cluster has been initialized yet, this step is not necessary.\rAfter this change, the host and CVM are now accessible from my admin desktop. This must now also be done with the other two hosts.\nWorkaround due to identical UUIDs of the hosts This brings me to the first real problem with the installation, and I noticed the error very late in the process. Unfortunately, all my MS-01 servers are assigned the same UUID. By default, the default source for the UUID is smbios, but all of my MS-01s have the same UUID. This should not happen and is clearly due to my hardware. I cannot say at this point whether this also happens with an MS-A2, but at least all 6 of my MS01s are affected.\nThe annoying thing is that I only notice this when a VM needs to be migrated. I can create a cluster without any problems, execute the lifecycle, and even Prism Central deployment works fine, but as soon as a VM needs to be migrated, the problems start.\nI received the following error message.\nOperation failed: internal error: Attempt to migrate guest to the same host 03000200-0400-0500-0006-000700080009: 61 And if you know a little bit about this, you’ll notice that the reason is already stated in the error message. All hosts have the UUID 03000200-0400-0500-0006-000700080009. As a result, Nutanix assumes that the VM should be migrated to the same host where it is running and therefore aborts the process.\nIf you are logged in as root on the AHV, you can use the following command to display the UUID.\ncat /sys/class/dmi/id/product_uuid If this is the same on all hosts, then congratulations, the following workaround is necessary. First, we generate fresh UUIDs that are unique. This can be done with the following command on the AHV. Three can be generated at once.\nuuidgen -r It’s best to save them, because unfortunately the fix isn’t 100% permanent, but more on that later. Next, the following file must be modified. /etc/libvirt/libvirtd.conf This can be done with nano or vi. Since I am more comfortable with nano, it is always my tool of choice, if available. The fix is quite simple: a line needs to be commented out relatively far down, and the UUID needs to be replaced with a valid one.\n# NB This default all-zeros UUID will not work. Replace # it with the output of the 'uuidgen' command and then # uncomment this entry host_uuid = \"c39808fa-8255-4c46-84ee-84e3ad5d16f0\" #host_uuid_source = \"smbios\" Finally, restart the libvirt service and we are ready to go.\nsystemctl restart libvirtd Persistence of the workaround\rUnfortunately, the workaround is not 100% persistent. Rebooting and completely shutting down the cluster or environment is not a problem, but when upgrading to a new AHV version, the file is overwritten with defaults again. A 100% permanent solution would probably only be a BIOS update where the manufacturer fixes the problem with the UUID.\rCreating the cluster - now really! Once network connectivity has been established and our UUIDs are once again unique, the cluster can be created. Since there is no GUI available for us to use at this point, this must also be done manually via the CLI. Don’t worry, it’s quick and painless. To do this, you must log in to any CVM via nutanix User. This should now also be possible via the configured IP from the installer.\nThe cluster creation process is simple and can be done quickly using the following CLI command.\ncluster -s cvm1_ip_addr,cvm2_ip_addr,... create After a certain amount of time, the cluster status can be checked with this command.\ncluster status DNS, NTP, Cluster VIP\rThe CE edition comes with public DNS and NTP server entries. If you don’t want this, you can change it via the cluster’s GUI or directly via CLI. Without adjustment, the cluster starts up without Cluster VIP, which must then be adjusted afterwards.\rAdditional settings via the CLI.\nDefine the cluster name.\nncli cluster edit-params new-name=cluster_name Configure a name server for the cluster.\nncli cluster add-to-name-servers servers=public_name_server_ip_address Configure an external IP address for the cluster.\n(This parameter is required for a CE cluster.)\nncli cluster set-external-ip-address external-ip-address=cluster_ip_address Add an NTP server IP address to the list of NTP servers.\nncli cluster add-to-ntp-servers servers=NTP_server_ip_address After completing all these steps, you should now be able to log in to the Nutanix cluster via the ClusterIP.\nWith Prism Elements, Nutanix provides a web interface that can be accessed via any host and via the cluster IP port 9440. This means that it is not necessarily required to deploy Prism Central. If you intend to use Nutanix as a pure hypervisor without Nutanix Flow and other services, Prism Elements is entirely sufficient. If you want to use different clusters or Nutanix Flow (which I am very interested in), then Prism Central is a must. It can be easily deployed as a VM in the cluster via Prism Element. I will describe this further down in the article.\nPrism Element\nWhen logging in for the first time at the Prism Elemet GUI with the admin user and the password nutanix/4u, this must be changed. And while we’re on the subject of changing passwords, this should also be done for all other accounts. To change the passwords for all accounts, there is a KB article from Nutanix that describes how to do this via the CVM. I strongly recommend changing all default accounts.\nDefault Paasword changes The following three commands help to change the password for the root, admin, and nutanix accounts at the AHV host level and on all the hosts in the cluster. Do not modify the command. It will ask for the new password twice and will not display it. This can run from any CVM in the cluster.\nChange CVM local account\nnutanix\nsudo passwd nutanix Change AHV local accounts\nroot\necho -e \"CHANGING ALL AHV HOST ROOT PASSWORDS.\\nPlease input new password: \"; read -rs password1; echo \"Confirm new password: \"; read -rs password2; if [ \"$password1\" == \"$password2\" ]; then for host in $(hostips); do echo Host $host; echo $password1 | ssh root@$host \"passwd --stdin root\"; done; else echo \"The passwords do not match\"; fi admin\necho -e \"CHANGING ALL AHV HOST ADMIN PASSWORDS.\\nPlease input new password: \"; read -rs password1; echo \"Confirm new password: \"; read -rs password2; if [ \"$password1\" == \"$password2\" ]; then for host in $(hostips); do echo Host $host; echo $password1 | ssh root@$host \"passwd --stdin admin\"; done; else echo \"The passwords do not match\"; fi nutanix\necho -e \"CHANGING ALL AHV HOST NUTANIX PASSWORDS.\\nPlease input new password: \"; read -rs password1; echo \"Confirm new password: \"; read -rs password2; if [ \"$password1\" == \"$password2\" ]; then for host in $(hostips); do echo Host $host; echo $password1 | ssh root@$host \"passwd --stdin nutanix\"; done; else echo \"The passwords do not match\"; fi Additional settings I switched my default network switch vs0 to jumbo frames. This can be done via the dropdown menu (in Prism Element) under Settings -\u003e Network Configuration -\u003e Virtual Switch -\u003e vs0 and the Edit icon. Here, the bond and uplinks can also be adjusted.\nvs0 network settings\nNutanix offers two options: Standard or Quick. In Standard mode, the hosts are put into maintenance mode beforehand; in Quick mode, the changes are implemented immediately. If something is wrong with the physical configuration, the workload would be offline as a result. Nutanix recommends Standard mode here, as adjusting the network also affects storage traffic. This always runs via the vs0 switch. If you have more than two adapters, you can also separate the traffic via an additional switch (alternatively, you can configure a bond without failover and separate traffic with two network types).\nIn addition, under Settings -\u003e SSL Certificate, I replaced the Prism Element certificate with my own CA from my root CA. Here, all IPs and FQDNs of all cluster nodes and the cluster VIP must be entered under SAN. I also switched the UI to dark mode and English. This can be done under Settings -\u003e UI Settings and Language Settings.\nLifecycle The lifecycle can be managed via Prism Element or Prism Central. Prism Central has its own lifecycle independent of Prism Element. Nutanix CE comes in AOS version 6.9.1. Currently, the maximum upgrade available via Lifecycle is to AOS version 7.3.1.2.\nCurrent Bug with 7.5.x.x\rThere is currently a problem with unofficially supported hardware hosts and Nutanix AOS versions higher than 7.3.x.x. In addition, if your host is affected by the UUID problem, the workaround must be applied after every AHV upgrade. I therefore first set the lifecycle to 7.3.x and then deployed Prism Central. To do this, I shut down all VMs (except for the CVM) so that I would not encounter any errors during the upgrade.\rDeploying Nutanix Prism To deploy Prism Central, I first created a new storage container. A storage container is a logical construct to which I can apply policies and where I can create my vDisks for VMs. It is not a volume or LUN. Each storage container can have different policies and therefore behave differently, but all storage containers run on the same storage pool (in my lab, I only have one storage pool consisting of the resources of the three servers).\nTo create the storage container, I switch to Storage via the dropdown menu and create a new container called Workload. Compression and an error tolerance of 1N/1D are set by default. This means that 1 node from the cluster can fail. I could also set the advertised capacity or reserve capacity. I leave everything at default here. Unfortunately, erasure coding does not work because I would need at least 4 hosts for that. It’s a sad, because vSAN ESA is a little more flexible here, allowing me to use Raid 5 erasure coding with as few as 3 hosts.\nStorage Container\nTo deploy Prism Central, simply click on the Nutanx Prism Element Dashboard (top left) and select “Deploy New Prism Central.” The dialog box will display all compatible versions, which you can then download. I opted for the latest version. I deployed Prism Central in the small form factor because I want to use Nutanix Flow later, and that doesn’t work with extra-small. Using Create Network, I created a new VLAN network on the default vSwitch vs0. This VLAN must be routed and must be able to communicate with the CVMs and the AHV server. It must also be present on the physical switches. The other settings are very self-explanatory. IP, gateway IP, DNS, NTP, and storage container should be known and available. I decided not to use an HA deployment due to the resources required. Finally, press Deploy and then it’s time for 1-2 coffees, because the installation can take a good 30-40 minutes.\nOnce Prism Central has been successfully deployed, the cluster still needs to be registered. This is done via Prism Element in the same place where the deployment was started. I will describe the rest of the Prism Central setup and the post-setup steps in a separate article—sometime in the future.\nSafely shut down the environment and restart it. Since I do not have my lab environments running continuously, I shut down my environments regularly, and as with VCF, this must be done in a fixed order.\nShutting down all workload VMs via Prism Central or Elements. Log in to Prism Central via SSH with the nutanix user and enter cluster stop. Wait until the message “Success” appears. You can check the status using cluster status. Even if Prism Central is not a clustered installation, this is the safest option. Shut down Prism Central with sudo shutdown now. Log in to Prism Element and wait until Prism Central VM has shut down. Log in via SSH and the nutanix user on any CMV and execute cluster stop. Wait until the message “Success” appears. You can check the status using cluster status. Log in to all CVMs via SSH and nutanix user and shut them down with sudo shutdown now Log in to all AHV servers via SSH and root Check with virsh list whether any VMs are still running Once all VMs have been stopped, shut down each AHV host with shutdown now Starting the cluster is done in exactly the opposite order. Instead of cluster stop, cluster start must be entered. Simply booting up the Prism Central VM is not enough; here too, the cluster must be started explicitly with cluster start.\nSummary At first glance, a lot of things are different from VMware. But what I particularly like, and haven’t mentioned in this article yet, is that as a home lab user, you get a really well-rounded and great software package for free. The CE also includes the Kubernetes Engine and Flow, which is essentially Nutanix’s alternative to NSX and VKS. Overall, I really liked how easy it was to install Flow or Move (the HCX alternative) via a kind of app store.\nI have to admit that the installation process wasn’t exactly easy. In this article, I’ve only written down the results of several days of trying and searching for the problem. Nutanix can’t do anything about the UUID problem, but I find it difficult to understand why the AHV installation process doesn’t simply support VLANs like ESX does. However, I also know that these are problems with the CE Edition and do not affect Nutanix Fusion.\nBut it’s not like you’re faced with unsolvable problems. The Nutanix forum is full of solutions and help, you just have to find it. It also doesn’t hurt to be familiar with KVM and Open vSwitch. I have experience with both thanks to my work with Proxmox and Unraid.\nThe fact that you need three hard drives could also be an obstacle. I wouldn’t have been able to get Nutanix to run on a Nuc. Maybe it’s possible to boot from a USB stick, I’ll have to test that. Fortunately, nested deployment is also an option if you can live with the lower performance of the storage.\nIn the future, I will write more articles about my small test cluster because I definitely want to try Move and Flow. I hope that anyone who was hoping I would write a scathing review isn’t too disappointed, but to be fair, I can only compare free software with free software, and VMware would currently come up short. I’m curious to see how this topic develops and what else I will write about it.\n",
+    "wordCount" : "4093",
+    "inLanguage": "en",
+    "datePublished": "2026-02-08T19:00:00+01:00",
+    "dateModified": "2026-02-08T19:00:00+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/nutanix-install-ce/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>Nutanix - Get started with the CE Edition</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.4a710a7c0d2021c556818ee82d473cb9b2609d3edea5ab7e43529e3680d670ad.css" integrity="sha256-SnEKfA0gIcVWgY7oLUc8ubJgnT7epat+Q1KeNoDWcK0=" crossorigin="anonymous">
+	</head>
+<body id="page">
+	<header id="site-header">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				</div>
+				<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-install-ce%2f&amp;text=Nutanix%20-%20Get%20started%20with%20the%20CE%20Edition" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-install-ce%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=Nutanix%20-%20Get%20started%20with%20the%20CE%20Edition&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-install-ce%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-install-ce%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Nutanix%20-%20Get%20started%20with%20the%20CE%20Edition&amp;summary=Nutanix%20-%20Get%20started%20with%20the%20CE%20Edition%2c%20by%20SDN-Warrior%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;Nutanix - Get started with the CE Edition&#34;,&#34;https://sdn-warrior.org/posts/nutanix-install-ce/&#34;,&#34;Nutanix - Get started with the CE Edition, by SDN-Warrior\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+			<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+			<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+			<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Feb 8, 2026</span></div>
+				<h1>Nutanix - Get started with the CE Edition</h1>
+			</header>
+			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nutanix">nutanix</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>4093 Words
+     // ReadTime
+    
+    
+    
+    18 Minutes, 36 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-02-08 19:00 &#43;0100</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.</p>
+<figure><picture><source srcset="/nutanix-ce/01_hu_f9ca88236445953f.jpg" type="image/jpeg">
+          <img
+            src="/nutanix-ce/01_hu_f9ca88236445953f.jpg"alt="Yes, this is my happy face"width="1988"
+            height="1491"/>
+        </picture><figcaption><p>Yes, this is my happy face</p></figcaption></figure>
+<p>Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.</p>
+<p>In any case, NEXT was decisive enough for me to take another closer look at Nutanix, because after all, there is a Community Edition that should cover most of the features. I would have liked to test the “real” Nutanix version, but unfortunately that&rsquo;s not easily possible. However, I am in talks with one or two Nutanix employees and perhaps a way can be found. That&rsquo;s why this isn&rsquo;t a feature comparison, because it would be like comparing apples and oranges if I were to compare the Community Edition of Nutanix with VCF9.</p>
+<p>After all, there is a Community Edition of Nutanix, but VMware currently only offers ESXi8 Free. Personally, I would welcome a Community Edition from VMware. I know you can get licenses for VCF through VMUG Advantage and by passing an exam, but it&rsquo;s not the same. Phew, that was quite a long introduction, but let&rsquo;s get started.</p>
+<h2 id="getting-started">Getting started<a href="#getting-started" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>At first, it wasn&rsquo;t that easy to find the CE Edition. You need a free Nutanix account, and then you can download the CE <a href="https://next.nutanix.com/discussion-forum-14/download-community-edition-38417">here</a>.
+Of course, the CE version has a few limitations, and of course I had to implement a few workarounds with my hardware to ensure that everything runs smoothly. But we are already used to that here, and it should come as no surprise to readers.</p>
+<p>One limitation, for example, is the cluster size; Nutanix CE can only be deployed as a one, three, or four node cluster. Larger clusters or even two node clusters are reserved for the full version. The same applies to stretched clusters. In addition, the CE version only comes with AHV, which I personally don&rsquo;t find problematic; if I want to use ESX, I deploy VCF or VVF. I first tried Nutanix as a nested deployment, which worked fine, but the storage was really slow. That&rsquo;s not Nutanix&rsquo;s fault, though; it&rsquo;s the same with a nested vSAN cluster.</p>
+<p>If you want to install the CE Edition bare metal, you unfortunately have to use a specific version of Rufus, otherwise Nutanix will not boot from a USB stick. I don&rsquo;t know exactly why this is the case. I tried Mac alternatives because I no longer have a Windows PC, but it didn&rsquo;t work. In the end, I got the image to run in a Windows 11 VM with USB passthrough and Rufus 3.21. Rufus 3.2.2 or newer do not work.</p>
+<p>Another limitation of the CE Edition is that you must be online and have a Nutanix account. This must be entered after creating the cluster. Nutanix CE cannot be used without free online activation.</p>
+<h2 id="hardware">Hardware<a href="#hardware" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To install Nutanix, you need at least three hard drives: one for booting, one for the CVM (hot tier must be flash), and one for cold data. I used NVMe storage for all three drives. I used three MS-01s with Intel i9 13th generation CPUs, 96 GB RAM, and 1x1TB and 2x2TB storage. Before the question arises, unfortunately I cannot use all 20 cores of the i9. Nutanix is the same as ESX in this respect; only the P+E cores without HT work. That makes a total of 14 vCPUs. I use 2x10Gb/s for the network, but less is also possible. However, you should not expect miracles in terms of performance if the network connection is less than 10Gb/s.</p>
+<h2 id="network">Network<a href="#network" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>While we&rsquo;re on the subject of networks, Nutanix uses the 192.168.5.0/24 network internally for communication between the hypervisor and CVM. I haven&rsquo;t found a way to change this (yet). If you have important external services such as DNS or NTP in this network area, it becomes difficult. Furthermore, the CVM and the hypervisor host must be in the same L2 network, and unfortunately, the CE Edition does not support VLANs for this. I managed to get my AHV host and my CVM to have a management VLAN, but the VLAN of the CVM is not persistent. After each reboot, the VLAN tag disappeared again. The problem seems to be that the VLAN tag settings are not written to cvm_config.json. I tried to do this manually, but I don&rsquo;t seem to be using the correct syntax. I need to test this further, and if I figure out how to do it, I will update this article. Another thing that may seem unusual to VMware users is that Nutanix initially uses all network adapters after installation, and this cannot be configured during installation.</p>
+<h2 id="installation">Installation<a href="#installation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The installation is so simple and straightforward that I briefly considered not writing anything at all. But that&rsquo;s mainly because there&rsquo;s virtually nothing to configure.</p>
+<figure><a href="02.jpg"><picture><source srcset="/nutanix-ce/02_hu_f1f4816dd63a9f3d.jpg" type="image/jpeg">
+          <img
+            src="/nutanix-ce/02_hu_f1f4816dd63a9f3d.jpg"alt="YInstall"width="1707"
+            height="1166"/>
+        </picture></a><figcaption><p>Installation</p></figcaption></figure>
+<p>What you see in this screenshot is exactly what you can configure in the CE version. I use my smallest disk as the boot disk (H) and both 2TB NVMes as data or CVM disks. The installer usually selects the appropriate option. If you have different disk sizes (all flash), I would select the largest one as the data disk. Ideally, the cluster should be uniformly equipped, but this is not a must.</p>
+<h2 id="cvm---what-is-that-anyway">CVM - What is that anyway?<a href="#cvm---what-is-that-anyway" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I should perhaps add a brief comment on this. One of my biggest criticisms was the complicated structure—why is there such a thing as a CVM, and why can&rsquo;t it be like vSAN? I had a very good conversation about this topic with <a href="https://www.linkedin.com/in/basraayman/">Bas Raayman</a> at Next and if anyone can explain it, it&rsquo;s him.</p>
+<p>I hope I can summarize everything briefly. But on the one hand, the issue is historical. Nutanix started with ESXi as its hypervisor, and it was simply not allowed to bring the functionalities into the kernel via its own extensions. On the other hand, it also makes the platform hypervisor agnostic. Among other things, the CVM serves as a storage controller, provides IO paths, contains the cluster logic, and can provide a file server and certainly much more. The big advantage is that it is flexible. Nutanix runs on AHV, VMware, and the cloud. The CVM code base is always the same. Furthermore, VM metadata is stored in the CVM. This means I can easily migrate VMs between hypervisors. But where there is light, there is also shadow. Of course, this comes at the cost of some latency. According to Bas, it&rsquo;s hardly noticeable, but if I need to squeeze out every last bit of latency, then ESX is probably faster. The second problem, which I consider much more significant, is that users can log in to the CVM at any time and, in the case of the CE Edition, must do so. With a lot of root privileges comes a lot of responsibility. If you shut down the CVM or break it, the storage node will also fail. Overall, however, the advantages outweigh the disadvantages if you want to be hypervisor agnostic. And I must admit that at first I didn&rsquo;t understand the necessity of CVM and found the whole thing unnecessarily complicated. However, my opinion has actually changed in the meantime and I can now appreciate the charm of this solution.</p>
+<p>Regardless, I will continue to favor NFS/iSCSI as the primary storage in my home lab wherever possible. Maybe I&rsquo;m just a little stubborn and old-fashioned in that regard.</p>
+<h2 id="creating-the-cluster">Creating the cluster<a href="#creating-the-cluster" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>After installing all three hosts, I was faced with the problem that my servers were not accessible. Since it is not officially possible to configure a VLAN for management, I configured my switch ports to untagged. However, the reason why the servers were not accessible was not because of this, but because my first adapter on the MS-01 is also used for the integrated IPMI. By default, Nutanix builds an active/standby bond with all adapters and prefers ETH0 as the active adapter. Even if it only has 1 Gb/s. Since my IPMI also does not support VLAN tags and is located in a different LAN than my Nutanix cluster, I had a problem.</p>
+<p>The solution is obvious: reconfigure the open vswitch. But how?</p>
+<h3 id="changing-the-ovs-switch-uplinks">Changing the OVS Switch uplinks<a href="#changing-the-ovs-switch-uplinks" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Now this is where the CVM comes into play, but how can you access the CVM if you can&rsquo;t reach it via the network? Thanks to IPMI, I have console access to my server, and I mentioned the 192.168.5.0/24 network earlier. Each CVM has the same internal IP, so you can jump to the CVM via SSH to 192.168.5.2. Each AHV host has 192.168.5.1. Each CVM has two interfaces. The external interface is assigned to the OVS on the default bridge br0, and the internal interface runs via a Linux bridge virbr0. To log in to the AHV host, you need the <em><strong>root</strong></em> user, and the CVM must be addressed with the user <em><strong>nutanix</strong></em>. Both users have the default password <em><strong>nutanix/4u</strong></em>.</p>
+<p>After logging in, you can change the uplinks of the default br0 using the following command. In my case, I only want to use the two 10 Gb/s interfaces of my MS-01.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">manage_ovs --bridge_name br0 --interfaces eth2,eth3 --bond_mode active-backup update_uplinks
+</span></span></code></pre></div>
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Modifying the network</b>
+        </div>
+        <div class="admonition-content">If the host is assigned to an existing cluster, the host should be in maintenance mode and the CVM should be shut down. Otherwise, significant problems may occur. Since no cluster has been initialized yet, this step is not necessary.</div>
+    </aside>
+<p>After this change, the host and CVM are now accessible from my admin desktop. This must now also be done with the other two hosts.</p>
+<h3 id="workaround-due-to-identical-uuids-of-the-hosts">Workaround due to identical UUIDs of the hosts<a href="#workaround-due-to-identical-uuids-of-the-hosts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>This brings me to the first real problem with the installation, and I noticed the error very late in the process. Unfortunately, all my MS-01 servers are assigned the same UUID. By default, the default source for the UUID is smbios, but all of my MS-01s have the same UUID. This should not happen and is clearly due to my hardware. I cannot say at this point whether this also happens with an MS-A2, but at least all 6 of my MS01s are affected.</p>
+<p>The annoying thing is that I only notice this when a VM needs to be migrated. I can create a cluster without any problems, execute the lifecycle, and even Prism Central deployment works fine, but as soon as a VM needs to be migrated, the problems start.</p>
+<p>I received the following error message.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Operation failed: internal error: Attempt to migrate guest to the same host 03000200-0400-0500-0006-000700080009: 61
+</span></span></code></pre></div><p>And if you know a little bit about this, you&rsquo;ll notice that the reason is already stated in the error message. All hosts have the UUID 03000200-0400-0500-0006-000700080009. As a result, Nutanix assumes that the VM should be migrated to the same host where it is running and therefore aborts the process.</p>
+<p>If you are logged in as root on the AHV, you can use the following command to display the UUID.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">cat /sys/class/dmi/id/product_uuid
+</span></span></code></pre></div><p>If this is the same on all hosts, then congratulations, the following workaround is necessary.
+First, we generate fresh UUIDs that are unique. This can be done with the following command on the AHV. Three can be generated at once.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">uuidgen -r
+</span></span></code></pre></div><p>It&rsquo;s best to save them, because unfortunately the fix isn&rsquo;t 100% permanent, but more on that later.
+Next, the following file must be modified.
+<em><strong>/etc/libvirt/libvirtd.conf</strong></em>
+This can be done with nano or vi. Since I am more comfortable with nano, it is always my tool of choice, if available.
+The fix is quite simple: a line needs to be commented out relatively far down, and the UUID needs to be replaced with a valid one.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl"># NB This default all-zeros UUID will not work. Replace
+</span></span><span class="line"><span class="cl"># it with the output of the &#39;uuidgen&#39; command and then
+</span></span><span class="line"><span class="cl"># uncomment this entry
+</span></span><span class="line"><span class="cl">host_uuid = &#34;c39808fa-8255-4c46-84ee-84e3ad5d16f0&#34;
+</span></span><span class="line"><span class="cl">#host_uuid_source = &#34;smbios&#34;
+</span></span></code></pre></div><p>Finally, restart the libvirt service and we are ready to go.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">systemctl restart libvirtd
+</span></span></code></pre></div>
+    <aside class="admonition attention">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div><b>Persistence of the workaround</b>
+        </div>
+        <div class="admonition-content">Unfortunately, the workaround is not 100% persistent. Rebooting and completely shutting down the cluster or environment is not a problem, but when upgrading to a new AHV version, the file is overwritten with defaults again. A 100% permanent solution would probably only be a BIOS update where the manufacturer fixes the problem with the UUID.</div>
+    </aside>
+<h3 id="creating-the-cluster---now-really">Creating the cluster - now really!<a href="#creating-the-cluster---now-really" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Once network connectivity has been established and our UUIDs are once again unique, the cluster can be created. Since there is no GUI available for us to use at this point, this must also be done manually via the CLI. Don&rsquo;t worry, it&rsquo;s quick and painless.
+To do this, you must log in to any CVM via nutanix User. This should now also be possible via the configured IP from the installer.</p>
+<p>The cluster creation process is simple and can be done quickly using the following CLI command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">cluster -s cvm1_ip_addr,cvm2_ip_addr,... create
+</span></span></code></pre></div><p>After a certain amount of time, the cluster status can be checked with this command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">cluster status
+</span></span></code></pre></div>
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>DNS, NTP, Cluster VIP</b>
+        </div>
+        <div class="admonition-content">The CE edition comes with public DNS and NTP server entries. If you don&rsquo;t want this, you can change it via the cluster&rsquo;s GUI or directly via CLI.
+Without adjustment, the cluster starts up without Cluster VIP, which must then be adjusted afterwards.</div>
+    </aside>
+<p>Additional settings via the CLI.</p>
+<p>Define the cluster name.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ncli cluster edit-params new-name=cluster_name
+</span></span></code></pre></div><p>Configure a name server for the cluster.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ncli cluster add-to-name-servers servers=public_name_server_ip_address
+</span></span></code></pre></div><p>Configure an external IP address for the cluster.</p>
+<p>(This parameter is required for a CE cluster.)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ncli cluster set-external-ip-address external-ip-address=cluster_ip_address
+</span></span></code></pre></div><p>Add an NTP server IP address to the list of NTP servers.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ncli cluster add-to-ntp-servers servers=NTP_server_ip_address
+</span></span></code></pre></div><p>After completing all these steps, you should now be able to log in to the Nutanix cluster via the ClusterIP.</p>
+<p>With Prism Elements, Nutanix provides a web interface that can be accessed via any host and via the cluster IP port 9440. This means that it is not necessarily required to deploy Prism Central. If you intend to use Nutanix as a pure hypervisor without Nutanix Flow and other services, Prism Elements is entirely sufficient. If you want to use different clusters or Nutanix Flow (which I am very interested in), then Prism Central is a must. It can be easily deployed as a VM in the cluster via Prism Element. I will describe this further down in the article.</p>
+<figure><a href="03.jpg"><picture><source srcset="/nutanix-ce/03_hu_c88bac9ea269e849.jpg" type="image/jpeg">
+          <img
+            src="/nutanix-ce/03_hu_c88bac9ea269e849.jpg"alt="Prism Element"width="1718"
+            height="915"/>
+        </picture></a><figcaption><p>Prism Element</p></figcaption></figure>
+<p>When logging in for the first time at the Prism Elemet GUI with the admin <em><strong>user</strong></em> and the password <em><strong>nutanix/4u</strong></em>, this must be changed.
+And while we&rsquo;re on the subject of changing passwords, this should also be done for all other accounts.
+To change the passwords for all accounts, there is a KB article from Nutanix that describes how to do this via the CVM. I strongly recommend changing all default accounts.</p>
+<h3 id="default-paasword-changes">Default Paasword changes<a href="#default-paasword-changes" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The following three commands help to change the password for the root, admin, and nutanix accounts at the AHV host level and on all the hosts in the cluster. Do not modify the command. It will ask for the new password twice and will not display it. This can run from any CVM in the cluster.</p>
+<p>Change CVM local account</p>
+<p>nutanix</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo passwd nutanix
+</span></span></code></pre></div><p>Change AHV local accounts</p>
+<p>root</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo -e &#34;CHANGING ALL AHV HOST ROOT PASSWORDS.\nPlease input new password: &#34;; read -rs password1; echo &#34;Confirm new password: &#34;; read -rs password2; if [ &#34;$password1&#34; == &#34;$password2&#34; ]; then for host in $(hostips); do echo Host $host; echo $password1 | ssh root@$host &#34;passwd --stdin root&#34;; done; else echo &#34;The passwords do not match&#34;; fi
+</span></span></code></pre></div><p>admin</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo -e &#34;CHANGING ALL AHV HOST ADMIN PASSWORDS.\nPlease input new password: &#34;; read -rs password1; echo &#34;Confirm new password: &#34;; read -rs password2; if [ &#34;$password1&#34; == &#34;$password2&#34; ]; then for host in $(hostips); do echo Host $host; echo $password1 | ssh root@$host &#34;passwd --stdin admin&#34;; done; else echo &#34;The passwords do not match&#34;; fi
+</span></span></code></pre></div><p>nutanix</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo -e &#34;CHANGING ALL AHV HOST NUTANIX PASSWORDS.\nPlease input new password: &#34;; read -rs password1; echo &#34;Confirm new password: &#34;; read -rs password2; if [ &#34;$password1&#34; == &#34;$password2&#34; ]; then for host in $(hostips); do echo Host $host; echo $password1 | ssh root@$host &#34;passwd --stdin nutanix&#34;; done; else echo &#34;The passwords do not match&#34;; fi
+</span></span></code></pre></div><h3 id="additional-settings">Additional settings<a href="#additional-settings" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>I switched my default network switch vs0 to jumbo frames. This can be done via the dropdown menu (in Prism Element) under <em><strong>Settings -&gt; Network Configuration -&gt; Virtual Switch -&gt; vs0</strong></em> and the Edit icon. Here, the bond and uplinks can also be adjusted.</p>
+<figure><a href="05.jpg"><picture><source srcset="/nutanix-ce/05_hu_9fc1ef9b59b7cbff.jpg" type="image/jpeg">
+          <img
+            src="/nutanix-ce/05_hu_9fc1ef9b59b7cbff.jpg"alt="Network"width="1717"
+            height="821"/>
+        </picture></a><figcaption><p>vs0 network settings</p></figcaption></figure>
+<p>Nutanix offers two options: Standard or Quick.
+In Standard mode, the hosts are put into maintenance mode beforehand; in Quick mode, the changes are implemented immediately. If something is wrong with the physical configuration, the workload would be offline as a result.
+Nutanix recommends Standard mode here, as adjusting the network also affects storage traffic. This always runs via the vs0 switch. If you have more than two adapters, you can also separate the traffic via an additional switch (alternatively, you can configure a bond without failover and separate traffic with two network types).</p>
+<p>In addition, under <em><strong>Settings -&gt; SSL Certificate</strong></em>, I replaced the Prism Element certificate with my own CA from my root CA. Here, all IPs and FQDNs of all cluster nodes and the cluster VIP must be entered under SAN. I also switched the UI to dark mode and English. This can be done under <em><strong>Settings -&gt; UI Settings</strong></em> and Language Settings.</p>
+<h2 id="lifecycle">Lifecycle<a href="#lifecycle" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The lifecycle can be managed via Prism Element or Prism Central. Prism Central has its own lifecycle independent of Prism Element. Nutanix CE comes in AOS version 6.9.1. Currently, the maximum upgrade available via Lifecycle is to AOS version 7.3.1.2.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Current Bug with 7.5.x.x</b>
+        </div>
+        <div class="admonition-content">There is currently a problem with unofficially supported hardware hosts and Nutanix AOS versions higher than 7.3.x.x. In addition, if your host is affected by the UUID problem, the workaround must be applied after every AHV upgrade. I therefore first set the lifecycle to 7.3.x and then deployed Prism Central. To do this, I shut down all VMs (except for the CVM) so that I would not encounter any errors during the upgrade.</div>
+    </aside>
+<h2 id="deploying-nutanix-prism">Deploying Nutanix Prism<a href="#deploying-nutanix-prism" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To deploy Prism Central, I first created a new storage container. A storage container is a logical construct to which I can apply policies and where I can create my vDisks for VMs. It is not a volume or LUN. Each storage container can have different policies and therefore behave differently, but all storage containers run on the same storage pool (in my lab, I only have one storage pool consisting of the resources of the three servers).</p>
+<p>To create the storage container, I switch to Storage via the dropdown menu and create a new container called Workload. Compression and an error tolerance of 1N/1D are set by default. This means that 1 node from the cluster can fail.
+I could also set the advertised capacity or reserve capacity. I leave everything at default here. Unfortunately, erasure coding does not work because I would need at least 4 hosts for that. It&rsquo;s a sad, because vSAN ESA is a little more flexible here, allowing me to use Raid 5 erasure coding with as few as 3 hosts.</p>
+<figure><a href="04.jpg"><picture><source srcset="/nutanix-ce/04_hu_580283e627807a4.jpg" type="image/jpeg">
+          <img
+            src="/nutanix-ce/04_hu_580283e627807a4.jpg"alt="Storage Container"width="1715"
+            height="1221"/>
+        </picture></a><figcaption><p>Storage Container</p></figcaption></figure>
+<p>To deploy Prism Central, simply click on the Nutanx Prism Element Dashboard (top left) and select “Deploy New Prism Central.”  The dialog box will display all compatible versions, which you can then download. I opted for the latest version. I deployed Prism Central in the small form factor because I want to use Nutanix Flow later, and that doesn&rsquo;t work with extra-small.
+Using Create Network, I created a new VLAN network on the default vSwitch vs0. This VLAN must be routed and must be able to communicate with the CVMs and the AHV server. It must also be present on the physical switches. The other settings are very self-explanatory. IP, gateway IP, DNS, NTP, and storage container should be known and available. I decided not to use an HA deployment due to the resources required. Finally, press Deploy and then it&rsquo;s time for 1-2 coffees, because the installation can take a good 30-40 minutes.</p>
+<p>Once Prism Central has been successfully deployed, the cluster still needs to be registered. This is done via Prism Element in the same place where the deployment was started. I will describe the rest of the Prism Central setup and the post-setup steps in a separate article—sometime in the future.</p>
+<h2 id="safely-shut-down-the-environment-and-restart-it">Safely shut down the environment and restart it.<a href="#safely-shut-down-the-environment-and-restart-it" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Since I do not have my lab environments running continuously, I shut down my environments regularly, and as with VCF, this must be done in a fixed order.</p>
+<ul>
+<li>Shutting down all workload VMs via Prism Central or Elements.</li>
+<li>Log in to Prism Central via SSH with the nutanix user and enter <em><strong>cluster stop</strong></em>.</li>
+<li>Wait until the message “Success” appears. You can check the status using <em><strong>cluster status</strong></em>. Even if Prism Central is not a clustered installation, this is the safest option.</li>
+<li>Shut down Prism Central with <em><strong>sudo shutdown now</strong></em>.</li>
+<li>Log in to Prism Element and wait until Prism Central VM has shut down.</li>
+<li>Log in via SSH and the nutanix user on any CMV and execute <em><strong>cluster stop</strong></em>.</li>
+<li>Wait until the message “Success” appears. You can check the status using <em><strong>cluster status</strong></em>.</li>
+<li>Log in to all CVMs via SSH and nutanix user and shut them down with <em><strong>sudo shutdown now</strong></em></li>
+<li>Log in to all AHV servers via SSH and root</li>
+<li>Check with <em><strong>virsh list</strong></em> whether any VMs are still running</li>
+<li>Once all VMs have been stopped, shut down each AHV host with <em><strong>shutdown now</strong></em></li>
+</ul>
+<p>Starting the cluster is done in exactly the opposite order. Instead of <em><strong>cluster stop</strong></em>, <em><strong>cluster start</strong></em> must be entered. Simply booting up the Prism Central VM is not enough; here too, the cluster must be started explicitly with cluster start.</p>
+<h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>At first glance, a lot of things are different from VMware. But what I particularly like, and haven&rsquo;t mentioned in this article yet, is that as a home lab user, you get a really well-rounded and great software package for free. The CE also includes the Kubernetes Engine and Flow, which is essentially Nutanix&rsquo;s alternative to NSX and VKS. Overall, I really liked how easy it was to install Flow or Move (the HCX alternative) via a kind of app store.</p>
+<p>I have to admit that the installation process wasn&rsquo;t exactly easy. In this article, I&rsquo;ve only written down the results of several days of trying and searching for the problem. Nutanix can&rsquo;t do anything about the UUID problem, but I find it difficult to understand why the AHV installation process doesn&rsquo;t simply support VLANs like ESX does. However, I also know that these are problems with the CE Edition and do not affect Nutanix Fusion.</p>
+<p>But it&rsquo;s not like you&rsquo;re faced with unsolvable problems. The Nutanix forum is full of solutions and help, you just have to find it. It also doesn&rsquo;t hurt to be familiar with KVM and Open vSwitch. I have experience with both thanks to my work with Proxmox and Unraid.</p>
+<p>The fact that you need three hard drives could also be an obstacle. I wouldn&rsquo;t have been able to get Nutanix to run on a Nuc. Maybe it&rsquo;s possible to boot from a USB stick, I&rsquo;ll have to test that. Fortunately, nested deployment is also an option if you can live with the lower performance of the storage.</p>
+<p>In the future, I will write more articles about my small test cluster because I definitely want to try Move and Flow.
+I hope that anyone who was hoping I would write a scathing review isn&rsquo;t too disappointed, but to be fair, I can only compare free software with free software, and VMware would currently come up short. I&rsquo;m curious to see how this topic develops and what else I will write about it.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/avi-keycloak/">AVI - Connect Keycloak to AVI Loadbalancer</a></li>
+	
+	<li><a href="/posts/vcf9-operations-dashboard/">VCF9 - Building a VCF Operations Dashboard</a></li>
+	
+	<li><a href="/posts/vcf9-dark-site-edge-part2/">VCF9 - Dark Site Edge - Part 2</a></li>
+	
+	<li><a href="/posts/vcf9-dark-site-edge/">VCF9 - Dark Site Edge</a></li>
+	
+	<li><a href="/posts/vcf9-ms-a2-special/">VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/avi-keycloak/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>AVI - Connect Keycloak to AVI Loadbalancer</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

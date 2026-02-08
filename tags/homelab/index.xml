@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 08 Feb 2026 19:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nutanix - Get started with the CE Edition</title>
+      <link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
+      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.&lt;/p&gt;&#xA;&lt;figure&gt;&lt;picture&gt;&lt;source srcset=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img&#xD;&#xA;            src=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34;alt=&#34;Yes, this is my happy face&#34;width=&#34;1988&#34;&#xD;&#xA;            height=&#34;1491&#34;/&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&lt;p&gt;Yes, this is my happy face&lt;/p&gt;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;p&gt;Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>AVI - Connect Keycloak to AVI Loadbalancer</title>
       <link>https://sdn-warrior.org/posts/avi-keycloak/</link>
@@ -141,13 +148,6 @@
       <pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My blog is a follow-up to my article &lt;a href=&#34;https://sdn-warrior.org/posts/vcf-import-cluster/&#34;&gt;&amp;ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&amp;rdquo;&lt;/a&gt; and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.&lt;/p&gt;&#xA;&lt;p&gt;The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-      <link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
-      <pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.&#xA;This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.&#xA;In addition, not every customer starts on a greenfield site.&#xA;Another point is the need for resources, which affects us home labbers in particular.&#xA;Many want to prepare for the new VCP exams and are now forced to deploy VCF in their Homelab.&#xA;There are already many solutions for this, such as the Holodeck, the &lt;a href=&#34;https://github.com/lamw/vcf-automated-lab-deployment&#34;&gt;Automated Lab Deployment Scrip&lt;/a&gt;) or the &lt;a href=&#34;https://github.com/lamw/vcf-automated-import-lab-deployment&#34;&gt;Automated VMware Cloud Foundation Import Lab Deployment&lt;/a&gt; script (both from the great &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;), but in my view this is too far removed from the kind of deployment that a customer will experience.&#xA;Therefore I will show several ways how to create VCF as close as possible to a real deployment without needing the real resources.&#xA;In this article I would like to show you how to do a convert with the VCF Import Tool. I will write more articles about VCF deployment in the future.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
