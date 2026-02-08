@@ -15,7 +15,7 @@
 			<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
 			
 			<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
-			<description><![CDATA[%!s(<nil>)]]></description>
+			<description><![CDATA[Short blog about my experiences with Nutanix CE and which workarounds I needed.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.</p>
 <figure><picture><source srcset="/nutanix-ce/01_hu_f9ca88236445953f.jpg" type="image/jpeg">
@@ -34,6 +34,11 @@ Of course, the CE version has a few limitations, and of course I had to implemen
 <p>Another limitation of the CE Edition is that you must be online and have a Nutanix account. This must be entered after creating the cluster. Nutanix CE cannot be used without free online activation.</p>
 <h2 id="hardware">Hardware</h2>
 <p>To install Nutanix, you need at least three hard drives: one for booting, one for the CVM (hot tier must be flash), and one for cold data. I used NVMe storage for all three drives. I used three MS-01s with Intel i9 13th generation CPUs, 96 GB RAM, and 1x1TB and 2x2TB storage. Before the question arises, unfortunately I cannot use all 20 cores of the i9. Nutanix is the same as ESX in this respect; only the P+E cores without HT work. That makes a total of 14 vCPUs. I use 2x10Gb/s for the network, but less is also possible. However, you should not expect miracles in terms of performance if the network connection is less than 10Gb/s.</p>
+<figure><a href="06.jpg"><picture><source srcset="/nutanix-ce/06_hu_f89b2cb82edbd9bd.jpg" type="image/jpeg">
+          <img
+            src="/nutanix-ce/06_hu_f89b2cb82edbd9bd.jpg"alt="MS-01"width="3344"
+            height="2508"/>
+        </picture></a><figcaption><p>MS-01</p></figcaption></figure>
 <h2 id="network">Network</h2>
 <p>While we&rsquo;re on the subject of networks, Nutanix uses the 192.168.5.0/24 network internally for communication between the hypervisor and CVM. I haven&rsquo;t found a way to change this (yet). If you have important external services such as DNS or NTP in this network area, it becomes difficult. Furthermore, the CVM and the hypervisor host must be in the same L2 network, and unfortunately, the CE Edition does not support VLANs for this. I managed to get my AHV host and my CVM to have a management VLAN, but the VLAN of the CVM is not persistent. After each reboot, the VLAN tag disappeared again. The problem seems to be that the VLAN tag settings are not written to cvm_config.json. I tried to do this manually, but I don&rsquo;t seem to be using the correct syntax. I need to test this further, and if I figure out how to do it, I will update this article. Another thing that may seem unusual to VMware users is that Nutanix initially uses all network adapters after installation, and this cannot be configured during installation.</p>
 <h2 id="installation">Installation</h2>
