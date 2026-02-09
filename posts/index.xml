@@ -2409,10 +2409,10 @@ The lab does not claim to run on minimal resources, but rather to fulfill my use
 <p>My plan is to build a two-node cluster without vSAN and with memory tiering. NFS will be provided via my good old Unraid storage system.
 I also started directly with VCF 9.0.1 as a greenfield deployment. I will continue to build my workload domains nested.
 This allows me to set up a complete VCF9 setup with three physical hosts, including VCF Operations for Network, Operations for Logs, and Automation.</p>
-<figure><a href="01.png"><picture><source srcset="/vcf9-special/01_hu_c4636f3e1268c393.png" type="image/png">
+<figure><a href="01.png"><picture><source srcset="/vcf9-special/01_hu_1038be1db341ef39.png" type="image/png">
           <img
-            src="/vcf9-special/01_hu_c4636f3e1268c393.png"alt="MS-A2"width="6048"
-            height="4536"/>
+            src="/vcf9-special/01_hu_1038be1db341ef39.png"alt="MS-A2"width="1512"
+            height="1134"/>
         </picture></a><figcaption><p>MS-A2 (click to enlarge)</p></figcaption></figure>
 <p>First, I install a 1 Tb Samsung 990 Pro in the first slot of each MS-A2.
 The first slot in the MS-A2 is set to PCIe4x4 in the BIOS by default.
@@ -2469,7 +2469,19 @@ Of course, this is not scalable if it has to be set for each individual VM, and 
 Fortunately, it can also be set globally. To do this, you must log in to each ESX host via SSH and execute the following command:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo &#39;monitor_control.disable_apichv =&#34;TRUE&#34;&#39; &gt;&gt; /etc/vmware/config
 </span></span></code></pre></div><p>The workaround takes effect immediately and the ESX server does not need to be rebooted. If VMs were running, they must first be shut down for the workaround to take effect for these VMs.</p>
-<h3 id="ryzen-workaroud-no2">Ryzen Workaroud No2.</h3>
+<h3 id="ryzen-workaroud-no2-nsx-edge-cpu-check">Ryzen Workaroud No2 (NSX Edge CPU Check).</h3>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">The workaround with the script no longer works with VCF 9.0.2 because the position of the CPU check has changed. There is a new, more effective workaround, which I describe below.</div>
+    </aside>
 <p>The next workaround concerns the problem with the Data Plane Development Kit (DPDK) and the lack of support for Ryzen CPUs.
 I already described how to solve this problem manually in my <a href="https://sdn-warrior.org/posts/ms-a2/#wheres-the-poop-robin">MS-A2</a> test.</p>
 <p>However, William has a better solution here too, and I am using his Powershell script, which he has kindly made publicly available.
@@ -2491,6 +2503,11 @@ I also didn&rsquo;t notice any performance issues. I get 10 Gb/s north-south ove
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">Disconnect-VIServer * -Confirm:$false
 </span></span></code></pre></div><p>The script is part of <a href="https://github.com/lamw/vmware-scripts/tree/master">Williams Script Collection</a>, which I highly recommend to everyone.</p>
+<h3 id="new-ryzen-cpu-nsx-workaround-nsx-edge-cpu-check">New Ryzen CPU NSX Workaround (NSX Edge CPU Check)</h3>
+<p>The improved workaround is both simple and sustainable. Instead of deactivating the CPU check in the Edge every time during deployment, you simply trick the system into thinking it has a suitable CPU. May I introduce the EPIC Ryzen processor.
+To do this, you must log in to each ESX server once as root and enter the following command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo &#39;cpuid.brandstring = &#34;AMD EPYC Ryzen 9 9955HX&#34;&#39; &gt;&gt; /etc/vmware/config
+</span></span></code></pre></div><p>A reboot of the ESX server is not necessary, but the Edge VM must undergo a full power cycle once. Edge VMs deployed in the future will then recognize the EPIC Ryzen CPU directly, thus bypassing the CPU check in the EdgeVM script. Simple and update-safe.</p>
 <h2 id="vcf-setup">VCF Setup</h2>
 <p>Now we come to the exciting part. After all the workarounds have been implemented and I was able to successfully complete the deployment, the question remains as to what exactly my design looks like now. Because I think that&rsquo;s what most readers are interested in.</p>
 <p>I currently have three physical hosts in use for my full-blown VCF9 setup.
