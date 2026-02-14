@@ -768,7 +768,7 @@ A new VPC must be created in advance for the supervisor cluster and a <em><stron
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
    </svg></div><b>Info</b>
         </div>
-        <div class="admonition-content">Unfortunately, VKS deployment does not have any prechecks, which means that it does not check whether the selected management network is accessible, for example. If in doubt, this means deactivating deployment (a funny name for deleting) and starting from scratch.</div>
+        <div class="admonition-content">The management network can also be a standard port group such as the VM management network. It does not have to be a VPC subnet, but if it is a VPC subnet, it must be public. Unfortunately, VKS deployment does not have any prechecks, which means that it does not check whether the selected management network is accessible, for example. If in doubt, this means deactivating deployment (a funny name for deleting) and starting from scratch.</div>
     </aside>
 <p>Next, the supervisor location is determined. Since this is a normal cluster deployment and not a vSphere with Zones setup, Cluster Deployment must be selected.
 In addition, a supervisor name is assigned (in lowercase letters) and, since this is to be a single node cluster, Control Plane HA remains disabled. As mentioned, I have two vSphere clusters in my setup and I want my supervisor to be in cluster m02-cl02.</p>
