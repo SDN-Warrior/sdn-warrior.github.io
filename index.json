@@ -1,0 +1,277 @@
+[{
+    "title": "Nutanix - Get started with the CE Edition",
+    "url": "/posts/nutanix-install-ce/",
+    "date": "2026-02-08",
+    "description": "Short blog about my experiences with Nutanix CE and which workarounds I needed.",
+    "tags": ["nutanix","homelab"]
+  },{
+    "title": "AVI - Connect Keycloak to AVI Loadbalancer",
+    "url": "/posts/avi-keycloak/",
+    "date": "2026-01-27",
+    "description": "A short blog post on how to connect Keycloak to the AVI load balancer.",
+    "tags": ["vmware","avi","homelab","security","sso"]
+  },{
+    "title": "VCF9 - Automation in All Apps mode",
+    "url": "/posts/vcf9-automation-all-apps/",
+    "date": "2026-01-12",
+    "description": "A quick introduction to VCF 9 Automation in All Apps mode",
+    "tags": ["vcf","operations","automation","vks"]
+  },{
+    "title": "VCF9 - Building a VCF Operations Dashboard",
+    "url": "/posts/vcf9-operations-dashboard/",
+    "date": "2025-12-20",
+    "description": "A short blog about the joys of creating a dashboard in VCF 9 Operations.",
+    "tags": ["vcf","vmware","operations","homelab"]
+  },{
+    "title": "VCF9 - Dark Site Edge - Part 2",
+    "url": "/posts/vcf9-dark-site-edge-part2/",
+    "date": "2025-12-09",
+    "description": "A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2",
+    "tags": ["vcf","edge","homelab","Minisforum"]
+  },{
+    "title": "VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore",
+    "url": "/posts/bug-vcf-onboarding/",
+    "date": "2025-12-03",
+    "description": "A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2",
+    "tags": ["vcf","operations","sddc","bugfix"]
+  },{
+    "title": "VCF9 - Dark Site Edge",
+    "url": "/posts/vcf9-dark-site-edge/",
+    "date": "2025-11-22",
+    "description": "A short blog on how to deploy a Dark Site Edge in VCF9",
+    "tags": ["vcf","edge","homelab","NUC"]
+  },{
+    "title": "VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs",
+    "url": "/posts/vcf9-ms-a2-special/",
+    "date": "2025-10-24",
+    "description": "A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.",
+    "tags": ["vcf","nsx","homelab","minisforum"]
+  },{
+    "title": "Tales from the Lab – Lab setup",
+    "url": "/posts/tales-from-the-lab-setup/",
+    "date": "2025-09-12",
+    "description": "A brief blog about setting up my nested lab.",
+    "tags": ["vcf","nsx","homelab","minisforum","intel","amd"]
+  },{
+    "title": "VCF9 -  VCF5.X to VCF9 upgrade",
+    "url": "/posts/vcf5-to-9-upgrade/",
+    "date": "2025-09-07",
+    "description": "A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.",
+    "tags": ["vcf","vcf9","sddc","upgrade"]
+  },{
+    "title": "VMware Explore 2025",
+    "url": "/posts/explore-2025/",
+    "date": "2025-08-31",
+    "description": "My VMware Explore 2025",
+    "tags": ["vmware","vcf","broadcom","vexperts"]
+  },{
+    "title": "VCF 9 - Certificate exchange",
+    "url": "/posts/vcf9-cert-exchange/",
+    "date": "2025-08-19",
+    "description": "A brief guide to replacing certificates in VCF9 with VCF Operations.",
+    "tags": ["vcf","nsx","homelab","certificates"]
+  },{
+    "title": "VCF 9 - NSX VPC Part 3 - Security",
+    "url": "/posts/vcf9-nsx-vpc-part3/",
+    "date": "2025-07-29",
+    "description": "A short article about VPCs in NSX 9 and VCF 9 Part 3.",
+    "tags": ["vcf","nsx","homelab","vpc","security"]
+  },{
+    "title": "VCF 9 - Migration to central VCF Operations instance",
+    "url": "/posts/vcf-operations-migration/",
+    "date": "2025-07-07",
+    "description": "A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.",
+    "tags": ["vcf","vvf","homelab","operations"]
+  },{
+    "title": "VCF 9 - NSX VPC Part 2 - distributed Transit Gateway",
+    "url": "/posts/vcf9-nsx-vpc-part2/",
+    "date": "2025-06-26",
+    "description": "A short article about VPCs in NSX 9 and VCF 9 Part 2.",
+    "tags": ["vcf","nsx","homelab","vpc"]
+  },{
+    "title": "NSX - IDFW \u0026 DFW Troubleshooting",
+    "url": "/posts/nsx-dfw-troubleshooting/",
+    "date": "2025-06-24",
+    "description": "A brief guide to troubleshooting the IdFW and dFW",
+    "tags": ["nsx","homelab","vcf"]
+  },{
+    "title": "Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too",
+    "url": "/posts/homelab-v6/",
+    "date": "2025-06-20",
+    "description": "A quick update on what's been happening in my lab over the last few weeks.",
+    "tags": ["vcf","nsx","homelab","minisforum","intel","amd"]
+  },{
+    "title": "VCF 9 - NSX VPC Part 1 - centralized Transit Gateway",
+    "url": "/posts/vcf9-nsx-vpc/",
+    "date": "2025-06-17",
+    "description": "A short article about VPCs in NSX 9 and VCF 9.",
+    "tags": ["vcf","nsx","homelab","vpc"]
+  },{
+    "title": "Tales from the Lab - Minisforum MS-A2",
+    "url": "/posts/ms-a2/",
+    "date": "2025-06-14",
+    "description": "A quick test of the new MS-A2 and how it compares to the MS-01.",
+    "tags": ["vcf","nsx","homelab","minisforum"]
+  },{
+    "title": "ReSTNSX with HCX",
+    "url": "/posts/restnsx-with-hcx/",
+    "date": "2025-05-20",
+    "description": "How can ReSTNSX help me with the migration with HCX",
+    "tags": ["VMware","HCX","NSX","VCF"]
+  },{
+    "title": "NSX Expiring Transport Node Certificates",
+    "url": "/posts/nsx-expiring-tn-certificates/",
+    "date": "2025-05-06",
+    "description": "On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.\nNSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years.\nThe Transport Node certificate used at create time is not replaced on upgrade.\nAny Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.",
+    "tags": ["nsx","vmware","homelab"]
+  },{
+    "title": "VMUG Connect St. Louis 2025",
+    "url": "/posts/vmug-connect-stl-2025/",
+    "date": "2025-04-26",
+    "description": "Brief report on my VMUG Connect in St. Louis",
+    "tags": ["vmug","broadcom","vmware","travel"]
+  },{
+    "title": "VCF - How to use the Broadcom Download Token",
+    "url": "/posts/vcf-token/",
+    "date": "2025-04-10",
+    "description": "A short article on how to use the Broadcom Download Token.",
+    "tags": ["vcf","sddc","broadcom","homelab"]
+  },{
+    "title": "VCF Quick Tip - WLD with single NSX Manager",
+    "url": "/posts/vcf-single-nsx/",
+    "date": "2025-04-01",
+    "description": "Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.",
+    "tags": ["vcf","nsx","homelab"]
+  },{
+    "title": "VCF Stretched Cluster",
+    "url": "/posts/vcf-stretched-cluster/",
+    "date": "2025-03-13",
+    "description": "A short article on how to build a stretched vSAN cluster in the VCF.",
+    "tags": ["vmware","vcf","homelab","broadcom"]
+  },{
+    "title": "VCF Import Tool - Enable Overlay in an imported VCF Domain",
+    "url": "/posts/vcf-import-overlay/",
+    "date": "2025-03-05",
+    "description": "Part 2 VCF Import Cluster with NFS and activating the overlay.",
+    "tags": ["vmware","vcf","homelab","broadcom","nfs"]
+  },{
+    "title": "VCF Import Tool - Run VCF with NFS as principal Storage ",
+    "url": "/posts/vcf-import-cluster/",
+    "date": "2025-02-23",
+    "description": "Importing from a vSphere cluster with NFS 3 as principal storage without losing support.",
+    "tags": ["vmware","vcf","homelab","broadcom","nfs"]
+  },{
+    "title": "JetKVM - all show and no substance?",
+    "url": "/posts/jetkvm/",
+    "date": "2025-02-03",
+    "description": "The good, the bad and the ugly - JetKVM",
+    "tags": ["kvm","homelab","kickstarrter"]
+  },{
+    "title": "Migration with HCX",
+    "url": "/posts/migration-with-hcx/",
+    "date": "2025-01-28",
+    "description": "Live Migration of Workloads with VMware HCX: A Customer Story",
+    "tags": ["vcf","hcx","vmware"]
+  },{
+    "title": "How Apply To works in NSX DFW",
+    "url": "/posts/nsx-apply-to/",
+    "date": "2025-01-11",
+    "description": "How Apply To works in NSX DFW and you can use it.",
+    "tags": ["nsx","security","vmware"]
+  },{
+    "title": "More performance trough NSX Edge TEP groups?",
+    "url": "/posts/nsx-tep-groups/",
+    "date": "2025-01-03",
+    "description": "How to use Edge TEP groups in NSX",
+    "tags": ["nsx","vmware","network"]
+  },{
+    "title": "Redeploy an NSX Edge VM Appliance",
+    "url": "/posts/nsx-edge-redeploy/",
+    "date": "2024-12-30",
+    "description": "Quicktip: Redeploy NSX Edge with API",
+    "tags": ["nsx","vmware","quicktip"]
+  },{
+    "title": "Ansible VLAN deployment with MikroTik",
+    "url": "/posts/vlan-automation/",
+    "date": "2024-12-24",
+    "description": "Ansible VLAN deployment with MikroTik",
+    "tags": ["mikrotik","homelab","ansible"]
+  },{
+    "title": "IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server",
+    "url": "/posts/ipam-automation/",
+    "date": "2024-12-20",
+    "description": "IPAM Automation with Netbox and Ansible",
+    "tags": ["netbox","ansible","homelab","automation"]
+  },{
+    "title": "From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook",
+    "url": "/posts/first-steps-ansible/",
+    "date": "2024-12-17",
+    "description": "How I Used ChatGPT to Create My First Ansible Playbook",
+    "tags": ["ansible","vmware","chatgpt","homelab"]
+  },{
+    "title": "Homelab V5",
+    "url": "/posts/homelab-v5/",
+    "date": "2024-12-14",
+    "description": "My Homelab Journey: From Unraid Beginnings to Version 5",
+    "tags": ["unraid","vmware","esxi","homelab","vcf"]
+  },{
+    "title": "How to use QoS in NSX",
+    "url": "/posts/nsx-qos/",
+    "date": "2024-12-10",
+    "description": "How to use QoS in NSX",
+    "tags": ["nsx","vmware","qos","networking"]
+  },{
+    "title": "NSX 4.2.1.1 Hotfix Update",
+    "url": "/posts/nsx4_2_1_1/",
+    "date": "2024-12-09",
+    "description": "short summary of the NSX update 4.2.1.1",
+    "tags": ["nsx","vmware","update"]
+  },{
+    "title": "iSCSI Tuning",
+    "url": "/posts/iscsi-tuning/",
+    "date": "2024-12-08",
+    "description": "Optimizing iSCSI Performance in an Unraid Environment",
+    "tags": ["unraid","vmware","esxi","iscsi","homelab"]
+  },{
+    "title": "MAC Learning is your friend",
+    "url": "/posts/mac-learning/",
+    "date": "2024-11-27",
+    "description": "Why you should use MAC Learning",
+    "tags": ["homelab","vcf","nested lab","vmware","esxi","network","performance"]
+  },{
+    "title": "Unraid - A Storage Journey",
+    "url": "/posts/unraid-storage/",
+    "date": "2024-11-19",
+    "description": "How i use Unraid",
+    "tags": ["homelab","unraid","iscsi","storage"]
+  },{
+    "title": "How to get most out of your Nuc ",
+    "url": "/posts/nuc/",
+    "date": "2024-11-17",
+    "description": "Performance tuning for NUCs",
+    "tags": ["homelab","nuc","memory Tiering"]
+  },{
+    "title": "Homelab V4",
+    "url": "/posts/labv4/",
+    "date": "2024-11-16",
+    "description": "Homelab v4",
+    "tags": ["unraid","vmware","esxi","homelab"]
+  },{
+    "title": "NSX Integration Fortigate",
+    "url": "/posts/nsx-integration-fortigate/",
+    "date": "2024-08-26",
+    "description": "NSX and Fortigate",
+    "tags": ["fortigate","firewall","nsx","security"]
+  },{
+    "title": "NSX Identity Firewall – A Case Study With the Flavour VDI",
+    "url": "/posts/nsx-idfw-vdi/",
+    "date": "2024-08-02",
+    "description": "IDFW with NSX and Windows Clients",
+    "tags": ["nsx","security","vdi"]
+  },{
+    "title": "NSX 4.X Certificate exchange of the NSX Manager",
+    "url": "/posts/nsx-cert-exchange/",
+    "date": "2024-04-05",
+    "description": "Exchange your NSX Manager certificates",
+    "tags": ["nsx","tls","vmware"]
+  }]

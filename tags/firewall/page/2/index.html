@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior">
+
+  <meta itemprop="name" content="Firewall">
+  <meta itemprop="datePublished" content="2024-08-26T19:49:23+01:00">
+  <meta itemprop="dateModified" content="2024-08-26T19:49:23+01:00">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png"><meta property="og:url" content="https://sdn-warrior.org/tags/firewall/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="Firewall">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="website">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:title" content="Firewall">
+<title>Firewall</title>
+<link rel="alternate" type="application/rss+xml" href="https://sdn-warrior.org/tags/firewall/index.xml" title="Firewall" />
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous"></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2f&amp;text=Posts" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=Posts&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Posts&amp;summary=Posts%2c%20by%20SDN-Warrior%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;Posts&#34;,&#34;https://sdn-warrior.org/posts/&#34;,&#34;Posts, by SDN-Warrior\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+<main class="site-main section-inner thin animated fadeIn faster">
+
+  <h1>Firewall</h1>
+
+  
+  <div class="posts-group posts-group--search">
+    <div class="post-year">Search</div>
+
+    
+    <div class="search-col">
+
+      <div class="search-wrap">
+        <input
+          id="post-search"
+          class="search-input"
+          type="search"
+          placeholder="Search posts…"
+          autocomplete="off"
+          aria-label="Search posts" />
+        <span class="search-hint" id="search-meta" hidden></span>
+      </div>
+
+      
+      <ul id="search-results" class="search-results" hidden></ul>
+
+    </div>
+  </div>
+  <div class="posts-group">
+    <div class="post-year" id="2025">2025</div>
+    <ul class="posts-list">
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/">
+          <span class="post-title">NSX - IDFW &amp; DFW Troubleshooting</span>
+          <span class="post-day">Jun 24</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/homelab-v6/">
+          <span class="post-title">Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</span>
+          <span class="post-day">Jun 20</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">
+          <span class="post-title">VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</span>
+          <span class="post-day">Jun 17</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/ms-a2/">
+          <span class="post-title">Tales from the Lab - Minisforum MS-A2</span>
+          <span class="post-day">Jun 14</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/restnsx-with-hcx/">
+          <span class="post-title">ReSTNSX with HCX</span>
+          <span class="post-day">May 20</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/">
+          <span class="post-title">NSX Expiring Transport Node Certificates</span>
+          <span class="post-day">May 6</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">
+          <span class="post-title">VMUG Connect St. Louis 2025</span>
+          <span class="post-day">Apr 26</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vcf-token/">
+          <span class="post-title">VCF - How to use the Broadcom Download Token</span>
+          <span class="post-day">Apr 10</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vcf-single-nsx/">
+          <span class="post-title">VCF Quick Tip - WLD with single NSX Manager</span>
+          <span class="post-day">Apr 1</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
+          <span class="post-title">VCF Stretched Cluster</span>
+          <span class="post-day">Mar 13</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vcf-import-overlay/">
+          <span class="post-title">VCF Import Tool - Enable Overlay in an imported VCF Domain</span>
+          <span class="post-day">Mar 5</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">
+          <span class="post-title">VCF Import Tool - Run VCF with NFS as principal Storage </span>
+          <span class="post-day">Feb 23</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/jetkvm/">
+          <span class="post-title">JetKVM - all show and no substance?</span>
+          <span class="post-day">Feb 3</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/migration-with-hcx/">
+          <span class="post-title">Migration with HCX</span>
+          <span class="post-day">Jan 28</span>
+        </a></li>
+      <li class="post-item">
+        <a href="https://sdn-warrior.org/posts/nsx-apply-to/">
+          <span class="post-title">How Apply To works in NSX DFW</span>
+          <span class="post-day">Jan 11</span>
+        </a></li>
+    </ul>
+  </div>
+
+  <nav class="pagination" aria-label="Pagination">
+  <ul class="pagination-list">
+    <li class="pagination-item"><a class="pagination-link" href="/tags/firewall/" aria-label="First page">««</a></li>
+
+    <li class="pagination-item"><a class="pagination-link" href="/tags/firewall/" aria-label="Previous page">«</a></li><li class="pagination-item"><a class="pagination-link" href="/tags/firewall/">1</a></li><li class="pagination-item"><span class="pagination-link is-current">2</span></li><li class="pagination-item"><a class="pagination-link" href="/tags/firewall/page/3/">3</a></li><li class="pagination-item"><a class="pagination-link" href="/tags/firewall/page/4/">4</a></li><li class="pagination-item"><a class="pagination-link" href="/tags/firewall/page/3/" aria-label="Next page">»</a></li>
+
+    <li class="pagination-item"><a class="pagination-link" href="/tags/firewall/page/4/" aria-label="Last page">»»</a></li>
+  </ul>
+</nav>
+
+  <div class="post-divider">
+    <img src="/end.png" alt="End graphic" loading="lazy">
+  </div>
+
+</main>
+
+
+<script>
+(() => {
+  const input = document.getElementById("post-search");
+  const resultsEl = document.getElementById("search-results");
+  const metaEl = document.getElementById("search-meta");
+  const mainEl = document.querySelector("main.site-main");
+
+  if (!input || !resultsEl || !metaEl || !mainEl) return;
+
+  let index = null;
+
+  const normalize = (s) =>
+    (s || "").toString().toLowerCase().normalize("NFKD");
+
+  const escapeHtml = (s) =>
+    (s || "").replace(/[&<>"']/g, (c) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+
+  async function loadIndex() {
+    if (index) return index;
+    const res = await fetch("\/index.json", { cache: "force-cache" });
+    if (!res.ok) throw new Error("Failed to load index.json");
+    index = await res.json();
+    index.forEach(p => {
+      p._hay = normalize([
+        p.title,
+        p.description,
+        (p.tags || []).join(" ")
+      ].join(" "));
+    });
+    return index;
+  }
+
+  function setSearching(isSearching) {
+    mainEl.classList.toggle("is-searching", isSearching);
+  }
+
+  function clear() {
+    resultsEl.hidden = true;
+    metaEl.hidden = true;
+    resultsEl.innerHTML = "";
+    metaEl.textContent = "";
+    setSearching(false);
+  }
+
+  function render(items, q) {
+    const count = items.length;
+    metaEl.hidden = false;
+    metaEl.textContent = `${count} result${count === 1 ? "" : "s"}`;
+
+    if (count === 0) {
+      resultsEl.hidden = false;
+      resultsEl.innerHTML = `
+        <li class="post-item">
+          <span class="post-title">No matches for “${escapeHtml(q)}”.</span>
+        </li>`;
+      return;
+    }
+
+    const html = items.slice(0, 50).map(p => {
+      const title = escapeHtml(p.title);
+      const url = p.url;
+      const day = escapeHtml(p.date || "");
+      const desc = escapeHtml(p.description || "");
+
+      return `
+        <li class="post-item">
+          <a href="${url}">
+            <span class="post-title">${title}</span>
+            <span class="post-day">${day}</span>
+          </a>
+          ${desc ? `<span class="post-description">${desc}</span>` : ""}
+        </li>`;
+    }).join("");
+
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = html;
+  }
+
+  let t = null;
+  input.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(async () => {
+      const q = input.value.trim();
+      if (!q) return clear();
+
+      setSearching(true);
+
+      const pages = await loadIndex();
+      const nq = normalize(q);
+
+      const matches = pages
+        .filter(p => p._hay.includes(nq))
+        .sort((a, b) => (a.date < b.date ? 1 : -1));
+
+      render(matches, q);
+    }, 120);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      input.value = "";
+      clear();
+      input.blur();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement !== input) {
+      e.preventDefault();
+      input.focus();
+    }
+  });
+
+  clear();
+})();
+</script>
+
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>
