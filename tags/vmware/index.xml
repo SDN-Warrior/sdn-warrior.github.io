@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 27 Jan 2026 21:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 01 Mar 2026 12:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IPv6 with NSX</title>
+      <link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>AVI - Connect Keycloak to AVI Loadbalancer</title>
       <link>https://sdn-warrior.org/posts/avi-keycloak/</link>
@@ -141,13 +148,6 @@
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Homelab V4</title>
-      <link>https://sdn-warrior.org/posts/labv4/</link>
-      <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/posts/labv4/</guid>
-      <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

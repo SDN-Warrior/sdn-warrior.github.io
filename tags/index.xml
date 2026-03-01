@@ -7,13 +7,41 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 08 Feb 2026 19:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 01 Mar 2026 12:00:00 +0100</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Homelab</title>
       <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ipv6</title>
+      <link>https://sdn-warrior.org/tags/ipv6/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/ipv6/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>NSX</title>
+      <link>https://sdn-warrior.org/tags/nsx/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vcf9</title>
+      <link>https://sdn-warrior.org/tags/vcf9/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf9/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vmware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -42,13 +70,6 @@
       <link>https://sdn-warrior.org/tags/sso/</link>
       <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/sso/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -108,17 +129,10 @@
       <description></description>
     </item>
     <item>
-      <title>NUC</title>
+      <title>Nuc</title>
       <link>https://sdn-warrior.org/tags/nuc/</link>
       <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/nuc/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>NSX</title>
-      <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/nsx/</guid>
       <description></description>
     </item>
     <item>
@@ -133,20 +147,6 @@
       <link>https://sdn-warrior.org/tags/intel/</link>
       <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/intel/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Upgrade</title>
-      <link>https://sdn-warrior.org/tags/upgrade/</link>
-      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/upgrade/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf9</title>
-      <link>https://sdn-warrior.org/tags/vcf9/</link>
-      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf9/</guid>
       <description></description>
     </item>
   </channel>

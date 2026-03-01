@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ipv6 on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/ipv6/</link>
+    <link>https://sdn-warrior.org/tags/ipv6/</link>
     <description>Recent content in Ipv6 on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sat, 28 Feb 2026 17:38:45 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/ipv6/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Mar 2026 12:00:00 +0100</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/ipv6/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>IPv6 with NSX</title>
-      <link>http://localhost:1313/posts/ipv6-nsx/</link>
-      <pubDate>Sat, 28 Feb 2026 17:38:45 +0100</pubDate>
-      <guid>http://localhost:1313/posts/ipv6-nsx/</guid>
+      <link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
     </item>
   </channel>
