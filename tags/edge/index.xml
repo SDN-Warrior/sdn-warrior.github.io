@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Edge on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/edge/</link>
+    <link>https://sdn-warrior.org/tags/edge/</link>
     <description>Recent content in Edge on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Tue, 09 Dec 2025 00:00:00 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/edge/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/edge/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VCF9 - Dark Site Edge - Part 2</title>
-      <link>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</link>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
       <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my last &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34;&gt;Dark Site&lt;/a&gt; article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).&#xA;However, this didn&amp;rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.&#xA;Spoiler alert: it works, and today I&amp;rsquo;m going to write down how to do it.&lt;/p&gt;&#xA;&lt;p&gt;Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.&#xA;So today I will use vSAN ESA, even though it requires significantly more resources than NFS.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 - Dark Site Edge</title>
-      <link>http://localhost:1313/posts/vcf9-dark-site-edge/</link>
+      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
       <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/vcf9-dark-site-edge/</guid>
+      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
     </item>
   </channel>

@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-12-09T00:00:00+01:00">
   <meta itemprop="dateModified" content="2025-12-09T00:00:00+01:00">
   <meta itemprop="wordCount" content="1671">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Edge,Homelab,Minisforum"><meta property="og:url" content="http://localhost:1313/posts/vcf9-dark-site-edge-part2/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Edge,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 - Dark Site Edge - Part 2">
   <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
@@ -44,10 +44,10 @@
     <meta property="article:tag" content="Edge">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="VCF9 - Dark Site Edge - Part 2">
   <meta name="twitter:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
 
@@ -62,16 +62,16 @@
     "articleBody": "Introduction In my last Dark Site article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host). However, this didn’t sit well with me, as I believe it should also be possible with just one host and without any additional tools. Spoiler alert: it works, and today I’m going to write down how to do it.\nOf course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS. So today I will use vSAN ESA, even though it requires significantly more resources than NFS.\nInfo\rAs always, please do not use in production. In addition, the ESA workaround requires VCF 9.0.1, but you can do without the vSAN ESA Mock VIB.\rSo buckle up, we’re going in.\nHardware modification Since I want to use vSAN for this deployment, because a greenfield deployment with external storage is not possible with only one node, I first need to expand my hardware. Fortunately, I purchased my NVMes before the price chaos. I need a total of three NVMes. I have a 1 TB NVMe (PCIe4) for memory tiering, a 2 TB NVMe (PCIe3) for local storage and the actual ESX. This could be a much smaller disk, but I had it anyway. And finally, another 2 TB NVMe (PCIe3) for vSAN.\nNVMe - MS-01 (click to enlarge)\nI could have saved myself an NVMe and booted the ESX via a USB stick, because then you can share the memory tiering disk with the system disk, but I simply only have one USB stick left and I need it for firmware updates, plus I don’t particularly like USB sticks. Now you might ask why I have two PCIe3 disks—well, I don’t. However, the MS-01 only uses one slot with PCIe4 by default BIOS settings, and the others run with PCIe3, as otherwise there is a risk of overheating. In addition, the MS-01 will serve another purpose later on, as it will sooner or later become part of my Nutanix cluster, and I will need the disks for that anyway.\nPrerequisites As with my first attempt, a deployed fleet is required. This must consist of at least one VCF Operations, vCenter, NSX Manager, VCF Operations Cloud Proxy, and one Fleet Manager.\nWorkarounds What would an SDN-warrior deployment be without workarounds? That’s right, work and no fun.\nWorkaround 1 (E\u0026P Cores): Since I use the MS-01, the first thing that comes into play is the workaround for the Big.LITTLE architecture. I have described this here.\nWorkaround 2 (Memory Tiering): Memory tiering is also used, as described in the same article like the Big.LITTLE workaround.\nWorkaround 3 (Single host deployment): I have described this here. However, with my 9.0.1 setup, I needed both entries in the feature.properties file.\necho \"feature.vcf.vgl-29121.single.host.domain=true\" \u003e\u003e /home/vcf/feature.properties echo \"feature.vcf.internal.single.host.domain=true\" \u003e\u003e /home/vcf/feature.properties Workaround 4 (Bypass vSAN HCL): Now we finally come to something new—at least, something new for me. In VCF 9.0.1, you can finally bypass the HCL check for vSAN ESA. Gone are the days of custom JSON vSAN files and VIB installation on ESX.\nTo do this, simply log in to the installer via SSH and enter the following in the shell.\necho \"vsan.esa.sddc.managed.disk.claim=true\" \u003e\u003e /etc/vmware/vcf/domainmanager/application-prod.properties systemctl restart domainmanager Now that most of the work has been done, we can proceed with the deployment. Just a quick heads-up: there will be a small workaround after the SDDC Manager has been successfully deployed.\nDeployment Now comes the really exciting part. Unfortunately, deployment via the guided GUI is not possible with vSAN and single host, but that’s what JSON is for. There are a few good VCF JSON generators available online, such as this one, or you can simply use my JSON and modify it. As with the first Dark Site setup, I am using my existing Fleet, which means I don’t have to deploy VCF Operations, Automation, Operations for Logs, or even the Fleet Manager.\nInfo\rFQDNs, IP addresses, and passwords must be adjusted. To integrate existing resources, you need their SSL thumbprint. You need the thumbprint from VCF Operations, VCF Fleet Manager and the ESX Host. With “skipEsxThumbprintValidation”: true, you can skip the ESX host verification.\rTo obtain the SSL thumbprints, simply log in to the ESX server and use the following command. Adjust the FQDN in the query for each thumbprint.\necho | openssl s_client -connect vcf09-e01-esx01.lab.vcf:443 2\u003e/dev/null | openssl x509 -noout -fingerprint -sha256 | cut -d= -f2 Here is the JSON file I used for VCF 9.0.1. Maybe I should create a GitHub repository for things like this.\n{ \"sddcId\": \"dark-site03\", \"vcfInstanceName\": \"dark-site03\", \"workflowType\": \"VCF\", \"version\": \"9.0.1.0\", \"ceipEnabled\": false, \"skipEsxThumbprintValidation\": true, \"dnsSpec\": { \"nameservers\": [ \"192.168.11.2\", \" 192.168.100.254\" ], \"subdomain\": \"lab.vcf\" }, \"ntpServers\": [ \"192.168.12.1\" ], \"vcenterSpec\": { \"vcenterHostname\": \"vcf09-e03-vcsa.lab.vcf\", \"rootVcenterPassword\": \"xxx\", \"vmSize\": \"small\", \"storageSize\": \"\", \"dminUserSsoUserName\": \"administrator@vsphere.local\", \"adminUserSsoPassword\": \"xxx\", \"ssoDomain\": \"vsphere.local\", \"useExistingDeployment\": false }, \"clusterSpec\": { \"clusterName\": \"dark-site03\", \"datacenterName\": \"e03\" }, \"datastoreSpec\": { \"vsanSpec\": { \"failuresToTolerate\": 0, \"vsanDedup\": false, \"esaConfig\": { \"enabled\": true }, \"datastoreName\": \"vsanDatastore\" } }, \"nsxtSpec\": { \"nsxtManagerSize\": \"medium\", \"nsxtManagers\": [ { \"hostname\": \"vcf09-e03-nsxa.lab.vcf\" } ], \"vipFqdn\": \"vcf09-e03-nsx.lab.vcf\", \"useExistingDeployment\": false, \"nsxtAdminPassword\": \"xxx\", \"nsxtAuditPassword\": \"xxx\", \"rootNsxtManagerPassword\": \"xxx\", \"skipNsxOverlayOverManagementNetwork\": true, \"ipAddressPoolSpec\": { \"name\": \"host-overlay\", \"description\": \"\", \"subnets\": [ { \"cidr\": \"10.28.24.0/24\", \"gateway\": \"10.28.24.1\", \"ipAddressPoolRanges\": [ { \"start\": \"10.28.24.21\", \"end\": \"10.28.24.30\" } ] } ] }, \"transportVlanId\": \"2024\" }, \"vcfOperationsSpec\": { \"nodes\": [ { \"hostname\": \"vcf09-ops.lab.vcf\", \"rootUserPassword\": \"xxx\", \"type\": \"master\", \"sslThumbprint\": \"XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX\" } ], \"adminUserPassword\": \"xxx\", \"applianceSize\": \"xsmall\", \"useExistingDeployment\": true, \"loadBalancerFqdn\": null }, \"vcfOperationsFleetManagementSpec\": { \"hostname\": \"fleet.lab.vcf\", \"rootUserPassword\": \"xxx\", \"adminUserPassword\": \"xxx\", \"useExistingDeployment\": true, \"sslThumbprint\": \"XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX\" }, \"vcfOperationsCollectorSpec\": { \"hostname\": \"vcf09-e03-ops.lab.vcf\", \"applianceSize\": \"small\", \"rootUserPassword\": \"xxx\", \"useExistingDeployment\": false }, \"hostSpecs\": [ { \"hostname\": \"vcf09-e03-esx01.lab.vcf\", \"credentials\": { \"username\": \"root\", \"password\": \"xxx\" }, \"sslThumbprint\": \"XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX\" } ], \"networkSpecs\": [ { \"networkType\": \"MANAGEMENT\", \"subnet\": \"10.28.22.0/24\", \"gateway\": \"10.28.22.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": null, \"vlanId\": \"2022\", \"mtu\": \"1500\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-esx-mgmt\" }, { \"networkType\": \"VM_MANAGEMENT\", \"subnet\": \"10.28.13.0/24\", \"gateway\": \"10.28.13.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": null, \"vlanId\": \"2013\", \"mtu\": \"1500\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-vm-mgmt\" }, { \"networkType\": \"VMOTION\", \"subnet\": \"10.28.23.0/24\", \"gateway\": \"10.28.23.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": [ { \"startIpAddress\": \"10.28.23.20\", \"endIpAddress\": \"10.28.23.29\" } ], \"vlanId\": \"2023\", \"mtu\": \"1500\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-vmotion\" }, { \"networkType\": \"VSAN\", \"subnet\": \"10.28.16.0/24\", \"gateway\": \"10.28.16.1\", \"subnetMask\": null, \"includeIpAddress\": null, \"includeIpAddressRanges\": [ { \"startIpAddress\": \"10.28.16.40\", \"endIpAddress\": \"10.28.16.50\" } ], \"vlanId\": \"2016\", \"mtu\": \"9000\", \"teamingPolicy\": \"loadbalance_loadbased\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standbyUplinks\": null, \"portGroupKey\": \"e03-cl01-vds01-pg-vsan\" } ], \"dvsSpecs\": [ { \"dvsName\": \"e03-cl02-vds01\", \"networks\": [ \"MANAGEMENT\", \"VM_MANAGEMENT\", \"VMOTION\", \"VSAN\" ], \"mtu\": 9000, \"nsxtSwitchConfig\": { \"transportZones\": [ { \"transportType\": \"OVERLAY\", \"name\": \"VCF-Created-Overlay-Zone\" } ] }, \"vmnicsToUplinks\": [ { \"id\": \"vmnic0\", \"uplink\": \"uplink1\" }, { \"id\": \"vmnic1\", \"uplink\": \"uplink2\" } ], \"nsxTeamings\": [ { \"policy\": \"LOADBALANCE_SRCID\", \"activeUplinks\": [ \"uplink1\", \"uplink2\" ], \"standByUplinks\": [] } ], \"lagSpecs\": null } ], \"sddcManagerSpec\": { \"hostname\": \"vcf09-e03-sddc.lab.vcf\", \"useExistingDeployment\": false, \"rootPassword\": \"xxx\", \"sshPassword\": \"xxx\", \"localUserPassword\": \"xxx\" } } Once the typing is done, you can simply upload the JSON file via the installer’s GUI and start the validation. In the best case, it should now look like this.\nVCF Installer (click to enlarge)\nYou can ignore the DNS warning. I simply made a fat-finger mistake when deploying my vcf installer and mistyped one of the two DNS servers. The ESX Host vSAN warning is expected, as I am using 100% unsupported consumer hardware—server vendors hate this trick. The same applies to my vSAN Network Gateway. Since this network does not need to route, it does not have a gateway, so this message can also be ignored. So fill up your coffee cup and press deploy.\nAs I mentioned earlier, the installation will fail and we will have to perform a final workaround. The installer will abort at the “Configure the vSphere cluster” step because a Raid 1 vSAN policy is set by default, which we obviously cannot fulfill.\n(Final) Workaround 5 (vSAN Policy): The solution is super simple. Go to the Policies and Profiles settings via the burger menu in the vCenter and find the vSAN policy that the installer has set as default. This is usually a policy with the name of the VCF instance and Optimal Datasore Default Policy -Raid1. Lovely name. Edit this policy and set Failures to tolerate to “No data redundancy.” I don’t need to mention that this setting should never be used in production 99.9% of the time…\nDangerzone - vSAN Policy (click to enlarge)\nAfter that, you can simply restart the deployment in the VCF installer using retry. The deployment should now run without any problems. For me, the whole process took about 2 hours.\nVCF Installer (click to enlarge)\nNice, another successful deployment completed after a few workarounds, and this time really only on one host. I then deployed two more edge VMs and built my BGP peering. The Kubernetes cluster is still missing, but that’s a story for another blog. The finished VCF instance now looks like this.\nVCF Instance (click to enlarge)\nSummary Significantly fewer workarounds but also more RAM required than with NFS. That’s my feedback in a nutshell. Perhaps I should say a few words about performance, as I am using NVMes that are unfamiliar to me in this setup. At first glance, the Lexar EQ790s perform quite well. They have similar read values to a Samsung 990 Pro and slightly weaker write values than the aforementioned drive, but the bottom line is that I couldn’t get a Samsung 990 Pro at an affordable price.\nvSAN Crystal Disk Mark Performance (click to enlarge)\nI also did a quick test with a Windows Server VM and Crystal Disk Mark. As always, this isn’t a 100% accurate test, but it just to show that this setup is perfectly usable for a lab environment to run a few test VMs and Kubernetes workloads without me always having to turn on multiple servers. So I achieved my goal 100%. I hope I was able to give you some helpful ideas for your setups.\n",
     "wordCount" : "1671",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/head.jpg","datePublished": "2025-12-09T00:00:00+01:00",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2025-12-09T00:00:00+01:00",
     "dateModified": "2025-12-09T00:00:00+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/vcf9-dark-site-edge-part2/"
+      "@id": "https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>VCF9 - Dark Site Edge - Part 2</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
 	<div class="hdr-wrapper section-inner">
 		<div class="hdr-left">
 			<div class="site-branding">
-				<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 			</div>
-			<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 		</div>
 
 		<div class="hdr-right hdr-icons">
@@ -123,26 +123,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;text=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;text=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;summary=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%20-%20Part%202%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-dark-site-edge-part2%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202&amp;summary=VCF9%20-%20Dark%20Site%20Edge%20-%20Part%202%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%20-%20Part%202%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -150,7 +150,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF9 - Dark Site Edge - Part 2&#34;,&#34;http://localhost:1313/posts/vcf9-dark-site-edge-part2/&#34;,&#34;VCF9 - Dark Site Edge - Part 2, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9 - Part 2\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF9 - Dark Site Edge - Part 2&#34;,&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/&#34;,&#34;VCF9 - Dark Site Edge - Part 2, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9 - Part 2\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -169,10 +169,10 @@
 
 <div id="mobile-menu" class="animated fast">
 	<ul>
-		<li><a href="http://localhost:1313/posts/">Posts</a></li>
-		<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-		<li><a href="http://localhost:1313/links/">Links</a></li>
-		<li><a href="http://localhost:1313/about/">About Me</a></li>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 	</ul>
 </div>
 
@@ -193,7 +193,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/edge">edge</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:1313/tags/minisforum">Minisforum</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/edge">edge</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/minisforum">Minisforum</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -606,14 +606,14 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/vcf9-operations-dashboard/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/vcf9-operations-dashboard/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>VCF9 - Building a VCF Operations Dashboard</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/bug-vcf-onboarding/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/bug-vcf-onboarding/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -626,9 +626,9 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2026 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
    <path d="M4 11a9 9 0 0 1 9 9"></path>
    <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -639,7 +639,7 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

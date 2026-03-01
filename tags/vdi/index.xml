@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vdi on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/vdi/</link>
+    <link>https://sdn-warrior.org/tags/vdi/</link>
     <description>Recent content in Vdi on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Fri, 02 Aug 2024 08:34:23 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/vdi/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/vdi/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-      <link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
+      <link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
       <pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
       <description>&lt;aside class=&#34;admonition info&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-info&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12.01&#34; y2=&#34;8&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Disclaimer&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;There are of course other ways of using the Identity Firewall. This is the way I have used it with my customers so far. Of course, the whole thing is colored by personal preferences, experiences and customer requirements so take this as an idea for your own implementations.&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&#xA;&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;A customer of mine has the use case that his entire environment must be micro-segmented. Of course, this does not stop at the VDI environment. Since my customer uses non-persistent VDIs (the VMs are deleted after each logoff), no tags can be used for the security groups. After deleting the VM, the tag would also be removed and a new VDI would have no tags and would thus be isolated. This can be solved with automation or with the Identity Firewall (a combination of both solutions is also conceivable and makes sense). In the first step, my customer opted for the Identity Firewall because it allows generic VDIs to be used and authorisations to resources can be conveniently controlled via the customer AD. In addition, each user/user group receives individual firewall rules, which corresponds to the need-to-know principle.&lt;/p&gt;</description>
     </item>
   </channel>

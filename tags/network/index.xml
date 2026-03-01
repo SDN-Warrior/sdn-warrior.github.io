@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Network on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/network/</link>
+    <link>https://sdn-warrior.org/tags/network/</link>
     <description>Recent content in Network on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Fri, 03 Jan 2025 12:00:00 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/network/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>More performance trough NSX Edge TEP groups?</title>
-      <link>http://localhost:1313/posts/nsx-tep-groups/</link>
+      <link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
       <pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
+      <guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My esteemed colleague, Steven Schramm, recently published an excellent article titled &lt;em&gt;&lt;a href=&#34;https://sdn-techtalk.com/posts/multitep-ha/&#34;&gt;Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability&lt;/a&gt;&lt;/em&gt;. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-tep-groups-and-why-are-they-interesting&#34;&gt;What Are TEP Groups and Why Are They Interesting?&lt;/h2&gt;&#xA;&lt;p&gt;With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.&lt;/p&gt;</description>
     </item>
     <item>
       <title>MAC Learning is your friend</title>
-      <link>http://localhost:1313/posts/mac-learning/</link>
+      <link>https://sdn-warrior.org/posts/mac-learning/</link>
       <pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
-      <guid>http://localhost:1313/posts/mac-learning/</guid>
+      <guid>https://sdn-warrior.org/posts/mac-learning/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.&#xA;Without MAC learning, when the ESXi VM&amp;rsquo;s vNIC connects to a switch port, it only contains a static MAC address.&#xA;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html&#34;&gt;(more Information about MAC learning)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
   </channel>

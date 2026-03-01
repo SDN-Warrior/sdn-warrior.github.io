@@ -1,10 +1,4 @@
 [{
-    "title": "IPv6 with NSX",
-    "url": "/posts/ipv6-nsx/",
-    "date": "2026-02-28",
-    "description": "A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.",
-    "tags": ["ipv6","vmware","nsx","vcf9","homelab"]
-  },{
     "title": "Nutanix - Get started with the CE Edition",
     "url": "/posts/nutanix-install-ce/",
     "date": "2026-02-08",

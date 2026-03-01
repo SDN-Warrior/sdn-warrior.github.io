@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2025-12-03T20:54:20+01:00">
   <meta itemprop="dateModified" content="2025-12-03T20:54:20+01:00">
   <meta itemprop="wordCount" content="820">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,Operations,Sddc,Bugfix"><meta property="og:url" content="http://localhost:1313/posts/bug-vcf-onboarding/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vcf,Operations,Sddc,Bugfix"><meta property="og:url" content="https://sdn-warrior.org/posts/bug-vcf-onboarding/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore">
   <meta property="og:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
@@ -44,10 +44,10 @@
     <meta property="article:tag" content="Operations">
     <meta property="article:tag" content="Sddc">
     <meta property="article:tag" content="Bugfix">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore">
   <meta name="twitter:description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
 
@@ -62,16 +62,16 @@
     "articleBody": "Introduction While preparing for an article that has not yet been published, I ran into an interesting VCF bug. For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet. Since I had to reinstall one of them, I removed it according to the official instructions, and that’s when the problems started.\nDisclaimer Warning\rI have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so at your own risk.\rError pattern and impact At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:\nInventory Sync fails with the message that SDDC from instance X is not reachable Deployment of a new VCF instance to the existing instance of VCF Operations fails Error VCF Installer (click to enlarge)\nThe error shown in the screenshot occurs during the “Join the existing fleet management appliance” step in the VCF deployment. When I take a closer look at the error message, I notice that an attempt is being made to log in to an SDDC Manager:\n\"exceptionMessage\":\"Could not get APl token from SDDC Manager vcf09-e02-sddc.lab.vcf. Coincidentally, the SDDC Manager belongs to the very VCF instance that was previously removed. A search in Operations revealed that there were still configuration remnants in Operations. Even after deleting these remnants, the error persisted—you don’t want to know how many times I deployed and deleted a VCF instance in the last two days.\nTroubleshooting After searching forever, I found an entry in the Fleet Manager database that explains the behavior, and that’s also the point where we end up in the danger zone. So buckle up, take a snapshot of the Fleet Manager, and jump into the SSH session.\nSDDC in the vCLM DB (click to enlarge)\nI must apologize for the screenshots, but I’m glad I took them at all. What you can see in the screenshot is that the old SDDC Manager is listed in the vm_lcops_sddc_manager table. In total, there were four SDDC Managers listed here—including the certificate in the database. Together with the other issues I found in Operations, this was the reason why the VCF installer was blocked and my inventory sync wasn’t working. When deleting a VCF instance, the SDDC does not appear to be deleted from the fleet database. I had exactly the same problem when switching from the public beta 9 to the final version of VCF 9. However, I attributed this to the beta installation and therefore did not spend much time troubleshooting.\nProblem solving Warning\rTake a snapshot of your fleet manager\rSince there is no official solution yet, here is my unofficial solution to the problem. I have tried this several times and was able to verify that it works. Would I do this in a production environment? Definitely not. You have been warned.\nFirst, the integration must be deleted, just as described in the official guide.\nAdministration-\u003e Integrations - Delete Accounts After that, the cloud proxy must be deleted, as this was overlooked.\nAdministration-\u003eCloud Proxies - Delete Cloud Proxy The next step is to delete the deployment target.\nFleet Management -\u003e Lifecycle -\u003e Settings -\u003e Deployment Target - Delete vCenter If vCenter is not deletable trigger inventory sync (doublecheck if the Integration is still deletet). At that point, I wiped my removed VCF instance.\nTo delete the SDDC entry in the Fleet Manager DB, you must connect to the appliance via SSH and the ROOT user.\nConnect to the DB:\nsu - postgres /opt/vmware/vpostgres/current/bin/psql -U postgres vrlcm Find your SDDC Manager Entrys:\nSELECT sddcmanagerhostname,vmid FROM vm_lcops_sddc_manager; You will receive a list with the host names and the VMID.\nvrlcm=# SELECT sddcmanagerhostname,vmid FROM vm_lcops_sddc_manager; sddcmanagerhostname | vmid ------------------------+-------------------------------------- vcf09-e03-sddc.lab.vcf | 0838e38b-ba5c-40e3-b50e-2c86f0b2cf3c vcf09-e01-sddc.lab.vcf | 06c98f38-d855-4b4a-b62c-f81fae9158e0 vcf09-sddc.lab.vcf | 52b7a8cc-7d41-4c30-ad5c-960eb6db515d (3 rows) Deleting the SDDC entry:\nDELETE FROM vm_lcops_sddc_manager WHERE vmid = 'xxxx'; Reboot the fleet manager.\nSummary Congratulations, we have hopefully survived the open-heart surgery. After that, I was able to simply press resume in the VCF installer and the VCF Instanc installation ran smoothly.\nInstallation complete (click to enlarge)\nOf course, I can’t say for sure whether all hidden entries from the old SDDC have been removed from the environment. The only thing to do here is wait until the bug is officially fixed. As I already mentioned, I was able to reproduce the behavior several times. Now that this problem has been solved, I can get back to working on the article I had originally planned.\nInfo\rBroadcom published an official KB article on this topic on January 7, 2026: https://knowledge.broadcom.com/external/article/424495\r",
     "wordCount" : "820",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/head.jpg","datePublished": "2025-12-03T20:54:20+01:00",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2025-12-03T20:54:20+01:00",
     "dateModified": "2025-12-03T20:54:20+01:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/bug-vcf-onboarding/"
+      "@id": "https://sdn-warrior.org/posts/bug-vcf-onboarding/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
 	<div class="hdr-wrapper section-inner">
 		<div class="hdr-left">
 			<div class="site-branding">
-				<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 			</div>
-			<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 		</div>
 
 		<div class="hdr-right hdr-icons">
@@ -123,26 +123,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fbug-vcf-onboarding%2f&amp;text=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fbug-vcf-onboarding%2f&amp;text=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fbug-vcf-onboarding%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fbug-vcf-onboarding%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fbug-vcf-onboarding%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fbug-vcf-onboarding%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fbug-vcf-onboarding%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore&amp;summary=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%20-%20Part%202%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fbug-vcf-onboarding%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore&amp;summary=VCF9%20BUG%3a%20After%20deleting%20a%20VCF%20instance%20on%20VCF%20Operations%2c%20no%20VCF%20instance%20can%20be%20imported%20anymore%2c%20by%20SDN-Warrior%0a%0aA%20short%20blog%20on%20how%20to%20deploy%20a%20Dark%20Site%20Edge%20in%20VCF9%20-%20Part%202%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -150,7 +150,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore&#34;,&#34;http://localhost:1313/posts/bug-vcf-onboarding/&#34;,&#34;VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9 - Part 2\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore&#34;,&#34;https://sdn-warrior.org/posts/bug-vcf-onboarding/&#34;,&#34;VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore, by SDN-Warrior\n\nA short blog on how to deploy a Dark Site Edge in VCF9 - Part 2\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -169,10 +169,10 @@
 
 <div id="mobile-menu" class="animated fast">
 	<ul>
-		<li><a href="http://localhost:1313/posts/">Posts</a></li>
-		<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-		<li><a href="http://localhost:1313/links/">Links</a></li>
-		<li><a href="http://localhost:1313/about/">About Me</a></li>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 	</ul>
 </div>
 
@@ -193,7 +193,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf">vcf</a></span><span class="tag"><a href="http://localhost:1313/tags/operations">operations</a></span><span class="tag"><a href="http://localhost:1313/tags/sddc">sddc</a></span><span class="tag"><a href="http://localhost:1313/tags/bugfix">bugfix</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf">vcf</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/operations">operations</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/sddc">sddc</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/bugfix">bugfix</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -359,14 +359,14 @@ I have tried this several times and was able to verify that it works. Would I do
 
 		</article>
 		<div class="post-nav thin">
-			<a class="next-post" href="http://localhost:1313/posts/vcf9-dark-site-edge-part2/">
+			<a class="next-post" href="https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/">
 				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
    </svg>&nbsp;Newer</span><br><span>VCF9 - Dark Site Edge - Part 2</span>
 			</a>
-			<a class="prev-post" href="http://localhost:1313/posts/vcf9-dark-site-edge/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -379,9 +379,9 @@ I have tried this several times and was able to verify that it works. Would I do
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2026 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
    <path d="M4 11a9 9 0 0 1 9 9"></path>
    <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -392,7 +392,7 @@ I have tried this several times and was able to verify that it works. Would I do
 
 <script defer src="/klaro/klaro.js"></script>
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

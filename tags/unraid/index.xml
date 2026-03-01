@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Unraid on SDN-Warrior | Daniel Krieger</title>
-    <link>http://localhost:1313/tags/unraid/</link>
+    <link>https://sdn-warrior.org/tags/unraid/</link>
     <description>Recent content in Unraid on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Sat, 14 Dec 2024 02:00:26 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/unraid/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sdn-warrior.org/tags/unraid/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Homelab V5</title>
-      <link>http://localhost:1313/posts/homelab-v5/</link>
+      <link>https://sdn-warrior.org/posts/homelab-v5/</link>
       <pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
-      <guid>http://localhost:1313/posts/homelab-v5/</guid>
+      <guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
       <description>&lt;h2 id=&#34;my-homelab-journey-from-unraid-beginnings-to-version-5&#34;&gt;My Homelab Journey: From Unraid Beginnings to Version 5&lt;/h2&gt;&#xA;&lt;p&gt;Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-beginning-unraid-with-custom-hardware&#34;&gt;The Beginning: Unraid with Custom Hardware&lt;/h2&gt;&#xA;&lt;p&gt;My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.&lt;/p&gt;</description>
     </item>
     <item>
       <title>iSCSI Tuning</title>
-      <link>http://localhost:1313/posts/iscsi-tuning/</link>
+      <link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
       <pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
-      <guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+      <guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
       <description>&lt;p&gt;In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.&lt;/p&gt;&#xA;&lt;p&gt;For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Unraid - A Storage Journey</title>
-      <link>http://localhost:1313/posts/unraid-storage/</link>
+      <link>https://sdn-warrior.org/posts/unraid-storage/</link>
       <pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
-      <guid>http://localhost:1313/posts/unraid-storage/</guid>
+      <guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
       <description>&lt;h2 id=&#34;my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing&#34;&gt;My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing&lt;/h2&gt;&#xA;&lt;p&gt;As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.&lt;/p&gt;&#xA;&lt;p&gt;After thorough research, I decided to go with Unraid – an operating system renowned for its simplicity, flexibility, and scalability. These key features were the deciding factors for me:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V4</title>
-      <link>http://localhost:1313/posts/labv4/</link>
+      <link>https://sdn-warrior.org/posts/labv4/</link>
       <pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/labv4/</guid>
+      <guid>https://sdn-warrior.org/posts/labv4/</guid>
       <description>&lt;h2 id=&#34;ready-for-vcf&#34;&gt;Ready for VCF&lt;/h2&gt;&#xA;&lt;p&gt;I have done a huge redesign of my Homelab.&#xA;To better test VCF scenarios, 3 new Minisforum MS-01 have been added.&#xA;These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.&#xA;They also have 2x10G and 2x2.5G networking on board for various VM workloads.&#xA;Furthermore, I converted my storage from NFS to iSCSI with multipathing, which gets even more performance out of my self-built Unraid.&#xA;I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q) in a Windows 11 VM.&lt;/p&gt;</description>
     </item>
   </channel>

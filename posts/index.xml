@@ -1,392 +1,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>http://localhost:1313/posts/</link>
+		<link>https://sdn-warrior.org/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sat, 28 Feb 2026 17:38:45 +0100</lastBuildDate>
-		<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
-		
-		<item>
-			<title>IPv6 with NSX</title>
-			<link>http://localhost:1313/posts/ipv6-nsx/</link>
-			<pubDate>Sat, 28 Feb 2026 17:38:45 +0100</pubDate>
-			
-			<guid>http://localhost:1313/posts/ipv6-nsx/</guid>
-			<description><![CDATA[A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
-<p>IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&rsquo;s only as a dual stack.</p>
-<p>According to estimates by <a href="https://blog.cloudflare.com/ipv6-from-dns-pov/">Cloudflare from 2023</a>, global acceptance of IPv6 is around 35.9%. ChatGPT puts it at around 45%, but we are still a long way from widespread adoption. PS: My blog can only be accessed with IPv6.</p>
-<p>Nevertheless, I wanted to take a look at the status quo and set up a working IPv6 setup with NSX, but unfortunately it&rsquo;s not as easy as I had imagined.
-Perhaps I should briefly mention the framework conditions. I have a consumer DSL connection from Deutsche Telekom. They generously provide me with a public IPv4 and a /56 IPv6 prefix. I already have my OPNsense appliance running in dual stack. I will only discuss this configuration to a limited extent, as it can be different for each operator.</p>
-<p>Unfortunately, my IPv4 and IPv6 are dynamic because I have a normal private customer connection and not a business tariff. Thanks for that – not. Unfortunately, this also means that I have to come up with something else for the IPv6 prefixes for NSX. More on that later. I also have a Mikrotik router between OPNSense and the NSX T0 router.</p>
-<figure><a href="01.png"><picture><source srcset="/ipv6-nsx/01_hu_b0a7e55fb2327430.png" type="image/png">
-          <img
-            src="/ipv6-nsx/01_hu_b0a7e55fb2327430.png"alt="Network"width="1323"
-            height="839"/>
-        </picture></a><figcaption><p>Network setup (click to enlarge)</p></figcaption></figure>
-<p>The current setup is deliberately simple. My T0 router is active/standby at this point and I only use one uplink VLAN.
-The reason for this is simple. The entire setup runs on a small <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">NUC Ultra 7</a> with only one LAN card. Any HA setup would be excessive here. But before we jump into the setup, we need to talk about a few IPv6 basics.</p>
-<h2 id="gua--ula--link-local-and-other-ipv6-basics">GUA / ULA / Link Local and other IPv6 basics</h2>
-<h3 id="gua">GUA</h3>
-<p>We start with what is probably the simplest prefix range, the GUA or Global Unicast.
-This prefix is publicly routable on the Internet and starts with <em><strong>2000::/3</strong></em>.</p>
-<h3 id="ula">ULA</h3>
-<p>The ULA prefix is the Unique Local Address range and is comparable to the private IP ranges of IPv4. These are not routed on the Internet and play an important role in my setup, as I unfortunately get assigned a dynamic prefix by my provider. ULA starts with <em><strong>fc00::/7</strong></em>
-The first bit following the prefix indicates, if set, that the address is locally assigned. This splits the address block in two equally sized blocks, fc00::/8 and fd00::/8. fd00::/8 is the range that is actually used for private addressing. NSX uses an fc00::/8 network by default for hotplug networks between T0 and T1 routers. For this reason alone, you should avoid fc00::/8 and use fd00::/8 networks for private addressing, even though the risk of having duplicate IPs is very low.</p>
-<h3 id="link-local">Link-Local</h3>
-<p>LL is automatically available on every interface. Used for Neighbor Discovery, Router Advertisements, and often as BGP Next-Hop. Only valid in the local Layer 2.
-LL starts with <em><strong>fe80::/10</strong></em>.</p>
-<h3 id="multicast">Multicast</h3>
-<p>Replaces broadcast in IPv6. Used for neighbor discovery, DAD, and router advertisements. Multicast can be recognized by the following prefix: <em><strong>ff00::/8</strong></em>.</p>
-<h3 id="ipv4-mapped-ipv6">IPv4-mapped IPv6</h3>
-<p>IPv4 addresses in IPv6 format, e.g., for MP-BGP (RFC 5549), when IPv6 routes are transported over an IPv4 session. The prefix is <em><strong>::ffff:0:0/96</strong></em>
-I had planned to use this for my NSX networks, but my OPNSense couldn&rsquo;t handle it. My IPv6 routes weren&rsquo;t in the routing table. I couldn&rsquo;t figure out whether it was due to OPNSense&rsquo;s FRR implementation or Mikrotik. More on that later.</p>
-<h3 id="prefix-delegation">Prefix Delegation</h3>
-<p>My internet provider gives me a GUA /56 prefix via prefix delegation. Unfortunately, as already mentioned, this is dynamic. My OPNSense supports dynamic prefixes, and thanks to /56, I can create up to 256 /64 networks and assign these individual VLAN interfaces to the OPNSense. Unfortunately, NSX does not support this, which is why I ultimately had to resort to NAT66 and ULA.</p>
-<h3 id="slaac">SLAAC</h3>
-<p>SLAAC stands for Stateless Address Autoconfiguration and enables a host to automatically generate its IPv6 address from a /64 prefix announced by the router. To do this, the router sends router advertisements containing the prefix and the default gateway. The client then independently forms its complete IPv6 address without the need for a DHCP server to assign the address.</p>
-
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">SLAAC itself only distributes the prefix and the default gateway. DNS servers are only provided if the router supports RDNSS (DNS via RA). Not all operating systems—especially minimalist distributions such as Alpine—reliably accept DNS information from router advertisements. As a result, IPv6 may work, but name resolution may not (this is a minor spoiler).</div>
-    </aside>
-<h3 id="dhcpv6">DHCPv6</h3>
-<p>DHCPv6 provides IPv6 addresses and additional network information centrally via a server. It can either assign the complete address (stateful) or only provide additional information such as DNS (stateless). If DHCP runs in stateless mode, SLAAC is used for IP address assignment.</p>
-
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Not every device or operating system supports DHCPv6 stateful! Welcome to the brave new world of IPv6.</div>
-    </aside>
-<h3 id="nat66">NAT66</h3>
-<p>NAT66 is the IPv6 variant of Network Address Translation, in which the source IPv6 address is replaced by another IPv6 address when leaving the network. It is often used when ULA addresses are used internally and the provider assigns a dynamic global prefix. NAT66 works statefully, which means that the router stores connection states for reverse translation. This keeps the internal address design stable, regardless of the external prefix. However, NAT66 contradicts the end-to-end principle of IPv6.</p>
-<h3 id="nsx-supportet-ipv6-features">NSX Supportet IPv6 features</h3>
-<ul>
-<li>IPv6 and Dual-Stack Overlay Segments</li>
-<li>IPv6 Distributed Routing (Tier-0 / Tier-1)</li>
-<li>IPv6 BGP (MP-BGP)</li>
-<li>IPv6 Distributed Firewall (L3/L4)</li>
-<li>IPv6 Gateway Firewall</li>
-<li>IPv6 Load Balancer VIPs</li>
-<li>NAT66 support</li>
-<li>DHCPv6 (Stateful &amp; Stateless)</li>
-<li>SLAAC support</li>
-</ul>
-
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content"><p>Unsupported IPv6 features are:</p>
-<ul>
-<li>EVPN</li>
-<li>Multicast Routing</li>
-<li>NSX Federation</li>
-<li>VPCs</li>
-</ul></div>
-    </aside>
-<h3 id="nsx-dad-profile">NSX DAD-Profile</h3>
-<p>I could make a DAD joke now, but&hellip;</p>
-<p><em><strong>Router:</strong></em> &ldquo;Doctor, it hurts when IP.&rdquo;
-<em><strong>Doctor:</strong></em> &ldquo;Then stop using IPv6.&rdquo;</p>
-<p>Okay, let&rsquo;s not go there, that&rsquo;s awful&hellip;</p>
-<p>Duplicate Address Detection (DAD) in NSX is an IPv6 mechanism that ensures that an IPv6 address is unique within a segment before it is actively used.
-NSX uses the standardized Neighbor Discovery Protocol to check whether an address is already being used by another VM, thereby preventing address conflicts.</p>
-<h3 id="nsx-nd-profile">NSX ND-Profile</h3>
-<p>An ND (Neighbor Discovery) profile in NSX defines parameters such as router advertisement DHCPv6 mode (stateful/stateless) and SLAAC behavior for a segment.
-The ND profile controls how IPv6 addresses are assigned and which default gateway information is distributed to the workloads.</p>
-<h3 id="that-was-quite-a-lot">That was quite a lot</h3>
-<p>Now that we&rsquo;ve refreshed the basics, let&rsquo;s move on to the setup.</p>
-<h2 id="configuring-the-opnsense-and-mikrotik-router">Configuring the OPNSense and Mikrotik router</h2>
-<p>I decided to set up my routing dynamically with BGP and fell into a few traps.
-Since I can&rsquo;t do much with my 4,722,366,482,869,645,213,696 public IPv6 addresses (that&rsquo;s an unimaginable 4.7 sextillion IP addresses)
-because they are not permanent, I have decided on a ULA setup and will then use NAT66.
-I have decided to use my ULA networks from the fd11:22:33::/56 prefix range. For one thing, it is still completely unused and relatively easy to read. My DNS servers have long been IPv6-capable in my network and have their own ULA IPs, which are somewhat arbitrary, however. Historically grown, as we say in Germany.
-To keep everything clear, here is a short table:</p>
-<table>
-  <thead>
-      <tr>
-          <th>Purpose / Connection</th>
-          <th>Prefix</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>ULA Core Aggregate</td>
-          <td>fd11:22:33::/56</td>
-          <td>Main internal IPv6 prefix</td>
-      </tr>
-      <tr>
-          <td>OPNsense ↔ MikroTik Transit</td>
-          <td>fd11:22:33:ff02::/64</td>
-          <td>transit network</td>
-      </tr>
-      <tr>
-          <td>MikroTik ↔ NSX T0 Transit</td>
-          <td>fd11:22:33:ff01::/64</td>
-          <td>transit network</td>
-      </tr>
-      <tr>
-          <td>NSX Segment 1</td>
-          <td>fd11:22:33:ff10::/64</td>
-          <td>Workload</td>
-      </tr>
-      <tr>
-          <td>NSX Segment 2</td>
-          <td>fd11:22:33:ff11::/64</td>
-          <td>Workload</td>
-      </tr>
-      <tr>
-          <td>NSX Hotplug Network</td>
-          <td>fc00::/8</td>
-          <td>T0 - T1 network</td>
-      </tr>
-      <tr>
-          <td>Public IP Prefix</td>
-          <td>2003:c4:XXXX:b100::/56</td>
-          <td>Telekom Internet</td>
-      </tr>
-  </tbody>
-</table>
-<p>The target setup is shown as a graphic.</p>
-<figure><a href="02.png"><picture><source srcset="/ipv6-nsx/02_hu_93c2e4dae02d1a99.png" type="image/png">
-          <img
-            src="/ipv6-nsx/02_hu_93c2e4dae02d1a99.png"alt="Network IPs"width="1414"
-            height="839"/>
-        </picture></a><figcaption><p>Network setup - IPs (click to enlarge)</p></figcaption></figure>
-<p>First, I configure my static IPv6 on my OPNSense on my BGP interface. It is important to select the IPv6 configuration type. This must be set to Static IPv6 and not Track Interface. With Track Interface, I would take a /64 prefix from my GUA IP address range, which unfortunately is not static.</p>
-<figure><a href="03.png"><picture><source srcset="/ipv6-nsx/03_hu_647e726cfed8b751.png" type="image/png">
-          <img
-            src="/ipv6-nsx/03_hu_647e726cfed8b751.png"alt="OPNSense Config"width="1214"
-            height="1120"/>
-        </picture></a><figcaption><p>OPNSense config (click to enlarge)</p></figcaption></figure>
-<p>It is also important that I assign the IP address cleanly with /64, otherwise the network cannot be used for SLAAC, and SLAAC is what we want to use on the other end, as all devices and operating systems that are dual-stack capable can do this.</p>
-
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Explicit IPv6 firewall rules must be written. In addition, IPv4 may be preferred in OPNSense. This can be deactivated under System -&gt; Settings -&gt; General -&gt; Prefer IPv4 over IPv6.</div>
-    </aside>
-<p>Next, IPv6 must be enabled on the Mikrotik. This requires a reboot and can be configured under IPv6 -&gt; Settings -&gt; Disable IPv6. By default, the checkbox is selected and must be deselected. One might almost think that none of the vendors are really interested in IPv6.</p>
-<p>But let&rsquo;s get to the first problem I had. My lab already had a BGP configuration between the lab router and OPNSense via IPv4. OPNSense Business Edition does not properly support IPv6 route exchange via IPv4.
-I saw my IPv6 routes in the FRR plugin, but with an incorrect next hop IP address.
-<figure><a href="04.png"><picture><source srcset="/ipv6-nsx/04_hu_b02ce72df2b325c8.png" type="image/png">
-          <img
-            src="/ipv6-nsx/04_hu_b02ce72df2b325c8.png"alt="OPNSense IPv6 Routing"width="1412"
-            height="574"/>
-        </picture></a><figcaption><p>OPNSense Routing (click to enlarge)</p></figcaption></figure></p>
-<p>Conversely, it doesn&rsquo;t work either, so I couldn&rsquo;t get RFC 4798 to work. OPNSense simply didn&rsquo;t want to learn IPv4 routes over IPv6.
-After an hour of troubleshooting, I gave up and configured a normal IPv6 and IPv4 BGP session.<br>
-The settings are relatively straightforward. I am listing my settings here as an example. However, there is nothing special about them.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl"> ;;; OPNSenseIPv6
-</span></span><span class="line"><span class="cl">     name=&#34;OPNSenseIPv6&#34; instance=OPNSense 
-</span></span><span class="line"><span class="cl">     remote.address=fd11:22:33:ff02::1/128 .as=65101 
-</span></span><span class="line"><span class="cl">     local.default-address=fd11:22:33:ff02::2 .role=ebgp 
-</span></span><span class="line"><span class="cl">     connect=yes listen=yes routing-table=main as=65102 nexthop-choice=default hold-time=3m 
-</span></span><span class="line"><span class="cl">     keepalive-time=1m afi=ipv6 use-bfd=yes 
-</span></span><span class="line"><span class="cl">     output.redistribute=connected,bgp 
-</span></span></code></pre></div><p>Here are the OPNSense settings, but they are pretty standard. Thanks to my new Hugo Gallery shortcode, it&rsquo;s now easier to view them.</p>
-
-
-
-
-    <div class="image-gallery" id="gallery-d4b41362">
-                <a href="/ipv6-nsx/opnsense-routing.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="Ipv6 Nsx Opnsense Routing"><img src="/ipv6-nsx/opnsense-routing_hu_dc1705084a688542.png" alt="/ipv6-nsx/opnsense-routing" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx Opnsense Routing</div>
-                </a>
-                <a href="/ipv6-nsx/opnsense-neigbor.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="Ipv6 Nsx Opnsense Neigbor"><img src="/ipv6-nsx/opnsense-neigbor_hu_d23fc6e3ac7aaaa4.png" alt="/ipv6-nsx/opnsense-neigbor" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx Opnsense Neigbor</div>
-                </a></div>
-<p>Now that that&rsquo;s done, I can finally get started on the NSX setup.</p>
-<h2 id="nsx-ipv6-setup---it-just-works">NSX IPv6 setup - it just works?</h2>
-<p>Of course not! Anyone who thought it would all be easy is mistaken. What I didn&rsquo;t really know—but what a quick glance at the documentation revealed—is that NSX has IPv6 forwarding disabled by default. Apparently, no one really wants to use IPv6.</p>
-<figure><a href="05.png"><picture><source srcset="/ipv6-nsx/05_hu_a421709109d75c7c.png" type="image/png">
-          <img
-            src="/ipv6-nsx/05_hu_a421709109d75c7c.png"alt="NSX Global Network Config"width="1392"
-            height="1007"/>
-        </picture></a><figcaption><p>NSX Global Network Config (click to enlarge)</p></figcaption></figure>
-<p>So I quickly jumped into the NSX Global Network config and enabled IPv6 L3 forwarding.
-For IPv6 to work, the T0 router must receive IPv6 addresses in addition to IPv4 addresses.</p>
-<figure><a href="06.png"><picture><source srcset="/ipv6-nsx/06_hu_b0d1063f93242ee8.png" type="image/png">
-          <img
-            src="/ipv6-nsx/06_hu_b0d1063f93242ee8.png"alt="NSX Edge Network Config"width="1442"
-            height="1050"/>
-        </picture></a><figcaption><p>NSX Edge Network Config (click to enlarge)</p></figcaption></figure>
-<p>Next, I configure my IPv6 routing, and this is where RFC 5549 comes into play. To minimize the number of BGP sessions and IPv4 addresses, you can exchange both IPv4 and IPv6 routes over a single IPv6 BGP session.</p>
-
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="16" x2="12" y2="12"></line>
-      <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Support for encoding and processing an IPv4 route with an IPv6 next hop is negotiated as part of the capability exchange in the BGP OPEN message. If both sides of a peering session support the capability, IPv4 routes are advertised with an IPv6 next hop. Multi-protocol BGP (MP-BGP) is used to advertise the Network Layer Reachability Information of an IPv4 address family using the next hop of an IPv6 address family.</div>
-    </aside>
-<p>Mikrotik now also supports RFC 5549. The Mikrotik configuration is very similar to the OPNSense configuration. The main difference is that both IPv4 and IPv6 address families are enabled in one session.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">;;; BGP_VCF09-E01-Edge01
-</span></span><span class="line"><span class="cl">     name=&#34;VCF09-E01-Edge1-01&#34; instance=VCF09-E01-Edge1-U1 
-</span></span><span class="line"><span class="cl">     remote.address=fd11:22:33:ff01::2/128 .as=65004 
-</span></span><span class="line"><span class="cl">     local.default-address=fd11:22:33:ff01::1 .role=ebgp 
-</span></span><span class="line"><span class="cl">     connect=yes listen=yes routing-table=main as=65102 hold-time=3m keepalive-time=1m afi=ip,ipv6 
-</span></span><span class="line"><span class="cl">     use-bfd=yes 
-</span></span><span class="line"><span class="cl">     output.redistribute=connected,bgp .default-originate=if-installed 
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">;;; BGP_VCF09-E01-Edge02
-</span></span><span class="line"><span class="cl">     name=&#34;VCF09-E01-Edge2-01&#34; instance=VCF09-E01-Edge1-U1 
-</span></span><span class="line"><span class="cl">     remote.address=fd11:22:33:ff01::3/128 .as=65004 
-</span></span><span class="line"><span class="cl">     local.default-address=fd11:22:33:ff01::1 .role=ebgp 
-</span></span><span class="line"><span class="cl">     connect=yes listen=yes routing-table=main as=65102 hold-time=3m keepalive-time=1m afi=ip,ipv6 
-</span></span><span class="line"><span class="cl">     use-bfd=yes 
-</span></span><span class="line"><span class="cl">     output.redistribute=connected,bgp .default-originate=if-installed 
-</span></span></code></pre></div><p>Next, the routing must be created on the T0 router. It is important to note that an IPv6 session must be created and an IPv6 route filter must be added to the default IPv4 route filter. Otherwise, the routing will not work. The rest of the configuration is standard. I always use BFD in my setups for fast network convergence, but it is not a must.</p>
-
-
-
-
-    <div class="image-gallery" id="gallery-c1310a94">
-                <a href="/ipv6-nsx/edge%20neigbor.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="Ipv6 Nsx Edge Neigbor"><img src="/ipv6-nsx/edge%20neigbor_hu_29e8a308f17b8715.png" alt="/ipv6-nsx/edge neigbor" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx Edge Neigbor</div>
-                </a>
-                <a href="/ipv6-nsx/edge%20routefilter.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="Ipv6 Nsx Edge Routefilter"><img src="/ipv6-nsx/edge%20routefilter_hu_dc3ed2c2f09fd42f.png" alt="/ipv6-nsx/edge routefilter" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx Edge Routefilter</div>
-                </a></div>
-<p>BGP peering should now be up and running. The IPv4 routing table on the Mikrotik looks a little strange. The immediate gateway shows the link local IP address of the NSX Edge Node. The IPv4 address is only how RouteOS represents IPv4 over IPv6 and is not actually used.</p>
-
-
-
-
-    <div class="image-gallery" id="gallery-3629e91e">
-                <a href="/ipv6-nsx/ipv4-over-ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="Ipv6 Nsx Ipv4 Over Ipv6"><img src="/ipv6-nsx/ipv4-over-ipv6_hu_498dd5864979a5ee.png" alt="/ipv6-nsx/ipv4-over-ipv6" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx Ipv4 Over Ipv6</div>
-                </a>
-                <a href="/ipv6-nsx/ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="Ipv6 Nsx Ipv6"><img src="/ipv6-nsx/ipv6_hu_8a4d2348afbd97f2.png" alt="/ipv6-nsx/ipv6" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx Ipv6</div>
-                </a></div>
-
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Even if the IPv6 session is used for route exchange, routing to IPv4 networks only works if the EdgeVMs also have IPv4 addresses on the uplink interfaces.
-If these configurations are missing, routes for the IPv4 networks exist but cannot be reached.</div>
-    </aside>
-<p>In the traceroute of the Mikrotik switch, you can also clearly see that for IPv4 networks, the next hop is actually the IPv4 address of the active EdgeVM.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[admin@router.lab.home] &gt; tool/traceroute 10.10.0.1
-</span></span><span class="line"><span class="cl">Columns: ADDRESS, LOSS, SENT, LAST, AVG, BEST, WORST, STD-DEV
-</span></span><span class="line"><span class="cl">#  ADDRESS      LOSS  SENT  LAST   AVG  BEST  WORST  STD-DEV
-</span></span><span class="line"><span class="cl">0  10.28.25.12  0%       3  0.6ms  0.5  0.4   0.6    0.1    
-</span></span><span class="line"><span class="cl">1  10.10.0.1    0%       3  0.3ms  0.3  0.2   0.4    0.1  
-</span></span></code></pre></div><h2 id="ipv6-segments-and-nd">IPv6 segments and ND</h2>
-<p>Now that the routing part is done, it would have been much faster if I had used static routing, but that would also have been much more boring. Now I can finally create segments. And yes, I know I already created some for my tests, because without segments, there are no networks and therefore no routing test. But just imagine if I hadn&rsquo;t done that yet.</p>
-<p>In my setup, I decided to build a T1 router for my IPv6 segments and a T1 router for my IPv4 networks, but why did I do that? Firstly, for clarity, and secondly, because of the ND profile, which is still needed. The ND profiles can be defined either globally at the T0 level or more specifically at the T1 level.
-NSX supports 5 modes for ND:</p>
-<ul>
-<li>Disabled - Router advertisement messages are disabled.</li>
-<li>SLAAC with DNS Through RA - The address and DNS information is generated with the router advertisement message.</li>
-<li>SLAAC with DNS Through DHCP - The address is generated with the router advertisement message and the DNS information is generated by the DHCP server.</li>
-<li>DHCP with Address and DNS through DHCP - The address and DNS information is generated by the DHCP server.</li>
-<li>SLAAC with Address and DNS through DHCP - The address and DNS information is generated by the DHCP server. This option is only supported by NSX Edge and not by ESX hosts.</li>
-</ul>
-<p>The standard is SLAAC with DNS Through RA, but as I already mentioned, problems can arise with some operating systems or devices. Specifically, some devices or operating systems cannot ause Route advertisment for DNS. Alpine Linux is one such case. I do get a valid IPv6 and can ping my DNS server with it, but name resolution does not work, and without that, the internet is not particularly useful. The DNS servers were, of course, configured correctly in the ND profile.</p>
-<p>That&rsquo;s why I create an ND profile with SLAAC with DNS Through DHCP. This has the advantage that SLAAC and RA can generally be used, but DHCPv6 stateless is also used to explicitly assign DNS. The profiles can be found under Networking -&gt; Networking Profiles -&gt; Select profile type -&gt; ND Profile. In the new profile, I only change the mode; otherwise, all settings remain at default. Under Networking -&gt; Tier-1 Gateways -&gt; Additional Settings -&gt; ND Profile, I then select my new profile for my IPv6 T1 router.</p>
-<p>Then I create an overlay segment connected to my IPv6 T1 and configure the following IPv6 gateway CIDR: fd11:22:33:ff10::1/64. I also create a segment DHCP server in which I specify the ULA IPs of my DNS servers in the lab and, of course, a DHCP server IP address from the segment. In my case, I simply take the next free IP fd11:22:33:ff10::2/64.</p>
-
-
-
-
-    <div class="image-gallery" id="gallery-92172efd">
-                <a href="/ipv6-nsx/dhcp-config.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="Ipv6 Nsx DHCP Config"><img src="/ipv6-nsx/dhcp-config_hu_143a80ba7fcf45f9.png" alt="/ipv6-nsx/dhcp-config" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx DHCP Config</div>
-                </a>
-                <a href="/ipv6-nsx/dhcp-profile.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="Ipv6 Nsx DHCP Profile"><img src="/ipv6-nsx/dhcp-profile_hu_1110274d5a161060.png" alt="/ipv6-nsx/dhcp-profile" width="300" height="300" loading="lazy">
-                    <div class="gallery-item-caption">Ipv6 Nsx DHCP Profile</div>
-                </a></div>
-<p>Next, I create a VM from my Alpine template and connect it to the new segment, power up the VM, and am disappointed.</p>
-<h2 id="are-we-there-yet">Are we there yet?</h2>
-<p>In order for my Alpine VM to get an IPv6 address at all, I have to edit the file /etc/network/interfaces and add iface eth0 inet6 auto.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">auto lo
-</span></span><span class="line"><span class="cl">iface lo inet loopback
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">auto eth0
-</span></span><span class="line"><span class="cl"><span class="c1">#iface eth0 inet dhcp</span>
-</span></span><span class="line"><span class="cl">iface eth0 inet6 auto
-</span></span></code></pre></div><p>One thing is already working after reboot: my VM is getting a ULA IP address via SLAAC and can also ping my DNS server.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">inet6 fd11:22:33:ff10:2b17:367c:2ddc:2925/64 scope global dynamic noprefixroute flags 100 
-</span></span><span class="line"><span class="cl">  valid_lft 2591977sec preferred_lft 604777sec
-</span></span><span class="line"><span class="cl">inet6 fe80::250:56ff:fe86:9e5/64 scope link 
-</span></span><span class="line"><span class="cl">  valid_lft forever preferred_lft forever
-</span></span></code></pre></div><p>Ping test:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">template:~# ping6 fd::101
-</span></span><span class="line"><span class="cl">PING fd::101 (fd::101): 56 data bytes
-</span></span><span class="line"><span class="cl">64 bytes from fd::101: seq=0 ttl=60 time=1.157 ms
-</span></span><span class="line"><span class="cl">64 bytes from fd::101: seq=1 ttl=60 time=1.190 ms
-</span></span><span class="line"><span class="cl">64 bytes from fd::101: seq=2 ttl=60 time=1.471 ms
-</span></span></code></pre></div><p>However, name resolution still does not work or rather, DHCPv6 is ignored.
-For this to work with Alpine, a small package needs to be installed. I should have mentioned this earlier, but then the suspense would have been ruined.
-For this to work, Alpine needs dhcpcd. I will incorporate this into my template in the future.
-Installation is super easy if you have internet access.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">apk update
-</span></span><span class="line"><span class="cl">apk add dhcpcd
-</span></span><span class="line"><span class="cl">rc-update add dhcpcd
-</span></span></code></pre></div><p>Then restart the network service or simply restart the entire VM, which is faster for me—but then again, I&rsquo;m no Linux expert.
-Wow, I finally have name resolution, but only if you have an IPv6-capable DNS, of course. In my environment, that&rsquo;s two Adguard Home instances. But I could also just use my OPNSense. Does the internet work now? Of course not. I get nice IPv6 name resolution and the routing works too, and yes, it&rsquo;s not because of firewall rules, no, NAT66 is missing.</p>
-<p>Because the entire setup is based on ULA IPs due to the dynamic Telekom prefix, and these are not routable on the internet, we now have to resort to NAT again. I would have liked to use NAT NPTv6, but that is not possible with my setup.
-I can&rsquo;t track the PPPoE interface, which means that every time I am assigned a new prefix by Telekom, I would have to manually adjust NAT NPTv6 like a caveman. So in the end, it will be stateful NAT from an IPv6 ULA address to an IPv6 GUA IP. The whole thing is comparable to normal SNAT with IPv4. NSX supports NAT66, but since NSX cannot be a prefix delegation client, that doesn&rsquo;t help me in my situation.</p>
-<p>After configuring OPNSense Outbound NAT for IPv6 and the source IP range fd:11:22:33::/56, my internet is now working – what a struggle!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">template:~# ping6 google.com
-</span></span><span class="line"><span class="cl">PING google.com (2a00:1450:4001:804::200e): 56 data bytes
-</span></span><span class="line"><span class="cl">64 bytes from 2a00:1450:4001:804::200e: seq=0 ttl=115 time=7.439 ms
-</span></span><span class="line"><span class="cl">64 bytes from 2a00:1450:4001:804::200e: seq=1 ttl=115 time=7.570 ms
-</span></span><span class="line"><span class="cl">64 bytes from 2a00:1450:4001:804::200e: seq=2 ttl=115 time=7.546 ms
-</span></span></code></pre></div><h2 id="conclusion">Conclusion</h2>
-<p>Was it stressful? That&rsquo;s a difficult question. On the one hand, I rediscovered a lot of forgotten knowledge about IPv6, and on the other hand, playing around with routing was really fun. It&rsquo;s a disappointment that VCF doesn&rsquo;t yet fully support IPv6. The same applies to VPCs. Since this will be the future standard, it&rsquo;s a bit strange that IPv6 isn&rsquo;t supported. You can assign IPv6 in the VPC connection profile, but it doesn&rsquo;t work in the VPC.</p>
-<p>It&rsquo;s also a pity that I can only test it to a very limited extent. I definitely want to do more tests, including with IPv6 DHCP, and see if I can somehow use my dynamic prefix and assign normal GUA IPs. I also want to try a few things with AVI. As a backup plan, I also have a public VPS server with fixed IPv6 IPs, which I currently use as a Wireguard rendezvous server and as an internet breakout in case Telekom decides to disadvantage Cloudflare services again, but that&rsquo;s a whole other story.</p>
-<p>It should be noted that even after 25 years, IPv6 is still not standard and IPv4 remains very important in data centers. Furthermore, it is somewhat disappointing that something as simple as DNS over RA is not yet supported by every operating system and every end device. I hope you enjoyed the article and feel encouraged to play around with IPv6 yourself.</p>
-]]></content>
-		</item>
+		<lastBuildDate>Sun, 08 Feb 2026 19:00:00 +0100</lastBuildDate>
+		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
 			<title>Nutanix - Get started with the CE Edition</title>
-			<link>http://localhost:1313/posts/nutanix-install-ce/</link>
+			<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
 			<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nutanix-install-ce/</guid>
+			<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
 			<description><![CDATA[Short blog about my experiences with Nutanix CE and which workarounds I needed.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.</p>
@@ -606,10 +234,10 @@ I hope that anyone who was hoping I would write a scathing review isn&rsquo;t to
 		
 		<item>
 			<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
-			<link>http://localhost:1313/posts/avi-keycloak/</link>
+			<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
 			<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/avi-keycloak/</guid>
+			<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
 			<description><![CDATA[A short blog post on how to connect Keycloak to the AVI load balancer.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.
@@ -1007,10 +635,10 @@ In short, a flow is a chain of steps, conditions, and sub-flows with rules that 
 		
 		<item>
 			<title>VCF9 - Automation in All Apps mode</title>
-			<link>http://localhost:1313/posts/vcf9-automation-all-apps/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
 			<pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-automation-all-apps/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
 			<description><![CDATA[A quick introduction to VCF 9 Automation in All Apps mode]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.
@@ -1626,10 +1254,10 @@ True multitenancy can only be achieved with VCF Automation. A rethink is necessa
 		
 		<item>
 			<title>VCF9 - Building a VCF Operations Dashboard</title>
-			<link>http://localhost:1313/posts/vcf9-operations-dashboard/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
 			<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-operations-dashboard/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
 			<description><![CDATA[A short blog about the joys of creating a dashboard in VCF 9 Operations.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I currently have two different systems in my home lab for monitoring things.
@@ -1988,10 +1616,10 @@ My thanks also go to <a href="https://www.vcrocs.info/">Dale Hassinger</a>, who 
 		
 		<item>
 			<title>VCF9 - Dark Site Edge - Part 2</title>
-			<link>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
 			<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In my last <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">Dark Site</a> article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).
@@ -2357,10 +1985,10 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 		
 		<item>
 			<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-			<link>http://localhost:1313/posts/bug-vcf-onboarding/</link>
+			<link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
 			<pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/bug-vcf-onboarding/</guid>
+			<guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>While preparing for an article that has not yet been published, I ran into an interesting VCF bug.
@@ -2479,10 +2107,10 @@ I have tried this several times and was able to verify that it works. Would I do
 		
 		<item>
 			<title>VCF9 - Dark Site Edge</title>
-			<link>http://localhost:1313/posts/vcf9-dark-site-edge/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
 			<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-dark-site-edge/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I haven&rsquo;t written anything in a while, and I need to change that here with another niche topic.
@@ -2748,10 +2376,10 @@ I must also say that I learned a lot. And as always, I have to express my gratit
 		
 		<item>
 			<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-			<link>http://localhost:1313/posts/vcf9-ms-a2-special/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
 			<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-ms-a2-special/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
 			<description><![CDATA[A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.
@@ -3149,10 +2777,10 @@ So, in total, I have 5 more MS-01s that I can use to test things out alongside V
 		
 		<item>
 			<title>Tales from the Lab – Lab setup</title>
-			<link>http://localhost:1313/posts/tales-from-the-lab-setup/</link>
+			<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/tales-from-the-lab-setup/</guid>
+			<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.
@@ -3257,10 +2885,10 @@ My Ansible playbooks need to be revised because they no longer run properly with
 		
 		<item>
 			<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-			<link>http://localhost:1313/posts/vcf5-to-9-upgrade/</link>
+			<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
 			<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf5-to-9-upgrade/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
 			<description><![CDATA[A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.
@@ -3573,10 +3201,10 @@ If you have any questions or comments, please feel free to send me a message on 
 		
 		<item>
 			<title>VMware Explore 2025</title>
-			<link>http://localhost:1313/posts/explore-2025/</link>
+			<link>https://sdn-warrior.org/posts/explore-2025/</link>
 			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
 			
-			<guid>http://localhost:1313/posts/explore-2025/</guid>
+			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
 			<description><![CDATA[My VMware Explore 2025]]></description>
 			<content type="html"><![CDATA[<h2 id="viva-las-vegas---a-kind-of-travelogue">Viva Las Vegas - A kind of travelogue.</h2>
 <p>At the beginning of the year, I had the pleasure of flying to the <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">USA</a>, and now I&rsquo;m on my way to Las Vegas.
@@ -3781,10 +3409,10 @@ I&rsquo;m already looking forward to the upcoming Knight exclusive events and Ex
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>
-			<link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
 			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
 			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
 			<content type="html"><![CDATA[<h2 id="certificates--the-mother-of-all-evils">Certificates – the mother of all evils</h2>
 <p>In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.
@@ -4002,10 +3630,10 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
 			<pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 3.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In my two other VPC articles, I showed you the basics and the differences between <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">centralized deployment</a> and <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">distributed deployment</a>.
@@ -4309,10 +3937,10 @@ I have written about why <a href="https://sdn-warrior.org/posts/nsx-apply-to/">A
 		
 		<item>
 			<title>VCF 9 - Migration to central VCF Operations instance</title>
-			<link>http://localhost:1313/posts/vcf-operations-migration/</link>
+			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
 			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
 			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Where should I start? Perhaps I should describe my starting point.
@@ -4570,10 +4198,10 @@ The components can still be shared by multiple instances if the security concept
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 2.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.
@@ -5305,10 +4933,10 @@ The complete communication is as follows:</p>
 		
 		<item>
 			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
-			<link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
+			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
 			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
 			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.
@@ -5439,10 +5067,10 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-			<link>http://localhost:1313/posts/homelab-v6/</link>
+			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
 			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/homelab-v6/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
 			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I&rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.
@@ -5525,10 +5153,10 @@ Thus, it has never really been considered part of the NUC era.</p>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!</p>
@@ -6070,10 +5698,10 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
-			<link>http://localhost:1313/posts/ms-a2/</link>
+			<link>https://sdn-warrior.org/posts/ms-a2/</link>
 			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/ms-a2/</guid>
+			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
 			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>After being impressed with the performance and form factor of the Minisforum <strong>MS-01</strong>, I had to get my hands on their latest beast: the <strong>MS-A2</strong>, powered by AMD&rsquo;s latest Zen 5 architecture.
@@ -6438,10 +6066,10 @@ I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, 
 		
 		<item>
 			<title>ReSTNSX with HCX</title>
-			<link>http://localhost:1313/posts/restnsx-with-hcx/</link>
+			<link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
 			<pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
+			<guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
 			<description><![CDATA[How can ReSTNSX help me with the migration with HCX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.</p>
@@ -6634,10 +6262,10 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 		
 		<item>
 			<title>NSX Expiring Transport Node Certificates</title>
-			<link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
+			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
 			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
 			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
 NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years.
 The Transport Node certificate used at create time is not replaced on upgrade.
@@ -7004,10 +6632,10 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>
-			<link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
+			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
 			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
 			
-			<guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
+			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
 			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
 			<content type="html"><![CDATA[<h2 id="vmug-st-louis--between-tech-talks-and-travel-vibes">VMUG St. Louis – Between Tech Talks and Travel Vibes</h2>
 <p>This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from <a href="https://www.evoila.de">evoila</a>, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&rsquo;m German after all.</p>
@@ -7137,10 +6765,10 @@ To share knowledge, to learn from others, and to keep growing – together.</p>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
-			<link>http://localhost:1313/posts/vcf-token/</link>
+			<link>https://sdn-warrior.org/posts/vcf-token/</link>
 			<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-token/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
 			<description><![CDATA[A short article on how to use the Broadcom Download Token.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.
@@ -7261,10 +6889,10 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 		
 		<item>
 			<title>VCF Quick Tip - WLD with single NSX Manager</title>
-			<link>http://localhost:1313/posts/vcf-single-nsx/</link>
+			<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
 			<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
 			<description><![CDATA[Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.
@@ -7544,10 +7172,10 @@ Happy VCF deployment!</p>
 		
 		<item>
 			<title>VCF Stretched Cluster</title>
-			<link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
+			<link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
 			<pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
 			<description><![CDATA[A short article on how to build a stretched vSAN cluster in the VCF.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This is my third article in my VCF Homelab series.
@@ -8010,10 +7638,10 @@ I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witne
 		
 		<item>
 			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-			<link>http://localhost:1313/posts/vcf-import-overlay/</link>
+			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
 			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>My blog is a follow-up to my article <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">&ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&rdquo;</a> and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.</p>
@@ -8156,10 +7784,10 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-			<link>http://localhost:1313/posts/vcf-import-cluster/</link>
+			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
 			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
 			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.
@@ -8500,10 +8128,10 @@ We also still need to install licenses in the SDDC manager and setup the softwar
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>
-			<link>http://localhost:1313/posts/jetkvm/</link>
+			<link>https://sdn-warrior.org/posts/jetkvm/</link>
 			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/jetkvm/</guid>
+			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
 			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
 			<content type="html"><![CDATA[<h2 id="jetkvm-a-kickstarter-project">JetKVM a Kickstarter Project</h2>
 <p>Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&rsquo;m only now getting to my conclusion and test.</p>
@@ -8551,10 +8179,10 @@ Time will tell whether the saying “all show and no substance” applies.</p>
 		
 		<item>
 			<title>Migration with HCX</title>
-			<link>http://localhost:1313/posts/migration-with-hcx/</link>
+			<link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
 			<pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/migration-with-hcx/</guid>
+			<guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
 			<description><![CDATA[Live Migration of Workloads with VMware HCX: A Customer Story]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.</p>
@@ -8912,10 +8540,10 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 		
 		<item>
 			<title>How Apply To works in NSX DFW</title>
-			<link>http://localhost:1313/posts/nsx-apply-to/</link>
+			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
 			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-apply-to/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
 			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>When working with the <strong>NSX Distributed Firewall (DFW)</strong>, one feature that often goes unnoticed or misunderstood is <strong>&lsquo;Apply To&rsquo;</strong>. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as <strong>&lsquo;Apply To&rsquo;</strong> is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.</p>
@@ -9316,10 +8944,10 @@ In addition, there is a limit to the number of firewall rules that can be applie
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>
-			<link>http://localhost:1313/posts/nsx-tep-groups/</link>
+			<link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
 			<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>My esteemed colleague, Steven Schramm, recently published an excellent article titled <em><a href="https://sdn-techtalk.com/posts/multitep-ha/">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></em>. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.</p>
@@ -9639,10 +9267,10 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 		
 		<item>
 			<title>Redeploy an NSX Edge VM Appliance</title>
-			<link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
+			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
 			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
 			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.</p>
@@ -9908,10 +9536,10 @@ Ensure these values align with those defined in the node_settings section.</p>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>
-			<link>http://localhost:1313/posts/vlan-automation/</link>
+			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
 			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/vlan-automation/</guid>
+			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
 			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
 			<content type="html"><![CDATA[<h2 id="yet-another-ansible-post">Yet Another Ansible Post</h2>
 <p>As the year comes to a close, I can&rsquo;t help but reflect on the progress I&rsquo;ve made with Ansible in the past few weeks. Looking back, there&rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.</p>
@@ -10172,10 +9800,10 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
-			<link>http://localhost:1313/posts/ipam-automation/</link>
+			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
 			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/ipam-automation/</guid>
+			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
 			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.</p>
@@ -10437,10 +10065,10 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-			<link>http://localhost:1313/posts/first-steps-ansible/</link>
+			<link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
 			<pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/first-steps-ansible/</guid>
+			<guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
 			<description><![CDATA[How I Used ChatGPT to Create My First Ansible Playbook]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.</p>
@@ -10889,10 +10517,10 @@ Efficiency:</p>
 		
 		<item>
 			<title>Homelab V5</title>
-			<link>http://localhost:1313/posts/homelab-v5/</link>
+			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
 			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/homelab-v5/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
 			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
 			<content type="html"><![CDATA[<h2 id="my-homelab-journey-from-unraid-beginnings-to-version-5">My Homelab Journey: From Unraid Beginnings to Version 5</h2>
 <p>Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.</p>
@@ -11128,10 +10756,10 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 		
 		<item>
 			<title>How to use QoS in NSX</title>
-			<link>http://localhost:1313/posts/nsx-qos/</link>
+			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
 			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-qos/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
 			<description><![CDATA[How to use QoS in NSX]]></description>
 			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.</p>
@@ -11643,10 +11271,10 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
-			<link>http://localhost:1313/posts/nsx4_2_1_1/</link>
+			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx4_2_1_1/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
 			<content type="html"><![CDATA[<p>The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:</p>
 <h2 id="1-enhanced-stability-for-virtual-environments">1. Enhanced Stability for Virtual Environments</h2>
@@ -11690,10 +11318,10 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>iSCSI Tuning</title>
-			<link>http://localhost:1313/posts/iscsi-tuning/</link>
+			<link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
 			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+			<guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
 			<description><![CDATA[Optimizing iSCSI Performance in an Unraid Environment]]></description>
 			<content type="html"><![CDATA[<p>In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.</p>
 <p>For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.</p>
@@ -11862,10 +11490,10 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>http://localhost:1313/posts/mac-learning/</link>
+			<link>https://sdn-warrior.org/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/mac-learning/</guid>
+			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
 			<description><![CDATA[Why you should use MAC Learning]]></description>
 			<content type="html"><![CDATA[<h2 id="intro">Intro</h2>
 <p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
@@ -12023,10 +11651,10 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>http://localhost:1313/posts/unraid-storage/</link>
+			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/unraid-storage/</guid>
+			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
 			<description><![CDATA[How i use Unraid]]></description>
 			<content type="html"><![CDATA[<h2 id="my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing">My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing</h2>
 <p>As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.</p>
@@ -12135,10 +11763,10 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>http://localhost:1313/posts/nuc/</link>
+			<link>https://sdn-warrior.org/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nuc/</guid>
+			<guid>https://sdn-warrior.org/posts/nuc/</guid>
 			<description><![CDATA[Performance tuning for NUCs]]></description>
 			<content type="html"><![CDATA[<h2 id="first-things-first">First things first</h2>
 <p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
@@ -12267,10 +11895,10 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>http://localhost:1313/posts/labv4/</link>
+			<link>https://sdn-warrior.org/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 			
-			<guid>http://localhost:1313/posts/labv4/</guid>
+			<guid>https://sdn-warrior.org/posts/labv4/</guid>
 			<description><![CDATA[Homelab v4]]></description>
 			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
 <p>I have done a huge redesign of my Homelab.
@@ -12296,10 +11924,10 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
-			<link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
+			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
 			<description><![CDATA[NSX and Fortigate]]></description>
 			<content type="html"><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
 <p>Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.</p>
@@ -12370,10 +11998,10 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
+			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
 			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
 			<content type="html"><![CDATA[
     <aside class="admonition info">
@@ -12538,10 +12166,10 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
-			<link>http://localhost:1313/posts/nsx-cert-exchange/</link>
+			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
 			
-			<guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
 			<description><![CDATA[Exchange your NSX Manager certificates]]></description>
 			<content type="html"><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
 <h1 id="certificate-creation">Certificate creation</h1>
