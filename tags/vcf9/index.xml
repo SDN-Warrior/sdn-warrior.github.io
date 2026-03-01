@@ -2,18 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vcf9 on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/vcf9/</link>
+    <link>http://localhost:1313/tags/vcf9/</link>
     <description>Recent content in Vcf9 on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 07 Sep 2025 23:00:08 +0200</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/vcf9/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Feb 2026 17:38:45 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/vcf9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IPv6 with NSX</title>
+      <link>http://localhost:1313/posts/ipv6-nsx/</link>
+      <pubDate>Sat, 28 Feb 2026 17:38:45 +0100</pubDate>
+      <guid>http://localhost:1313/posts/ipv6-nsx/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-      <link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+      <link>http://localhost:1313/posts/vcf5-to-9-upgrade/</link>
       <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+      <guid>http://localhost:1313/posts/vcf5-to-9-upgrade/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
     </item>
   </channel>

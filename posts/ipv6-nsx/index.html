@@ -1,0 +1,642 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.">
+
+  <meta itemprop="name" content="IPv6 with NSX">
+  <meta itemprop="description" content="A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.">
+  <meta itemprop="datePublished" content="2026-02-28T17:38:45+01:00">
+  <meta itemprop="dateModified" content="2026-02-28T17:38:45+01:00">
+  <meta itemprop="wordCount" content="3403">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Ipv6,VMware,Nsx,Vcf9,Homelab"><meta property="og:url" content="http://localhost:1313/posts/ipv6-nsx/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="IPv6 with NSX">
+  <meta property="og:description" content="A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-28T17:38:45+01:00">
+    <meta property="article:modified_time" content="2026-02-28T17:38:45+01:00">
+    <meta property="article:tag" content="Ipv6">
+    <meta property="article:tag" content="VMware">
+    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="Vcf9">
+    <meta property="article:tag" content="Homelab">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:title" content="IPv6 with NSX">
+  <meta name="twitter:description" content="A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "IPv6 with NSX",
+    "name": "IPv6 with NSX",
+    "description": "A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.",
+    "keywords": ["ipv6", "vmware", "nsx", "vcf9", "homelab"],
+    "articleBody": "Introduction IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we’ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I’ve had exactly one customer who uses IPv6 in their data center, and that’s only as a dual stack.\nAccording to estimates by Cloudflare from 2023, global acceptance of IPv6 is around 35.9%. ChatGPT puts it at around 45%, but we are still a long way from widespread adoption. PS: My blog can only be accessed with IPv6.\nNevertheless, I wanted to take a look at the status quo and set up a working IPv6 setup with NSX, but unfortunately it’s not as easy as I had imagined. Perhaps I should briefly mention the framework conditions. I have a consumer DSL connection from Deutsche Telekom. They generously provide me with a public IPv4 and a /56 IPv6 prefix. I already have my OPNsense appliance running in dual stack. I will only discuss this configuration to a limited extent, as it can be different for each operator.\nUnfortunately, my IPv4 and IPv6 are dynamic because I have a normal private customer connection and not a business tariff. Thanks for that – not. Unfortunately, this also means that I have to come up with something else for the IPv6 prefixes for NSX. More on that later. I also have a Mikrotik router between OPNSense and the NSX T0 router.\nNetwork setup (click to enlarge)\nThe current setup is deliberately simple. My T0 router is active/standby at this point and I only use one uplink VLAN. The reason for this is simple. The entire setup runs on a small NUC Ultra 7 with only one LAN card. Any HA setup would be excessive here. But before we jump into the setup, we need to talk about a few IPv6 basics.\nGUA / ULA / Link Local and other IPv6 basics GUA We start with what is probably the simplest prefix range, the GUA or Global Unicast. This prefix is publicly routable on the Internet and starts with 2000::/3.\nULA The ULA prefix is the Unique Local Address range and is comparable to the private IP ranges of IPv4. These are not routed on the Internet and play an important role in my setup, as I unfortunately get assigned a dynamic prefix by my provider. ULA starts with fc00::/7 The first bit following the prefix indicates, if set, that the address is locally assigned. This splits the address block in two equally sized blocks, fc00::/8 and fd00::/8. fd00::/8 is the range that is actually used for private addressing. NSX uses an fc00::/8 network by default for hotplug networks between T0 and T1 routers. For this reason alone, you should avoid fc00::/8 and use fd00::/8 networks for private addressing, even though the risk of having duplicate IPs is very low.\nLink-Local LL is automatically available on every interface. Used for Neighbor Discovery, Router Advertisements, and often as BGP Next-Hop. Only valid in the local Layer 2. LL starts with fe80::/10.\nMulticast Replaces broadcast in IPv6. Used for neighbor discovery, DAD, and router advertisements. Multicast can be recognized by the following prefix: ff00::/8.\nIPv4-mapped IPv6 IPv4 addresses in IPv6 format, e.g., for MP-BGP (RFC 5549), when IPv6 routes are transported over an IPv4 session. The prefix is ::ffff:0:0/96 I had planned to use this for my NSX networks, but my OPNSense couldn’t handle it. My IPv6 routes weren’t in the routing table. I couldn’t figure out whether it was due to OPNSense’s FRR implementation or Mikrotik. More on that later.\nPrefix Delegation My internet provider gives me a GUA /56 prefix via prefix delegation. Unfortunately, as already mentioned, this is dynamic. My OPNSense supports dynamic prefixes, and thanks to /56, I can create up to 256 /64 networks and assign these individual VLAN interfaces to the OPNSense. Unfortunately, NSX does not support this, which is why I ultimately had to resort to NAT66 and ULA.\nSLAAC SLAAC stands for Stateless Address Autoconfiguration and enables a host to automatically generate its IPv6 address from a /64 prefix announced by the router. To do this, the router sends router advertisements containing the prefix and the default gateway. The client then independently forms its complete IPv6 address without the need for a DHCP server to assign the address.\nWarning\rSLAAC itself only distributes the prefix and the default gateway. DNS servers are only provided if the router supports RDNSS (DNS via RA). Not all operating systems—especially minimalist distributions such as Alpine—reliably accept DNS information from router advertisements. As a result, IPv6 may work, but name resolution may not (this is a minor spoiler).\rDHCPv6 DHCPv6 provides IPv6 addresses and additional network information centrally via a server. It can either assign the complete address (stateful) or only provide additional information such as DNS (stateless). If DHCP runs in stateless mode, SLAAC is used for IP address assignment.\nWarning\rNot every device or operating system supports DHCPv6 stateful! Welcome to the brave new world of IPv6.\rNAT66 NAT66 is the IPv6 variant of Network Address Translation, in which the source IPv6 address is replaced by another IPv6 address when leaving the network. It is often used when ULA addresses are used internally and the provider assigns a dynamic global prefix. NAT66 works statefully, which means that the router stores connection states for reverse translation. This keeps the internal address design stable, regardless of the external prefix. However, NAT66 contradicts the end-to-end principle of IPv6.\nNSX Supportet IPv6 features IPv6 and Dual-Stack Overlay Segments IPv6 Distributed Routing (Tier-0 / Tier-1) IPv6 BGP (MP-BGP) IPv6 Distributed Firewall (L3/L4) IPv6 Gateway Firewall IPv6 Load Balancer VIPs NAT66 support DHCPv6 (Stateful \u0026 Stateless) SLAAC support Warning\rUnsupported IPv6 features are:\nEVPN Multicast Routing NSX Federation VPCs NSX DAD-Profile I could make a DAD joke now, but…\nRouter: “Doctor, it hurts when IP.” Doctor: “Then stop using IPv6.”\nOkay, let’s not go there, that’s awful…\nDuplicate Address Detection (DAD) in NSX is an IPv6 mechanism that ensures that an IPv6 address is unique within a segment before it is actively used. NSX uses the standardized Neighbor Discovery Protocol to check whether an address is already being used by another VM, thereby preventing address conflicts.\nNSX ND-Profile An ND (Neighbor Discovery) profile in NSX defines parameters such as router advertisement DHCPv6 mode (stateful/stateless) and SLAAC behavior for a segment. The ND profile controls how IPv6 addresses are assigned and which default gateway information is distributed to the workloads.\nThat was quite a lot Now that we’ve refreshed the basics, let’s move on to the setup.\nConfiguring the OPNSense and Mikrotik router I decided to set up my routing dynamically with BGP and fell into a few traps. Since I can’t do much with my 4,722,366,482,869,645,213,696 public IPv6 addresses (that’s an unimaginable 4.7 sextillion IP addresses) because they are not permanent, I have decided on a ULA setup and will then use NAT66. I have decided to use my ULA networks from the fd11:22:33::/56 prefix range. For one thing, it is still completely unused and relatively easy to read. My DNS servers have long been IPv6-capable in my network and have their own ULA IPs, which are somewhat arbitrary, however. Historically grown, as we say in Germany. To keep everything clear, here is a short table:\nPurpose / Connection Prefix Description ULA Core Aggregate fd11:22:33::/56 Main internal IPv6 prefix OPNsense ↔ MikroTik Transit fd11:22:33:ff02::/64 transit network MikroTik ↔ NSX T0 Transit fd11:22:33:ff01::/64 transit network NSX Segment 1 fd11:22:33:ff10::/64 Workload NSX Segment 2 fd11:22:33:ff11::/64 Workload NSX Hotplug Network fc00::/8 T0 - T1 network Public IP Prefix 2003:c4:XXXX:b100::/56 Telekom Internet The target setup is shown as a graphic.\nNetwork setup - IPs (click to enlarge)\nFirst, I configure my static IPv6 on my OPNSense on my BGP interface. It is important to select the IPv6 configuration type. This must be set to Static IPv6 and not Track Interface. With Track Interface, I would take a /64 prefix from my GUA IP address range, which unfortunately is not static.\nOPNSense config (click to enlarge)\nIt is also important that I assign the IP address cleanly with /64, otherwise the network cannot be used for SLAAC, and SLAAC is what we want to use on the other end, as all devices and operating systems that are dual-stack capable can do this.\nWarning\rExplicit IPv6 firewall rules must be written. In addition, IPv4 may be preferred in OPNSense. This can be deactivated under System -\u003e Settings -\u003e General -\u003e Prefer IPv4 over IPv6.\rNext, IPv6 must be enabled on the Mikrotik. This requires a reboot and can be configured under IPv6 -\u003e Settings -\u003e Disable IPv6. By default, the checkbox is selected and must be deselected. One might almost think that none of the vendors are really interested in IPv6.\nBut let’s get to the first problem I had. My lab already had a BGP configuration between the lab router and OPNSense via IPv4. OPNSense Business Edition does not properly support IPv6 route exchange via IPv4. I saw my IPv6 routes in the FRR plugin, but with an incorrect next hop IP address. OPNSense Routing (click to enlarge)\nConversely, it doesn’t work either, so I couldn’t get RFC 4798 to work. OPNSense simply didn’t want to learn IPv4 routes over IPv6. After an hour of troubleshooting, I gave up and configured a normal IPv6 and IPv4 BGP session.\nThe settings are relatively straightforward. I am listing my settings here as an example. However, there is nothing special about them.\n;;; OPNSenseIPv6 name=\"OPNSenseIPv6\" instance=OPNSense remote.address=fd11:22:33:ff02::1/128 .as=65101 local.default-address=fd11:22:33:ff02::2 .role=ebgp connect=yes listen=yes routing-table=main as=65102 nexthop-choice=default hold-time=3m keepalive-time=1m afi=ipv6 use-bfd=yes output.redistribute=connected,bgp Here are the OPNSense settings, but they are pretty standard. Thanks to my new Hugo Gallery shortcode, it’s now easier to view them.\nIpv6 Nsx Opnsense Routing Ipv6 Nsx Opnsense Neigbor Now that that’s done, I can finally get started on the NSX setup.\nNSX IPv6 setup - it just works? Of course not! Anyone who thought it would all be easy is mistaken. What I didn’t really know—but what a quick glance at the documentation revealed—is that NSX has IPv6 forwarding disabled by default. Apparently, no one really wants to use IPv6.\nNSX Global Network Config (click to enlarge)\nSo I quickly jumped into the NSX Global Network config and enabled IPv6 L3 forwarding. For IPv6 to work, the T0 router must receive IPv6 addresses in addition to IPv4 addresses.\nNSX Edge Network Config (click to enlarge)\nNext, I configure my IPv6 routing, and this is where RFC 5549 comes into play. To minimize the number of BGP sessions and IPv4 addresses, you can exchange both IPv4 and IPv6 routes over a single IPv6 BGP session.\nInfo\rSupport for encoding and processing an IPv4 route with an IPv6 next hop is negotiated as part of the capability exchange in the BGP OPEN message. If both sides of a peering session support the capability, IPv4 routes are advertised with an IPv6 next hop. Multi-protocol BGP (MP-BGP) is used to advertise the Network Layer Reachability Information of an IPv4 address family using the next hop of an IPv6 address family.\rMikrotik now also supports RFC 5549. The Mikrotik configuration is very similar to the OPNSense configuration. The main difference is that both IPv4 and IPv6 address families are enabled in one session.\n;;; BGP_VCF09-E01-Edge01 name=\"VCF09-E01-Edge1-01\" instance=VCF09-E01-Edge1-U1 remote.address=fd11:22:33:ff01::2/128 .as=65004 local.default-address=fd11:22:33:ff01::1 .role=ebgp connect=yes listen=yes routing-table=main as=65102 hold-time=3m keepalive-time=1m afi=ip,ipv6 use-bfd=yes output.redistribute=connected,bgp .default-originate=if-installed ;;; BGP_VCF09-E01-Edge02 name=\"VCF09-E01-Edge2-01\" instance=VCF09-E01-Edge1-U1 remote.address=fd11:22:33:ff01::3/128 .as=65004 local.default-address=fd11:22:33:ff01::1 .role=ebgp connect=yes listen=yes routing-table=main as=65102 hold-time=3m keepalive-time=1m afi=ip,ipv6 use-bfd=yes output.redistribute=connected,bgp .default-originate=if-installed Next, the routing must be created on the T0 router. It is important to note that an IPv6 session must be created and an IPv6 route filter must be added to the default IPv4 route filter. Otherwise, the routing will not work. The rest of the configuration is standard. I always use BFD in my setups for fast network convergence, but it is not a must.\nIpv6 Nsx Edge Neigbor Ipv6 Nsx Edge Routefilter BGP peering should now be up and running. The IPv4 routing table on the Mikrotik looks a little strange. The immediate gateway shows the link local IP address of the NSX Edge Node. The IPv4 address is only how RouteOS represents IPv4 over IPv6 and is not actually used.\nIpv6 Nsx Ipv4 Over Ipv6 Ipv6 Nsx Ipv6 Warning\rEven if the IPv6 session is used for route exchange, routing to IPv4 networks only works if the EdgeVMs also have IPv4 addresses on the uplink interfaces. If these configurations are missing, routes for the IPv4 networks exist but cannot be reached.\rIn the traceroute of the Mikrotik switch, you can also clearly see that for IPv4 networks, the next hop is actually the IPv4 address of the active EdgeVM.\n[admin@router.lab.home] \u003e tool/traceroute 10.10.0.1 Columns: ADDRESS, LOSS, SENT, LAST, AVG, BEST, WORST, STD-DEV # ADDRESS LOSS SENT LAST AVG BEST WORST STD-DEV 0 10.28.25.12 0% 3 0.6ms 0.5 0.4 0.6 0.1 1 10.10.0.1 0% 3 0.3ms 0.3 0.2 0.4 0.1 IPv6 segments and ND Now that the routing part is done, it would have been much faster if I had used static routing, but that would also have been much more boring. Now I can finally create segments. And yes, I know I already created some for my tests, because without segments, there are no networks and therefore no routing test. But just imagine if I hadn’t done that yet.\nIn my setup, I decided to build a T1 router for my IPv6 segments and a T1 router for my IPv4 networks, but why did I do that? Firstly, for clarity, and secondly, because of the ND profile, which is still needed. The ND profiles can be defined either globally at the T0 level or more specifically at the T1 level. NSX supports 5 modes for ND:\nDisabled - Router advertisement messages are disabled. SLAAC with DNS Through RA - The address and DNS information is generated with the router advertisement message. SLAAC with DNS Through DHCP - The address is generated with the router advertisement message and the DNS information is generated by the DHCP server. DHCP with Address and DNS through DHCP - The address and DNS information is generated by the DHCP server. SLAAC with Address and DNS through DHCP - The address and DNS information is generated by the DHCP server. This option is only supported by NSX Edge and not by ESX hosts. The standard is SLAAC with DNS Through RA, but as I already mentioned, problems can arise with some operating systems or devices. Specifically, some devices or operating systems cannot ause Route advertisment for DNS. Alpine Linux is one such case. I do get a valid IPv6 and can ping my DNS server with it, but name resolution does not work, and without that, the internet is not particularly useful. The DNS servers were, of course, configured correctly in the ND profile.\nThat’s why I create an ND profile with SLAAC with DNS Through DHCP. This has the advantage that SLAAC and RA can generally be used, but DHCPv6 stateless is also used to explicitly assign DNS. The profiles can be found under Networking -\u003e Networking Profiles -\u003e Select profile type -\u003e ND Profile. In the new profile, I only change the mode; otherwise, all settings remain at default. Under Networking -\u003e Tier-1 Gateways -\u003e Additional Settings -\u003e ND Profile, I then select my new profile for my IPv6 T1 router.\nThen I create an overlay segment connected to my IPv6 T1 and configure the following IPv6 gateway CIDR: fd11:22:33:ff10::1/64. I also create a segment DHCP server in which I specify the ULA IPs of my DNS servers in the lab and, of course, a DHCP server IP address from the segment. In my case, I simply take the next free IP fd11:22:33:ff10::2/64.\nIpv6 Nsx DHCP Config Ipv6 Nsx DHCP Profile Next, I create a VM from my Alpine template and connect it to the new segment, power up the VM, and am disappointed.\nAre we there yet? In order for my Alpine VM to get an IPv6 address at all, I have to edit the file /etc/network/interfaces and add iface eth0 inet6 auto.\nauto lo iface lo inet loopback auto eth0 #iface eth0 inet dhcp iface eth0 inet6 auto One thing is already working after reboot: my VM is getting a ULA IP address via SLAAC and can also ping my DNS server.\ninet6 fd11:22:33:ff10:2b17:367c:2ddc:2925/64 scope global dynamic noprefixroute flags 100 valid_lft 2591977sec preferred_lft 604777sec inet6 fe80::250:56ff:fe86:9e5/64 scope link valid_lft forever preferred_lft forever Ping test:\ntemplate:~# ping6 fd::101 PING fd::101 (fd::101): 56 data bytes 64 bytes from fd::101: seq=0 ttl=60 time=1.157 ms 64 bytes from fd::101: seq=1 ttl=60 time=1.190 ms 64 bytes from fd::101: seq=2 ttl=60 time=1.471 ms However, name resolution still does not work or rather, DHCPv6 is ignored. For this to work with Alpine, a small package needs to be installed. I should have mentioned this earlier, but then the suspense would have been ruined. For this to work, Alpine needs dhcpcd. I will incorporate this into my template in the future. Installation is super easy if you have internet access.\napk update apk add dhcpcd rc-update add dhcpcd Then restart the network service or simply restart the entire VM, which is faster for me—but then again, I’m no Linux expert. Wow, I finally have name resolution, but only if you have an IPv6-capable DNS, of course. In my environment, that’s two Adguard Home instances. But I could also just use my OPNSense. Does the internet work now? Of course not. I get nice IPv6 name resolution and the routing works too, and yes, it’s not because of firewall rules, no, NAT66 is missing.\nBecause the entire setup is based on ULA IPs due to the dynamic Telekom prefix, and these are not routable on the internet, we now have to resort to NAT again. I would have liked to use NAT NPTv6, but that is not possible with my setup. I can’t track the PPPoE interface, which means that every time I am assigned a new prefix by Telekom, I would have to manually adjust NAT NPTv6 like a caveman. So in the end, it will be stateful NAT from an IPv6 ULA address to an IPv6 GUA IP. The whole thing is comparable to normal SNAT with IPv4. NSX supports NAT66, but since NSX cannot be a prefix delegation client, that doesn’t help me in my situation.\nAfter configuring OPNSense Outbound NAT for IPv6 and the source IP range fd:11:22:33::/56, my internet is now working – what a struggle!\ntemplate:~# ping6 google.com PING google.com (2a00:1450:4001:804::200e): 56 data bytes 64 bytes from 2a00:1450:4001:804::200e: seq=0 ttl=115 time=7.439 ms 64 bytes from 2a00:1450:4001:804::200e: seq=1 ttl=115 time=7.570 ms 64 bytes from 2a00:1450:4001:804::200e: seq=2 ttl=115 time=7.546 ms Conclusion Was it stressful? That’s a difficult question. On the one hand, I rediscovered a lot of forgotten knowledge about IPv6, and on the other hand, playing around with routing was really fun. It’s a disappointment that VCF doesn’t yet fully support IPv6. The same applies to VPCs. Since this will be the future standard, it’s a bit strange that IPv6 isn’t supported. You can assign IPv6 in the VPC connection profile, but it doesn’t work in the VPC.\nIt’s also a pity that I can only test it to a very limited extent. I definitely want to do more tests, including with IPv6 DHCP, and see if I can somehow use my dynamic prefix and assign normal GUA IPs. I also want to try a few things with AVI. As a backup plan, I also have a public VPS server with fixed IPv6 IPs, which I currently use as a Wireguard rendezvous server and as an internet breakout in case Telekom decides to disadvantage Cloudflare services again, but that’s a whole other story.\nIt should be noted that even after 25 years, IPv6 is still not standard and IPv4 remains very important in data centers. Furthermore, it is somewhat disappointing that something as simple as DNS over RA is not yet supported by every operating system and every end device. I hope you enjoyed the article and feel encouraged to play around with IPv6 yourself.\n",
+    "wordCount" : "3403",
+    "inLanguage": "en",
+    "image":"http://localhost:1313/images/disc.jpg","datePublished": "2026-02-28T17:38:45+01:00",
+    "dateModified": "2026-02-28T17:38:45+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "http://localhost:1313/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http://localhost:1313/posts/ipv6-nsx/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:1313/favicon.ico"
+      }
+    }
+}
+</script><title>IPv6 with NSX</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fipv6-nsx%2f&amp;text=IPv6%20with%20NSX" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fipv6-nsx%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=IPv6%20with%20NSX&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fipv6-nsx%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fipv6-nsx%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=IPv6%20with%20NSX&amp;summary=IPv6%20with%20NSX%2c%20by%20SDN-Warrior%0a%0aA%20look%20at%20IPv6%20and%20the%20situation%20with%20NSX.%20In%20this%20blog%2c%20I%20navigate%20the%20valley%20of%20tears%20known%20as%20IPv6%2c%20demonstrate%20how%20it%20can%20be%20utilized%20with%20NSX%2c%20and%20explain%20some%20of%20the%20fundamentals.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;IPv6 with NSX&#34;,&#34;http://localhost:1313/posts/ipv6-nsx/&#34;,&#34;IPv6 with NSX, by SDN-Warrior\n\nA look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="http://localhost:1313/posts/">Posts</a></li>
+		<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+		<li><a href="http://localhost:1313/links/">Links</a></li>
+		<li><a href="http://localhost:1313/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Feb 28, 2026</span></div>
+				<h1>IPv6 with NSX</h1>
+			</header>
+			<div class="post-info"><p>A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/ipv6">ipv6</a></span><span class="tag"><a href="http://localhost:1313/tags/vmware">vmware</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vcf9">vcf9</a></span><span class="tag"><a href="http://localhost:1313/tags/homelab">homelab</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>3403 Words
+     // ReadTime
+    
+    
+    
+    15 Minutes, 28 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-02-28 17:38 &#43;0100</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&rsquo;s only as a dual stack.</p>
+<p>According to estimates by <a href="https://blog.cloudflare.com/ipv6-from-dns-pov/">Cloudflare from 2023</a>, global acceptance of IPv6 is around 35.9%. ChatGPT puts it at around 45%, but we are still a long way from widespread adoption. PS: My blog can only be accessed with IPv6.</p>
+<p>Nevertheless, I wanted to take a look at the status quo and set up a working IPv6 setup with NSX, but unfortunately it&rsquo;s not as easy as I had imagined.
+Perhaps I should briefly mention the framework conditions. I have a consumer DSL connection from Deutsche Telekom. They generously provide me with a public IPv4 and a /56 IPv6 prefix. I already have my OPNsense appliance running in dual stack. I will only discuss this configuration to a limited extent, as it can be different for each operator.</p>
+<p>Unfortunately, my IPv4 and IPv6 are dynamic because I have a normal private customer connection and not a business tariff. Thanks for that – not. Unfortunately, this also means that I have to come up with something else for the IPv6 prefixes for NSX. More on that later. I also have a Mikrotik router between OPNSense and the NSX T0 router.</p>
+<figure><a href="01.png"><picture><source srcset="/ipv6-nsx/01_hu_b0a7e55fb2327430.png" type="image/png">
+          <img
+            src="/ipv6-nsx/01_hu_b0a7e55fb2327430.png"alt="Network"width="1323"
+            height="839"/>
+        </picture></a><figcaption><p>Network setup (click to enlarge)</p></figcaption></figure>
+<p>The current setup is deliberately simple. My T0 router is active/standby at this point and I only use one uplink VLAN.
+The reason for this is simple. The entire setup runs on a small <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">NUC Ultra 7</a> with only one LAN card. Any HA setup would be excessive here. But before we jump into the setup, we need to talk about a few IPv6 basics.</p>
+<h2 id="gua--ula--link-local-and-other-ipv6-basics">GUA / ULA / Link Local and other IPv6 basics<a href="#gua--ula--link-local-and-other-ipv6-basics" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="gua">GUA<a href="#gua" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>We start with what is probably the simplest prefix range, the GUA or Global Unicast.
+This prefix is publicly routable on the Internet and starts with <em><strong>2000::/3</strong></em>.</p>
+<h3 id="ula">ULA<a href="#ula" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The ULA prefix is the Unique Local Address range and is comparable to the private IP ranges of IPv4. These are not routed on the Internet and play an important role in my setup, as I unfortunately get assigned a dynamic prefix by my provider. ULA starts with <em><strong>fc00::/7</strong></em>
+The first bit following the prefix indicates, if set, that the address is locally assigned. This splits the address block in two equally sized blocks, fc00::/8 and fd00::/8. fd00::/8 is the range that is actually used for private addressing. NSX uses an fc00::/8 network by default for hotplug networks between T0 and T1 routers. For this reason alone, you should avoid fc00::/8 and use fd00::/8 networks for private addressing, even though the risk of having duplicate IPs is very low.</p>
+<h3 id="link-local">Link-Local<a href="#link-local" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>LL is automatically available on every interface. Used for Neighbor Discovery, Router Advertisements, and often as BGP Next-Hop. Only valid in the local Layer 2.
+LL starts with <em><strong>fe80::/10</strong></em>.</p>
+<h3 id="multicast">Multicast<a href="#multicast" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Replaces broadcast in IPv6. Used for neighbor discovery, DAD, and router advertisements. Multicast can be recognized by the following prefix: <em><strong>ff00::/8</strong></em>.</p>
+<h3 id="ipv4-mapped-ipv6">IPv4-mapped IPv6<a href="#ipv4-mapped-ipv6" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>IPv4 addresses in IPv6 format, e.g., for MP-BGP (RFC 5549), when IPv6 routes are transported over an IPv4 session. The prefix is <em><strong>::ffff:0:0/96</strong></em>
+I had planned to use this for my NSX networks, but my OPNSense couldn&rsquo;t handle it. My IPv6 routes weren&rsquo;t in the routing table. I couldn&rsquo;t figure out whether it was due to OPNSense&rsquo;s FRR implementation or Mikrotik. More on that later.</p>
+<h3 id="prefix-delegation">Prefix Delegation<a href="#prefix-delegation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>My internet provider gives me a GUA /56 prefix via prefix delegation. Unfortunately, as already mentioned, this is dynamic. My OPNSense supports dynamic prefixes, and thanks to /56, I can create up to 256 /64 networks and assign these individual VLAN interfaces to the OPNSense. Unfortunately, NSX does not support this, which is why I ultimately had to resort to NAT66 and ULA.</p>
+<h3 id="slaac">SLAAC<a href="#slaac" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>SLAAC stands for Stateless Address Autoconfiguration and enables a host to automatically generate its IPv6 address from a /64 prefix announced by the router. To do this, the router sends router advertisements containing the prefix and the default gateway. The client then independently forms its complete IPv6 address without the need for a DHCP server to assign the address.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">SLAAC itself only distributes the prefix and the default gateway. DNS servers are only provided if the router supports RDNSS (DNS via RA). Not all operating systems—especially minimalist distributions such as Alpine—reliably accept DNS information from router advertisements. As a result, IPv6 may work, but name resolution may not (this is a minor spoiler).</div>
+    </aside>
+<h3 id="dhcpv6">DHCPv6<a href="#dhcpv6" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>DHCPv6 provides IPv6 addresses and additional network information centrally via a server. It can either assign the complete address (stateful) or only provide additional information such as DNS (stateless). If DHCP runs in stateless mode, SLAAC is used for IP address assignment.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">Not every device or operating system supports DHCPv6 stateful! Welcome to the brave new world of IPv6.</div>
+    </aside>
+<h3 id="nat66">NAT66<a href="#nat66" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>NAT66 is the IPv6 variant of Network Address Translation, in which the source IPv6 address is replaced by another IPv6 address when leaving the network. It is often used when ULA addresses are used internally and the provider assigns a dynamic global prefix. NAT66 works statefully, which means that the router stores connection states for reverse translation. This keeps the internal address design stable, regardless of the external prefix. However, NAT66 contradicts the end-to-end principle of IPv6.</p>
+<h3 id="nsx-supportet-ipv6-features">NSX Supportet IPv6 features<a href="#nsx-supportet-ipv6-features" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>IPv6 and Dual-Stack Overlay Segments</li>
+<li>IPv6 Distributed Routing (Tier-0 / Tier-1)</li>
+<li>IPv6 BGP (MP-BGP)</li>
+<li>IPv6 Distributed Firewall (L3/L4)</li>
+<li>IPv6 Gateway Firewall</li>
+<li>IPv6 Load Balancer VIPs</li>
+<li>NAT66 support</li>
+<li>DHCPv6 (Stateful &amp; Stateless)</li>
+<li>SLAAC support</li>
+</ul>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content"><p>Unsupported IPv6 features are:</p>
+<ul>
+<li>EVPN</li>
+<li>Multicast Routing</li>
+<li>NSX Federation</li>
+<li>VPCs</li>
+</ul></div>
+    </aside>
+<h3 id="nsx-dad-profile">NSX DAD-Profile<a href="#nsx-dad-profile" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>I could make a DAD joke now, but&hellip;</p>
+<p><em><strong>Router:</strong></em> &ldquo;Doctor, it hurts when IP.&rdquo;
+<em><strong>Doctor:</strong></em> &ldquo;Then stop using IPv6.&rdquo;</p>
+<p>Okay, let&rsquo;s not go there, that&rsquo;s awful&hellip;</p>
+<p>Duplicate Address Detection (DAD) in NSX is an IPv6 mechanism that ensures that an IPv6 address is unique within a segment before it is actively used.
+NSX uses the standardized Neighbor Discovery Protocol to check whether an address is already being used by another VM, thereby preventing address conflicts.</p>
+<h3 id="nsx-nd-profile">NSX ND-Profile<a href="#nsx-nd-profile" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>An ND (Neighbor Discovery) profile in NSX defines parameters such as router advertisement DHCPv6 mode (stateful/stateless) and SLAAC behavior for a segment.
+The ND profile controls how IPv6 addresses are assigned and which default gateway information is distributed to the workloads.</p>
+<h3 id="that-was-quite-a-lot">That was quite a lot<a href="#that-was-quite-a-lot" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Now that we&rsquo;ve refreshed the basics, let&rsquo;s move on to the setup.</p>
+<h2 id="configuring-the-opnsense-and-mikrotik-router">Configuring the OPNSense and Mikrotik router<a href="#configuring-the-opnsense-and-mikrotik-router" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I decided to set up my routing dynamically with BGP and fell into a few traps.
+Since I can&rsquo;t do much with my 4,722,366,482,869,645,213,696 public IPv6 addresses (that&rsquo;s an unimaginable 4.7 sextillion IP addresses)
+because they are not permanent, I have decided on a ULA setup and will then use NAT66.
+I have decided to use my ULA networks from the fd11:22:33::/56 prefix range. For one thing, it is still completely unused and relatively easy to read. My DNS servers have long been IPv6-capable in my network and have their own ULA IPs, which are somewhat arbitrary, however. Historically grown, as we say in Germany.
+To keep everything clear, here is a short table:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Purpose / Connection</th>
+          <th>Prefix</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ULA Core Aggregate</td>
+          <td>fd11:22:33::/56</td>
+          <td>Main internal IPv6 prefix</td>
+      </tr>
+      <tr>
+          <td>OPNsense ↔ MikroTik Transit</td>
+          <td>fd11:22:33:ff02::/64</td>
+          <td>transit network</td>
+      </tr>
+      <tr>
+          <td>MikroTik ↔ NSX T0 Transit</td>
+          <td>fd11:22:33:ff01::/64</td>
+          <td>transit network</td>
+      </tr>
+      <tr>
+          <td>NSX Segment 1</td>
+          <td>fd11:22:33:ff10::/64</td>
+          <td>Workload</td>
+      </tr>
+      <tr>
+          <td>NSX Segment 2</td>
+          <td>fd11:22:33:ff11::/64</td>
+          <td>Workload</td>
+      </tr>
+      <tr>
+          <td>NSX Hotplug Network</td>
+          <td>fc00::/8</td>
+          <td>T0 - T1 network</td>
+      </tr>
+      <tr>
+          <td>Public IP Prefix</td>
+          <td>2003:c4:XXXX:b100::/56</td>
+          <td>Telekom Internet</td>
+      </tr>
+  </tbody>
+</table>
+<p>The target setup is shown as a graphic.</p>
+<figure><a href="02.png"><picture><source srcset="/ipv6-nsx/02_hu_93c2e4dae02d1a99.png" type="image/png">
+          <img
+            src="/ipv6-nsx/02_hu_93c2e4dae02d1a99.png"alt="Network IPs"width="1414"
+            height="839"/>
+        </picture></a><figcaption><p>Network setup - IPs (click to enlarge)</p></figcaption></figure>
+<p>First, I configure my static IPv6 on my OPNSense on my BGP interface. It is important to select the IPv6 configuration type. This must be set to Static IPv6 and not Track Interface. With Track Interface, I would take a /64 prefix from my GUA IP address range, which unfortunately is not static.</p>
+<figure><a href="03.png"><picture><source srcset="/ipv6-nsx/03_hu_647e726cfed8b751.png" type="image/png">
+          <img
+            src="/ipv6-nsx/03_hu_647e726cfed8b751.png"alt="OPNSense Config"width="1214"
+            height="1120"/>
+        </picture></a><figcaption><p>OPNSense config (click to enlarge)</p></figcaption></figure>
+<p>It is also important that I assign the IP address cleanly with /64, otherwise the network cannot be used for SLAAC, and SLAAC is what we want to use on the other end, as all devices and operating systems that are dual-stack capable can do this.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">Explicit IPv6 firewall rules must be written. In addition, IPv4 may be preferred in OPNSense. This can be deactivated under System -&gt; Settings -&gt; General -&gt; Prefer IPv4 over IPv6.</div>
+    </aside>
+<p>Next, IPv6 must be enabled on the Mikrotik. This requires a reboot and can be configured under IPv6 -&gt; Settings -&gt; Disable IPv6. By default, the checkbox is selected and must be deselected. One might almost think that none of the vendors are really interested in IPv6.</p>
+<p>But let&rsquo;s get to the first problem I had. My lab already had a BGP configuration between the lab router and OPNSense via IPv4. OPNSense Business Edition does not properly support IPv6 route exchange via IPv4.
+I saw my IPv6 routes in the FRR plugin, but with an incorrect next hop IP address.
+<figure><a href="04.png"><picture><source srcset="/ipv6-nsx/04_hu_b02ce72df2b325c8.png" type="image/png">
+          <img
+            src="/ipv6-nsx/04_hu_b02ce72df2b325c8.png"alt="OPNSense IPv6 Routing"width="1412"
+            height="574"/>
+        </picture></a><figcaption><p>OPNSense Routing (click to enlarge)</p></figcaption></figure></p>
+<p>Conversely, it doesn&rsquo;t work either, so I couldn&rsquo;t get RFC 4798 to work. OPNSense simply didn&rsquo;t want to learn IPv4 routes over IPv6.
+After an hour of troubleshooting, I gave up and configured a normal IPv6 and IPv4 BGP session.<br>
+The settings are relatively straightforward. I am listing my settings here as an example. However, there is nothing special about them.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl"> ;;; OPNSenseIPv6
+</span></span><span class="line"><span class="cl">     name=&#34;OPNSenseIPv6&#34; instance=OPNSense 
+</span></span><span class="line"><span class="cl">     remote.address=fd11:22:33:ff02::1/128 .as=65101 
+</span></span><span class="line"><span class="cl">     local.default-address=fd11:22:33:ff02::2 .role=ebgp 
+</span></span><span class="line"><span class="cl">     connect=yes listen=yes routing-table=main as=65102 nexthop-choice=default hold-time=3m 
+</span></span><span class="line"><span class="cl">     keepalive-time=1m afi=ipv6 use-bfd=yes 
+</span></span><span class="line"><span class="cl">     output.redistribute=connected,bgp 
+</span></span></code></pre></div><p>Here are the OPNSense settings, but they are pretty standard. Thanks to my new Hugo Gallery shortcode, it&rsquo;s now easier to view them.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-d4b41362">
+                <a href="/ipv6-nsx/opnsense-routing.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="Ipv6 Nsx Opnsense Routing"><img src="/ipv6-nsx/opnsense-routing_hu_dc1705084a688542.png" alt="/ipv6-nsx/opnsense-routing" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx Opnsense Routing</div>
+                </a>
+                <a href="/ipv6-nsx/opnsense-neigbor.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="Ipv6 Nsx Opnsense Neigbor"><img src="/ipv6-nsx/opnsense-neigbor_hu_d23fc6e3ac7aaaa4.png" alt="/ipv6-nsx/opnsense-neigbor" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx Opnsense Neigbor</div>
+                </a></div>
+<p>Now that that&rsquo;s done, I can finally get started on the NSX setup.</p>
+<h2 id="nsx-ipv6-setup---it-just-works">NSX IPv6 setup - it just works?<a href="#nsx-ipv6-setup---it-just-works" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Of course not! Anyone who thought it would all be easy is mistaken. What I didn&rsquo;t really know—but what a quick glance at the documentation revealed—is that NSX has IPv6 forwarding disabled by default. Apparently, no one really wants to use IPv6.</p>
+<figure><a href="05.png"><picture><source srcset="/ipv6-nsx/05_hu_a421709109d75c7c.png" type="image/png">
+          <img
+            src="/ipv6-nsx/05_hu_a421709109d75c7c.png"alt="NSX Global Network Config"width="1392"
+            height="1007"/>
+        </picture></a><figcaption><p>NSX Global Network Config (click to enlarge)</p></figcaption></figure>
+<p>So I quickly jumped into the NSX Global Network config and enabled IPv6 L3 forwarding.
+For IPv6 to work, the T0 router must receive IPv6 addresses in addition to IPv4 addresses.</p>
+<figure><a href="06.png"><picture><source srcset="/ipv6-nsx/06_hu_b0d1063f93242ee8.png" type="image/png">
+          <img
+            src="/ipv6-nsx/06_hu_b0d1063f93242ee8.png"alt="NSX Edge Network Config"width="1442"
+            height="1050"/>
+        </picture></a><figcaption><p>NSX Edge Network Config (click to enlarge)</p></figcaption></figure>
+<p>Next, I configure my IPv6 routing, and this is where RFC 5549 comes into play. To minimize the number of BGP sessions and IPv4 addresses, you can exchange both IPv4 and IPv6 routes over a single IPv6 BGP session.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Support for encoding and processing an IPv4 route with an IPv6 next hop is negotiated as part of the capability exchange in the BGP OPEN message. If both sides of a peering session support the capability, IPv4 routes are advertised with an IPv6 next hop. Multi-protocol BGP (MP-BGP) is used to advertise the Network Layer Reachability Information of an IPv4 address family using the next hop of an IPv6 address family.</div>
+    </aside>
+<p>Mikrotik now also supports RFC 5549. The Mikrotik configuration is very similar to the OPNSense configuration. The main difference is that both IPv4 and IPv6 address families are enabled in one session.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">;;; BGP_VCF09-E01-Edge01
+</span></span><span class="line"><span class="cl">     name=&#34;VCF09-E01-Edge1-01&#34; instance=VCF09-E01-Edge1-U1 
+</span></span><span class="line"><span class="cl">     remote.address=fd11:22:33:ff01::2/128 .as=65004 
+</span></span><span class="line"><span class="cl">     local.default-address=fd11:22:33:ff01::1 .role=ebgp 
+</span></span><span class="line"><span class="cl">     connect=yes listen=yes routing-table=main as=65102 hold-time=3m keepalive-time=1m afi=ip,ipv6 
+</span></span><span class="line"><span class="cl">     use-bfd=yes 
+</span></span><span class="line"><span class="cl">     output.redistribute=connected,bgp .default-originate=if-installed 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">;;; BGP_VCF09-E01-Edge02
+</span></span><span class="line"><span class="cl">     name=&#34;VCF09-E01-Edge2-01&#34; instance=VCF09-E01-Edge1-U1 
+</span></span><span class="line"><span class="cl">     remote.address=fd11:22:33:ff01::3/128 .as=65004 
+</span></span><span class="line"><span class="cl">     local.default-address=fd11:22:33:ff01::1 .role=ebgp 
+</span></span><span class="line"><span class="cl">     connect=yes listen=yes routing-table=main as=65102 hold-time=3m keepalive-time=1m afi=ip,ipv6 
+</span></span><span class="line"><span class="cl">     use-bfd=yes 
+</span></span><span class="line"><span class="cl">     output.redistribute=connected,bgp .default-originate=if-installed 
+</span></span></code></pre></div><p>Next, the routing must be created on the T0 router. It is important to note that an IPv6 session must be created and an IPv6 route filter must be added to the default IPv4 route filter. Otherwise, the routing will not work. The rest of the configuration is standard. I always use BFD in my setups for fast network convergence, but it is not a must.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-c1310a94">
+                <a href="/ipv6-nsx/edge%20neigbor.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="Ipv6 Nsx Edge Neigbor"><img src="/ipv6-nsx/edge%20neigbor_hu_29e8a308f17b8715.png" alt="/ipv6-nsx/edge neigbor" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx Edge Neigbor</div>
+                </a>
+                <a href="/ipv6-nsx/edge%20routefilter.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="Ipv6 Nsx Edge Routefilter"><img src="/ipv6-nsx/edge%20routefilter_hu_dc3ed2c2f09fd42f.png" alt="/ipv6-nsx/edge routefilter" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx Edge Routefilter</div>
+                </a></div>
+<p>BGP peering should now be up and running. The IPv4 routing table on the Mikrotik looks a little strange. The immediate gateway shows the link local IP address of the NSX Edge Node. The IPv4 address is only how RouteOS represents IPv4 over IPv6 and is not actually used.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-3629e91e">
+                <a href="/ipv6-nsx/ipv4-over-ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="Ipv6 Nsx Ipv4 Over Ipv6"><img src="/ipv6-nsx/ipv4-over-ipv6_hu_498dd5864979a5ee.png" alt="/ipv6-nsx/ipv4-over-ipv6" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx Ipv4 Over Ipv6</div>
+                </a>
+                <a href="/ipv6-nsx/ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="Ipv6 Nsx Ipv6"><img src="/ipv6-nsx/ipv6_hu_8a4d2348afbd97f2.png" alt="/ipv6-nsx/ipv6" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx Ipv6</div>
+                </a></div>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">Even if the IPv6 session is used for route exchange, routing to IPv4 networks only works if the EdgeVMs also have IPv4 addresses on the uplink interfaces.
+If these configurations are missing, routes for the IPv4 networks exist but cannot be reached.</div>
+    </aside>
+<p>In the traceroute of the Mikrotik switch, you can also clearly see that for IPv4 networks, the next hop is actually the IPv4 address of the active EdgeVM.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[admin@router.lab.home] &gt; tool/traceroute 10.10.0.1
+</span></span><span class="line"><span class="cl">Columns: ADDRESS, LOSS, SENT, LAST, AVG, BEST, WORST, STD-DEV
+</span></span><span class="line"><span class="cl">#  ADDRESS      LOSS  SENT  LAST   AVG  BEST  WORST  STD-DEV
+</span></span><span class="line"><span class="cl">0  10.28.25.12  0%       3  0.6ms  0.5  0.4   0.6    0.1    
+</span></span><span class="line"><span class="cl">1  10.10.0.1    0%       3  0.3ms  0.3  0.2   0.4    0.1  
+</span></span></code></pre></div><h2 id="ipv6-segments-and-nd">IPv6 segments and ND<a href="#ipv6-segments-and-nd" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Now that the routing part is done, it would have been much faster if I had used static routing, but that would also have been much more boring. Now I can finally create segments. And yes, I know I already created some for my tests, because without segments, there are no networks and therefore no routing test. But just imagine if I hadn&rsquo;t done that yet.</p>
+<p>In my setup, I decided to build a T1 router for my IPv6 segments and a T1 router for my IPv4 networks, but why did I do that? Firstly, for clarity, and secondly, because of the ND profile, which is still needed. The ND profiles can be defined either globally at the T0 level or more specifically at the T1 level.
+NSX supports 5 modes for ND:</p>
+<ul>
+<li>Disabled - Router advertisement messages are disabled.</li>
+<li>SLAAC with DNS Through RA - The address and DNS information is generated with the router advertisement message.</li>
+<li>SLAAC with DNS Through DHCP - The address is generated with the router advertisement message and the DNS information is generated by the DHCP server.</li>
+<li>DHCP with Address and DNS through DHCP - The address and DNS information is generated by the DHCP server.</li>
+<li>SLAAC with Address and DNS through DHCP - The address and DNS information is generated by the DHCP server. This option is only supported by NSX Edge and not by ESX hosts.</li>
+</ul>
+<p>The standard is SLAAC with DNS Through RA, but as I already mentioned, problems can arise with some operating systems or devices. Specifically, some devices or operating systems cannot ause Route advertisment for DNS. Alpine Linux is one such case. I do get a valid IPv6 and can ping my DNS server with it, but name resolution does not work, and without that, the internet is not particularly useful. The DNS servers were, of course, configured correctly in the ND profile.</p>
+<p>That&rsquo;s why I create an ND profile with SLAAC with DNS Through DHCP. This has the advantage that SLAAC and RA can generally be used, but DHCPv6 stateless is also used to explicitly assign DNS. The profiles can be found under Networking -&gt; Networking Profiles -&gt; Select profile type -&gt; ND Profile. In the new profile, I only change the mode; otherwise, all settings remain at default. Under Networking -&gt; Tier-1 Gateways -&gt; Additional Settings -&gt; ND Profile, I then select my new profile for my IPv6 T1 router.</p>
+<p>Then I create an overlay segment connected to my IPv6 T1 and configure the following IPv6 gateway CIDR: fd11:22:33:ff10::1/64. I also create a segment DHCP server in which I specify the ULA IPs of my DNS servers in the lab and, of course, a DHCP server IP address from the segment. In my case, I simply take the next free IP fd11:22:33:ff10::2/64.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-92172efd">
+                <a href="/ipv6-nsx/dhcp-config.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="Ipv6 Nsx DHCP Config"><img src="/ipv6-nsx/dhcp-config_hu_143a80ba7fcf45f9.png" alt="/ipv6-nsx/dhcp-config" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx DHCP Config</div>
+                </a>
+                <a href="/ipv6-nsx/dhcp-profile.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="Ipv6 Nsx DHCP Profile"><img src="/ipv6-nsx/dhcp-profile_hu_1110274d5a161060.png" alt="/ipv6-nsx/dhcp-profile" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Ipv6 Nsx DHCP Profile</div>
+                </a></div>
+<p>Next, I create a VM from my Alpine template and connect it to the new segment, power up the VM, and am disappointed.</p>
+<h2 id="are-we-there-yet">Are we there yet?<a href="#are-we-there-yet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In order for my Alpine VM to get an IPv6 address at all, I have to edit the file /etc/network/interfaces and add iface eth0 inet6 auto.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">auto lo
+</span></span><span class="line"><span class="cl">iface lo inet loopback
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">auto eth0
+</span></span><span class="line"><span class="cl"><span class="c1">#iface eth0 inet dhcp</span>
+</span></span><span class="line"><span class="cl">iface eth0 inet6 auto
+</span></span></code></pre></div><p>One thing is already working after reboot: my VM is getting a ULA IP address via SLAAC and can also ping my DNS server.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">inet6 fd11:22:33:ff10:2b17:367c:2ddc:2925/64 scope global dynamic noprefixroute flags 100 
+</span></span><span class="line"><span class="cl">  valid_lft 2591977sec preferred_lft 604777sec
+</span></span><span class="line"><span class="cl">inet6 fe80::250:56ff:fe86:9e5/64 scope link 
+</span></span><span class="line"><span class="cl">  valid_lft forever preferred_lft forever
+</span></span></code></pre></div><p>Ping test:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">template:~# ping6 fd::101
+</span></span><span class="line"><span class="cl">PING fd::101 (fd::101): 56 data bytes
+</span></span><span class="line"><span class="cl">64 bytes from fd::101: seq=0 ttl=60 time=1.157 ms
+</span></span><span class="line"><span class="cl">64 bytes from fd::101: seq=1 ttl=60 time=1.190 ms
+</span></span><span class="line"><span class="cl">64 bytes from fd::101: seq=2 ttl=60 time=1.471 ms
+</span></span></code></pre></div><p>However, name resolution still does not work or rather, DHCPv6 is ignored.
+For this to work with Alpine, a small package needs to be installed. I should have mentioned this earlier, but then the suspense would have been ruined.
+For this to work, Alpine needs dhcpcd. I will incorporate this into my template in the future.
+Installation is super easy if you have internet access.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">apk update
+</span></span><span class="line"><span class="cl">apk add dhcpcd
+</span></span><span class="line"><span class="cl">rc-update add dhcpcd
+</span></span></code></pre></div><p>Then restart the network service or simply restart the entire VM, which is faster for me—but then again, I&rsquo;m no Linux expert.
+Wow, I finally have name resolution, but only if you have an IPv6-capable DNS, of course. In my environment, that&rsquo;s two Adguard Home instances. But I could also just use my OPNSense. Does the internet work now? Of course not. I get nice IPv6 name resolution and the routing works too, and yes, it&rsquo;s not because of firewall rules, no, NAT66 is missing.</p>
+<p>Because the entire setup is based on ULA IPs due to the dynamic Telekom prefix, and these are not routable on the internet, we now have to resort to NAT again. I would have liked to use NAT NPTv6, but that is not possible with my setup.
+I can&rsquo;t track the PPPoE interface, which means that every time I am assigned a new prefix by Telekom, I would have to manually adjust NAT NPTv6 like a caveman. So in the end, it will be stateful NAT from an IPv6 ULA address to an IPv6 GUA IP. The whole thing is comparable to normal SNAT with IPv4. NSX supports NAT66, but since NSX cannot be a prefix delegation client, that doesn&rsquo;t help me in my situation.</p>
+<p>After configuring OPNSense Outbound NAT for IPv6 and the source IP range fd:11:22:33::/56, my internet is now working – what a struggle!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">template:~# ping6 google.com
+</span></span><span class="line"><span class="cl">PING google.com (2a00:1450:4001:804::200e): 56 data bytes
+</span></span><span class="line"><span class="cl">64 bytes from 2a00:1450:4001:804::200e: seq=0 ttl=115 time=7.439 ms
+</span></span><span class="line"><span class="cl">64 bytes from 2a00:1450:4001:804::200e: seq=1 ttl=115 time=7.570 ms
+</span></span><span class="line"><span class="cl">64 bytes from 2a00:1450:4001:804::200e: seq=2 ttl=115 time=7.546 ms
+</span></span></code></pre></div><h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Was it stressful? That&rsquo;s a difficult question. On the one hand, I rediscovered a lot of forgotten knowledge about IPv6, and on the other hand, playing around with routing was really fun. It&rsquo;s a disappointment that VCF doesn&rsquo;t yet fully support IPv6. The same applies to VPCs. Since this will be the future standard, it&rsquo;s a bit strange that IPv6 isn&rsquo;t supported. You can assign IPv6 in the VPC connection profile, but it doesn&rsquo;t work in the VPC.</p>
+<p>It&rsquo;s also a pity that I can only test it to a very limited extent. I definitely want to do more tests, including with IPv6 DHCP, and see if I can somehow use my dynamic prefix and assign normal GUA IPs. I also want to try a few things with AVI. As a backup plan, I also have a public VPS server with fixed IPv6 IPs, which I currently use as a Wireguard rendezvous server and as an internet breakout in case Telekom decides to disadvantage Cloudflare services again, but that&rsquo;s a whole other story.</p>
+<p>It should be noted that even after 25 years, IPv6 is still not standard and IPv4 remains very important in data centers. Furthermore, it is somewhat disappointing that something as simple as DNS over RA is not yet supported by every operating system and every end device. I hope you enjoyed the article and feel encouraged to play around with IPv6 yourself.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/nsx-expiring-tn-certificates/">NSX Expiring Transport Node Certificates</a></li>
+	
+	<li><a href="/posts/avi-keycloak/">AVI - Connect Keycloak to AVI Loadbalancer</a></li>
+	
+	<li><a href="/posts/vcf9-operations-dashboard/">VCF9 - Building a VCF Operations Dashboard</a></li>
+	
+	<li><a href="/posts/vcf9-ms-a2-special/">VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</a></li>
+	
+	<li><a href="/posts/tales-from-the-lab-setup/">Tales from the Lab – Lab setup</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="http://localhost:1313/posts/nutanix-install-ce/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>Nutanix - Get started with the CE Edition</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,152 +1,152 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>VCF on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/vcf/</link>
-    <description>Recent content in VCF on SDN-Warrior | Daniel Krieger</description>
+    <title>Vcf on SDN-Warrior | Daniel Krieger</title>
+    <link>http://localhost:1313/tags/vcf/</link>
+    <description>Recent content in Vcf on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Mon, 12 Jan 2026 02:00:00 +0100</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VCF9 - Automation in All Apps mode</title>
-      <link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
+      <link>http://localhost:1313/posts/vcf9-automation-all-apps/</link>
       <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+      <guid>http://localhost:1313/posts/vcf9-automation-all-apps/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.&#xA;Anyway, over 60% wanted me to cover VCF9 automation in All Apps mode.&#xA;As most people know, there are two modes in VCF Automation: the so-called legacy mode, which is nothing more than VCF Automation 8.18, and the new and much more exciting All Apps mode.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 - Building a VCF Operations Dashboard</title>
-      <link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+      <link>http://localhost:1313/posts/vcf9-operations-dashboard/</link>
       <pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+      <guid>http://localhost:1313/posts/vcf9-operations-dashboard/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I currently have two different systems in my home lab for monitoring things.&#xA;I started everything but never really finished it.&#xA;I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.&#xA;As I have to run a VCF Operations anyway so that I can license my Baselab, I thought, why not use Operations for monitoring purposes, since it&amp;rsquo;s there anyway.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 - Dark Site Edge - Part 2</title>
-      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+      <link>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</link>
       <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+      <guid>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my last &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34;&gt;Dark Site&lt;/a&gt; article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).&#xA;However, this didn&amp;rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.&#xA;Spoiler alert: it works, and today I&amp;rsquo;m going to write down how to do it.&lt;/p&gt;&#xA;&lt;p&gt;Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.&#xA;So today I will use vSAN ESA, even though it requires significantly more resources than NFS.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-      <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
+      <link>http://localhost:1313/posts/bug-vcf-onboarding/</link>
       <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+      <guid>http://localhost:1313/posts/bug-vcf-onboarding/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While preparing for an article that has not yet been published, I ran into an interesting VCF bug.&#xA;For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet.&#xA;Since I had to reinstall one of them, I removed it according to the official &lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html&#34;&gt;instructions&lt;/a&gt;, and that&amp;rsquo;s when the problems started.&lt;/p&gt;&#xA;&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;&#xA;&#xD;&#xA;    &lt;aside class=&#34;admonition warning&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;            &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-circle&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&lt;b&gt;Warning&lt;/b&gt;&#xD;&#xA;        &lt;/div&gt;&#xD;&#xA;        &lt;div class=&#34;admonition-content&#34;&gt;I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so &lt;strong&gt;at your own risk.&lt;/strong&gt;&lt;/div&gt;&#xD;&#xA;    &lt;/aside&gt;&#xA;&lt;h2 id=&#34;error-pattern-and-impact&#34;&gt;Error pattern and impact&lt;/h2&gt;&#xA;&lt;p&gt;At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 - Dark Site Edge</title>
-      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+      <link>http://localhost:1313/posts/vcf9-dark-site-edge/</link>
       <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+      <guid>http://localhost:1313/posts/vcf9-dark-site-edge/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-      <link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
+      <link>http://localhost:1313/posts/vcf9-ms-a2-special/</link>
       <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+      <guid>http://localhost:1313/posts/vcf9-ms-a2-special/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tales from the Lab – Lab setup</title>
-      <link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
+      <link>http://localhost:1313/posts/tales-from-the-lab-setup/</link>
       <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
+      <guid>http://localhost:1313/posts/tales-from-the-lab-setup/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-      <link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+      <link>http://localhost:1313/posts/vcf5-to-9-upgrade/</link>
       <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+      <guid>http://localhost:1313/posts/vcf5-to-9-upgrade/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VMware Explore 2025</title>
-      <link>https://sdn-warrior.org/posts/explore-2025/</link>
+      <link>http://localhost:1313/posts/explore-2025/</link>
       <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+      <guid>http://localhost:1313/posts/explore-2025/</guid>
       <description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - Certificate exchange</title>
-      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+      <link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
       <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+      <guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
       <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 3 - Security</title>
-      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
+      <link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
       <pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
+      <guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my two other VPC articles, I showed you the basics and the differences between &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;centralized deployment&lt;/a&gt; and &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/&#34;&gt;distributed deployment&lt;/a&gt;.&#xA;Today, I would like to write something about security, as VPCs offer various possibilities in this area.&#xA;VPCs provide a certain degree of isolation through their private networks, as these cannot be easily routed from outside the VPC.&#xA;But what if we want to protect a VM from the public network or a private VM that has been assigned a public IP? This is where the distributed firewall and gateway firewall come into play.&#xA;Let&amp;rsquo;s find out exactly how.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - Migration to central VCF Operations instance</title>
-      <link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
+      <link>http://localhost:1313/posts/vcf-operations-migration/</link>
       <pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
+      <guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where should I start? Perhaps I should describe my starting point.&#xA;I deployed a nested lab with VCF9 for the VCF9 beta, so far so good.&#xA;This lab came with its own VCF Operations. Now we are GA and I am lucky enough to have 256 core VCF9 licenses.&#xA;I wanted to upgrade part of my hardware lab to ESX9 because I also want to test memory tiering in its final version, and that&amp;rsquo;s where my problems start.&#xA;In VCF9, there are no more keys and you have to license your products via VCF Operations and vCenter.&#xA;This also applies to VVF, or if you want to use ESX9 on your physical lab hardware.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
+      <link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
       <pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
+      <guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.&#xA;If you are not familiar with VPCs and have not yet come across this topic, I recommend reading &lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-nsx-vpc/&#34;&gt;Part 1&lt;/a&gt; first.&#xA;I will not go into all the basics again in this article, as these were already explained in the first article.&#xA;In this article, I will look at the distributed deployment of VPCs and show how VPCs can also be used without an edge cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NSX - IDFW &amp; DFW Troubleshooting</title>
-      <link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
+      <link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
       <pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+      <guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.&#xA;I&amp;rsquo;m sure everyone has been in this situation: you&amp;rsquo;ve written a nice new Identity firewall, but for some reason it doesn&amp;rsquo;t work.&#xA;If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn&amp;rsquo;t work with the Identity firewall.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-the-identity-firewall&#34;&gt;What is the Identity Firewall?&lt;/h2&gt;&#xA;&lt;p&gt;An identity firewall does not make firewall decisions based on IP addresses, but uses user and group information to apply security policies.&#xA;It identifies users based on their login credentials and dynamically assigns them appropriate access rights and firewall rules.&#xA;This enables more granular control and improved protection, as access permissions are directly linked to the actual identity of the user.&#xA;If you want to know how I used this for one of my customers, you can read about it &lt;a href=&#34;https://sdn-warrior.org/posts/nsx-idfw-vdi/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-      <link>https://sdn-warrior.org/posts/homelab-v6/</link>
+      <link>http://localhost:1313/posts/homelab-v6/</link>
       <pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+      <guid>http://localhost:1313/posts/homelab-v6/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.&#xA;On top of that, the Minisforum A2 was finally available. But first things first.&lt;/p&gt;&#xA;&lt;h2 id=&#34;25-gbs-lan---and-what-i-have-learned&#34;&gt;2.5 Gb/s LAN - and what I have learned&lt;/h2&gt;&#xA;&lt;p&gt;Well, where should I start? I bought the Mikrotik CRS326-4C+20G+2Q for my NUCs, which offered me 20x 2.5 GB/s ports and wasn&amp;rsquo;t exactly cheap at around 800 euros.&#xA;In hindsight, I can say that it wasn&amp;rsquo;t a good investment. Not that the switch is bad, it&amp;rsquo;s not, but as of today, I only use exactly 2 2.5G ports.&#xA;For this purpose, I utilize all 10G and 40G ports (with brakeout) as 10G ports are now in short supply. Following the recent upgrade, I have exactly one 10G port remaining in the entire lab.&#xA;That&amp;rsquo;s why I&amp;rsquo;m actually considering selling the Switch again.&#xA;But hey, that&amp;rsquo;s part of homelabbing. Sometimes you just make bad investments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-      <link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
+      <link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
       <pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+      <guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!&lt;/p&gt;&#xA;&lt;p&gt;But wait, from the top, what are VPCs anyway?&#xA;VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tales from the Lab - Minisforum MS-A2</title>
-      <link>https://sdn-warrior.org/posts/ms-a2/</link>
+      <link>http://localhost:1313/posts/ms-a2/</link>
       <pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+      <guid>http://localhost:1313/posts/ms-a2/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;After being impressed with the performance and form factor of the Minisforum &lt;strong&gt;MS-01&lt;/strong&gt;, I had to get my hands on their latest beast: the &lt;strong&gt;MS-A2&lt;/strong&gt;, powered by AMD&amp;rsquo;s latest Zen 5 architecture.&#xA;It&amp;rsquo;s also exciting to test a gadget before &lt;a href=&#34;https://williamlam.com/&#34;&gt;William Lam&lt;/a&gt;. Thanks for letting me be the first (I&amp;rsquo;m just kidding, of course).&lt;/p&gt;&#xA;&lt;p&gt;In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.&lt;/p&gt;</description>
     </item>
     <item>
       <title>ReSTNSX with HCX</title>
-      <link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
+      <link>http://localhost:1313/posts/restnsx-with-hcx/</link>
       <pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+      <guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&amp;rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.&lt;/p&gt;&#xA;&lt;p&gt;But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&amp;rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.&#xA;We will see in this post whether it is really that simple.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF - How to use the Broadcom Download Token</title>
-      <link>https://sdn-warrior.org/posts/vcf-token/</link>
+      <link>http://localhost:1313/posts/vcf-token/</link>
       <pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-token/</guid>
+      <guid>http://localhost:1313/posts/vcf-token/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
     </item>
     <item>
       <title>VCF Quick Tip - WLD with single NSX Manager</title>
-      <link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
+      <link>http://localhost:1313/posts/vcf-single-nsx/</link>
       <pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
+      <guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&amp;rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.&#xA;We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.&lt;/p&gt;</description>
     </item>
   </channel>

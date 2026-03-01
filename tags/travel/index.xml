@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Travel on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/travel/</link>
+    <link>http://localhost:1313/tags/travel/</link>
     <description>Recent content in Travel on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Sat, 26 Apr 2025 16:00:10 -0500</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/travel/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/travel/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMUG Connect St. Louis 2025</title>
-      <link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
+      <link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
       <pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
-      <guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
+      <guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
       <description>&lt;h2 id=&#34;vmug-st-louis--between-tech-talks-and-travel-vibes&#34;&gt;VMUG St. Louis – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from &lt;a href=&#34;https://www.evoila.de&#34;&gt;evoila&lt;/a&gt;, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&amp;rsquo;m German after all.&lt;/p&gt;</description>
     </item>
   </channel>
