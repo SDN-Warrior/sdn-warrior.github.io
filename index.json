@@ -1,4 +1,10 @@
 [{
+    "title": "2026 VMUG Connect - Amsterdam",
+    "url": "/posts/2026-vmug-amsterdam/",
+    "date": "2026-03-24",
+    "description": "A personal summary of the first VMUG Connect in Europe.",
+    "tags": ["vcf9","operations","community","vmug"]
+  },{
     "title": "IPv6 with NSX",
     "url": "/posts/ipv6-nsx/",
     "date": "2026-03-01",

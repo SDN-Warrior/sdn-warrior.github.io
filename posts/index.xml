@@ -6,8 +6,111 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Sun, 01 Mar 2026 12:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Tue, 24 Mar 2026 23:00:00 +0100</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>2026 VMUG Connect - Amsterdam</title>
+			<link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
+			<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
+			<description><![CDATA[A personal summary of the first VMUG Connect in Europe.]]></description>
+			<content type="html"><![CDATA[<h2 id="vmug-connect-amsterdam--between-tech-talks-and-travel-vibes">VMUG Connect Amsterdam – Between Tech Talks and Travel Vibes</h2>
+<p>Wow, so here we are again. Another travel blog post and no tech content. Yes, unfortunately I’m a bit behind on my own &ldquo;roadmap&rdquo;, but right now I simply don’t have the personal time to write another tech article. I actually still have so much in the works and just can’t seem to get through it all. But that won’t stop me from sharing my impressions of VMUG Connect in Amsterdam here.</p>
+<h2 id="day-0---day-of-travel">Day 0 - Day of travel</h2>
+<p>My trip started early Monday morning with the Deutsche Bahn, traveling via Mannheim and Düsseldorf to Amsterdam Centraal—a surprisingly uneventful train ride. I was practically right on time, caught all my connections, and everything just went smoothly—crazy. To be honest, I’m not really used to that.</p>
+<p>I bought a metro ticket directly online via the Metro app (without having to register—yeah, that’s how it can be done, Deutsche Bahn), since my hotel was a bit out of the way and I had to take the metro about 16 minutes to the RAI and back every morning/evening. Writing this makes me realize that I really need to get my travel expense report done.</p>
+<p>Well, anyway, I checked into the hotel and then spent some time exploring Amsterdam. All in all, the weather wasn’t great that day, so I headed back to my hotel pretty quickly and relaxed a bit.</p>
+<figure><a href="01.jpg"><picture><source srcset="/2026-amsterdam/01_hu_91950889935cf041.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/01_hu_91950889935cf041.jpg"alt="Amsterdam"width="2016"
+            height="1512"/>
+        </picture></a><figcaption><p>I am Amsterdam (click to enlarge)</p></figcaption></figure>
+<p>It wasn’t my first visit to Amsterdam, after all, and I wasn’t really in the mood for sightseeing anyway.
+So you could say it was a completely unspectacular day of arrival.</p>
+<h2 id="day-1---preconnect">Day 1 - PreConnect</h2>
+<p>The first day started off quite leisurely with a nice breakfast at the hotel, and afterward I met up with my colleague Steffen Richter in front of the Rai to pick up our badges and check out the venue. The expo was still a work in progress at that point, and we ran into the first few familiar faces.
+Speaking of faces, no trip would be complete without a happy face selfie. I know you didn&rsquo;t ask for it, but here it is.</p>
+<figure><a href="02.jpg"><picture><source srcset="/2026-amsterdam/02_hu_2395d8beba90c1ae.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/02_hu_2395d8beba90c1ae.jpg"alt="Happy Face"width="1482"
+            height="1111"/>
+        </picture></a><figcaption><p>Happy Face (click to enlarge)</p></figcaption></figure>
+<p>But let’s get to the official part. The first session I attended was a so-called PreConnect Session <em><strong>VCF: Deployment, Automation &amp; Networking</strong></em>, presented by and featuring John Nicholson. It wasn’t a traditional session with a slide deck and such, but more like an open discussion. Unfortunately, there was an error in the VMUG app that listed me as a co-speaker, but I wasn’t informed beforehand that I had a second session. I spoke briefly with John Nicholson later, and he didn’t know either that we were supposed to have a session together. I was asked about it several times and can only say sorry, but something went wrong with the organization. For me, it remains Schrödinger’s speaker slot. You never really know whether I should have participated or not. :D</p>
+<figure><a href="03.jpg"><picture><source srcset="/2026-amsterdam/03_hu_2565612525c80b3f.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/03_hu_2565612525c80b3f.jpg"alt="Schrödinger’s speaker slot"width="1920"
+            height="1440"/>
+        </picture></a><figcaption><p>Schrödinger’s speaker slot (click to enlarge)</p></figcaption></figure>
+<p>After that, I attended the PreConnect session <em><strong>Security: All Things Security</strong></em>. As before, this wasn’t a traditional session but a panel discussion, and what can I say—Chris McCain doesn’t need a microphone. Some people in the audience said he was “American loud,” and that wasn’t meant negatively, but rather as a compliment. The panel discussion was quite entertaining, even if it didn’t really offer anything new to me.</p>
+<figure><a href="04.jpg"><picture><source srcset="/2026-amsterdam/04_hu_c0b8b37099645421.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/04_hu_c0b8b37099645421.jpg"alt="Security: All Things Security"width="2016"
+            height="1512"/>
+        </picture></a><figcaption><p>Security: All Things Security (click to enlarge)</p></figcaption></figure>
+<p>Unfortunately, I missed my colleague Maria Kmita’s session (sorry, I would have loved to see it, but you know I tend to get sidetracked).
+These PreConnect sessions were something new for me, and I found them really entertaining. Above all, they were twice as long as regular sessions, and we had the chance to ask all sorts of questions—both the obvious and the unexpected.</p>
+<p>After that, i headed over to the expo for some casual “networking”—and by “networking,” I actually mean drinking beer and shooting the breeze with friends, old buddies, and new faces. The beer was actually not too bad, by the way. Yeah, I’m still German at heart, and the fact that I didn’t complain is praise enough.</p>
+<figure><a href="11.jpg"><picture><source srcset="/2026-amsterdam/11_hu_b1d0205087ad90d0.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/11_hu_b1d0205087ad90d0.jpg"alt="Athideth Sananikone"width="960"
+            height="1280"/>
+        </picture></a><figcaption><p>Thanks Athideth Sananikone for the picture (click to enlarge)</p></figcaption></figure>
+<h2 id="day-2---here-we-go">Day 2 - Here we go</h2>
+<p>Today is actually the first real day of VMUG Connect. It kicks off with the general session at 9 a.m. Fresh and rested (okay, I’m lying), I showed up right on time just before 9 a.m. and listened intently to Duncan Epping as he talked about what’s new. But dude, what kind of session title is that? <em><strong>From Roadmap to Implementation: Key Innovations Redefining Storage and Cyber Resilience for VCF 9!</strong></em> Sounds like a tongue-twister for me. The general session was split into two parts, and Chris McCain also had a segment titled <em><strong>Shrink the Blast Radius: Private Cloud Segmentation Made Easy by Chris McCain</strong></em>. I have to say that DR isn’t really my area of expertise (sorry, Duncan), and the vDefend session didn’t have a ton of new stuff for me either, but Brad Tomkins did a wonderful job moderating the general keynote, and it was definitely entertaining.</p>
+<figure><a href="05.jpg"><picture><source srcset="/2026-amsterdam/05_hu_e19dc58bc1967cfd.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/05_hu_e19dc58bc1967cfd.jpg"alt="Brad Tomkins"width="2016"
+            height="1512"/>
+        </picture></a><figcaption><p>Brad Tomkins (click to enlarge)</p></figcaption></figure>
+<p>After the opening session, I went straight to the <em><strong>Redefining the Private Cloud: The Next Evolution of VCF</strong></em> session without a break. The session offered some exciting insights into upcoming VCF versions. Among other things, it was mentioned that stateful services will soon be possible in NSX without edges. They also demonstrated what the VXLAN/EVPN integration will look like in version 9.1. We have some exciting new features coming our way, especially in NSX.</p>
+<p>After that, I took some time to myself to mentally prepare for my VCAP Operations exam, which I was able to take for free thanks to VMUG Advantage. I passed, so I was able to relax and enjoy the rest of the day.</p>
+<figure><picture><source srcset="/2026-amsterdam/06_hu_43d60f2597a400d0.png" type="image/png">
+          <img
+            src="/2026-amsterdam/06_hu_43d60f2597a400d0.png"alt="VCAP"width="600"
+            height="600"/>
+        </picture><figcaption><p>VCAP Operations</p></figcaption></figure>
+<p>My next session was led by <a href="https://www.linkedin.com/in/giovanni-dominoni-65065678/">Giovanni Dominoni</a> and <a href="https://www.linkedin.com/in/amedeo-simone-luciano-28a9b84b/">Amedeo Simone Luciano</a> and had the promising title <em><strong>Zero-Impact Network Fabric Migration: From Cisco Nexus 9K to ACI with NSX Environments</strong></em>. It provided a practical demonstration of how to approach a network platform migration without any downtime, and it was truly inspiring to see how the two of them implemented this project. This led to some nice discussions after the session.</p>
+<p>Since I ended up chatting with so many people again, I wasn’t able to attend any more sessions that day. But let’s be honest—talking to people is just as important as any session, especially when you work for a partner.</p>
+<p>The welcome reception took place that evening. It was held at <em><strong>Strandzuid</strong></em>,  a cozy waterfront restaurant beautifully situated right next to the Rai Convention Center, from which you could take a pleasant walks around the lake. I would also like to take this opportunity to mention comdivision, which sponsored the entire welcome reception and treated us all to a wonderful evening.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-a6ec200e">
+                <a href="/2026-amsterdam/welcome%20reception.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="2026 Amsterdam Welcome Reception"><img src="/2026-amsterdam/welcome%20reception_hu_66b3ae7b6b5c5326.jpg" alt="/2026-amsterdam/welcome reception" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">2026 Amsterdam Welcome Reception</div>
+                </a>
+                <a href="/2026-amsterdam/welcome%20reception2.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="2026 Amsterdam Welcome Reception2"><img src="/2026-amsterdam/welcome%20reception2_hu_8540d7fb2ba7e726.jpg" alt="/2026-amsterdam/welcome reception2" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">2026 Amsterdam Welcome Reception2</div>
+                </a>
+                <a href="/2026-amsterdam/vBeer.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="2026 Amsterdam v Beer"><img src="/2026-amsterdam/vBeer_hu_b9f37600e9233047.jpg" alt="/2026-amsterdam/vBeer" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">2026 Amsterdam v Beer</div>
+                </a>
+                <a href="/2026-amsterdam/more%20happy%20faces.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="2026 Amsterdam More Happy Faces"><img src="/2026-amsterdam/more%20happy%20faces_hu_a4bec7a0c2eadf7e.jpg" alt="/2026-amsterdam/more happy faces" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">2026 Amsterdam More Happy Faces</div>
+                </a></div>
+<h2 id="day-3---or-the-day-my-legs-were-shaking">Day 3 - or the day my legs were shaking</h2>
+<p>This day was a particular focus for me because I gave my first session at an international event—all in English, with a live demo, and on a spotty internet connection. Naturally, I was pretty nervous leading up to the day. Of course, this wasn’t the first session I’ve ever given, but I think I’ll always be nervous.</p>
+<p>Once again, I talked about one of my favorite topics, which is VPCs in NSX, or rather VCF9. What can I say? I just love the feature and the possibilities it offers. I was also very surprised by the audience—for one thing, the room was almost completely full, and for another, at least 80% of the people in the session were using NSX.</p>
+<figure><a href="12.jpg"><picture><source srcset="/2026-amsterdam/12_hu_169d248ddf8c5077.jpg" type="image/jpeg">
+          <img
+            src="/2026-amsterdam/12_hu_169d248ddf8c5077.jpg"alt="Stage Time"width="1462"
+            height="1096"/>
+        </picture></a><figcaption><p>Stage time (click to enlarge)</p></figcaption></figure>
+<p>I wasn’t used to that at all. So I cut the general NSX section short and focused more (though not enough) on the topic of traffic flow. For anyone who’d like my slides, I’m making them available for download here. Unfortunately, due to space constraints, only the PDF version is available, but that should suffice.</p>
+<figure><a href="VPCs%20VMUG%20Connect.pdf" target="_blank"><picture><source srcset="/2026-amsterdam/13_hu_687c23b7d9bb9015.png" type="image/png">
+          <img
+            src="/2026-amsterdam/13_hu_687c23b7d9bb9015.png"alt="Download"width="1847"
+            height="1036"/>
+        </picture></a><figcaption><p>VMUG Slidedeck (click to download)</p></figcaption></figure>
+<p>After my session, I had a quick meal, and then, unfortunately, I had to head home again. Since you can always count on Deutsche Bahn, my connecting train in Mannheim was so late that I actually ended up getting home earlier because I was able to catch a train that was supposed to have already left. It’s quite a feat to get home faster thanks to a delay.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Compared to the VMUG in <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">St. Louis</a>, I’d say the Amsterdam event had a better venue. The expo was also somehow better organized. To be fair, it’s worth noting that Connect in St. Louis was the first of its kind and certainly just a trial run. As always with these kinds of events, it’s great when the community comes together and you finally get to see all those people in person whom you otherwise only know from LinkedIn, the vExpert Discord, or local VMUG events. For me, that’s actually always the highlight of every event and, in my view, the very heart of VMUG. I also had great conversations with Duncan Epping, Chris McCain, and other VMware leaders, and of course plenty of chats with vExperts, VMware users, partners, and customers. In the end, that’s what makes these events special for me—not the sessions or any slides, but the direct interaction.</p>
+<p>Many thanks to everyone I had the pleasure of sharing the event with. ❤️❤️❤️</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>IPv6 with NSX</title>
