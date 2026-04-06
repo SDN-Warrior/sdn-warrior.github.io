@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Vmware on SDN-Warrior | Daniel Krieger</title>
+    <title>VMware on SDN-Warrior | Daniel Krieger</title>
     <link>https://sdn-warrior.org/tags/vmware/</link>
-    <description>Recent content in Vmware on SDN-Warrior | Daniel Krieger</description>
+    <description>Recent content in VMware on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
     <lastBuildDate>Mon, 06 Apr 2026 23:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>VCF9 - Extende Managment Domain Cluster</title>
+      <title>VCF9 - Extend Managment Domain Cluster</title>
       <link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
       <pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
