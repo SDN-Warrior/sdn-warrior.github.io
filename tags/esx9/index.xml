@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Esx9 on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/esx9/</link>
+    <description>Recent content in Esx9 on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Mon, 06 Apr 2026 23:00:00 +0200</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/esx9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Extende Managment Domain Cluster</title>
+      <link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
+      <pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

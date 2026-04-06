@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 24 Mar 2026 23:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 23:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/vcf9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 - Extende Managment Domain Cluster</title>
+      <link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
+      <pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>2026 VMUG Connect - Amsterdam</title>
       <link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>

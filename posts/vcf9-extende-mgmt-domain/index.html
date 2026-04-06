@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.">
+
+  <meta itemprop="name" content="VCF9 - Extende Managment Domain Cluster">
+  <meta itemprop="description" content="How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.">
+  <meta itemprop="datePublished" content="2026-04-06T23:00:00+02:00">
+  <meta itemprop="dateModified" content="2026-04-06T23:00:00+02:00">
+  <meta itemprop="wordCount" content="1509">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Vcf9,Esx9,Homelab,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="VCF9 - Extende Managment Domain Cluster">
+  <meta property="og:description" content="How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-06T23:00:00+02:00">
+    <meta property="article:modified_time" content="2026-04-06T23:00:00+02:00">
+    <meta property="article:tag" content="Vcf9">
+    <meta property="article:tag" content="Esx9">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Vmware">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:title" content="VCF9 - Extende Managment Domain Cluster">
+  <meta name="twitter:description" content="How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF9 - Extende Managment Domain Cluster",
+    "name": "VCF9 - Extende Managment Domain Cluster",
+    "description": "How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.",
+    "keywords": ["vcf9", "esx9", "homelab", "vmware"],
+    "articleBody": "Introduction Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.\nBut joking aside, this blog post is actually supposed to be about how I can expand my existing management domain, since I don’t want to reinstall everything—and to be honest, I’m not sure yet if it will all work, because my management domain currently consists of two clusters. The first cluster runs on two AMD MS-A2 servers with memory tiering and hosts my fleet, and the second cluster is a nested cluster on MS-01 servers (yes, the ones with the Intel CPUs). On top of that, I’m also running a nested instance of VCF9 that’s onboarded into my fleet. Of course, not everything can be running at the same time, since I don’t have enough RAM and processing power. So it’ll be interesting to see if the whole thing will work out somehow.\nSo if you’re able to read this blog, it must have worked out somehow; if not, you’ll never know.\nLet’s Get Ready to Rumble It all starts off quite innocently: first, unpack the new server, install the NVMEs—you know the drill. Then I install a fresh ESX 9.0.2 image and configure the network, DNS, NTP, memory tiering, and the Ryzen workarounds. If you want to read exactly what needs to be done, you can check out this article. I’ve written everything down in detail there.\nESX installer - JetKVM (click to enlarge)\nThe goal should be to have a basic ESX9 host that can resolve DNS, has SSH enabled, has NTP working, has over 377 GB of RAM (memory tiering), and has only one network adapter connected. In other words, it should be exactly the same as if I were installing VCF9 from scratch.\nNow that these preparations have been made, I can get started on the actual cluster expansion. To do this, I first need to check my network pool settings and, if necessary, adjust the IP ranges for the NFS and vMotion networks.\nNetwork Pools The network pools are a bit hidden. In VCF 5.x, this was something you configured in the SDDC Manager. In VCF 9, this has now moved to vCenter under Global Inventory -\u003e Hosts -\u003e Network Pools.\nNetwork Pools (click to enlarge)\nFortunately, I was a bit more generous here and still have some IP addresses available.\nWarning\rIf the IP range isn’t sufficient, it can be expanded—but only if there are still free IP addresses available in the subnet. The subnet cannot be modified later. Please always take growth into account when sizing your subnets.\rThe TEP IP pool is managed in NSX and, of course, must have two free IP addresses per host. In my case, it just barely works. The pool can be adjusted here as well.\nNSX TEP Pool (click to enlarge)\nNSX is significantly more flexible than VCF in vCenter when it comes to the network pool. Once everything has been checked, I can now add the host.\nHost onboarding Onboarding is no longer done via the SDDC as it used to be, but must now also be done via the global inventory in vCenter. To do this, go to Global Inventory List -\u003e Hosts -\u003e Unassigned Hosts -\u003e COMMISSION HOSTS\nAfter that, you’re immediately greeted with a friendly checklist of everything that needs to be done:\n- Host for vSAN/vSAN ESA/vSAN Storage workload domain should be vSAN/vSAN ESA/vSAN Storage compliant and certified per the VMware Hardware Compatibility Guide. BIOS, HBA, SSD, HDD, etc. must match the VMware Hardware Compatibility Guide. - Host has the drivers and firmware versions specified in the VMware Compatibility Guide. - Host has ESXi installed on it. The host must be preinstalled with supported versions (9.0.2.0.25148076) - Host is configured with DNS server for forward and reverse lookup and FQDN. - Hostname should be same as the FQDN. - Management IP is configured to first NIC port. - Ensure that the host has a standard switch and the default uplinks with 10Gb speed are configured starting with traditional numbering (e.g., vmnic0) and increasing sequentially. - Host hardware health status is healthy without any errors. - All disk partitions on HDD / SSD are deleted. - Ensure required network pool is created and available before host commissioning. - Ensure hosts to be used for VSAN workload domain are associated with VSAN enabled network pool. - Ensure hosts to be used for NFS workload domain are associated with NFS enabled network pool. - Ensure hosts to be used for VMFS on FC workload domain are associated with NFS or VMOTION only enabled network pool. - Ensure hosts to be used for vVol FC workload domain are associated with NFS or VMOTION only enabled network pool. - Ensure hosts to be used for vVol NFS workload domain are associated with NFS and VMOTION only enabled network pool. - Ensure hosts to be used for vVol iSCSI workload domain are associated with iSCSI and VMOTION only enabled network pool. - For hosts with a DPU device, enable SR-IOV in the BIOS and in the vSphere Client (if required by your DPU vendor). Of course, I’ve carefully checked all of this and can confirm it.\nAfter specifying the correct network pool and entering the correct storage type, fqdn, username, and password, the validation process failed with a certificate error—but why? After all, I created a new self-signed certificate during installation.\nCert Error (click to enlarge)\nThe problem is—and this is something the pre-check doesn’t tell you—that once you’ve rolled out your own certificates in your domain, the host certificate must be from the same CA. So I have to create a CA request via the ESX GUI, submit it to my Microsoft CA, and implement it on my host. I love certificates—not.\nIf you’ve never done this before, you can do it in the ESX GUI under Host -\u003e Manage -\u003e Security \u0026 Users -\u003e Certificates. After the certificate exchange, the validation process completes successfully. The ESX server does not need to be restarted. Once the commissioning is complete, the host should now appear under “Unassigned Hosts.” That means half the work is already done.\nUnassigned Hosts (click to enlarge)\nExtend Cluster Now comes the fun part: actually expanding the cluster. To do this, right-click on the existing cluster -\u003e Add Host -\u003e Add Unassigned Hosts. Here, too, the process differs from VCF 5.x, as this task is not performed in the SDDC. Info\rIn the current VCF 9 release, it would still be done via the SDDC, but this approach is eventually set to be phased out completely, and the recommended method is via vCenter.\rThe process itself is pretty straightforward, and the most important thing is that the uplink assignment on the distributed switch is correct. That’s actually the only potential source of error at this stage.\ndVSwitch (click to enlarge)\nHere, too, there is a brief validation step after confirmation, and if no errors occur, the process should run fully automatically. The process can be monitored in both SDDC and vCenter. Personally, I find the view in the SDDC a bit clearer than the one in the vCenter Recent Tasks view. You can also check the progress of the host’s NSX configuration in NSX Manager. After about 10 minutes, the whole thing was done and dusted, and my management domain had been successfully expanded to three nodes.\nFinished cluster(click to enlarge)\nTo perform a manual validation, I booted up a test VM connected to an NSX network and ran a quick connectivity check to make sure my TEP network was working properly. Unfortunately, with VCF 9.0.2 and the MS-A2, I can no longer see the TEP tunnel status displayed correctly in NSX. The status simply remains gray—unknown. However, this is purely a visual issue, and other 9.0.2 users with the same hardware are experiencing the same problem.\nConclusion What can I say? I expected the certificate error—I’ve fallen for that one before. But to make this article a bit more useful, I decided to highlight this error again. Generally speaking, though, I would have expected more problems, since one SDDC Manager (the one from my other nested domain) is unreachable, so I was pleasantly surprised. That’s because things like an inventory scan don’t run error-free unless all vCenters and SDDC Managers are accessible, and I had already envisioned having to get those two components online somehow to complete the expansion.\nThe most important thing when expanding is careful preparation and ensuring that all pre-checks are carried out. There’s a good reason why the checklist is included in the onboarding dialog. If you’ve followed all the steps, the expansion will indeed go smoothly.\n",
+    "wordCount" : "1509",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2026-04-06T23:00:00+02:00",
+    "dateModified": "2026-04-06T23:00:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>VCF9 - Extende Managment Domain Cluster</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-extende-mgmt-domain%2f&amp;text=VCF9%20-%20Extende%20Managment%20Domain%20Cluster" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-extende-mgmt-domain%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF9%20-%20Extende%20Managment%20Domain%20Cluster&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-extende-mgmt-domain%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9-extende-mgmt-domain%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF9%20-%20Extende%20Managment%20Domain%20Cluster&amp;summary=VCF9%20-%20Extende%20Managment%20Domain%20Cluster%2c%20by%20SDN-Warrior%0a%0aHow%20do%20you%20actually%20expand%20a%20management%20domain%20in%20VCF9%2c%20and%20what%20do%20I%20need%20to%20keep%20in%20mind%3f%20A%20quick%20guide.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF9 - Extende Managment Domain Cluster&#34;,&#34;https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/&#34;,&#34;VCF9 - Extende Managment Domain Cluster, by SDN-Warrior\n\nHow do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Apr 6, 2026</span></div>
+				<h1>VCF9 - Extende Managment Domain Cluster</h1>
+			</header>
+			<div class="post-info"><p>How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9">vcf9</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/esx9">esx9</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>1509 Words
+     // ReadTime
+    
+    
+    
+    6 Minutes, 51 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-04-06 23:00 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.</p>
+<p>But joking aside, this blog post is actually supposed to be about how I can expand my existing management domain, since I don’t want to reinstall everything—and to be honest, I’m not sure yet if it will all work, because my management domain currently consists of two clusters. The first cluster runs on two AMD MS-A2 servers with memory tiering and hosts my fleet, and the second cluster is a nested cluster on MS-01 servers (yes, the ones with the Intel CPUs). On top of that, I’m also running a nested instance of VCF9 that’s onboarded into my fleet. Of course, not everything can be running at the same time, since I don’t have enough RAM and processing power. So it’ll be interesting to see if the whole thing will work out somehow.</p>
+<p>So if you&rsquo;re able to read this blog, it must have worked out somehow; if not, you&rsquo;ll never know.</p>
+<h2 id="lets-get-ready-to-rumble">Let’s Get Ready to Rumble<a href="#lets-get-ready-to-rumble" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>It all starts off quite innocently: first, unpack the new server, install the NVMEs—you know the drill. Then I install a fresh ESX 9.0.2 image and configure the network, DNS, NTP, memory tiering, and the Ryzen workarounds. If you want to read exactly what needs to be done, you can check out this <a href="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">article</a>. I’ve written everything down in detail there.</p>
+<figure><a href="01.png"><picture><source srcset="/vcf9-mgmt-domain/01_hu_ce28ccd2fa908264.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/01_hu_ce28ccd2fa908264.png"alt="JetKVM"width="1718"
+            height="1236"/>
+        </picture></a><figcaption><p>ESX installer - JetKVM (click to enlarge)</p></figcaption></figure>
+<p>The goal should be to have a basic ESX9 host that can resolve DNS, has SSH enabled, has NTP working, has over 377 GB of RAM (memory tiering), and has only one network adapter connected. In other words, it should be exactly the same as if I were installing VCF9 from scratch.</p>
+<p>Now that these preparations have been made, I can get started on the actual cluster expansion. To do this, I first need to check my network pool settings and, if necessary, adjust the IP ranges for the NFS and vMotion networks.</p>
+<h2 id="network-pools">Network Pools<a href="#network-pools" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The network pools are a bit hidden. In VCF 5.x, this was something you configured in the SDDC Manager. In VCF 9, this has now moved to vCenter under Global Inventory -&gt; Hosts -&gt; Network Pools.</p>
+<figure><a href="02.png"><picture><source srcset="/vcf9-mgmt-domain/02_hu_d0583ef61538f87e.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/02_hu_d0583ef61538f87e.png"alt="Network Pools"width="1713"
+            height="1008"/>
+        </picture></a><figcaption><p>Network Pools (click to enlarge)</p></figcaption></figure>
+<p>Fortunately, I was a bit more generous here and still have some IP addresses available.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">If the IP range isn&rsquo;t sufficient, it can be expanded—but only if there are still free IP addresses available in the subnet. The subnet cannot be modified later.
+Please always take growth into account when sizing your subnets.</div>
+    </aside>
+<p>The TEP IP pool is managed in NSX and, of course, must have two free IP addresses per host. In my case, it just barely works. The pool can be adjusted here as well.</p>
+<figure><a href="03.png"><picture><source srcset="/vcf9-mgmt-domain/03_hu_26b92acaed9dd616.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/03_hu_26b92acaed9dd616.png"alt="NSX TEP Pool"width="1719"
+            height="1145"/>
+        </picture></a><figcaption><p>NSX TEP Pool (click to enlarge)</p></figcaption></figure>
+<p>NSX is significantly more flexible than VCF in vCenter when it comes to the network pool.
+Once everything has been checked, I can now add the host.</p>
+<h2 id="host-onboarding">Host onboarding<a href="#host-onboarding" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Onboarding is no longer done via the SDDC as it used to be, but must now also be done via the global inventory in vCenter.
+To do this, go to <em><strong>Global Inventory List -&gt; Hosts -&gt; Unassigned Hosts -&gt; COMMISSION HOSTS</strong></em></p>
+<p>After that, you&rsquo;re immediately greeted with a friendly checklist of everything that needs to be done:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">- Host for vSAN/vSAN ESA/vSAN Storage workload domain should be vSAN/vSAN ESA/vSAN Storage compliant and certified per the VMware Hardware Compatibility Guide. BIOS, HBA, SSD, HDD, etc. must match the VMware Hardware Compatibility Guide.
+</span></span><span class="line"><span class="cl">- Host has the drivers and firmware versions specified in the VMware Compatibility Guide.
+</span></span><span class="line"><span class="cl">- Host has ESXi installed on it. The host must be preinstalled with supported versions (9.0.2.0.25148076)
+</span></span><span class="line"><span class="cl">- Host is configured with DNS server for forward and reverse lookup and FQDN.
+</span></span><span class="line"><span class="cl">- Hostname should be same as the FQDN.
+</span></span><span class="line"><span class="cl">- Management IP is configured to first NIC port.
+</span></span><span class="line"><span class="cl">- Ensure that the host has a standard switch and the default uplinks with 10Gb speed are configured starting with traditional numbering (e.g., vmnic0) and increasing sequentially.
+</span></span><span class="line"><span class="cl">- Host hardware health status is healthy without any errors.
+</span></span><span class="line"><span class="cl">- All disk partitions on HDD / SSD are deleted.
+</span></span><span class="line"><span class="cl">- Ensure required network pool is created and available before host commissioning.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for VSAN workload domain are associated with VSAN enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for NFS workload domain are associated with NFS enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for VMFS on FC workload domain are associated with NFS or VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for vVol FC workload domain are associated with NFS or VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for vVol NFS workload domain are associated with NFS and VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for vVol iSCSI workload domain are associated with iSCSI and VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- For hosts with a DPU device, enable SR-IOV in the BIOS and in the vSphere Client (if required by your DPU vendor).
+</span></span></code></pre></div><p>Of course, I’ve carefully checked all of this and can confirm it.</p>
+<p>After specifying the correct network pool and entering the correct storage type, fqdn, username, and password, the validation process failed with a certificate error—but why? After all, I created a new self-signed certificate during installation.</p>
+<figure><a href="04.png"><picture><source srcset="/vcf9-mgmt-domain/04_hu_7f1961bb4d7a220e.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/04_hu_7f1961bb4d7a220e.png"alt="Cert Error"width="1164"
+            height="867"/>
+        </picture></a><figcaption><p>Cert Error (click to enlarge)</p></figcaption></figure>
+<p>The problem is—and this is something the pre-check doesn’t tell you—that once you’ve rolled out your own certificates in your domain, the host certificate must be from the same CA. So I have to create a CA request via the ESX GUI, submit it to my Microsoft CA, and implement it on my host. I love certificates—not.</p>
+<p>If you&rsquo;ve never done this before, you can do it in the ESX GUI under <em><strong>Host -&gt; Manage -&gt; Security &amp; Users -&gt; Certificates</strong></em>.
+After the certificate exchange, the validation process completes successfully. The ESX server does not need to be restarted.
+Once the commissioning is complete, the host should now appear under “Unassigned Hosts.” That means half the work is already done.</p>
+<figure><a href="05.png"><picture><source srcset="/vcf9-mgmt-domain/05_hu_4291125f62b8ad2c.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/05_hu_4291125f62b8ad2c.png"alt="Unassigned Host"width="1722"
+            height="668"/>
+        </picture></a><figcaption><p>Unassigned Hosts (click to enlarge)</p></figcaption></figure>
+<h2 id="extend-cluster">Extend Cluster<a href="#extend-cluster" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Now comes the fun part: actually expanding the cluster. To do this, <em><strong>right-click on the existing cluster -&gt; Add Host -&gt; Add Unassigned Hosts</strong></em>.
+Here, too, the process differs from VCF 5.x, as this task is not performed in the SDDC.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">In the current VCF 9 release, it would still be done via the SDDC, but this approach is eventually set to be phased out completely, and the recommended method is via vCenter.</div>
+    </aside></p>
+<p>The process itself is pretty straightforward, and the most important thing is that the uplink assignment on the distributed switch is correct. That’s actually the only potential source of error at this stage.</p>
+<figure><a href="06.png"><picture><source srcset="/vcf9-mgmt-domain/06_hu_92a485f96d1b29fd.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/06_hu_92a485f96d1b29fd.png"alt="dVSwitch"width="1233"
+            height="825"/>
+        </picture></a><figcaption><p>dVSwitch (click to enlarge)</p></figcaption></figure>
+<p>Here, too, there is a brief validation step after confirmation, and if no errors occur, the process should run fully automatically.
+The process can be monitored in both SDDC and vCenter.
+Personally, I find the view in the SDDC a bit clearer than the one in the vCenter Recent Tasks view. You can also check the progress of the host’s NSX configuration in NSX Manager.
+After about 10 minutes, the whole thing was done and dusted, and my management domain had been successfully expanded to three nodes.</p>
+<figure><a href="07.png"><picture><source srcset="/vcf9-mgmt-domain/07_hu_593d89c79d66dd6a.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/07_hu_593d89c79d66dd6a.png"alt="Cluster"width="1643"
+            height="884"/>
+        </picture></a><figcaption><p>Finished cluster(click to enlarge)</p></figcaption></figure>
+<p>To perform a manual validation, I booted up a test VM connected to an NSX network and ran a quick connectivity check to make sure my TEP network was working properly. Unfortunately, with VCF 9.0.2 and the MS-A2, I can no longer see the TEP tunnel status displayed correctly in NSX. The status simply remains gray—unknown. However, this is purely a visual issue, and other 9.0.2 users with the same hardware are experiencing the same problem.</p>
+<h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>What can I say? I expected the certificate error—I’ve fallen for that one before. But to make this article a bit more useful, I decided to highlight this error again. Generally speaking, though, I would have expected more problems, since one SDDC Manager (the one from my other nested domain) is unreachable, so I was pleasantly surprised. That’s because things like an inventory scan don’t run error-free unless all vCenters and SDDC Managers are accessible, and I had already envisioned having to get those two components online somehow to complete the expansion.</p>
+<p>The most important thing when expanding is careful preparation and ensuring that all pre-checks are carried out. There’s a good reason why the checklist is included in the onboarding dialog. If you’ve followed all the steps, the expansion will indeed go smoothly.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/ipv6-nsx/">IPv6 with NSX</a></li>
+	
+	<li><a href="/posts/avi-keycloak/">AVI - Connect Keycloak to AVI Loadbalancer</a></li>
+	
+	<li><a href="/posts/vcf9-operations-dashboard/">VCF9 - Building a VCF Operations Dashboard</a></li>
+	
+	<li><a href="/posts/nsx-expiring-tn-certificates/">NSX Expiring Transport Node Certificates</a></li>
+	
+	<li><a href="/posts/vcf-stretched-cluster/">VCF Stretched Cluster</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/2026-vmug-amsterdam/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>2026 VMUG Connect - Amsterdam</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger</p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

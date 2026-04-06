@@ -6,8 +6,131 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Tue, 24 Mar 2026 23:00:00 +0100</lastBuildDate>
+		<lastBuildDate>Mon, 06 Apr 2026 23:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF9 - Extende Managment Domain Cluster</title>
+			<link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
+			<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+			<description><![CDATA[How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.</p>
+<p>But joking aside, this blog post is actually supposed to be about how I can expand my existing management domain, since I don’t want to reinstall everything—and to be honest, I’m not sure yet if it will all work, because my management domain currently consists of two clusters. The first cluster runs on two AMD MS-A2 servers with memory tiering and hosts my fleet, and the second cluster is a nested cluster on MS-01 servers (yes, the ones with the Intel CPUs). On top of that, I’m also running a nested instance of VCF9 that’s onboarded into my fleet. Of course, not everything can be running at the same time, since I don’t have enough RAM and processing power. So it’ll be interesting to see if the whole thing will work out somehow.</p>
+<p>So if you&rsquo;re able to read this blog, it must have worked out somehow; if not, you&rsquo;ll never know.</p>
+<h2 id="lets-get-ready-to-rumble">Let’s Get Ready to Rumble</h2>
+<p>It all starts off quite innocently: first, unpack the new server, install the NVMEs—you know the drill. Then I install a fresh ESX 9.0.2 image and configure the network, DNS, NTP, memory tiering, and the Ryzen workarounds. If you want to read exactly what needs to be done, you can check out this <a href="https://sdn-warrior.org/posts/vcf9-ms-a2-special/">article</a>. I’ve written everything down in detail there.</p>
+<figure><a href="01.png"><picture><source srcset="/vcf9-mgmt-domain/01_hu_ce28ccd2fa908264.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/01_hu_ce28ccd2fa908264.png"alt="JetKVM"width="1718"
+            height="1236"/>
+        </picture></a><figcaption><p>ESX installer - JetKVM (click to enlarge)</p></figcaption></figure>
+<p>The goal should be to have a basic ESX9 host that can resolve DNS, has SSH enabled, has NTP working, has over 377 GB of RAM (memory tiering), and has only one network adapter connected. In other words, it should be exactly the same as if I were installing VCF9 from scratch.</p>
+<p>Now that these preparations have been made, I can get started on the actual cluster expansion. To do this, I first need to check my network pool settings and, if necessary, adjust the IP ranges for the NFS and vMotion networks.</p>
+<h2 id="network-pools">Network Pools</h2>
+<p>The network pools are a bit hidden. In VCF 5.x, this was something you configured in the SDDC Manager. In VCF 9, this has now moved to vCenter under Global Inventory -&gt; Hosts -&gt; Network Pools.</p>
+<figure><a href="02.png"><picture><source srcset="/vcf9-mgmt-domain/02_hu_d0583ef61538f87e.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/02_hu_d0583ef61538f87e.png"alt="Network Pools"width="1713"
+            height="1008"/>
+        </picture></a><figcaption><p>Network Pools (click to enlarge)</p></figcaption></figure>
+<p>Fortunately, I was a bit more generous here and still have some IP addresses available.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Warning</b>
+        </div>
+        <div class="admonition-content">If the IP range isn&rsquo;t sufficient, it can be expanded—but only if there are still free IP addresses available in the subnet. The subnet cannot be modified later.
+Please always take growth into account when sizing your subnets.</div>
+    </aside>
+<p>The TEP IP pool is managed in NSX and, of course, must have two free IP addresses per host. In my case, it just barely works. The pool can be adjusted here as well.</p>
+<figure><a href="03.png"><picture><source srcset="/vcf9-mgmt-domain/03_hu_26b92acaed9dd616.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/03_hu_26b92acaed9dd616.png"alt="NSX TEP Pool"width="1719"
+            height="1145"/>
+        </picture></a><figcaption><p>NSX TEP Pool (click to enlarge)</p></figcaption></figure>
+<p>NSX is significantly more flexible than VCF in vCenter when it comes to the network pool.
+Once everything has been checked, I can now add the host.</p>
+<h2 id="host-onboarding">Host onboarding</h2>
+<p>Onboarding is no longer done via the SDDC as it used to be, but must now also be done via the global inventory in vCenter.
+To do this, go to <em><strong>Global Inventory List -&gt; Hosts -&gt; Unassigned Hosts -&gt; COMMISSION HOSTS</strong></em></p>
+<p>After that, you&rsquo;re immediately greeted with a friendly checklist of everything that needs to be done:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">- Host for vSAN/vSAN ESA/vSAN Storage workload domain should be vSAN/vSAN ESA/vSAN Storage compliant and certified per the VMware Hardware Compatibility Guide. BIOS, HBA, SSD, HDD, etc. must match the VMware Hardware Compatibility Guide.
+</span></span><span class="line"><span class="cl">- Host has the drivers and firmware versions specified in the VMware Compatibility Guide.
+</span></span><span class="line"><span class="cl">- Host has ESXi installed on it. The host must be preinstalled with supported versions (9.0.2.0.25148076)
+</span></span><span class="line"><span class="cl">- Host is configured with DNS server for forward and reverse lookup and FQDN.
+</span></span><span class="line"><span class="cl">- Hostname should be same as the FQDN.
+</span></span><span class="line"><span class="cl">- Management IP is configured to first NIC port.
+</span></span><span class="line"><span class="cl">- Ensure that the host has a standard switch and the default uplinks with 10Gb speed are configured starting with traditional numbering (e.g., vmnic0) and increasing sequentially.
+</span></span><span class="line"><span class="cl">- Host hardware health status is healthy without any errors.
+</span></span><span class="line"><span class="cl">- All disk partitions on HDD / SSD are deleted.
+</span></span><span class="line"><span class="cl">- Ensure required network pool is created and available before host commissioning.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for VSAN workload domain are associated with VSAN enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for NFS workload domain are associated with NFS enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for VMFS on FC workload domain are associated with NFS or VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for vVol FC workload domain are associated with NFS or VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for vVol NFS workload domain are associated with NFS and VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- Ensure hosts to be used for vVol iSCSI workload domain are associated with iSCSI and VMOTION only enabled network pool.
+</span></span><span class="line"><span class="cl">- For hosts with a DPU device, enable SR-IOV in the BIOS and in the vSphere Client (if required by your DPU vendor).
+</span></span></code></pre></div><p>Of course, I’ve carefully checked all of this and can confirm it.</p>
+<p>After specifying the correct network pool and entering the correct storage type, fqdn, username, and password, the validation process failed with a certificate error—but why? After all, I created a new self-signed certificate during installation.</p>
+<figure><a href="04.png"><picture><source srcset="/vcf9-mgmt-domain/04_hu_7f1961bb4d7a220e.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/04_hu_7f1961bb4d7a220e.png"alt="Cert Error"width="1164"
+            height="867"/>
+        </picture></a><figcaption><p>Cert Error (click to enlarge)</p></figcaption></figure>
+<p>The problem is—and this is something the pre-check doesn’t tell you—that once you’ve rolled out your own certificates in your domain, the host certificate must be from the same CA. So I have to create a CA request via the ESX GUI, submit it to my Microsoft CA, and implement it on my host. I love certificates—not.</p>
+<p>If you&rsquo;ve never done this before, you can do it in the ESX GUI under <em><strong>Host -&gt; Manage -&gt; Security &amp; Users -&gt; Certificates</strong></em>.
+After the certificate exchange, the validation process completes successfully. The ESX server does not need to be restarted.
+Once the commissioning is complete, the host should now appear under “Unassigned Hosts.” That means half the work is already done.</p>
+<figure><a href="05.png"><picture><source srcset="/vcf9-mgmt-domain/05_hu_4291125f62b8ad2c.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/05_hu_4291125f62b8ad2c.png"alt="Unassigned Host"width="1722"
+            height="668"/>
+        </picture></a><figcaption><p>Unassigned Hosts (click to enlarge)</p></figcaption></figure>
+<h2 id="extend-cluster">Extend Cluster</h2>
+<p>Now comes the fun part: actually expanding the cluster. To do this, <em><strong>right-click on the existing cluster -&gt; Add Host -&gt; Add Unassigned Hosts</strong></em>.
+Here, too, the process differs from VCF 5.x, as this task is not performed in the SDDC.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">In the current VCF 9 release, it would still be done via the SDDC, but this approach is eventually set to be phased out completely, and the recommended method is via vCenter.</div>
+    </aside></p>
+<p>The process itself is pretty straightforward, and the most important thing is that the uplink assignment on the distributed switch is correct. That’s actually the only potential source of error at this stage.</p>
+<figure><a href="06.png"><picture><source srcset="/vcf9-mgmt-domain/06_hu_92a485f96d1b29fd.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/06_hu_92a485f96d1b29fd.png"alt="dVSwitch"width="1233"
+            height="825"/>
+        </picture></a><figcaption><p>dVSwitch (click to enlarge)</p></figcaption></figure>
+<p>Here, too, there is a brief validation step after confirmation, and if no errors occur, the process should run fully automatically.
+The process can be monitored in both SDDC and vCenter.
+Personally, I find the view in the SDDC a bit clearer than the one in the vCenter Recent Tasks view. You can also check the progress of the host’s NSX configuration in NSX Manager.
+After about 10 minutes, the whole thing was done and dusted, and my management domain had been successfully expanded to three nodes.</p>
+<figure><a href="07.png"><picture><source srcset="/vcf9-mgmt-domain/07_hu_593d89c79d66dd6a.png" type="image/png">
+          <img
+            src="/vcf9-mgmt-domain/07_hu_593d89c79d66dd6a.png"alt="Cluster"width="1643"
+            height="884"/>
+        </picture></a><figcaption><p>Finished cluster(click to enlarge)</p></figcaption></figure>
+<p>To perform a manual validation, I booted up a test VM connected to an NSX network and ran a quick connectivity check to make sure my TEP network was working properly. Unfortunately, with VCF 9.0.2 and the MS-A2, I can no longer see the TEP tunnel status displayed correctly in NSX. The status simply remains gray—unknown. However, this is purely a visual issue, and other 9.0.2 users with the same hardware are experiencing the same problem.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>What can I say? I expected the certificate error—I’ve fallen for that one before. But to make this article a bit more useful, I decided to highlight this error again. Generally speaking, though, I would have expected more problems, since one SDDC Manager (the one from my other nested domain) is unreachable, so I was pleasantly surprised. That’s because things like an inventory scan don’t run error-free unless all vCenters and SDDC Managers are accessible, and I had already envisioned having to get those two components online somehow to complete the expansion.</p>
+<p>The most important thing when expanding is careful preparation and ensuring that all pre-checks are carried out. There’s a good reason why the checklist is included in the onboarding dialog. If you’ve followed all the steps, the expansion will indeed go smoothly.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>2026 VMUG Connect - Amsterdam</title>
