@@ -1,0 +1,508 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.">
+
+  <meta itemprop="name" content="Nutanix - Flow 7: virtual networking">
+  <meta itemprop="description" content="In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.">
+  <meta itemprop="datePublished" content="2026-04-13T23:30:00+02:00">
+  <meta itemprop="dateModified" content="2026-04-13T23:30:00+02:00">
+  <meta itemprop="wordCount" content="3512">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Nutanix,Homelab,Flow"><meta property="og:url" content="https://sdn-warrior.org/posts/nutanix-flow/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="Nutanix - Flow 7: virtual networking">
+  <meta property="og:description" content="In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-13T23:30:00+02:00">
+    <meta property="article:modified_time" content="2026-04-13T23:30:00+02:00">
+    <meta property="article:tag" content="Nutanix">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Flow">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:title" content="Nutanix - Flow 7: virtual networking">
+  <meta name="twitter:description" content="In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Nutanix - Flow 7: virtual networking",
+    "name": "Nutanix - Flow 7: virtual networking",
+    "description": "In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.",
+    "keywords": ["nutanix", "homelab", "flow"],
+    "articleBody": "Introduction As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.\nBut perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article. But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).\nBut I stray from the point. In this article, I’ll start by looking at the installation of Flow and, primarily, virtual networking. Security will certainly be covered in a separate article. Virtual networking offers standard features such as overlay networks, VPCs, NAT, VPN, routing, and much more. Furthermore, just like NSX, it relies on a three-tier architecture. I’d say buckle up—here comes the wild ride! Info\rI should probably mention that I generally don’t go into every last detail about VPCs, since the basics are the same for both Nutanix and NSX—that is, what VPCs are, what they’re used for, and so on. So I’m assuming you have a general understanding of the basics here, at least in terms of what VPCs are used for.\rFlow Virtual Networking Architecture I know, I know, nobody likes theory, but luckily you can skip chapters. But I don’t think a little theory will hurt, and I’ll keep it brief.\nManagement Plane As mentioned earlier, Flow consists of three planes, the first of which is the management plane—and this is where the first difference from NSX comes in. While NSX requires the deployment of an NSX Manager, in Nutanix, Prism Central takes on the role of the Flow management plane and serves as the interface between you and the management interface. Here, the roles of vCenter and NSX Manager are essentially combined. Prism Central can be deployed as a cluster or a single VM, and while Nutanix can be used quite effectively with Prism Element, Flow is not possible without Prism Central.\nControl Plane Next up is the control plane, which is provided by the network controller. Here, too, there are some minor differences from NSX: in NSX, the central control plane runs on the NSX managers, whereas Nutanix offers two deployment options. You can either deploy the network controller as a container within the Prism Central cluster (even a single-node deployment counts as a cluster) or in so-called standalone mode, which, however, requires additional resources. For labs, I would always prefer the integrated option. The network controller manages the network services configured via Prism and must be manually activated (except in extra-large Prism Central deployments).\nData Plane Last but not least, we have the data plane, where packets are actually transferred from point A to point B. And just like with NSX, the data plane runs on the hypervisor. In my case, that’s AHV. The data plane is implemented via Open vSwitch, which deploys a collection of bridges on the AHV. In my setup, I use the default virtual switch vs0 with the default bridge br0. I’ve set up an LACP bond over the bridge, but I don’t really want to go into the architecture of Open vSwitch here—that’s a whole other story. One more thing: you don’t necessarily have to use br0; you can also build your own bridge for flow.\nFeatures of the virtual network Like NSX, Flow supports a wide range of features. Here is a short list (not a comprehensive list):\nVPCs VLAN / Overlay Subnets Routing NAT based external networks Routed external networks over Vyos Appliance VPN VxLAN Extension (Layer 2 over Layer3) Dynamic Routing with BGP But so as not to get too carried away with theory, let’s now take a look at how flow is put into practice.\nDeployment of the Network Controller This article assumes that Prism Central is deployed and functioning properly. I am using the Nutanix CE edition as my base. You can read about exactly how I set it up here.\nNutanix Version\rIf, like me, you want to test Flow 7, you must update the CE Edition to Prism Version 7.5.x, AOS 7.5.x, and AHV 11. As of today, this can only be done by manually uploading the packages from the Partner Portal. Today, I’m not describing any features that you couldn’t do with an older version of Flow. X-Small Prism installations do not support Flow by the way.\rSoftware Components\nOnce the patching is done—and yes, I know it’s not as convenient as being able to update everything online—we can finally start enabling Flow. P.S.: Flow 7 is supposed to be included in the next release of the CE Edition—at least that’s what I was told, so take that with a grain of salt.\nTo enable Flow, navigate to Flow Management via Prism Central -\u003e Infrastructure -\u003e Prism Central Settings -\u003e Flow Management. There, you can enable Flow with the click of a button. The only thing left to select is the deployment mode, and if you look at the resources required for the standalone deployment, it should be clear that I chose the Integrated with Prism Central option. And to be honest, that’s pretty much it. The deployment happens completely automatically in the background, and no interaction is necessary. For me, it took about 10 minutes for everything to be ready.\nFlow deployment\nI really have to give Nutanix credit here—that was truly a great user experience. I wish NSX were this easy to deploy. Sure, I don’t have as many options for designing my environment as I do with NSX, though VCF’s approach is pretty rigid anyway, but everything here actually feels like it’s all part of a single solution. Flow integrates seamlessly into Prism Central, so no additional UI is needed.\nOf course, this all assumes that I set my MTU to somewhere between 1,500 and 9,000 bytes. MTU\rThe best practice recommendation here is the same as for VMware: use 9000 bytes on the virtual switch, and set the physical switches as high as possible (i.e. above 9000 bytes).\rBy default, the Nutanix Controller VMs use the standard Ethernet MTU of 1500 bytes for all the network interfaces. The system advertises the MTU of 1442 bytes to guest VMs using DHCP to account for the extra 58 bytes used by Generic Network Virtualization Encapsulation (Geneve). However, some VMs ignore the MTU advertisements in the DHCP response. Therefore, to ensure that Flow Virtual Networking functions properly with such VMs, enable jumbo frame support on the physical network and the default virtual switch vs0.\nGuest MTU\rIf you cannot increase the MTU of the physical network, decrease the MTU of every VM in a VPC to 1442 bytes or lower in the guest VM console.\rFeature Encapsulation Effective MTU VPC Regular Geneve 1442 VPC + Subnet Extension Geneve + VXLAN 1392 VPC + VPN Geneve + IPSec 1356 VPC + VTEP + VPN Geneve + VXLAN VTEP + IPSec 1306 Just a quick side note: Flow Network Security is disabled by default after installation. Since it doesn’t really matter for this blog, I still wanted to mention it. Network Security can be enabled in Flow Management.\nCongratulations to all of us—Flow is now available for use. With my Prism Central deployment size, up to 500 subnets and up to 50 VPCs are supported. That should be enough for everything. You might see a message saying that the CVMs aren’t the right size. In my experience, you can ignore that as long as you’re not concerned with performance and limits in the lab. In production, of course, everything should be correct. My next goal is to set up a VPC, connect a VM to a private overlay network, and ensure that north-south traffic is possible.\nVPCs - a slightly different approach than with NSX Nutanix operates somewhat differently here than VMware does with NSX. This is because Flow does not have anything like EdgeVMs. There is a VyOS-based network gateway appliance required for VPN, BGP, and VxLAN configurations, but it is not comparable to the T0/T1 concept or the central transit gateway. For the VPC, I’m not looking into that for now. Furthermore, Nutanix follows the concept of NAT gateway services or No-NAT gateway services. No-NAT/NAT Gateway Services require AHV and are the default when creating a VPC. The service is automatically created on an AHV host. By default, two hosts are automatically selected from the cluster and act as No-NAT/NAT Gateway Service hosts. This can be expanded to up to four hosts. The advantage of this approach, compared to NSX, is that it supports stateful SNAT without requiring the deployment of additional edge VMs, since the entire solution runs automatically as a service on the AHV host. Nutanix automatically determines which VPC uses which AHV host with the NAT Gateway service.\nVPC\nEvery VPC automatically includes a virtual router, which is connected to at least one but no more than two external networks. An external network is the primary way traffic enters and exits a VPC. There are two types of external networks: NAT and Routed (NoNAT). A VPC can have a maximum of one network of each type. This explains the limit of two external networks. VPCs can share the external network, as I showed in my example diagram.\nNAT Each VPC has SNAT IP addresses that are randomly selected from the external network pool. This corresponds to the number of active gateway hosts I select when creating the VPC (minimum 2, maximum 4). Which gateway host is used is determined by randomly and cannot be influenced. Therefore, all SNAT IPs used for the VPC should be allowed through a (physical) firewall. Because SNAT is used, the internal VPC networks can overlap.\nRouted Routed or NO-NAT networks allow VMs within the VPC to be accessible without using NAT. To achieve this, the VPC router is assigned an IP address from the external No-NAT network, and the internal VPC networks are then accessible via routing; however, this also means that these internal networks must not overlap and must be unique per VPC. Routing can be configured either statically or using a BGP gateway. Unlike with NSX, the BGP gateway is only part of the control plane and, unlike the Edge VM, is not part of the data plane; in other words, no north-south VM traffic passes through the network gateway. Due to its complexity, a routed VPC will be covered in a separate article. I will also leave out other topics, such as VPN/VXLAN for VPCs, in this article.\nMultiple External Networks Of course, all of this can be combined. For example, you could provide Internet access via NAT and connect the corporate networks via NO-NAT. However, this requires at least two routing destinations—that is, two physical routers, VRFs, or similar. Naturally, the routed networks must not overlap. But I don’t want to make the setup too complicated, so I’ll just touch on the topic briefly.\nCreating a VPC Let’s finally get to the fun part.\nExternal Subnet To create a VPC, you must first define and configure an external network. To do this, navigate to Infrastructure -\u003e Network \u0026 Security -\u003e Subnets -\u003e Create Subnet in Prism Central. Of course, the VLAN must be connected to every AHV host, but I think that goes without saying; if not, go back and review the theory section.\nExternal Subnet\nExternal subnets for VPCs cannot be of the VLAN Basic networking type and are therefore automatically managed by the network controller. In this setup, VLAN must be selected as the subnet type (Overlay would only be possible if we wanted to connect a transit VPC). NAT is selected by default. When creating a No-NAT external subnet, you must uncheck the box next to “NAT”. For automatic IP address assignment to work, an IP pool must be created. Additionally, the network requires a gateway in the physical network. In my example, I am using the 192.168.200.0/24 network as the external subnet, and my gateway is my lab router with the IP address 1. Once the network has been created using Save, you can proceed to create a VPC.\nNew VPC To create the VPC, navigate to Infrastructure -\u003e Network \u0026 Security -\u003e Virtual Private Clouds -\u003e Create VPC. The settings are fairly self-explanatory. VPC Setuo\nYou need to enter a name, connect an external network, and, as mentioned earlier, this network must be of the VLAN type. In our simple example, we can also enable “Set this subnet as the default next hop for outbound traffic.” This option creates a static default route 0.0.0.0/0 via 192.168.200.1 in the virtual VPC router. I leave the SNAT IP set to “auto assigned.” Here, you could manually specify two SNAT IPs from the pool to have more control over outbound traffic. Additionally, the number of gateway hosts can be specified.\nVPC External Subnet\nAs a last option, you can configure one or more DNS servers in the VPC. These settings are then automatically applied when creating new VPC subnets, but can also be overridden on a per-subnet basis. We’re almost there, I promise. Now all that’s left is to create a VPC subnet.\nVPC Subnet This subnet is a private network, meaning that subnets with the same network address can be created across multiple VPCs, since they can only communicate within the VPC and rely on SNAT from the gateway service host for external communication. As long as they are unique within the VPC, everything is fine. To create such a subnet, navigate to Infrastructure -\u003e Network \u0026 Security -\u003e Subnets -\u003e Create Subnet.\nCreate a private VPC Subnet\nHere, too, the settings are very straightforward. We need a subnet name; this time, the type must be “Overlay” since we want to create a VPC subnet. The subnet must be assigned to the correct VPC—in my example, it’s VPC02. The actual subnet prefix and the gateway must be configured. If we don’t want to use automatic IP addressing in the subnet, we’d be done here. In my example, however, I want to keep this option open, so I’m defining an IP pool. When creating the VM, an IP address can then be automatically assigned from this pool. Since the VPC has a DNS server configuration, I don’t need to adjust anything in the domain settings to ensure that, at the end of the day, my VMs are assigned the correct DNS servers. Once the subnet has been saved and created, it can be used like any other network in Nutanix with IPAM enabled.\nVPC Subnets\nAs you can clearly see in the screenshot, I’ve created two VPC subnets, and both use the same IP network; however, since they’re in separate VPCs, there are no issues, and each VM can communicate with the outside world.\nTesting the North-South connection To test out the whole setup, I created two Alpine Linux VMs, connected each to one of the two networks I had set up, and had Nutanix IPAM assign an IP address to each. I’ll admit that this whole Nutanix IPAM thing still confuses me a bit, and I need to take a closer look at it when I get the chance. On the one hand, it’s practical; on the other, it’s a bit annoying—but that’s just my current opinion, based on limited experience with the feature.\nAnyway—let’s get back on track. I’m happy to report that the VMs were automatically assigned IP addresses, and they were able to connect to the internet via SNAT right away.\nMy Traceroute\nTo test this, I used the My Tracroute tool, and in the screenshot you can clearly see the gateway I configured as an external VLAN listed as the third hop—in this case, my LAB router. As a cross-check, I look at the assigned NAT IP addresses for the VPC in the VPC Summary and filter for outbound traffic in my firewall; in the firewall log, I see the generated traffic using the second IP address of my VPC as SNAT IP.\nVPC SNAT IPs\nFirewall\nSo our VPC is now fully functional, but one problem remains. While the VM can communicate outbound, by default it is initially isolated from the outside world. Perhaps I should also mention that VMs within a VPC can communicate with all subnets in that VPC, though this is one of the basic features of a VPC. There is another useful feature that allows you to make a VM accessible from outside the VPC after all.\nFloating IPs You can change this using floating IPs; this feature allows you to request an IP address from the external VLAN and bind it to a VM. Technically speaking, this is simply a 1-to-1 NAT. In other words, it doesn’t work for every protocol, but at least my VM would be reachable. I can also request a maximum of 50 floating IPs per external VLAN. Therefore, the better approach when services need to be exposed to the outside world is to deploy them in a routed VPC network. However, this is a setup I will cover in a second article.\nIf you want to configure a floating IP, you can do so under Infrastructure -\u003e Network \u0026 Security -\u003e Floating IPs -\u003e Request Floating IP. The process is super simple and doesn’t really need much explanation. Select the external subnet, specify the number of floating IPs you want to request, and assign the floating IP to a VM—done.\nHow Overlay Networks Work - The Super-Short Version? Perhaps I should also briefly explain how the whole thing works.\nWitchcraft and black magic! Okay, just kidding. But seriously now. To give a simple example, our test VM is located in VPC01 on AHV Host 1. The gateway services are running on AHV Hosts 2 and 3, with AHV Host 3 automatically selected for the VPC. If the VM now wants to communicate externally, the traffic is encapsulated using Geneve and sent to AHV Host 3, since that’s where our gateway services for the VPC are running. The Geneve traffic is decapsulated on AHV3, the gateway services perform SNAT, and send the traffic out via the external subnet VLAN to the next hop. The reply is sent back to AHV3 based on the SNAT IP; the packet is wrapped up nicely in Geneva and sent back to AHV1.\nAnother example would be two VMs sitting in the same VPC network that want to communicate with each other. If both VMs are on the same host, the traffic is delivered normally, just like in any other network. No Geneve magic is required.\nIf, for example, the destination VM is on the second AHV host and the source remains on the first AHV host, the traffic is transported via Geneve to AHV 2 and delivered to the VM there. Since Geneve traffic encapsulates the original packet, jumbo frames are actually mandatory, as mentioned earlier.\nSummary In short, VPCs are a powerful and important feature in Nutanix as well, and they work quite differently from NSX, although the end result is more or less the same. I can use overlapping networks; my VPC is isolated by default, and ideally, as a user, I don’t need extensive networking knowledge. Here I have to say that NSX has an advantage in terms of ease of use, since it relies heavily on auto-allocation, allowing me, for example, to automatically carve out networks from a larger subnet. The VPC administrator really only needs to specify what type of network they want and how many free IP addresses should be available.\nAnyway, NSX isn’t the focus here. But there will definitely be more articles on Flow and VPCs, because I feel like I’ve only scratched the surface of what’s possible. I’m particularly interested in the setup with a transit VPC and a BGP gateway.\nI hope you enjoyed this short excursion into Flow. I’ll continue diving down the rabbit hole to discover even more features of Flow. If you were hoping there would be a clear winner by the end, I’m afraid I have to disappoint you, because I’d have to go much deeper for that. Sure, NSX has more features than Flow, but the exciting question is: do you really need them, or is a stripped-down solution sufficient here? Based on my many years of experience with customer projects and NSX, I can say that many customers don’t even begin to utilize the potential, and I don’t think it will be any different for Nutanix customers.\n",
+    "wordCount" : "3512",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2026-04-13T23:30:00+02:00",
+    "dateModified": "2026-04-13T23:30:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/nutanix-flow/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>Nutanix - Flow 7: virtual networking</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-flow%2f&amp;text=Nutanix%20-%20Flow%207%3a%20virtual%20networking" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-flow%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=Nutanix%20-%20Flow%207%3a%20virtual%20networking&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-flow%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fnutanix-flow%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Nutanix%20-%20Flow%207%3a%20virtual%20networking&amp;summary=Nutanix%20-%20Flow%207%3a%20virtual%20networking%2c%20by%20SDN-Warrior%0a%0aIn%20this%20blog%20post%2c%20I%e2%80%99ll%20explain%20how%20Nutanix%20Flow%207%20works%2c%20how%20to%20set%20up%20and%20use%20virtual%20networking%2c%20take%20a%20look%20at%20VPCs%2c%20and%20highlight%20the%20differences%20from%20NSX.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;Nutanix - Flow 7: virtual networking&#34;,&#34;https://sdn-warrior.org/posts/nutanix-flow/&#34;,&#34;Nutanix - Flow 7: virtual networking, by SDN-Warrior\n\nIn this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Apr 13, 2026</span></div>
+				<h1>Nutanix - Flow 7: virtual networking</h1>
+			</header>
+			<div class="post-info"><p>In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/nutanix">nutanix</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/flow">flow</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>3512 Words
+     // ReadTime
+    
+    
+    
+    15 Minutes, 57 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-04-13 23:30 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.</p>
+<p>But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.
+But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).</p>
+<p>But I stray from the point. In this article, I’ll start by looking at the installation of Flow and, primarily, virtual networking. Security will certainly be covered in a separate article. Virtual networking offers standard features such as overlay networks, VPCs, NAT, VPN, routing, and much more. Furthermore, just like NSX, it relies on a three-tier architecture. I&rsquo;d say buckle up—here comes the wild ride!
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I should probably mention that I generally don’t go into every last detail about VPCs, since the basics are the same for both Nutanix and NSX—that is, what VPCs are, what they’re used for, and so on. So I’m assuming you have a general understanding of the basics here, at least in terms of what VPCs are used for.</div>
+    </aside></p>
+<h2 id="flow-virtual-networking-architecture">Flow Virtual Networking Architecture<a href="#flow-virtual-networking-architecture" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I know, I know, nobody likes theory, but luckily you can skip chapters.
+But I don&rsquo;t think a little theory will hurt, and I&rsquo;ll keep it brief.</p>
+<h3 id="management-plane">Management Plane<a href="#management-plane" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>As mentioned earlier, Flow consists of three planes, the first of which is the <em><strong>management plane</strong></em>—and this is where the first difference from NSX comes in. While NSX requires the deployment of an NSX Manager, in Nutanix, Prism Central takes on the role of the Flow management plane and serves as the interface between you and the management interface. Here, the roles of vCenter and NSX Manager are essentially combined.
+Prism Central can be deployed as a cluster or a single VM, and while Nutanix can be used quite effectively with Prism Element, Flow is not possible without Prism Central.</p>
+<h3 id="control-plane">Control Plane<a href="#control-plane" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Next up is the <em><strong>control plane</strong></em>, which is provided by the network controller. Here, too, there are some minor differences from NSX: in NSX, the central control plane runs on the NSX managers, whereas Nutanix offers two deployment options. You can either deploy the network controller as a container within the Prism Central cluster (even a single-node deployment counts as a cluster) or in so-called standalone mode, which, however, requires additional resources. For labs, I would always prefer the integrated option.
+The network controller manages the network services configured via Prism and must be manually activated (except in extra-large Prism Central deployments).</p>
+<h3 id="data-plane">Data Plane<a href="#data-plane" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Last but not least, we have the <em><strong>data plane</strong></em>, where packets are actually transferred from point A to point B. And just like with NSX, the data plane runs on the hypervisor. In my case, that’s AHV. The data plane is implemented via Open vSwitch, which deploys a collection of bridges on the AHV. In my setup, I use the default virtual switch vs0 with the default bridge br0. I’ve set up an LACP bond over the bridge, but I don’t really want to go into the architecture of Open vSwitch here—that’s a whole other story. One more thing: you don’t necessarily have to use br0; you can also build your own bridge for flow.</p>
+<h3 id="features-of-the-virtual-network">Features of the virtual network<a href="#features-of-the-virtual-network" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Like NSX, Flow supports a wide range of features. Here is a short list (not a comprehensive list):</p>
+<ul>
+<li>VPCs</li>
+<li>VLAN / Overlay Subnets</li>
+<li>Routing</li>
+<li>NAT based external networks</li>
+<li>Routed external networks over Vyos Appliance</li>
+<li>VPN</li>
+<li>VxLAN Extension (Layer 2 over Layer3)</li>
+<li>Dynamic Routing with BGP</li>
+</ul>
+<p>But so as not to get too carried away with theory, let’s now take a look at how flow is put into practice.</p>
+<h2 id="deployment-of-the-network-controller">Deployment of the Network Controller<a href="#deployment-of-the-network-controller" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>This article assumes that Prism Central is deployed and functioning properly. I am using the Nutanix CE edition as my base. You can read about exactly how I set it up <a href="https://sdn-warrior.org/posts/nutanix-install-ce/">here</a>.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Nutanix Version</b>
+        </div>
+        <div class="admonition-content">If, like me, you want to test Flow 7, you must update the CE Edition to Prism Version 7.5.x, AOS 7.5.x, and AHV 11. As of today, this can only be done by manually uploading the packages from the Partner Portal. Today, I’m not describing any features that you couldn’t do with an older version of Flow. X-Small Prism installations do not support Flow by the way.</div>
+    </aside>
+<figure><a href="02.png"><picture><source srcset="/nutanix-flow/02_hu_1db04cffcf8695.png" type="image/png">
+          <img
+            src="/nutanix-flow/02_hu_1db04cffcf8695.png"alt="Software Components"width="2978"
+            height="1718"/>
+        </picture></a><figcaption><p>Software Components</p></figcaption></figure>
+<p>Once the patching is done—and yes, I know it’s not as convenient as being able to update everything online—we can finally start enabling Flow.
+P.S.: Flow 7 is supposed to be included in the next release of the CE Edition—at least that&rsquo;s what I was told, so take that with a grain of salt.</p>
+<p>To enable Flow, navigate to Flow Management via <em><strong>Prism Central -&gt; Infrastructure -&gt; Prism Central Settings -&gt; Flow Management</strong></em>. There, you can enable Flow with the click of a button. The only thing left to select is the deployment mode, and if you look at the resources required for the standalone deployment, it should be clear that I chose the <em><strong>Integrated with Prism Central</strong></em> option. And to be honest, that’s pretty much it. The deployment happens completely automatically in the background, and no interaction is necessary. For me, it took about 10 minutes for everything to be ready.</p>
+<figure><a href="01.png"><picture><source srcset="/nutanix-flow/01_hu_8d052a693cc66bd4.png" type="image/png">
+          <img
+            src="/nutanix-flow/01_hu_8d052a693cc66bd4.png"alt="Flow deployment"width="1439"
+            height="1168"/>
+        </picture></a><figcaption><p>Flow deployment</p></figcaption></figure>
+<p>I really have to give Nutanix credit here—that was truly a great user experience. I wish NSX were this easy to deploy. Sure, I don’t have as many options for designing my environment as I do with NSX, though VCF’s approach is pretty rigid anyway, but everything here actually feels like it’s all part of a single solution. Flow integrates seamlessly into Prism Central, so no additional UI is needed.</p>
+<p>Of course, this all assumes that I set my MTU to somewhere between 1,500 and 9,000 bytes.
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>MTU</b>
+        </div>
+        <div class="admonition-content">The best practice recommendation here is the same as for VMware: use 9000 bytes on the virtual switch, and set the physical switches as high as possible (i.e. above 9000 bytes).</div>
+    </aside></p>
+<p>By default, the Nutanix Controller VMs use the standard Ethernet MTU of 1500 bytes for all the network interfaces. The system advertises the MTU of 1442 bytes to guest VMs using DHCP to account for the extra 58 bytes used by Generic Network Virtualization Encapsulation (Geneve). However, some VMs ignore the MTU advertisements in the DHCP response. Therefore, to ensure that Flow Virtual Networking functions properly with such VMs, enable jumbo frame support on the physical network and the default virtual switch vs0.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Guest MTU</b>
+        </div>
+        <div class="admonition-content">If you cannot increase the MTU of the physical network, decrease the MTU of every VM in a VPC to 1442 bytes or lower in the guest VM console.</div>
+    </aside>
+<table>
+  <thead>
+      <tr>
+          <th>Feature</th>
+          <th>Encapsulation</th>
+          <th>Effective MTU</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>VPC</td>
+          <td>Regular Geneve</td>
+          <td>1442</td>
+      </tr>
+      <tr>
+          <td>VPC + Subnet Extension</td>
+          <td>Geneve + VXLAN</td>
+          <td>1392</td>
+      </tr>
+      <tr>
+          <td>VPC + VPN</td>
+          <td>Geneve + IPSec</td>
+          <td>1356</td>
+      </tr>
+      <tr>
+          <td>VPC + VTEP + VPN</td>
+          <td>Geneve + VXLAN VTEP + IPSec</td>
+          <td>1306</td>
+      </tr>
+  </tbody>
+</table>
+<p>Just a quick side note: Flow Network Security is disabled by default after installation. Since it doesn&rsquo;t really matter for this blog, I still wanted to mention it. Network Security can be enabled in Flow Management.</p>
+<p>Congratulations to all of us—Flow is now available for use. With my Prism Central deployment size, up to 500 subnets and up to 50 VPCs are supported. That should be enough for everything. You might see a message saying that the CVMs aren’t the right size. In my experience, you can ignore that as long as you’re not concerned with performance and limits in the lab. In production, of course, everything should be correct. My next goal is to set up a VPC, connect a VM to a private overlay network, and ensure that north-south traffic is possible.</p>
+<h2 id="vpcs---a-slightly-different-approach-than-with-nsx">VPCs - a slightly different approach than with NSX<a href="#vpcs---a-slightly-different-approach-than-with-nsx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Nutanix operates somewhat differently here than VMware does with NSX. This is because Flow does not have anything like EdgeVMs. There is a VyOS-based network gateway appliance required for VPN, BGP, and VxLAN configurations, but it is not comparable to the T0/T1 concept or the central transit gateway. For the VPC, I’m not looking into that for now. Furthermore, Nutanix follows the concept of NAT gateway services or No-NAT gateway services.
+No-NAT/NAT Gateway Services require AHV and are the default when creating a VPC. The service is automatically created on an AHV host. By default, two hosts are automatically selected from the cluster and act as No-NAT/NAT Gateway Service hosts. This can be expanded to up to four hosts.
+The advantage of this approach, compared to NSX, is that it supports stateful SNAT without requiring the deployment of additional edge VMs, since the entire solution runs automatically as a service on the AHV host. Nutanix automatically determines which VPC uses which AHV host with the NAT Gateway service.</p>
+<figure><a href="07.png"><picture><source srcset="/nutanix-flow/07_hu_f441410c9c8736c1.png" type="image/png">
+          <img
+            src="/nutanix-flow/07_hu_f441410c9c8736c1.png"alt="VPCs"width="2021"
+            height="840"/>
+        </picture></a><figcaption><p>VPC</p></figcaption></figure>
+<p>Every VPC automatically includes a virtual router, which is connected to at least one but no more than two external networks. An external network is the primary way traffic enters and exits a VPC. There are two types of external networks: NAT and Routed (NoNAT). A VPC can have a maximum of one network of each type. This explains the limit of two external networks. VPCs can share the external network, as I showed in my example diagram.</p>
+<h3 id="nat">NAT<a href="#nat" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Each VPC has SNAT IP addresses that are randomly selected from the external network pool. This corresponds to the number of active gateway hosts I select when creating the VPC (minimum 2, maximum 4). Which gateway host is used is determined by randomly and cannot be influenced. Therefore, all SNAT IPs used for the VPC should be allowed through a (physical) firewall. Because SNAT is used, the internal VPC networks can overlap.</p>
+<h3 id="routed">Routed<a href="#routed" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Routed or NO-NAT networks allow VMs within the VPC to be accessible without using NAT. To achieve this, the VPC router is assigned an IP address from the external No-NAT network, and the internal VPC networks are then accessible via routing; however, this also means that these internal networks must not overlap and must be unique per VPC. Routing can be configured either statically or using a BGP gateway. Unlike with NSX, the BGP gateway is only part of the control plane and, unlike the Edge VM, is not part of the data plane; in other words, no north-south VM traffic passes through the network gateway. Due to its complexity, a routed VPC will be covered in a separate article. I will also leave out other topics, such as VPN/VXLAN for VPCs, in this article.</p>
+<h3 id="multiple-external-networks">Multiple External Networks<a href="#multiple-external-networks" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Of course, all of this can be combined. For example, you could provide Internet access via NAT and connect the corporate networks via NO-NAT. However, this requires at least two routing destinations—that is, two physical routers, VRFs, or similar. Naturally, the routed networks must not overlap. But I don’t want to make the setup too complicated, so I’ll just touch on the topic briefly.</p>
+<h2 id="creating-a-vpc">Creating a VPC<a href="#creating-a-vpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Let&rsquo;s finally get to the fun part.</p>
+<h3 id="external-subnet">External Subnet<a href="#external-subnet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To create a VPC, you must first define and configure an external network. To do this, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Subnets -&gt; Create Subnet</strong></em> in Prism Central. Of course, the VLAN must be connected to every AHV host, but I think that goes without saying; if not, go back and review the theory section.</p>
+<figure><a href="03.png"><picture><source srcset="/nutanix-flow/03_hu_8dd344683f227022.png" type="image/png">
+          <img
+            src="/nutanix-flow/03_hu_8dd344683f227022.png"alt="External Subnet"width="1669"
+            height="1306"/>
+        </picture></a><figcaption><p>External Subnet</p></figcaption></figure>
+<p>External subnets for VPCs cannot be of the VLAN Basic networking type and are therefore automatically managed by the network controller. In this setup, VLAN must be selected as the subnet type (Overlay would only be possible if we wanted to connect a transit VPC).
+NAT is selected by default. When creating a No-NAT external subnet, you must uncheck the box next to “NAT”. For automatic IP address assignment to work, an IP pool must be created. Additionally, the network requires a gateway in the physical network. In my example, I am using the 192.168.200.0/24 network as the external subnet, and my gateway is my lab router with the IP address 1.
+Once the network has been created using Save, you can proceed to create a VPC.</p>
+<h3 id="new-vpc">New VPC<a href="#new-vpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To create the VPC, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Virtual Private Clouds -&gt; Create VPC</strong></em>.
+The settings are fairly self-explanatory.
+<figure><a href="05.png"><picture><source srcset="/nutanix-flow/05_hu_6553f87c9efde8ad.png" type="image/png">
+          <img
+            src="/nutanix-flow/05_hu_6553f87c9efde8ad.png"alt="VPC Setup"width="1700"
+            height="1229"/>
+        </picture></a><figcaption><p>VPC Setuo</p></figcaption></figure>
+You need to enter a name, connect an external network, and, as mentioned earlier, this network must be of the VLAN type. In our simple example, we can also enable “Set this subnet as the default next hop for outbound traffic.”
+This option creates a static default route 0.0.0.0/0 via 192.168.200.1 in the virtual VPC router. I leave the SNAT IP set to “auto assigned.” Here, you could manually specify two SNAT IPs from the pool to have more control over outbound traffic. Additionally, the number of gateway hosts can be specified.</p>
+<figure><a href="06.png"><picture><source srcset="/nutanix-flow/06_hu_7ebaf19b6eb67262.png" type="image/png">
+          <img
+            src="/nutanix-flow/06_hu_7ebaf19b6eb67262.png"alt="VPC External Subnet"width="1680"
+            height="1305"/>
+        </picture></a><figcaption><p>VPC External Subnet</p></figcaption></figure>
+<p>As a last option, you can configure one or more DNS servers in the VPC.
+These settings are then automatically applied when creating new VPC subnets, but can also be overridden on a per-subnet basis.
+We&rsquo;re almost there, I promise. Now all that&rsquo;s left is to create a VPC subnet.</p>
+<h3 id="vpc-subnet">VPC Subnet<a href="#vpc-subnet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>This subnet is a private network, meaning that subnets with the same network address can be created across multiple VPCs, since they can only communicate within the VPC and rely on SNAT from the gateway service host for external communication. As long as they are unique within the VPC, everything is fine.
+To create such a subnet, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Subnets -&gt; Create Subnet</strong></em>.</p>
+<figure><a href="04.png"><picture><source srcset="/nutanix-flow/04_hu_2b3695e02c098b98.png" type="image/png">
+          <img
+            src="/nutanix-flow/04_hu_2b3695e02c098b98.png"alt="VPC Subnet"width="1676"
+            height="1309"/>
+        </picture></a><figcaption><p>Create a private VPC Subnet</p></figcaption></figure>
+<p>Here, too, the settings are very straightforward. We need a subnet name; this time, the type must be “Overlay” since we want to create a VPC subnet. The subnet must be assigned to the correct VPC—in my example, it’s VPC02. The actual subnet prefix and the gateway must be configured. If we don’t want to use automatic IP addressing in the subnet, we’d be done here.
+In my example, however, I want to keep this option open, so I’m defining an IP pool. When creating the VM, an IP address can then be automatically assigned from this pool. Since the VPC has a DNS server configuration, I don’t need to adjust anything in the domain settings to ensure that, at the end of the day, my VMs are assigned the correct DNS servers. Once the subnet has been saved and created, it can be used like any other network in Nutanix with IPAM enabled.</p>
+<figure><a href="08.png"><picture><source srcset="/nutanix-flow/08_hu_f76da280bb1fb28e.png" type="image/png">
+          <img
+            src="/nutanix-flow/08_hu_f76da280bb1fb28e.png"alt="Subnets"width="1716"
+            height="902"/>
+        </picture></a><figcaption><p>VPC Subnets</p></figcaption></figure>
+<p>As you can clearly see in the screenshot, I’ve created two VPC subnets, and both use the same IP network; however, since they’re in separate VPCs, there are no issues, and each VM can communicate with the outside world.</p>
+<h2 id="testing-the-north-south-connection">Testing the North-South connection<a href="#testing-the-north-south-connection" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To test out the whole setup, I created two Alpine Linux VMs, connected each to one of the two networks I had set up, and had Nutanix IPAM assign an IP address to each. I’ll admit that this whole Nutanix IPAM thing still confuses me a bit, and I need to take a closer look at it when I get the chance. On the one hand, it’s practical; on the other, it’s a bit annoying—but that’s just my current opinion, based on limited experience with the feature.</p>
+<p>Anyway—let&rsquo;s get back on track. I&rsquo;m happy to report that the VMs were automatically assigned IP addresses, and they were able to connect to the internet via SNAT right away.</p>
+<figure><a href="09.png"><picture><source srcset="/nutanix-flow/09_hu_563577d1adc70150.png" type="image/png">
+          <img
+            src="/nutanix-flow/09_hu_563577d1adc70150.png"alt="MTR"width="1078"
+            height="757"/>
+        </picture></a><figcaption><p>My Traceroute</p></figcaption></figure>
+<p>To test this, I used the My Tracroute tool, and in the screenshot you can clearly see the gateway I configured as an external VLAN listed as the third hop—in this case, my LAB router. As a cross-check, I look at the assigned NAT IP addresses for the VPC in the VPC Summary and filter for outbound traffic in my firewall; in the firewall log, I see the generated traffic using the second IP address of my VPC as SNAT IP.</p>
+<figure><a href="10.png"><picture><source srcset="/nutanix-flow/10_hu_9a1253c2a7b0cef8.png" type="image/png">
+          <img
+            src="/nutanix-flow/10_hu_9a1253c2a7b0cef8.png"alt="VPC SNAT IPs"width="1266"
+            height="745"/>
+        </picture></a><figcaption><p>VPC SNAT IPs</p></figcaption></figure>
+<figure><a href="11.png"><picture><source srcset="/nutanix-flow/11_hu_cf83ffd4ff4fd6e0.png" type="image/png">
+          <img
+            src="/nutanix-flow/11_hu_cf83ffd4ff4fd6e0.png"alt="Firewall"width="1439"
+            height="734"/>
+        </picture></a><figcaption><p>Firewall</p></figcaption></figure>
+<p>So our VPC is now fully functional, but one problem remains. While the VM can communicate outbound, by default it is initially isolated from the outside world. Perhaps I should also mention that VMs within a VPC can communicate with all subnets in that VPC, though this is one of the basic features of a VPC.
+There is another useful feature that allows you to make a VM accessible from outside the VPC after all.</p>
+<h3 id="floating-ips">Floating IPs<a href="#floating-ips" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>You can change this using floating IPs; this feature allows you to request an IP address from the external VLAN and bind it to a VM.
+Technically speaking, this is simply a 1-to-1 NAT. In other words, it doesn’t work for every protocol, but at least my VM would be reachable. I can also request a maximum of 50 floating IPs per external VLAN. Therefore, the better approach when services need to be exposed to the outside world is to deploy them in a routed VPC network. However, this is a setup I will cover in a second article.</p>
+<p>If you want to configure a floating IP, you can do so under
+<em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Floating IPs -&gt; Request Floating IP</strong></em>. The process is super simple and doesn&rsquo;t really need much explanation. Select the external subnet, specify the number of floating IPs you want to request, and assign the floating IP to a VM—done.</p>
+<h3 id="how-overlay-networks-work---the-super-short-version">How Overlay Networks Work - The Super-Short Version?<a href="#how-overlay-networks-work---the-super-short-version" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Perhaps I should also briefly explain how the whole thing works.</p>
+<h1 id="witchcraft-and-black-magic">Witchcraft and black magic!<a href="#witchcraft-and-black-magic" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>Okay, just kidding. But seriously now.
+To give a simple example, our test VM is located in VPC01 on AHV Host 1. The gateway services are running on AHV Hosts 2 and 3, with AHV Host 3 automatically selected for the VPC.
+If the VM now wants to communicate externally, the traffic is encapsulated using Geneve and sent to AHV Host 3, since that’s where our gateway services for the VPC are running. The Geneve traffic is decapsulated on AHV3, the gateway services perform SNAT, and send the traffic out via the external subnet VLAN to the next hop. The reply is sent back to AHV3 based on the SNAT IP; the packet is wrapped up nicely in Geneva and sent back to AHV1.</p>
+<p>Another example would be two VMs sitting in the same VPC network that want to communicate with each other. If both VMs are on the same host, the traffic is delivered normally, just like in any other network. No Geneve magic is required.</p>
+<p>If, for example, the destination VM is on the second AHV host and the source remains on the first AHV host, the traffic is transported via Geneve to AHV 2 and delivered to the VM there. Since Geneve traffic encapsulates the original packet, jumbo frames are actually mandatory, as mentioned earlier.</p>
+<h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>In short, VPCs are a powerful and important feature in Nutanix as well, and they work quite differently from NSX, although the end result is more or less the same. I can use overlapping networks; my VPC is isolated by default, and ideally, as a user, I don’t need extensive networking knowledge. Here I have to say that NSX has an advantage in terms of ease of use, since it relies heavily on auto-allocation, allowing me, for example, to automatically carve out networks from a larger subnet.
+The VPC administrator really only needs to specify what type of network they want and how many free IP addresses should be available.</p>
+<p>Anyway, NSX isn’t the focus here. But there will definitely be more articles on Flow and VPCs, because I feel like I’ve only scratched the surface of what’s possible.
+I’m particularly interested in the setup with a transit VPC and a BGP gateway.</p>
+<p>I hope you enjoyed this short excursion into Flow. I’ll continue diving down the rabbit hole to discover even more features of Flow. If you were hoping there would be a clear winner by the end, I’m afraid I have to disappoint you, because I’d have to go much deeper for that. Sure, NSX has more features than Flow, but the exciting question is: do you really need them, or is a stripped-down solution sufficient here? Based on my many years of experience with customer projects and NSX, I can say that many customers don’t even begin to utilize the potential, and I don’t think it will be any different for Nutanix customers.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/nutanix-install-ce/">Nutanix - Get started with the CE Edition</a></li>
+	
+	<li><a href="/posts/vcf9-extende-mgmt-domain/">VCF9 - Extend Managment Domain Cluster</a></li>
+	
+	<li><a href="/posts/ipv6-nsx/">IPv6 with NSX</a></li>
+	
+	<li><a href="/posts/avi-keycloak/">AVI - Connect Keycloak to AVI Loadbalancer</a></li>
+	
+	<li><a href="/posts/vcf9-operations-dashboard/">VCF9 - Building a VCF Operations Dashboard</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF9 - Extend Managment Domain Cluster</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Sun, 08 Feb 2026 19:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 13 Apr 2026 23:30:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/nutanix/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nutanix - Flow 7: virtual networking</title>
+      <link>https://sdn-warrior.org/posts/nutanix-flow/</link>
+      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.&lt;/p&gt;&#xA;&lt;p&gt;But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.&#xA;But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Nutanix - Get started with the CE Edition</title>
       <link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>

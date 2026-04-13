@@ -1,4 +1,10 @@
 [{
+    "title": "Nutanix - Flow 7: virtual networking",
+    "url": "/posts/nutanix-flow/",
+    "date": "2026-04-13",
+    "description": "In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.",
+    "tags": ["nutanix","homelab","flow"]
+  },{
     "title": "VCF9 - Extend Managment Domain Cluster",
     "url": "/posts/vcf9-extende-mgmt-domain/",
     "date": "2026-04-06",
