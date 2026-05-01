@@ -165,33 +165,3 @@
     border-bottom: none;
   }
 }
-
-/* SDN-Warrior: Make Klaro accept button gold */
-.klaro .cookie-notice .cm-btn.cm-btn-success,
-.klaro .cookie-modal .cm-btn.cm-btn-success,
-.klaro .context-notice .cm-btn.cm-btn-success {
-  background-color: #d6bd6a !important;
-  border-color: #d6bd6a !important;
-  color: #263b4d !important;
-}
-
-.klaro .cookie-notice .cm-btn.cm-btn-success:hover,
-.klaro .cookie-modal .cm-btn.cm-btn-success:hover,
-.klaro .context-notice .cm-btn.cm-btn-success:hover {
-  background-color: #e3ca75 !important;
-  border-color: #e3ca75 !important;
-  color: #263b4d !important;
-}
-
-/* SDN-Warrior: Make Klaro toggles gold */
-.klaro .cookie-modal .cm-list-input:checked + .cm-list-label .slider,
-.klaro .context-notice .cm-list-input:checked + .cm-list-label .slider,
-.klaro .cookie-notice .cm-list-input:checked + .cm-list-label .slider {
-  background-color: #d6bd6a !important;
-}
-
-.klaro .cookie-modal .cm-list-label .slider::before,
-.klaro .context-notice .cm-list-label .slider::before,
-.klaro .cookie-notice .cm-list-label .slider::before {
-  background-color: #263b4d !important;
-}

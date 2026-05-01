@@ -2,9 +2,9 @@ var klaroConfig = {
   version: 1,
   elementID: 'klaro',
   cookieName: 'klaro-consent',
-  cookieExpiresAfterDays: 7,
+  cookieExpiresAfterDays: 365,
   privacyPolicy: '/about/#privacy-policy', // Link zu deiner Datenschutzerklärung
-  default: false,
+  default: true,
   mustConsent: false, // Nutzer kann Banner ignorieren
   acceptAll: true,
   hideDeclineAll: false,
@@ -17,6 +17,8 @@ var klaroConfig = {
       purposes: ['analytics'],
       cookies: [/^_ga/, /^_gid/, /^_gat/],
       required: false,
+      default: true,
+      optOut: true,
     },
   ],
 
@@ -25,9 +27,9 @@ var klaroConfig = {
   translations: {
     en: {
       consentModal: {
-        title: 'We use cookies 🍪',
+        title: 'SDN-Warrior use cookies 🍪',
         description:
-          'We use cookies to enhance your browsing experience and analyze our website traffic with Google Analytics 4 (GA4). You can accept, decline, or customize cookies.',
+          'This private blog uses Google Analytics 4 only with your consent. Analytics helps me understand which content is useful and whether keeping this blog alive is worth the effort. You can accept or decline analytics cookies at any time. No analytics cookies are set before you accept.',
         privacyPolicy: {
           text: 'privacy policy',
           name: 'privacy policy',
