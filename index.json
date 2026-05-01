@@ -1,4 +1,10 @@
 [{
+    "title": "Homelab Update 2026",
+    "url": "/posts/homelab-update-2026/",
+    "date": "2026-05-01",
+    "description": "Homelab Update 2026",
+    "tags": ["unraid","vmware","esx","homelab","proxmox","nutanix"]
+  },{
     "title": "Nutanix - Flow 7: virtual networking",
     "url": "/posts/nutanix-flow/",
     "date": "2026-04-13",

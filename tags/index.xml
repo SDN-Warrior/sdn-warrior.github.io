@@ -7,27 +7,55 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 13 Apr 2026 23:30:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2026 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Flow</title>
-      <link>https://sdn-warrior.org/tags/flow/</link>
-      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/flow/</guid>
+      <title>Esx</title>
+      <link>https://sdn-warrior.org/tags/esx/</link>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/esx/</guid>
       <description></description>
     </item>
     <item>
       <title>Homelab</title>
       <link>https://sdn-warrior.org/tags/homelab/</link>
-      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
       <title>Nutanix</title>
       <link>https://sdn-warrior.org/tags/nutanix/</link>
-      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/nutanix/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Proxmox</title>
+      <link>https://sdn-warrior.org/tags/proxmox/</link>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/proxmox/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Unraid</title>
+      <link>https://sdn-warrior.org/tags/unraid/</link>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/unraid/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>VMware</title>
+      <link>https://sdn-warrior.org/tags/vmware/</link>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/vmware/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Flow</title>
+      <link>https://sdn-warrior.org/tags/flow/</link>
+      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/tags/flow/</guid>
       <description></description>
     </item>
     <item>
@@ -42,13 +70,6 @@
       <link>https://sdn-warrior.org/tags/vcf9/</link>
       <pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf9/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vmware</title>
-      <link>https://sdn-warrior.org/tags/vmware/</link>
-      <pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vmware/</guid>
       <description></description>
     </item>
     <item>
@@ -126,27 +147,6 @@
       <link>https://sdn-warrior.org/tags/vks/</link>
       <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/vks/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Edge</title>
-      <link>https://sdn-warrior.org/tags/edge/</link>
-      <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/edge/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Minisforum</title>
-      <link>https://sdn-warrior.org/tags/minisforum/</link>
-      <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/minisforum/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Bugfix</title>
-      <link>https://sdn-warrior.org/tags/bugfix/</link>
-      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/tags/bugfix/</guid>
       <description></description>
     </item>
   </channel>

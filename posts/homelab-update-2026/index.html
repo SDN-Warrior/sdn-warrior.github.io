@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Homelab Update 2026">
+
+  <meta itemprop="name" content="Homelab Update 2026">
+  <meta itemprop="description" content="Homelab Update 2026">
+  <meta itemprop="datePublished" content="2026-05-01T18:00:00+02:00">
+  <meta itemprop="dateModified" content="2026-05-01T18:00:00+02:00">
+  <meta itemprop="wordCount" content="2569">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Unraid,VMware,Esx,Homelab,Proxmox,Nutanix"><meta property="og:url" content="https://sdn-warrior.org/posts/homelab-update-2026/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="Homelab Update 2026">
+  <meta property="og:description" content="Homelab Update 2026">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-01T18:00:00+02:00">
+    <meta property="article:modified_time" content="2026-05-01T18:00:00+02:00">
+    <meta property="article:tag" content="Unraid">
+    <meta property="article:tag" content="VMware">
+    <meta property="article:tag" content="Esx">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Proxmox">
+    <meta property="article:tag" content="Nutanix">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+  <meta name="twitter:title" content="Homelab Update 2026">
+  <meta name="twitter:description" content="Homelab Update 2026">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Homelab Update 2026",
+    "name": "Homelab Update 2026",
+    "description": "Homelab Update 2026",
+    "keywords": ["unraid", "vmware", "esx", "homelab", "proxmox", "nutanix"],
+    "articleBody": "Introduction It’s been almost a year since the last lab update, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area. I will divide the article into several categories: hardware, networking, and the software stack. But as they say, let’s not beat around the bush—just go for it!\nHardware I’ve added quite a bit of hardware over the past few months, because nothing is as certain as change in a home lab.\nAsus NUC I’ll start with the 14th-generation Asus NUC with an Ultra 7 155H processor. This H model (High) complements my management NUC and allows me to easily run more always-on workloads. I bought the unit secondhand for about 300 euros and was able to use RAM and NVMe drives that were already sitting in my drawer. Readers of my blog are already familiar with this machine from my attempt to build a single-node VCF instance. The NUC can run with up to 128 GB of DDR5 RAM and consumes about 15–20 watts when idle, making it the perfect always-on node in my lab.\nWould I buy the NUC again? Absolutely. For around 300 euros, this little box was—and still is—a no-brainer.\nOPNSense DEC 740 Next up was my firewall. For the past two years, I’d been using a Fortinet Fortigate 40F, but in the end, renewing the license was just too expensive for me. Plus, the firewall only had Gigabit ports. I swapped it out for an OPNSense DEC 740. This is an official OPNSense appliance from Deciso. It comes with a one-year subscription to OPNSense Business Edition, though I’ve since switched to the open-source version of OPNSense. The DEC 740 is based on an embedded Ryzen processor and comes with 4 GB of DDR4 RAM that’s easy to swap out—which I plan to do eventually, once RAM prices return to normal. The firewall is advertised with a 10 GB/s throughput, but this claim should be taken with a grain of salt, as the firewall’s port-to-port throughput is a maximum of 8.5 GB/s—which is roughly the figures I’ve achieved.\nThe appliance is fully passively cooled and therefore runs silently. With an average power consumption of 15 watts, it’s also quite energy-efficient. However, I’ve had—and still have—issues with the appliance. Even though the hardware apparently supports 9K jumbo frames and you can configure them, I’m only getting a maximum of 4K jumbo frames to work. After searching the OPNSense forum, I found several threads that confirm this. Since the hardware can handle 9K without issues with Vyos, it’s likely due to the OPNSense software.\nWould I buy the firewall again? It’s a tough call. I like the design, build quality, and silent operation, but for nearly 900 euros, I could probably have built the whole thing myself with better hardware.\nMikroTik CRS326-24S+2Q+RM MikroTik and its names are a bit of a thing. I wanted to simplify my network setup and needed more 10G ports, so I bit the bullet and bought a supposedly very loud MikroTik switch for around 500 euros. The CRS326-24S+2Q+RM (MikroTik, please come up with different names already) comes with up to 32 * 10G ports and, unfortunately, has three very loud 40mm fans built in. While these can be temperature-controlled via RouteOS, they’re super loud and annoying. I therefore swapped them out for 3 Noctua NF-A4x20 PWM fans.\nCaution\rWhen replacing the fans, parts of the power supply units are exposed and accessible. Electricity is no joke. Monitor your temperatures, as the Noctua fans generate less air pressure and cooling performance than the original fans.\rThanks to the fan mod, the Switch has become pleasantly quiet; however, the fans run at 40–50% speed to achieve the same cooling effect as the original fans did at 20% speed. So far, this hasn’t been a problem in my lab, even when many servers are running and the ambient temperature in the rack exceeds 35 degrees. However, I don’t yet have any experience with how this will play out during a hot summer. That’s why I’ve kept the original fans in my spare parts drawer. Otherwise, the switch does what it’s supposed to do: fast and reliable Layer 2 switching. The routing performance is terrible, but it’s primarily a Layer 2 switch. I handle routing differently—more on that later. Would I buy it again? Absolutely.\nHomelab 2026 Managment Nuc Homelab 2026 Opnsense DEC 740 Homelab 2026 Mikrotik Crs 326 Homelab 2026 Mikrotik Crs 326 2 Homelab 2026 Mikrotik Fanmod 10Gtek Quad SFP+ Network Card For my Unraid server, I purchased a quad-port card from 10Gtek based on the Intel X710 chip for 135 euros. My Unraid server is based on a NUC 11 Extreme and, unfortunately, only has one PCIe slot. Since my Unraid server will also handle routing for my lab and provide NFS in the future, I wanted to have more ports. It was actually quite difficult to find a used quad card, so I decided to try the 10Gtek. I was already familiar with the manufacturer from my DAC cables, which were always affordable and reliable. I had tried a dual 40G card in my Unraid server in the past, but it overheated. The quad card with 4x10G works flawlessly in my Unraid. Two ports are in LACP for my Unraid NFS, and two ports are passed through to a VM via PCIe passthrough.\nWould I do it again? After several months of trouble-free use, I can say it was the right decision. Unfortunately, it seems the card is no longer available for purchase.\nMinisforum MS-A2 Next up was a third MS-A2 with Ryzen 9 9955HX. This node adds extra computing power to my VCF9.X cluster. As far as I’m concerned, it’s still one of the best Minisforums you can buy. I don’t think I need to say much more about the MS-A2; if you’d like to read a detailed article about it, you can check it out here. Whether I would buy the box again isn’t really a question here, because I just did so in March 2026.\nMinisforum MS-02 Ultra This is the latest addition to my lab, and as I write this, my unit is still in transit. That’s why I can’t say much about it yet. I also don’t know 100% what I’ll do with it, but it will likely be a KVM-based node—something like Proxmox, Unraid, Nutanix, or something entirely different. I might send it back if it doesn’t meet my expectations. In any case, I’m really curious about the MS-02 Ultra.\nHomelab 2026 Unriad Quad LAN Homelab 2026 Rewiring Homelab 2026 Minisforum Ms A2 Networking There have also been a lot of changes to my network. I rewired the entire rack and greatly simplified the physical network. In my old setup, I was using two MikroTik CRS 309s, one as an L2 switch and one as an L2/L3 switch. While the hardware offloading on the MikroTik CRS 309 ensured that I had 10 Gb/s routing performance, I occasionally had issues with the ARP table—specifically, MAC addresses weren’t being properly cleared, resulting in the same MAC address appearing on two switches. This primarily occurred during vMotion processes. Furthermore, the 10G ports were a major compromise, and the servers were connected across three switches.\nIn my new setup, there are really only two switches left—if you don’t count the 1 Gb/s switches. Those aren’t for the lab; they’re for access points, smart home bridges, and all the other stuff that runs 24/7 and needs network connectivity. All my servers are now connected to the CRS 326 via dual 10 Gb/s network (I won’t keep writing the full name—it’s enough to drive you crazy). For ESX servers, they’re configured as standard trunk ports; for other systems like my Unraid or my Nutanix cluster, Layer 4 LACP bonds were created. If I include the new MS-02, my CRS 326 still has a full 3 10 Gb/s ports free. For lab servers that only support 2.5 Gb/s, such as my two NUCs or my backup NAS, I’m still using my Mikrotik CRS326-4C+20G+2Q. This is a 24-port 2.5 Gb/s switch that also offers 4x10 Gb/s and additionally supports 2x40 Gb/s QSFP. It’s a great switch, but sooner or later I’ll probably replace it with a smaller, more energy-efficient alternative, since I no longer need that many 2.5 Gb/s ports. The days when my lab consisted of 10 NUCs are definitely over.\nBut you’re probably wondering, “Where are you doing the routing, Daniel?” And that’s where the Quad network card comes in. On my Unraid server, I’ve connected two ports via PCIe passthrough to a virtual MikroTik switch. For about 80 euros, you can get a lifetime MikroTik CHR (Cloud Hosted Router) RouterOS license that can route 10 Gb/s per interface. Together with the pass-through, my virtual router handles this with ease. If more capacity is ever needed, you can get an unlimited license for about 200 euros. My virtual router is equipped with 2 vCPUs and 2 GB of RAM and doesn’t even come close to using them all. Of course, I could have done this with VyOS as well, but since my Ansible setup was already fully optimized for MikroTik, it was the simpler choice for me.\nHomelab 2026 Network Homelab 2026 Final Setup I route all networks relevant to my lab through my CHR (the exception is NFS, which I set up as an unrouted VLAN in my labs). I route all other networks through my OPNSense, and thanks to 10 Gb/s, I have more than enough bandwidth there. My OPNSense has a BGP peering connection with my virtual LAB router, and that’s also how I access my lab environment. If this connection is disrupted, I can simply connect to the virtual LAB router via the Unraid KVM console and resolve the issue directly. This setup has paid off for me. I have fast routing performance, a simple network setup, and the router can be easily expanded if more resources are needed.\nSoftware stacks Nutanix CE But let’s move on to the final point—software stacks. Some of you may have noticed, but I’m no longer using VMware exclusively. This year, I was recognized as one of the few German MCXs (Nutanix Multi-Cloud Experts), and for that reason—or because of it, depending on how you look at it—I’m currently running a 3-node Nutanix cluster. This runs on three MS-01 servers, each with three NVMe drives and 96 GB of RAM per host. If you’d like to read exactly what I’m doing with it, you can check it out here.\nProxmox For the past few weeks, I’ve also been running a Proxmox 3-node cluster on three MS-01 nodes. However, these nodes only have a small local NVMe drive and 96 GB of RAM. That’s why I’m using NFS instead of Ceph for storage. I’m currently testing Pegaprox for management, but the entire setup is still a work in progress. I’ve already conducted the first migration tests from VMware to Proxmox, but the whole thing hasn’t reached a level of maturity where I could write an article about it yet. In any case, I plan to use it for some SDN tests and other experiments.\nVMware VCF 9.X On my three AMD MS-A2 nodes, I am running a currently unspecified version of VCF 9 (the version that must not be named). The cluster runs on 3 x 128 GB RAM and 2 NVMe drives, one for memory tiering and one for local storage. This cluster also serves as my solution lab for the Broadcom Knight. Workload domains are typically set up as nested environments and will likely run on Proxmox hosts or on the MS-02 Ultra in the future; I use NFS as my primary storage.\nVMware ESX 9 Managment Cluster My management cluster is always on, while the other clusters only run when needed (electricity is expensive). These are currently running on ESX 9 and are licensed via VCF licenses, though it’s not a VCF setup. For this, I simply have a VCF Operations instance, a vCenter, and ESX 9—that’s basically the bare minimum required to use a VCF 9 license. Thanks to VMUG Advantage, this isn’t a problem for me. However, I’m seriously considering switching to Proxmox here, not because I’m unhappy with ESX 9, but rather because of the P/E cores issue, since with my Ultra 7 NUC CPU I can only use 16 cores / 16 threads instead of the 22 threads I have with Proxmox (Hyper-Threading isn’t supported with ESX/Nutanix if the CPU has E/P cores).\nHomelab 2026 Nutanix Ce Homelab 2026 Pegaprox Homelab 2026 VC F 9.0.2 MS-02 Ultra To be completely honest, I haven’t decided yet what I’m going to do with this host. I might use it to replace my trusty old NUC Extreme and run Unraid on it. That would be a really nice CPU and performance upgrade. Alternatively, I’m thinking of building a pretty powerful standalone host with it—one that can really get things done with 256 GB of RAM. Maybe I’ll also install a graphics card and try my hand at some AI workloads. All in all, it’s still completely unclear what I’ll do with it and how. When it arrives, I’ll put it through its paces first, and I’m curious to see how it stacks up against the MS-A2, especially in terms of CPU performance and noise levels. Sometimes you just have to buy the hardware even if you don’t yet have any idea what you want to do with it. The use cases will come naturally. Please don’t try this at home—I enjoy making financially reckless decisions.\nUnraid My Unraid hosts a handful of KVM-based VMs, including my lab router, one of my two Windows domain controllers, and a Ravada VDI. Unraid was the first system I ever had in my home lab, and it will probably be the last. For many years, it has provided me with SMB shares, NFS, iSCSI, and all my Docker containers. I think the system has already gone through at least five different hardware configurations, from an old dual-core notebook to a custom-built computer with a SAS controller, up to its current form. It’s my faithful companion, and even though Unraid has its quirks, I really like the system. I’ve already dedicated a separate article to my Unraid server, which you can read here.\nFinal words It was time for another update post; I still haven’t updated my BOM, but I’ll probably get to that over the next few weeks. At the same time, I’m continuing to work on improving my blog theme, since it no longer quite meets my standards. Most recently, I added a gallery feature and a search function to the post page. A comment feature is still on my to-do list, even though I don’t yet know how to actively prevent spam. Also, because of the search function I built, the tag view no longer works—it’s not a big deal, but it still bugs me. I hope you enjoyed this little Lab update and that it has inspired you to create your own Lab.\nOther than that, all I can do is say thank you for the support I’ve received over the past few weeks and months, and for all the new followers.\n",
+    "wordCount" : "2569",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/disc.jpg","datePublished": "2026-05-01T18:00:00+02:00",
+    "dateModified": "2026-05-01T18:00:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/homelab-update-2026/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>Homelab Update 2026</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-update-2026%2f&amp;text=Homelab%20Update%202026" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-update-2026%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=Homelab%20Update%202026&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-update-2026%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fhomelab-update-2026%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Homelab%20Update%202026&amp;summary=Homelab%20Update%202026%2c%20by%20SDN-Warrior%0a%0aHomelab%20Update%202026%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;Homelab Update 2026&#34;,&#34;https://sdn-warrior.org/posts/homelab-update-2026/&#34;,&#34;Homelab Update 2026, by SDN-Warrior\n\nHomelab Update 2026\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>May 1, 2026</span></div>
+				<h1>Homelab Update 2026</h1>
+			</header>
+			<div class="post-info"><p>Homelab Update 2026</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/unraid">unraid</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vmware">vmware</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/esx">esx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/homelab">homelab</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/proxmox">proxmox</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nutanix">nutanix</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>2569 Words
+     // ReadTime
+    
+    
+    
+    11 Minutes, 40 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-05-01 18:00 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>It’s been almost a year since the last lab <a href="https://sdn-warrior.org/posts/homelab-v6/">update</a>, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.
+I will divide the article into several categories: hardware, networking, and the software stack.
+But as they say, let&rsquo;s not beat around the bush—just go for it!</p>
+<h2 id="hardware">Hardware<a href="#hardware" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I’ve added quite a bit of hardware over the past few months, because nothing is as certain as change in a home lab.</p>
+<h3 id="asus-nuc">Asus NUC<a href="#asus-nuc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>I’ll start with the 14th-generation <em><strong>Asus NUC with an Ultra 7 155H processor</strong></em>. This H model (High) complements my management NUC and allows me to easily run more always-on workloads. I bought the unit secondhand for about 300 euros and was able to use RAM and NVMe drives that were already sitting in my drawer. Readers of my blog are already familiar with this machine from my attempt to build a single-node VCF instance. The NUC can run with up to 128 GB of DDR5 RAM and consumes about 15–20 watts when idle, making it the perfect always-on node in my lab.</p>
+<p>Would I buy the NUC again? Absolutely. For around 300 euros, this little box was—and still is—a no-brainer.</p>
+<h3 id="opnsense-dec-740">OPNSense DEC 740<a href="#opnsense-dec-740" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Next up was my firewall. For the past two years, I’d been using a Fortinet Fortigate 40F, but in the end, renewing the license was just too expensive for me. Plus, the firewall only had Gigabit ports.
+I swapped it out for an <em><strong>OPNSense DEC 740</strong></em>. This is an official OPNSense appliance from Deciso. It comes with a one-year subscription to OPNSense Business Edition, though I’ve since switched to the open-source version of OPNSense.
+The DEC 740 is based on an embedded Ryzen processor and comes with 4 GB of DDR4 RAM that’s easy to swap out—which I plan to do eventually, once RAM prices return to normal.
+The firewall is advertised with a 10 GB/s throughput, but this claim should be taken with a grain of salt, as the firewall’s port-to-port throughput is a maximum of 8.5 GB/s—which is roughly the figures I’ve achieved.</p>
+<p>The appliance is fully passively cooled and therefore runs silently. With an average power consumption of 15 watts, it’s also quite energy-efficient. However, I’ve had—and still have—issues with the appliance. Even though the hardware apparently supports 9K jumbo frames and you can configure them, I’m only getting a maximum of 4K jumbo frames to work. After searching the OPNSense forum, I found several threads that confirm this. Since the hardware can handle 9K without issues with Vyos, it’s likely due to the OPNSense software.</p>
+<p>Would I buy the firewall again? It’s a tough call. I like the design, build quality, and silent operation, but for nearly 900 euros, I could probably have built the whole thing myself with better hardware.</p>
+<h3 id="mikrotik-crs326-24s2qrm">MikroTik CRS326-24S+2Q+RM<a href="#mikrotik-crs326-24s2qrm" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>MikroTik and its names are a bit of a thing. I wanted to simplify my network setup and needed more 10G ports, so I bit the bullet and bought a supposedly very loud MikroTik switch for around 500 euros. The CRS326-24S+2Q+RM (MikroTik, please come up with different names already) comes with up to 32 * 10G ports and, unfortunately, has three very loud 40mm fans built in. While these can be temperature-controlled via RouteOS, they’re super loud and annoying. I therefore swapped them out for 3 <em><strong>Noctua NF-A4x20 PWM</strong></em> fans.</p>
+
+    <aside class="admonition warning">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div><b>Caution</b>
+        </div>
+        <div class="admonition-content">When replacing the fans, parts of the power supply units are exposed and accessible. Electricity is no joke. Monitor your temperatures, as the Noctua fans generate less air pressure and cooling performance than the original fans.</div>
+    </aside>
+<p>Thanks to the fan mod, the Switch has become pleasantly quiet; however, the fans run at 40–50% speed to achieve the same cooling effect as the original fans did at 20% speed. So far, this hasn’t been a problem in my lab, even when many servers are running and the ambient temperature in the rack exceeds 35 degrees. However, I don’t yet have any experience with how this will play out during a hot summer. That’s why I’ve kept the original fans in my spare parts drawer. Otherwise, the switch does what it’s supposed to do: fast and reliable Layer 2 switching. The routing performance is terrible, but it’s primarily a Layer 2 switch. I handle routing differently—more on that later. Would I buy it again? Absolutely.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-ec3cb92c">
+                <a href="/homelab-2026/Managment%20NUC.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Homelab 2026 Managment Nuc"><img src="/homelab-2026/Managment%20NUC_hu_29dfcd0f0098736f.jpg" alt="/homelab-2026/Managment NUC" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Managment Nuc</div>
+                </a>
+                <a href="/homelab-2026/OPNSense%20DEC%20740.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Homelab 2026 Opnsense DEC 740"><img src="/homelab-2026/OPNSense%20DEC%20740_hu_37968ca89748ffaa.jpg" alt="/homelab-2026/OPNSense DEC 740" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Opnsense DEC 740</div>
+                </a>
+                <a href="/homelab-2026/Mikrotik%20CRS%20326.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Homelab 2026 Mikrotik Crs 326"><img src="/homelab-2026/Mikrotik%20CRS%20326_hu_32125143c374de23.jpg" alt="/homelab-2026/Mikrotik CRS 326" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Mikrotik Crs 326</div>
+                </a>
+                <a href="/homelab-2026/Mikrotik%20CRS%20326-2.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Homelab 2026 Mikrotik Crs 326 2"><img src="/homelab-2026/Mikrotik%20CRS%20326-2_hu_ef681c370bce7782.jpg" alt="/homelab-2026/Mikrotik CRS 326-2" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Mikrotik Crs 326 2</div>
+                </a>
+                <a href="/homelab-2026/Mikrotik%20Fanmod.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Homelab 2026 Mikrotik Fanmod"><img src="/homelab-2026/Mikrotik%20Fanmod_hu_29a7e92063f68fbe.jpg" alt="/homelab-2026/Mikrotik Fanmod" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Mikrotik Fanmod</div>
+                </a></div>
+<h3 id="10gtek-quad-sfp-network-card">10Gtek Quad SFP+ Network Card<a href="#10gtek-quad-sfp-network-card" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>For my Unraid server, I purchased a quad-port card from <em><strong>10Gtek</strong></em> based on the Intel X710 chip for 135 euros. My Unraid server is based on a NUC 11 Extreme and, unfortunately, only has one PCIe slot. Since my Unraid server will also handle routing for my lab and provide NFS in the future, I wanted to have more ports.
+It was actually quite difficult to find a used quad card, so I decided to try the 10Gtek.
+I was already familiar with the manufacturer from my DAC cables, which were always affordable and reliable. I had tried a dual 40G card in my Unraid server in the past, but it overheated. The quad card with 4x10G works flawlessly in my Unraid. Two ports are in LACP for my Unraid NFS, and two ports are passed through to a VM via PCIe passthrough.</p>
+<p>Would I do it again? After several months of trouble-free use, I can say it was the right decision. Unfortunately, it seems the card is no longer available for purchase.</p>
+<h3 id="minisforum-ms-a2">Minisforum MS-A2<a href="#minisforum-ms-a2" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Next up was a third MS-A2 with
+Ryzen 9 9955HX. This node adds extra computing power to my VCF9.X cluster. As far as I’m concerned, it’s still one of the best Minisforums you can buy. I don’t think I need to say much more about the MS-A2; if you’d like to read a detailed article about it, you can check it out <a href="https://sdn-warrior.org/posts/ms-a2/">here</a>. Whether I would buy the box again isn&rsquo;t really a question here, because I just did so in March 2026.</p>
+<h3 id="minisforum-ms-02-ultra">Minisforum MS-02 Ultra<a href="#minisforum-ms-02-ultra" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>This is the latest addition to my lab, and as I write this, my unit is still in transit. That’s why I can’t say much about it yet. I also don’t know 100% what I’ll do with it, but it will likely be a KVM-based node—something like Proxmox, Unraid, Nutanix, or something entirely different. I might send it back if it doesn&rsquo;t meet my expectations. In any case, I&rsquo;m really curious about the MS-02 Ultra.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-6d8599e0">
+                <a href="/homelab-2026/Unriad%20Quad-LAN.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Homelab 2026 Unriad Quad LAN"><img src="/homelab-2026/Unriad%20Quad-LAN_hu_f92a95c11ce39e61.jpg" alt="/homelab-2026/Unriad Quad-LAN" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Unriad Quad LAN</div>
+                </a>
+                <a href="/homelab-2026/rewiring.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Homelab 2026 Rewiring"><img src="/homelab-2026/rewiring_hu_cab5a60a5684d388.jpg" alt="/homelab-2026/rewiring" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Rewiring</div>
+                </a>
+                <a href="/homelab-2026/Minisforum%20MS-A2.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Homelab 2026 Minisforum Ms A2"><img src="/homelab-2026/Minisforum%20MS-A2_hu_d3a2cb21062eeae7.jpg" alt="/homelab-2026/Minisforum MS-A2" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Minisforum Ms A2</div>
+                </a></div>
+<h2 id="networking">Networking<a href="#networking" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>There have also been a lot of changes to my network. I rewired the entire rack and greatly simplified the physical network. In my old setup, I was using two MikroTik CRS 309s, one as an L2 switch and one as an L2/L3 switch.
+While the hardware offloading on the MikroTik CRS 309 ensured that I had 10 Gb/s routing performance, I occasionally had issues with the ARP table—specifically, MAC addresses weren’t being properly cleared, resulting in the same MAC address appearing on two switches. This primarily occurred during vMotion processes. Furthermore, the 10G ports were a major compromise, and the servers were connected across three switches.</p>
+<p>In my new setup, there are really only two switches left—if you don’t count the 1 Gb/s switches. Those aren’t for the lab; they’re for access points, smart home bridges, and all the other stuff that runs 24/7 and needs network connectivity.  All my servers are now connected to the CRS 326 via dual 10 Gb/s network (I won’t keep writing the full name—it’s enough to drive you crazy).  For ESX servers, they’re configured as standard trunk ports; for other systems like my Unraid or my Nutanix cluster, Layer 4 LACP bonds were created. If I include the new MS-02, my CRS 326 still has a full 3 10 Gb/s ports free. For lab servers that only support 2.5 Gb/s, such as my two NUCs or my backup NAS, I’m still using my Mikrotik CRS326-4C+20G+2Q. This is a 24-port 2.5 Gb/s switch that also offers 4x10 Gb/s and additionally supports 2x40 Gb/s QSFP.  It’s a great switch, but sooner or later I’ll probably replace it with a smaller, more energy-efficient alternative, since I no longer need that many 2.5 Gb/s ports. The days when my lab consisted of 10 NUCs are definitely over.</p>
+<p>But you’re probably wondering, “Where are you doing the routing, Daniel?” And that’s where the Quad network card comes in. On my Unraid server, I’ve connected two ports via PCIe passthrough to a virtual MikroTik switch. For about 80 euros, you can get a lifetime MikroTik CHR (Cloud Hosted Router) RouterOS license that can route 10 Gb/s per interface. Together with the pass-through, my virtual router handles this with ease. If more capacity is ever needed, you can get an unlimited license for about 200 euros. My virtual router is equipped with 2 vCPUs and 2 GB of RAM and doesn’t even come close to using them all. Of course, I could have done this with VyOS as well, but since my Ansible setup was already fully optimized for MikroTik, it was the simpler choice for me.</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-e88feb55">
+                <a href="/homelab-2026/Network.jpg" class="gallery-item" data-lightbox-group="gallery-e88feb55" data-title="Homelab 2026 Network"><img src="/homelab-2026/Network_hu_e7d4674d50b48cd7.jpg" alt="/homelab-2026/Network" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Network</div>
+                </a>
+                <a href="/homelab-2026/Final%20Setup.jpg" class="gallery-item" data-lightbox-group="gallery-e88feb55" data-title="Homelab 2026 Final Setup"><img src="/homelab-2026/Final%20Setup_hu_38135a5c54f4b733.jpg" alt="/homelab-2026/Final Setup" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Final Setup</div>
+                </a></div>
+<p>I route all networks relevant to my lab through my CHR (the exception is NFS, which I set up as an unrouted VLAN in my labs). I route all other networks through my OPNSense, and thanks to 10 Gb/s, I have more than enough bandwidth there. My OPNSense has a BGP peering connection with my virtual LAB router, and that’s also how I access my lab environment. If this connection is disrupted, I can simply connect to the virtual LAB router via the Unraid KVM console and resolve the issue directly. This setup has paid off for me. I have fast routing performance, a simple network setup, and the router can be easily expanded if more resources are needed.</p>
+<h2 id="software-stacks">Software stacks<a href="#software-stacks" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="nutanix-ce">Nutanix CE<a href="#nutanix-ce" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>But let’s move on to the final point—software stacks. Some of you may have noticed, but I’m no longer using VMware exclusively. This year, I was recognized as one of the few German MCXs (Nutanix Multi-Cloud Experts), and for that reason—or because of it, depending on how you look at it—I’m currently running a 3-node Nutanix cluster. This runs on three MS-01 servers, each with three NVMe drives and 96 GB of RAM per host. If you’d like to read exactly what I’m doing with it, you can check it out <a href="https://sdn-warrior.org/posts/nutanix-install-ce/">here</a>.</p>
+<h3 id="proxmox">Proxmox<a href="#proxmox" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>For the past few weeks, I’ve also been running a Proxmox 3-node cluster on three MS-01 nodes. However, these nodes only have a small local NVMe drive and 96 GB of RAM. That’s why I’m using NFS instead of Ceph for storage. I’m currently testing Pegaprox for management, but the entire setup is still a work in progress. I’ve already conducted the first migration tests from VMware to Proxmox, but the whole thing hasn’t reached a level of maturity where I could write an article about it yet. In any case, I plan to use it for some SDN tests and other experiments.</p>
+<h3 id="vmware-vcf-9x">VMware VCF 9.X<a href="#vmware-vcf-9x" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>On my three AMD MS-A2 nodes, I am running a currently unspecified version of VCF 9 (the version that must not be named). The cluster runs on 3 x 128 GB RAM and 2 NVMe drives, one for memory tiering and one for local storage. This cluster also serves as my solution lab for the Broadcom Knight. Workload domains are typically set up as nested environments and will likely run on Proxmox hosts or on the MS-02 Ultra in the future; I use NFS as my primary storage.</p>
+<h3 id="vmware-esx-9-managment-cluster">VMware ESX 9 Managment Cluster<a href="#vmware-esx-9-managment-cluster" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>My management cluster is always on, while the other clusters only run when needed (electricity is expensive). These are currently running on ESX 9 and are licensed via VCF licenses, though it’s not a VCF setup. For this, I simply have a VCF Operations instance, a vCenter, and ESX 9—that’s basically the bare minimum required to use a VCF 9 license. Thanks to VMUG Advantage, this isn’t a problem for me. However, I’m seriously considering switching to Proxmox here, not because I’m unhappy with ESX 9, but rather because of the P/E cores issue, since with my Ultra 7 NUC CPU I can only use 16 cores / 16 threads instead of the 22 threads I have with Proxmox (Hyper-Threading isn’t supported with ESX/Nutanix if the CPU has E/P cores).</p>
+
+
+
+
+    <div class="image-gallery" id="gallery-9e099085">
+                <a href="/homelab-2026/Nutanix%20CE.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Homelab 2026 Nutanix Ce"><img src="/homelab-2026/Nutanix%20CE_hu_56e9706a5b348add.jpg" alt="/homelab-2026/Nutanix CE" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Nutanix Ce</div>
+                </a>
+                <a href="/homelab-2026/Pegaprox.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Homelab 2026 Pegaprox"><img src="/homelab-2026/Pegaprox_hu_c6e5a257a46676b9.jpg" alt="/homelab-2026/Pegaprox" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 Pegaprox</div>
+                </a>
+                <a href="/homelab-2026/VCF%209.0.2.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Homelab 2026 VC F 9.0.2"><img src="/homelab-2026/VCF%209.0.2_hu_6c4b1927a3112c16.jpg" alt="/homelab-2026/VCF 9.0.2" width="300" height="300" loading="lazy">
+                    <div class="gallery-item-caption">Homelab 2026 VC F 9.0.2</div>
+                </a></div>
+<h3 id="ms-02-ultra">MS-02 Ultra<a href="#ms-02-ultra" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To be completely honest, I haven’t decided yet what I’m going to do with this host. I might use it to replace my trusty old NUC Extreme and run Unraid on it. That would be a really nice CPU and performance upgrade. Alternatively, I’m thinking of building a pretty powerful standalone host with it—one that can really get things done with 256 GB of RAM. Maybe I’ll also install a graphics card and try my hand at some AI workloads. All in all, it’s still completely unclear what I’ll do with it and how. When it arrives, I’ll put it through its paces first, and I’m curious to see how it stacks up against the MS-A2, especially in terms of CPU performance and noise levels. Sometimes you just have to buy the hardware even if you don’t yet have any idea what you want to do with it. The use cases will come naturally. Please don’t try this at home—I enjoy making financially reckless decisions.</p>
+<h3 id="unraid">Unraid<a href="#unraid" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>My Unraid hosts a handful of KVM-based VMs, including my lab router, one of my two Windows domain controllers, and a Ravada VDI. Unraid was the first system I ever had in my home lab, and it will probably be the last.
+For many years, it has provided me with SMB shares, NFS, iSCSI, and all my Docker containers. I think the system has already gone through at least five different hardware configurations, from an old dual-core notebook to a custom-built computer with a SAS controller, up to its current form. It’s my faithful companion, and even though Unraid has its quirks, I really like the system. I’ve already dedicated a separate article to my Unraid server, which you can read <a href="https://sdn-warrior.org/posts/unraid-storage/">here</a>.</p>
+<h2 id="final-words">Final words<a href="#final-words" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>It was time for another update post; I still haven&rsquo;t updated my BOM, but I&rsquo;ll probably get to that over the next few weeks. At the same time, I’m continuing to work on improving my blog theme, since it no longer quite meets my standards. Most recently, I added a gallery feature and a search function to the post page. A comment feature is still on my to-do list, even though I don’t yet know how to actively prevent spam. Also, because of the search function I built, the tag view no longer works—it’s not a big deal, but it still bugs me. I hope you enjoyed this little Lab update and that it has inspired you to create your own Lab.</p>
+<p>Other than that, all I can do is say thank you for the support I’ve received over the past few weeks and months, and for all the new followers.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/homelab-v5/">Homelab V5</a></li>
+	
+	<li><a href="/posts/iscsi-tuning/">iSCSI Tuning</a></li>
+	
+	<li><a href="/posts/labv4/">Homelab V4</a></li>
+	
+	<li><a href="/posts/nutanix-flow/">Nutanix - Flow 7: virtual networking</a></li>
+	
+	<li><a href="/posts/vcf9-extende-mgmt-domain/">VCF9 - Extend Managment Domain Cluster</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/nutanix-flow/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>Nutanix - Flow 7: virtual networking</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

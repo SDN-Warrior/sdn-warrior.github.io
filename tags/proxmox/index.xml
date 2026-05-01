@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Proxmox on SDN-Warrior | Daniel Krieger</title>
+    <link>https://sdn-warrior.org/tags/proxmox/</link>
+    <description>Recent content in Proxmox on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Fri, 01 May 2026 18:00:00 +0200</lastBuildDate>
+    <atom:link href="https://sdn-warrior.org/tags/proxmox/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Homelab Update 2026</title>
+      <link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
+      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;It’s been almost a year since the last lab &lt;a href=&#34;https://sdn-warrior.org/posts/homelab-v6/&#34;&gt;update&lt;/a&gt;, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.&#xA;I will divide the article into several categories: hardware, networking, and the software stack.&#xA;But as they say, let&amp;rsquo;s not beat around the bush—just go for it!&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
