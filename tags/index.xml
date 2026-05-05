@@ -7,36 +7,8 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 05 May 2026 17:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2026 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>NSX</title>
-      <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Tue, 05 May 2026 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/nsx/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Security</title>
-      <link>https://sdn-warrior.org/tags/security/</link>
-      <pubDate>Tue, 05 May 2026 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/security/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vcf9.1</title>
-      <link>https://sdn-warrior.org/tags/vcf9.1/</link>
-      <pubDate>Tue, 05 May 2026 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vpc</title>
-      <link>https://sdn-warrior.org/tags/vpc/</link>
-      <pubDate>Tue, 05 May 2026 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/tags/vpc/</guid>
-      <description></description>
-    </item>
     <item>
       <title>Esx</title>
       <link>https://sdn-warrior.org/tags/esx/</link>
@@ -73,7 +45,7 @@
       <description></description>
     </item>
     <item>
-      <title>VMware</title>
+      <title>Vmware</title>
       <link>https://sdn-warrior.org/tags/vmware/</link>
       <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vmware/</guid>
@@ -129,10 +101,24 @@
       <description></description>
     </item>
     <item>
+      <title>Nsx</title>
+      <link>https://sdn-warrior.org/tags/nsx/</link>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/nsx/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Avi</title>
       <link>https://sdn-warrior.org/tags/avi/</link>
       <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/avi/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Security</title>
+      <link>https://sdn-warrior.org/tags/security/</link>
+      <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/security/</guid>
       <description></description>
     </item>
     <item>
@@ -147,6 +133,20 @@
       <link>https://sdn-warrior.org/tags/automation/</link>
       <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/tags/automation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>VCF</title>
+      <link>https://sdn-warrior.org/tags/vcf/</link>
+      <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vcf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vks</title>
+      <link>https://sdn-warrior.org/tags/vks/</link>
+      <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
+      <guid>https://sdn-warrior.org/tags/vks/</guid>
       <description></description>
     </item>
   </channel>
