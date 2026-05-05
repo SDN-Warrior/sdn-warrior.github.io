@@ -1,22 +1,45 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
 		<link>https://sdn-warrior.org/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
-		<language>en-us</language>
+
+		
+		<language>en-US</language>
+		
+
+		
+
+		
+
+		
 		<copyright>Daniel Krieger</copyright>
+		
+
+		
 		<lastBuildDate>Tue, 05 May 2026 16:00:00 +0200</lastBuildDate>
+		
+
+		
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+
 		
 		<item>
 			<title>VCF 9.1 - VPCs Connectivity Policies</title>
 			<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
 			<pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+
+			
 			<description><![CDATA[In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>A new VCF release is just around the corner, and just like the transition from VCF 5.X to 9.0, this one brings massive changes as well. Not only is the entire fleet being turned upside down, but there have also been a ton of changes to my favorite topic: VPCs in NSX. One of the many new features is VPC Connectivity Policies. Today, in this blog post, I’ll explain what you can do with them and how they work. So let&rsquo;s dive into VPC&rsquo;s rabbit hole.</p>
 
     <aside class="admonition info">
@@ -32,13 +55,13 @@
     </aside>
 <h2 id="what-are-connectivity-policies">What are Connectivity Policies?</h2>
 <p>Just a quick note before we begin: if you’re not sure how VPCs work, you can read about them in my articles on VPCs in VCF9. I won’t be going over the basics here. <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Here&rsquo;s</a> a good place to start on this topic.</p>
-<p>First, I should probably outline the test setup. In total, I will have 4 VPCs, numbered 01–04 for simplicity. Since the connectivity policy applies only to the public subnet, the private transit gateway subnet, or external IP addresses of a VPC, I have configured each of my VPCs with a public subnet and a private transit gateway subnet. In each subnet, I have deployed an Alpine VM that has obtained an IP address via DHCP. Without a connectivity policy, the public VMs are accessible as usual both inside and outside my lab, and the private transit gateway VMs are accessible only between VPCs on the same transit gateway—business as usual.</p>
+<p>First, I should probably outline the test setup. In total, I will have 4 VPCs, numbered 01–04 for simplicity. In general the connectivity policies do only apply to networks from type public subnet, private transit gateway or assigned external IPs of a specific VPC. Based on this limitation I have configured a public and private transit gateway subnet for each of my VPCs. In each subnet, I have deployed an Alpine VM that has obtained an IP address via DHCP. Without a connectivity policy, the public VMs are accessible as usual both inside and outside my lab, and the private transit gateway VMs are accessible only between VPCs on the same transit gateway—business as usual.</p>
 <p>There are currently 3 different policy types, which is why I need 4 VPCs. As an additional test, I have set up a classic overlay segment on a T1 router connected to the shared T0 router to test access from non-VPC networks.</p>
 
 
-<div class="image-gallery" id="gallery-08794289"><a href="/vcf91-vpc-con-policy/Setup.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Setup"><img src="/vcf91-vpc-con-policy/Setup_hu_3fa9d0626df11402.jpg" alt="VPC Setup" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VPC Setup</div>
-                    </a><a href="/vcf91-vpc-con-policy/Topology.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Topology"><img src="/vcf91-vpc-con-policy/Topology_hu_939548e208522d17.jpg" alt="VPC Topology" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VPC Topology</div>
-                    </a><a href="/vcf91-vpc-con-policy/Connectivity%20Policies.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Connectivity Policies"><img src="/vcf91-vpc-con-policy/Connectivity%20Policies_hu_e063f95d6effc1ef.jpg" alt="VPC Connectivity Policies" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VPC Connectivity Policies</div>
+<div class="image-gallery" id="gallery-08794289"><a href="/vcf91-vpc-con-policy/Setup.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Setup"><img src="/vcf91-vpc-con-policy/Setup_hu_b8980ea8222e84fa.jpg" alt="VPC Setup" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC Setup</div>
+                    </a><a href="/vcf91-vpc-con-policy/Topology.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Topology"><img src="/vcf91-vpc-con-policy/Topology_hu_901ac433f3a9246e.jpg" alt="VPC Topology" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC Topology</div>
+                    </a><a href="/vcf91-vpc-con-policy/Connectivity%20Policies.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Connectivity Policies"><img src="/vcf91-vpc-con-policy/Connectivity%20Policies_hu_d94ef2d8a0fd83fe.jpg" alt="VPC Connectivity Policies" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC Connectivity Policies</div>
                     </a></div>
 <p>The attentive reader has probably already noticed that I have created three different connectivity policies.</p>
 <ul>
@@ -191,10 +214,10 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
 <p>My external Mac can access <code>alpine01</code> and all public VPC networks, but not the private transit gateway networks. I did not list the Mac in the table because it acts as a control system. It behaves just like the Alpine01 test VM.</p>
 
 
-<div class="image-gallery" id="gallery-14d39bc1"><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC02.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC02"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC02_hu_4c24d51669925453.jpg" alt="Traceflow: VPC01 to VPC02" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC02</div>
-                    </a><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC03.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC03"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC03_hu_b012a6fa533e48b7.jpg" alt="Traceflow: VPC01 to VPC03" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC03</div>
-                    </a><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC04.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC04"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC04_hu_240bf53b7df10a38.jpg" alt="Traceflow: VPC01 to VPC04" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC04</div>
-                    </a><a href="/vcf91-vpc-con-policy/VPC04%20to%20VPC03.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC04 to VPC03"><img src="/vcf91-vpc-con-policy/VPC04%20to%20VPC03_hu_8d033c6e4e8abf4.jpg" alt="Traceflow: VPC04 to VPC03" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC04 to VPC03</div>
+<div class="image-gallery" id="gallery-14d39bc1"><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC02.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC02"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC02_hu_eed257225e38550f.jpg" alt="Traceflow: VPC01 to VPC02" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC02</div>
+                    </a><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC03.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC03"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC03_hu_c762c63f01ec90a8.jpg" alt="Traceflow: VPC01 to VPC03" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC03</div>
+                    </a><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC04.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC04"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC04_hu_bbca07b37dede3d4.jpg" alt="Traceflow: VPC01 to VPC04" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC04</div>
+                    </a><a href="/vcf91-vpc-con-policy/VPC04%20to%20VPC03.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC04 to VPC03"><img src="/vcf91-vpc-con-policy/VPC04%20to%20VPC03_hu_9edaf704fadbe886.jpg" alt="Traceflow: VPC04 to VPC03" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC04 to VPC03</div>
                     </a></div>
 
     <aside class="admonition info">
@@ -213,23 +236,29 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 <p>The answer is quite simple. The policy is enforced on the transit gateway, which is why the policies only work within a single transit gateway. If traffic from another VPC passes through a second transit gateway, the policy does not apply, and the traffic is treated as if it came from an external system.</p>
 
 
-<div class="image-gallery" id="gallery-4189b13a"><a href="/vcf91-vpc-con-policy/Policies%20Overview.jpg" class="gallery-item" data-lightbox-group="gallery-4189b13a" data-title="Policies Overview"><img src="/vcf91-vpc-con-policy/Policies%20Overview_hu_d55c7b453d3d3084.jpg" alt="Policies Overview" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Policies Overview</div>
+<div class="image-gallery" id="gallery-4189b13a"><a href="/vcf91-vpc-con-policy/Policies%20Overview.jpg" class="gallery-item" data-lightbox-group="gallery-4189b13a" data-title="Policies Overview"><img src="/vcf91-vpc-con-policy/Policies%20Overview_hu_b458936d1723bed1.jpg" alt="Policies Overview" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Policies Overview</div>
                     </a></div>
 <h2 id="so-what-do-we-do-with-this-now">So what do we do with this now?</h2>
 <p>To be honest, it’s not that simple; at first glance, it offers a kind of enhanced isolation for VPCs within the transit gateway. Of course, this feature doesn’t replace vDefend, but depending on your network architecture, it can provide significant added value. You just have to follow a few rules. For example, you need to consider whether and how you want to use the promiscuous policy.</p>
-<p>One possible scenario, for example, would be isolating specific VKS Kubernetes clusters by strictly using separate communities here. The services could be accessed from outside the Kubernetes clusters, but there is no need to isolate the Kubernetes clusters from one another, since the exposed services are not accessible to other VPCs or Kubernetes clusters via the transit gateway.</p>
+<p>One possible scenario, for example, would be isolating specific VKS Kubernetes clusters by strictly using separate communities and VPCs here. In this case, you don&rsquo;t need to worry about isolation between the Kubernetes clusters, as the connectivity policies handle that. Because the Kubernetes clusters are in different VPCs with different communities, they cannot access public services from other VPCs in diffrent communities. Specifically, this means that even if the Kubernetes workload is accessible to the public, it cannot be accessed by another VPC unless that VPC has a promiscuous policy or is in the same community.</p>
 <p>In my opinion, that’s already a good use case. You could also isolate test environments from one another without having to purchase vDefend licenses. In combination with the Stateless Gateway Firewall (which currently requires no licenses), this allows you to set up a secure test system—or multiple test systems—that cannot communicate with one another. I think more possibilities will emerge over time. There are also the VPC Security Profiles I briefly mentioned, but that’s a topic for another blog post.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Homelab Update 2026</title>
 			<link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
 			<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
+
+			
 			<description><![CDATA[Homelab Update 2026]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>It’s been almost a year since the last lab <a href="https://sdn-warrior.org/posts/homelab-v6/">update</a>, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.
 I will divide the article into several categories: hardware, networking, and the software stack.
 But as they say, let&rsquo;s not beat around the bush—just go for it!</p>
@@ -262,11 +291,11 @@ The firewall is advertised with a 10 GB/s throughput, but this claim should be t
 <p>Thanks to the fan mod, the Switch has become pleasantly quiet; however, the fans run at 40–50% speed to achieve the same cooling effect as the original fans did at 20% speed. So far, this hasn’t been a problem in my lab, even when many servers are running and the ambient temperature in the rack exceeds 35 degrees. However, I don’t yet have any experience with how this will play out during a hot summer. That’s why I’ve kept the original fans in my spare parts drawer. Otherwise, the switch does what it’s supposed to do: fast and reliable Layer 2 switching. The routing performance is terrible, but it’s primarily a Layer 2 switch. I handle routing differently—more on that later. Would I buy it again? Absolutely.</p>
 
 
-<div class="image-gallery" id="gallery-ec3cb92c"><a href="/homelab-2026/Managment%20NUC.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Managment NUC"><img src="/homelab-2026/Managment%20NUC_hu_29dfcd0f0098736f.jpg" alt="Managment NUC" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Managment NUC</div>
-                    </a><a href="/homelab-2026/OPNSense%20DEC%20740.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="OPNSense DEC 740"><img src="/homelab-2026/OPNSense%20DEC%20740_hu_37968ca89748ffaa.jpg" alt="OPNSense DEC 740" width="300" height="300" loading="lazy"><div class="gallery-item-caption">OPNSense DEC 740</div>
-                    </a><a href="/homelab-2026/Mikrotik%20CRS%20326.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Mikrotik CRS 326"><img src="/homelab-2026/Mikrotik%20CRS%20326_hu_32125143c374de23.jpg" alt="Mikrotik CRS 326" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Mikrotik CRS 326</div>
-                    </a><a href="/homelab-2026/Mikrotik%20CRS%20326-2.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Mikrotik CRS 326-2"><img src="/homelab-2026/Mikrotik%20CRS%20326-2_hu_ef681c370bce7782.jpg" alt="Mikrotik CRS 326-2" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Mikrotik CRS 326-2</div>
-                    </a><a href="/homelab-2026/Mikrotik%20Fanmod.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Mikrotik Fanmod"><img src="/homelab-2026/Mikrotik%20Fanmod_hu_29a7e92063f68fbe.jpg" alt="Mikrotik Fanmod" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Mikrotik Fanmod</div>
+<div class="image-gallery" id="gallery-ec3cb92c"><a href="/homelab-2026/Managment%20NUC.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Managment NUC"><img src="/homelab-2026/Managment%20NUC_hu_fbcc02f0c406d2b6.jpg" alt="Managment NUC" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Managment NUC</div>
+                    </a><a href="/homelab-2026/OPNSense%20DEC%20740.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="OPNSense DEC 740"><img src="/homelab-2026/OPNSense%20DEC%20740_hu_acd91a728db2877f.jpg" alt="OPNSense DEC 740" width="350" height="350" loading="lazy"><div class="gallery-item-caption">OPNSense DEC 740</div>
+                    </a><a href="/homelab-2026/Mikrotik%20CRS%20326.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Mikrotik CRS 326"><img src="/homelab-2026/Mikrotik%20CRS%20326_hu_2c1d4b3df0998d14.jpg" alt="Mikrotik CRS 326" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Mikrotik CRS 326</div>
+                    </a><a href="/homelab-2026/Mikrotik%20CRS%20326-2.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Mikrotik CRS 326-2"><img src="/homelab-2026/Mikrotik%20CRS%20326-2_hu_1512d8545cb237db.jpg" alt="Mikrotik CRS 326-2" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Mikrotik CRS 326-2</div>
+                    </a><a href="/homelab-2026/Mikrotik%20Fanmod.jpg" class="gallery-item" data-lightbox-group="gallery-ec3cb92c" data-title="Mikrotik Fanmod"><img src="/homelab-2026/Mikrotik%20Fanmod_hu_1c08b3c170aa1c85.jpg" alt="Mikrotik Fanmod" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Mikrotik Fanmod</div>
                     </a></div>
 <h3 id="10gtek-quad-sfp-network-card">10Gtek Quad SFP+ Network Card</h3>
 <p>For my Unraid server, I purchased a quad-port card from <em><strong>10Gtek</strong></em> based on the Intel X710 chip for 135 euros. My Unraid server is based on a NUC 11 Extreme and, unfortunately, only has one PCIe slot. Since my Unraid server will also handle routing for my lab and provide NFS in the future, I wanted to have more ports.
@@ -280,9 +309,9 @@ Ryzen 9 9955HX. This node adds extra computing power to my VCF9.X cluster. As fa
 <p>This is the latest addition to my lab, and as I write this, my unit is still in transit. That’s why I can’t say much about it yet. I also don’t know 100% what I’ll do with it, but it will likely be a KVM-based node—something like Proxmox, Unraid, Nutanix, or something entirely different. I might send it back if it doesn&rsquo;t meet my expectations. In any case, I&rsquo;m really curious about the MS-02 Ultra.</p>
 
 
-<div class="image-gallery" id="gallery-6d8599e0"><a href="/homelab-2026/Unriad%20Quad-LAN.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Unriad Quad-LAN"><img src="/homelab-2026/Unriad%20Quad-LAN_hu_f92a95c11ce39e61.jpg" alt="Unriad Quad-LAN" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Unriad Quad-LAN</div>
-                    </a><a href="/homelab-2026/rewiring.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="rewiring"><img src="/homelab-2026/rewiring_hu_cab5a60a5684d388.jpg" alt="rewiring" width="300" height="300" loading="lazy"><div class="gallery-item-caption">rewiring</div>
-                    </a><a href="/homelab-2026/Minisforum%20MS-A2.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Minisforum MS-A2"><img src="/homelab-2026/Minisforum%20MS-A2_hu_d3a2cb21062eeae7.jpg" alt="Minisforum MS-A2" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Minisforum MS-A2</div>
+<div class="image-gallery" id="gallery-6d8599e0"><a href="/homelab-2026/Unriad%20Quad-LAN.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Unriad Quad-LAN"><img src="/homelab-2026/Unriad%20Quad-LAN_hu_7edc055a7adf9378.jpg" alt="Unriad Quad-LAN" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Unriad Quad-LAN</div>
+                    </a><a href="/homelab-2026/rewiring.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="rewiring"><img src="/homelab-2026/rewiring_hu_2df1fe93ea46c898.jpg" alt="rewiring" width="350" height="350" loading="lazy"><div class="gallery-item-caption">rewiring</div>
+                    </a><a href="/homelab-2026/Minisforum%20MS-A2.jpg" class="gallery-item" data-lightbox-group="gallery-6d8599e0" data-title="Minisforum MS-A2"><img src="/homelab-2026/Minisforum%20MS-A2_hu_bfab92f80b37b30e.jpg" alt="Minisforum MS-A2" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Minisforum MS-A2</div>
                     </a></div>
 <h2 id="networking">Networking</h2>
 <p>There have also been a lot of changes to my network. I rewired the entire rack and greatly simplified the physical network. In my old setup, I was using two MikroTik CRS 309s, one as an L2 switch and one as an L2/L3 switch.
@@ -291,8 +320,8 @@ While the hardware offloading on the MikroTik CRS 309 ensured that I had 10 Gb/s
 <p>But you’re probably wondering, “Where are you doing the routing, Daniel?” And that’s where the Quad network card comes in. On my Unraid server, I’ve connected two ports via PCIe passthrough to a virtual MikroTik switch. For about 80 euros, you can get a lifetime MikroTik CHR (Cloud Hosted Router) RouterOS license that can route 10 Gb/s per interface. Together with the pass-through, my virtual router handles this with ease. If more capacity is ever needed, you can get an unlimited license for about 200 euros. My virtual router is equipped with 2 vCPUs and 2 GB of RAM and doesn’t even come close to using them all. Of course, I could have done this with VyOS as well, but since my Ansible setup was already fully optimized for MikroTik, it was the simpler choice for me.</p>
 
 
-<div class="image-gallery" id="gallery-e88feb55"><a href="/homelab-2026/Network.jpg" class="gallery-item" data-lightbox-group="gallery-e88feb55" data-title="Network"><img src="/homelab-2026/Network_hu_e7d4674d50b48cd7.jpg" alt="Network" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Network</div>
-                    </a><a href="/homelab-2026/Final%20Setup.jpg" class="gallery-item" data-lightbox-group="gallery-e88feb55" data-title="Final Setup"><img src="/homelab-2026/Final%20Setup_hu_38135a5c54f4b733.jpg" alt="Final Setup" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Final Setup</div>
+<div class="image-gallery" id="gallery-e88feb55"><a href="/homelab-2026/Network.jpg" class="gallery-item" data-lightbox-group="gallery-e88feb55" data-title="Network"><img src="/homelab-2026/Network_hu_a15b29971e288007.jpg" alt="Network" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Network</div>
+                    </a><a href="/homelab-2026/Final%20Setup.jpg" class="gallery-item" data-lightbox-group="gallery-e88feb55" data-title="Final Setup"><img src="/homelab-2026/Final%20Setup_hu_28bf017e72fdc687.jpg" alt="Final Setup" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Final Setup</div>
                     </a></div>
 <p>I route all networks relevant to my lab through my CHR (the exception is NFS, which I set up as an unrouted VLAN in my labs). I route all other networks through my OPNSense, and thanks to 10 Gb/s, I have more than enough bandwidth there. My OPNSense has a BGP peering connection with my virtual LAB router, and that’s also how I access my lab environment. If this connection is disrupted, I can simply connect to the virtual LAB router via the Unraid KVM console and resolve the issue directly. This setup has paid off for me. I have fast routing performance, a simple network setup, and the router can be easily expanded if more resources are needed.</p>
 <h2 id="software-stacks">Software stacks</h2>
@@ -306,9 +335,9 @@ While the hardware offloading on the MikroTik CRS 309 ensured that I had 10 Gb/s
 <p>My management cluster is always on, while the other clusters only run when needed (electricity is expensive). These are currently running on ESX 9 and are licensed via VCF licenses, though it’s not a VCF setup. For this, I simply have a VCF Operations instance, a vCenter, and ESX 9—that’s basically the bare minimum required to use a VCF 9 license. Thanks to VMUG Advantage, this isn’t a problem for me. However, I’m seriously considering switching to Proxmox here, not because I’m unhappy with ESX 9, but rather because of the P/E cores issue, since with my Ultra 7 NUC CPU I can only use 16 cores / 16 threads instead of the 22 threads I have with Proxmox (Hyper-Threading isn’t supported with ESX/Nutanix if the CPU has E/P cores).</p>
 
 
-<div class="image-gallery" id="gallery-9e099085"><a href="/homelab-2026/Nutanix%20CE.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Nutanix CE"><img src="/homelab-2026/Nutanix%20CE_hu_56e9706a5b348add.jpg" alt="Nutanix CE" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Nutanix CE</div>
-                    </a><a href="/homelab-2026/Pegaprox.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Pegaprox"><img src="/homelab-2026/Pegaprox_hu_c6e5a257a46676b9.jpg" alt="Pegaprox" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Pegaprox</div>
-                    </a><a href="/homelab-2026/VCF%209.0.2.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="VCF 9.0.2"><img src="/homelab-2026/VCF%209.0.2_hu_6c4b1927a3112c16.jpg" alt="VCF 9.0.2" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VCF 9.0.2</div>
+<div class="image-gallery" id="gallery-9e099085"><a href="/homelab-2026/Nutanix%20CE.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Nutanix CE"><img src="/homelab-2026/Nutanix%20CE_hu_6bc032e88a0d2c87.jpg" alt="Nutanix CE" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix CE</div>
+                    </a><a href="/homelab-2026/Pegaprox.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="Pegaprox"><img src="/homelab-2026/Pegaprox_hu_18e0af4533978fb4.jpg" alt="Pegaprox" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Pegaprox</div>
+                    </a><a href="/homelab-2026/VCF%209.0.2.jpg" class="gallery-item" data-lightbox-group="gallery-9e099085" data-title="VCF 9.0.2"><img src="/homelab-2026/VCF%209.0.2_hu_dd324fb0e23590eb.jpg" alt="VCF 9.0.2" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VCF 9.0.2</div>
                     </a></div>
 <h3 id="ms-02-ultra">MS-02 Ultra</h3>
 <p>To be completely honest, I haven’t decided yet what I’m going to do with this host. I might use it to replace my trusty old NUC Extreme and run Unraid on it. That would be a really nice CPU and performance upgrade. Alternatively, I’m thinking of building a pretty powerful standalone host with it—one that can really get things done with 256 GB of RAM. Maybe I’ll also install a graphics card and try my hand at some AI workloads. All in all, it’s still completely unclear what I’ll do with it and how. When it arrives, I’ll put it through its paces first, and I’m curious to see how it stacks up against the MS-A2, especially in terms of CPU performance and noise levels. Sometimes you just have to buy the hardware even if you don’t yet have any idea what you want to do with it. The use cases will come naturally. Please don’t try this at home—I enjoy making financially reckless decisions.</p>
@@ -318,17 +347,23 @@ For many years, it has provided me with SMB shares, NFS, iSCSI, and all my Docke
 <h2 id="final-words">Final words</h2>
 <p>It was time for another update post; I still haven&rsquo;t updated my BOM, but I&rsquo;ll probably get to that over the next few weeks. At the same time, I’m continuing to work on improving my blog theme, since it no longer quite meets my standards. Most recently, I added a gallery feature and a search function to the post page. A comment feature is still on my to-do list, even though I don’t yet know how to actively prevent spam. Also, because of the search function I built, the tag view no longer works—it’s not a big deal, but it still bugs me. I hope you enjoyed this little Lab update and that it has inspired you to create your own Lab.</p>
 <p>Other than that, all I can do is say thank you for the support I’ve received over the past few weeks and months, and for all the new followers.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Nutanix - Flow 7: virtual networking</title>
 			<link>https://sdn-warrior.org/posts/nutanix-flow/</link>
 			<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
+
+			
 			<description><![CDATA[In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.</p>
 <p>But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.
 But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).</p>
@@ -558,17 +593,23 @@ The VPC administrator really only needs to specify what type of network they wan
 <p>Anyway, NSX isn’t the focus here. But there will definitely be more articles on Flow and VPCs, because I feel like I’ve only scratched the surface of what’s possible.
 I’m particularly interested in the setup with a transit VPC and a BGP gateway.</p>
 <p>I hope you enjoyed this short excursion into Flow. I’ll continue diving down the rabbit hole to discover even more features of Flow. If you were hoping there would be a clear winner by the end, I’m afraid I have to disappoint you, because I’d have to go much deeper for that. Sure, NSX has more features than Flow, but the exciting question is: do you really need them, or is a stripped-down solution sufficient here? Based on my many years of experience with customer projects and NSX, I can say that many customers don’t even begin to utilize the potential, and I don’t think it will be any different for Nutanix customers.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 - Extend Managment Domain Cluster</title>
 			<link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
 			<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+
+			
 			<description><![CDATA[How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.</p>
 <p>But joking aside, this blog post is actually supposed to be about how I can expand my existing management domain, since I don’t want to reinstall everything—and to be honest, I’m not sure yet if it will all work, because my management domain currently consists of two clusters. The first cluster runs on two AMD MS-A2 servers with memory tiering and hosts my fleet, and the second cluster is a nested cluster on MS-01 servers (yes, the ones with the Intel CPUs). On top of that, I’m also running a nested instance of VCF9 that’s onboarded into my fleet. Of course, not everything can be running at the same time, since I don’t have enough RAM and processing power. So it’ll be interesting to see if the whole thing will work out somehow.</p>
 <p>So if you&rsquo;re able to read this blog, it must have worked out somehow; if not, you&rsquo;ll never know.</p>
@@ -681,17 +722,23 @@ After about 10 minutes, the whole thing was done and dusted, and my management d
 <h2 id="conclusion">Conclusion</h2>
 <p>What can I say? I expected the certificate error—I’ve fallen for that one before. But to make this article a bit more useful, I decided to highlight this error again. Generally speaking, though, I would have expected more problems, since one SDDC Manager (the one from my other nested domain) is unreachable, so I was pleasantly surprised. That’s because things like an inventory scan don’t run error-free unless all vCenters and SDDC Managers are accessible, and I had already envisioned having to get those two components online somehow to complete the expansion.</p>
 <p>The most important thing when expanding is careful preparation and ensuring that all pre-checks are carried out. There’s a good reason why the checklist is included in the onboarding dialog. If you’ve followed all the steps, the expansion will indeed go smoothly.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>2026 VMUG Connect - Amsterdam</title>
 			<link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
 			<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
+
+			
 			<description><![CDATA[A personal summary of the first VMUG Connect in Europe.]]></description>
-			<content type="html"><![CDATA[<h2 id="vmug-connect-amsterdam--between-tech-talks-and-travel-vibes">VMUG Connect Amsterdam – Between Tech Talks and Travel Vibes</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="vmug-connect-amsterdam--between-tech-talks-and-travel-vibes">VMUG Connect Amsterdam – Between Tech Talks and Travel Vibes</h2>
 <p>Wow, so here we are again. Another travel blog post and no tech content. Yes, unfortunately I’m a bit behind on my own &ldquo;roadmap&rdquo;, but right now I simply don’t have the personal time to write another tech article. I actually still have so much in the works and just can’t seem to get through it all. But that won’t stop me from sharing my impressions of VMUG Connect in Amsterdam here.</p>
 <h2 id="day-0---day-of-travel">Day 0 - Day of travel</h2>
 <p>My trip started early Monday morning with the Deutsche Bahn, traveling via Mannheim and Düsseldorf to Amsterdam Centraal—a surprisingly uneventful train ride. I was practically right on time, caught all my connections, and everything just went smoothly—crazy. To be honest, I’m not really used to that.</p>
@@ -751,10 +798,10 @@ These PreConnect sessions were something new for me, and I found them really ent
 <p>The welcome reception took place that evening. It was held at <em><strong>Strandzuid</strong></em>,  a cozy waterfront restaurant beautifully situated right next to the Rai Convention Center, from which you could take a pleasant walks around the lake. I would also like to take this opportunity to mention comdivision, which sponsored the entire welcome reception and treated us all to a wonderful evening.</p>
 
 
-<div class="image-gallery" id="gallery-a6ec200e"><a href="/2026-amsterdam/welcome%20reception.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="welcome reception"><img src="/2026-amsterdam/welcome%20reception_hu_66b3ae7b6b5c5326.jpg" alt="welcome reception" width="300" height="300" loading="lazy"><div class="gallery-item-caption">welcome reception</div>
-                    </a><a href="/2026-amsterdam/welcome%20reception2.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="welcome reception2"><img src="/2026-amsterdam/welcome%20reception2_hu_8540d7fb2ba7e726.jpg" alt="welcome reception2" width="300" height="300" loading="lazy"><div class="gallery-item-caption">welcome reception2</div>
-                    </a><a href="/2026-amsterdam/vBeer.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="vBeer"><img src="/2026-amsterdam/vBeer_hu_b9f37600e9233047.jpg" alt="vBeer" width="300" height="300" loading="lazy"><div class="gallery-item-caption">vBeer</div>
-                    </a><a href="/2026-amsterdam/more%20happy%20faces.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="more happy faces"><img src="/2026-amsterdam/more%20happy%20faces_hu_a4bec7a0c2eadf7e.jpg" alt="more happy faces" width="300" height="300" loading="lazy"><div class="gallery-item-caption">more happy faces</div>
+<div class="image-gallery" id="gallery-a6ec200e"><a href="/2026-amsterdam/welcome%20reception.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="welcome reception"><img src="/2026-amsterdam/welcome%20reception_hu_73ded49f16bba913.jpg" alt="welcome reception" width="350" height="350" loading="lazy"><div class="gallery-item-caption">welcome reception</div>
+                    </a><a href="/2026-amsterdam/welcome%20reception2.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="welcome reception2"><img src="/2026-amsterdam/welcome%20reception2_hu_8ad81fb20aad9490.jpg" alt="welcome reception2" width="350" height="350" loading="lazy"><div class="gallery-item-caption">welcome reception2</div>
+                    </a><a href="/2026-amsterdam/vBeer.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="vBeer"><img src="/2026-amsterdam/vBeer_hu_a5ba67b9c0aa32b.jpg" alt="vBeer" width="350" height="350" loading="lazy"><div class="gallery-item-caption">vBeer</div>
+                    </a><a href="/2026-amsterdam/more%20happy%20faces.jpg" class="gallery-item" data-lightbox-group="gallery-a6ec200e" data-title="more happy faces"><img src="/2026-amsterdam/more%20happy%20faces_hu_6240a8988d2e2d1c.jpg" alt="more happy faces" width="350" height="350" loading="lazy"><div class="gallery-item-caption">more happy faces</div>
                     </a></div>
 <h2 id="day-3---or-the-day-my-legs-were-shaking">Day 3 - or the day my legs were shaking</h2>
 <p>This day was a particular focus for me because I gave my first session at an international event—all in English, with a live demo, and on a spotty internet connection. Naturally, I was pretty nervous leading up to the day. Of course, this wasn’t the first session I’ve ever given, but I think I’ll always be nervous.</p>
@@ -774,17 +821,23 @@ These PreConnect sessions were something new for me, and I found them really ent
 <h2 id="conclusion">Conclusion</h2>
 <p>Compared to the VMUG in <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">St. Louis</a>, I’d say the Amsterdam event had a better venue. The expo was also somehow better organized. To be fair, it’s worth noting that Connect in St. Louis was the first of its kind and certainly just a trial run. As always with these kinds of events, it’s great when the community comes together and you finally get to see all those people in person whom you otherwise only know from LinkedIn, the vExpert Discord, or local VMUG events. For me, that’s actually always the highlight of every event and, in my view, the very heart of VMUG. I also had great conversations with Duncan Epping, Chris McCain, and other VMware leaders, and of course plenty of chats with vExperts, VMware users, partners, and customers. In the end, that’s what makes these events special for me—not the sessions or any slides, but the direct interaction.</p>
 <p>Many thanks to everyone I had the pleasure of sharing the event with. ❤️❤️❤️</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>IPv6 with NSX</title>
 			<link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
 			<pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
+
+			
 			<description><![CDATA[A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&rsquo;s only as a dual stack.</p>
 <p>According to estimates by <a href="https://blog.cloudflare.com/ipv6-from-dns-pov/">Cloudflare from 2023</a>, global acceptance of IPv6 is around 35.9%. ChatGPT puts it at around 45%, but we are still a long way from widespread adoption. PS: My blog can be accessed with IPv6 native.</p>
 <p>Nevertheless, I wanted to take a look at the status quo and set up a working IPv6 setup with NSX, but unfortunately it&rsquo;s not as easy as I had imagined.
@@ -984,8 +1037,8 @@ The settings are relatively straightforward. I am listing my settings here as an
 </span></span></code></pre></div><p>Here are the OPNSense settings, but they are pretty standard. Thanks to my new Hugo Gallery shortcode, it&rsquo;s now easier to view them.</p>
 
 
-<div class="image-gallery" id="gallery-d4b41362"><a href="/ipv6-nsx/opnsense-routing.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="opnsense-routing"><img src="/ipv6-nsx/opnsense-routing_hu_dc1705084a688542.png" alt="opnsense-routing" width="300" height="300" loading="lazy"><div class="gallery-item-caption">opnsense-routing</div>
-                    </a><a href="/ipv6-nsx/opnsense-neigbor.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="opnsense-neigbor"><img src="/ipv6-nsx/opnsense-neigbor_hu_d23fc6e3ac7aaaa4.png" alt="opnsense-neigbor" width="300" height="300" loading="lazy"><div class="gallery-item-caption">opnsense-neigbor</div>
+<div class="image-gallery" id="gallery-d4b41362"><a href="/ipv6-nsx/opnsense-routing.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="opnsense-routing"><img src="/ipv6-nsx/opnsense-routing_hu_f009541d4e6f17ce.png" alt="opnsense-routing" width="350" height="350" loading="lazy"><div class="gallery-item-caption">opnsense-routing</div>
+                    </a><a href="/ipv6-nsx/opnsense-neigbor.png" class="gallery-item" data-lightbox-group="gallery-d4b41362" data-title="opnsense-neigbor"><img src="/ipv6-nsx/opnsense-neigbor_hu_9026c7eacf2fcac8.png" alt="opnsense-neigbor" width="350" height="350" loading="lazy"><div class="gallery-item-caption">opnsense-neigbor</div>
                     </a></div>
 <p>Now that that&rsquo;s done, I can finally get started on the NSX setup.</p>
 <h2 id="nsx-ipv6-setup---it-just-works">NSX IPv6 setup - it just works?</h2>
@@ -1034,14 +1087,14 @@ For IPv6 to work, the T0 router must receive IPv6 addresses in addition to IPv4 
 </span></span></code></pre></div><p>Next, the routing must be created on the T0 router. It is important to note that an IPv6 session must be created and an IPv6 route filter must be added to the default IPv4 route filter. Otherwise, the routing will not work. The rest of the configuration is standard. I always use BFD in my setups for fast network convergence, but it is not a must.</p>
 
 
-<div class="image-gallery" id="gallery-c1310a94"><a href="/ipv6-nsx/edge%20neigbor.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="edge neigbor"><img src="/ipv6-nsx/edge%20neigbor_hu_29e8a308f17b8715.png" alt="edge neigbor" width="300" height="300" loading="lazy"><div class="gallery-item-caption">edge neigbor</div>
-                    </a><a href="/ipv6-nsx/edge%20routefilter.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="edge routefilter"><img src="/ipv6-nsx/edge%20routefilter_hu_dc3ed2c2f09fd42f.png" alt="edge routefilter" width="300" height="300" loading="lazy"><div class="gallery-item-caption">edge routefilter</div>
+<div class="image-gallery" id="gallery-c1310a94"><a href="/ipv6-nsx/edge%20neigbor.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="edge neigbor"><img src="/ipv6-nsx/edge%20neigbor_hu_996205cf918de07f.png" alt="edge neigbor" width="350" height="350" loading="lazy"><div class="gallery-item-caption">edge neigbor</div>
+                    </a><a href="/ipv6-nsx/edge%20routefilter.png" class="gallery-item" data-lightbox-group="gallery-c1310a94" data-title="edge routefilter"><img src="/ipv6-nsx/edge%20routefilter_hu_25aa7682c627c215.png" alt="edge routefilter" width="350" height="350" loading="lazy"><div class="gallery-item-caption">edge routefilter</div>
                     </a></div>
 <p>BGP peering should now be up and running. The IPv4 routing table on the Mikrotik looks a little strange. The immediate gateway shows the link local IP address of the NSX Edge Node. The IPv4 address is only how RouteOS represents IPv4 over IPv6 and is not actually used.</p>
 
 
-<div class="image-gallery" id="gallery-3629e91e"><a href="/ipv6-nsx/ipv4-over-ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="ipv4-over-ipv6"><img src="/ipv6-nsx/ipv4-over-ipv6_hu_498dd5864979a5ee.png" alt="ipv4-over-ipv6" width="300" height="300" loading="lazy"><div class="gallery-item-caption">ipv4-over-ipv6</div>
-                    </a><a href="/ipv6-nsx/ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="ipv6"><img src="/ipv6-nsx/ipv6_hu_8a4d2348afbd97f2.png" alt="ipv6" width="300" height="300" loading="lazy"><div class="gallery-item-caption">ipv6</div>
+<div class="image-gallery" id="gallery-3629e91e"><a href="/ipv6-nsx/ipv4-over-ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="ipv4-over-ipv6"><img src="/ipv6-nsx/ipv4-over-ipv6_hu_5ba1e268acea1f9a.png" alt="ipv4-over-ipv6" width="350" height="350" loading="lazy"><div class="gallery-item-caption">ipv4-over-ipv6</div>
+                    </a><a href="/ipv6-nsx/ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="ipv6"><img src="/ipv6-nsx/ipv6_hu_9f4cb5e4616150a8.png" alt="ipv6" width="350" height="350" loading="lazy"><div class="gallery-item-caption">ipv6</div>
                     </a></div>
 
     <aside class="admonition warning">
@@ -1082,8 +1135,8 @@ NSX supports 5 modes for ND:</p>
 <p>Then I create an overlay segment connected to my IPv6 T1 and configure the following IPv6 gateway CIDR: fd11:22:33:ff10::1/64. I also create a segment DHCP server in which I specify the ULA IPs of my DNS servers in the lab and, of course, a DHCP server IP address from the segment. In my case, I simply take the next free IP fd11:22:33:ff10::2/64.</p>
 
 
-<div class="image-gallery" id="gallery-92172efd"><a href="/ipv6-nsx/dhcp-config.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="dhcp-config"><img src="/ipv6-nsx/dhcp-config_hu_143a80ba7fcf45f9.png" alt="dhcp-config" width="300" height="300" loading="lazy"><div class="gallery-item-caption">dhcp-config</div>
-                    </a><a href="/ipv6-nsx/dhcp-profile.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="dhcp-profile"><img src="/ipv6-nsx/dhcp-profile_hu_1110274d5a161060.png" alt="dhcp-profile" width="300" height="300" loading="lazy"><div class="gallery-item-caption">dhcp-profile</div>
+<div class="image-gallery" id="gallery-92172efd"><a href="/ipv6-nsx/dhcp-config.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="dhcp-config"><img src="/ipv6-nsx/dhcp-config_hu_f2e857d3979ce50.png" alt="dhcp-config" width="350" height="350" loading="lazy"><div class="gallery-item-caption">dhcp-config</div>
+                    </a><a href="/ipv6-nsx/dhcp-profile.png" class="gallery-item" data-lightbox-group="gallery-92172efd" data-title="dhcp-profile"><img src="/ipv6-nsx/dhcp-profile_hu_f5432f0890a518e4.png" alt="dhcp-profile" width="350" height="350" loading="lazy"><div class="gallery-item-caption">dhcp-profile</div>
                     </a></div>
 <p>Next, I create a VM from my Alpine template and connect it to the new segment, power up the VM, and am disappointed.</p>
 <h2 id="are-we-there-yet">Are we there yet?</h2>
@@ -1129,17 +1182,23 @@ In the official documentation for VCF9, there are exactly 143 search hits for IP
 <p>Was it stressful? That&rsquo;s a difficult question. On the one hand, I rediscovered a lot of forgotten knowledge about IPv6, and on the other hand, playing around with routing was really fun. It&rsquo;s a disappointment that VCF doesn&rsquo;t yet fully support IPv6. The same applies to VPCs. Since this will be the future standard, it&rsquo;s a bit strange that IPv6 isn&rsquo;t supported. You can assign IPv6 in the VPC connection profile, but it doesn&rsquo;t work in the VPC.</p>
 <p>It&rsquo;s also a pity that I can only test it to a very limited extent. I definitely want to do more tests, including with IPv6 DHCP, and see if I can somehow use my dynamic prefix and assign normal GUA IPs. I also want to try a few things with AVI. As a backup plan, I also have a public VPS server with fixed IPv6 IPs, which I currently use as a Wireguard rendezvous server and as an internet breakout in case Telekom decides to disadvantage Cloudflare services again, but that&rsquo;s a whole other story.</p>
 <p>It should be noted that even after 25 years, IPv6 is still not standard and IPv4 remains very important in data centers. Furthermore, it is somewhat disappointing that something as simple as DNS over RA is not yet supported by every operating system and every end device. I hope you enjoyed the article and feel encouraged to play around with IPv6 yourself.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Nutanix - Get started with the CE Edition</title>
 			<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
 			<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+
+			
 			<description><![CDATA[Short blog about my experiences with Nutanix CE and which workarounds I needed.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.</p>
 <figure><picture><source srcset="/nutanix-ce/01_hu_f9ca88236445953f.jpg" type="image/jpeg">
           <img
@@ -1352,17 +1411,23 @@ Using Create Network, I created a new VLAN network on the default vSwitch vs0. T
 <p>The fact that you need three hard drives could also be an obstacle. I wouldn&rsquo;t have been able to get Nutanix to run on a Nuc. Maybe it&rsquo;s possible to boot from a USB stick, I&rsquo;ll have to test that. Fortunately, nested deployment is also an option if you can live with the lower performance of the storage.</p>
 <p>In the future, I will write more articles about my small test cluster because I definitely want to try Move and Flow.
 I hope that anyone who was hoping I would write a scathing review isn&rsquo;t too disappointed, but to be fair, I can only compare free software with free software, and VMware would currently come up short. I&rsquo;m curious to see how this topic develops and what else I will write about it.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
 			<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
 			<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+
+			
 			<description><![CDATA[A short blog post on how to connect Keycloak to the AVI load balancer.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.
 In theory, this is relatively easy to implement, but in practice, there are a few challenges.
 I would like to describe exactly what these are and also present a solution.
@@ -1753,17 +1818,23 @@ In short, a flow is a chain of steps, conditions, and sub-flows with rules that 
         </picture></a><figcaption><p>We are sorry&hellip;(to be honest, I&rsquo;m not.)</p></figcaption></figure>
 <h2 id="summary">Summary</h2>
 <p>Keycloak or OIDC is a damn powerful toolkit. However, it is anything but simple and, unfortunately, extremely poorly documented for AVI load balancers. I actually wanted to write down the configuration for the VCF client, but the blog article is becoming so extensive that most people probably won&rsquo;t read it anyway, so I&rsquo;d rather pick up the whole thing again in a second article.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 - Automation in All Apps mode</title>
 			<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
 			<pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+
+			
 			<description><![CDATA[A quick introduction to VCF 9 Automation in All Apps mode]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.
 Anyway, over 60% wanted me to cover VCF9 automation in All Apps mode.
 As most people know, there are two modes in VCF Automation: the so-called legacy mode, which is nothing more than VCF Automation 8.18, and the new and much more exciting All Apps mode.</p>
@@ -2372,17 +2443,23 @@ I recorded a short test video to show how it all works in practice. To do this, 
 A general rethink of how VMs are managed is needed, because if my VM has been deployed in a vSphere namespace, it is no longer managed via vCenter.
 This should also make it clear that a simple migration from Automation 8.X to Automation 9 is not easily possible (unless you use Legacy Mode). However, this is the future of the VCF platform.
 True multitenancy can only be achieved with VCF Automation. A rethink is necessary, and I look forward to exciting new possibilities with Automation.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 - Building a VCF Operations Dashboard</title>
 			<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
 			<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+
+			
 			<description><![CDATA[A short blog about the joys of creating a dashboard in VCF 9 Operations.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I currently have two different systems in my home lab for monitoring things.
 I started everything but never really finished it.
 I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.
@@ -2734,17 +2811,23 @@ I hope I&rsquo;ve been able to help you make even better use of your operations.
 <p>Looking at my final dashboard, I&rsquo;m quite excited about how much you can achieve with it in a short amount of time. I only looked into the topic about a week ago and have been cautiously playing around with it.
 My thanks also go to <a href="https://www.vcrocs.info/">Dale Hassinger</a>, who was kind enough to help me. Check out his blog.</p>
 <p>And now all that remains for me to say is, happy creating and Merry Christmas!</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 - Dark Site Edge - Part 2</title>
 			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
 			<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+
+			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In my last <a href="https://sdn-warrior.org/posts/vcf9-dark-site-edge/">Dark Site</a> article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).
 However, this didn&rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.
 Spoiler alert: it works, and today I&rsquo;m going to write down how to do it.</p>
@@ -3103,17 +3186,23 @@ They have similar read values to a Samsung 990 Pro and slightly weaker write val
 <p>I also did a quick test with a Windows Server VM and Crystal Disk Mark. As always, this isn&rsquo;t a 100% accurate test, but it just to show that this setup is perfectly usable for a lab environment to run a few test VMs and Kubernetes workloads without me always having to turn on multiple servers.
 So I achieved my goal 100%.
 I hope I was able to give you some helpful ideas for your setups.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
 			<link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
 			<pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+
+			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>While preparing for an article that has not yet been published, I ran into an interesting VCF bug.
 For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet.
 Since I had to reinstall one of them, I removed it according to the official <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html">instructions</a>, and that&rsquo;s when the problems started.</p>
@@ -3225,17 +3314,23 @@ I have tried this several times and was able to verify that it works. Would I do
         </div>
         <div class="admonition-content">Broadcom published an official KB article on this topic on January 7, 2026: <a href="https://knowledge.broadcom.com/external/article/424495">https://knowledge.broadcom.com/external/article/424495</a></div>
     </aside>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 - Dark Site Edge</title>
 			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
 			<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+
+			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I haven&rsquo;t written anything in a while, and I need to change that here with another niche topic.
 I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.
 VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.</p>
@@ -3494,17 +3589,23 @@ I must also say that I learned a lot. And as always, I have to express my gratit
             height="1124"/>
         </picture></a><figcaption><p>VCF Fleet (click to enlarge)</p></figcaption></figure>
 <p>I hope you enjoyed the article and maybe it will help some of you, or you can laugh at me and my journey through the valley of tears.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
 			<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
 			<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+
+			
 			<description><![CDATA[A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.
 I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.
 Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.
@@ -3895,17 +3996,23 @@ These port groups must then be assigned as Adapter 1 and Adapter 2 in the vCente
 I have enough space in my physical lab to create additional nested labs, and I have a complete solution lab where I can test all aspects of VCF 9. Best of all, I only need three physical hosts, which means I can get by with about 500 watts of power consumption.
 My always-on equipment requires about 200 watts, bringing the total power consumption of the VCF 9 setup to 300 watts. Not bad at all, to be honest.
 So, in total, I have 5 more MS-01s that I can use to test things out alongside VCF 9.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Tales from the Lab – Lab setup</title>
 			<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
+
+			
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.
 I want to change that here now, as I have received an increasing number of requests for more information.</p>
 <p>So let&rsquo;s jump right in. First things first, let&rsquo;s take a look at the physical lab infrastructure. That&rsquo;s my basis for everything else.</p>
@@ -4003,17 +4110,23 @@ However, this is still a work in progress.</p>
 <p>My setup isn&rsquo;t particularly complicated, and everything is designed so that I can save resources and minimize 24/7 use without sacrificing too much comfort—anyone who has ever looked at the procedure for shutting down a VKS-enabled cluster knows what I mean. But not everything is perfect, and there is certainly room for improvement.
 My Ansible playbooks need to be revised because they no longer run properly with the latest version. In the future, I would also like to deploy much more automatically, i.e., I would prefer to deploy my standard VCF deployments fully automatically.</p>
 <p>My monitoring with uptime Kuma with Discord bot and notifications is a good start, but it was never really finished. I&rsquo;m also not quite sure where I want to go with my VCF automation setup, but I think the next few weeks and months will show. If you have any suggestions, questions, or improvements, please feel free to contact me. Homelab thrives on exchange.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
 			<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
 			<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+
+			
 			<description><![CDATA[A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.
 Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.
 But let&rsquo;s start at the beginning.</p>
@@ -4319,17 +4432,23 @@ Unfortunately, the same applies here as with my old NSX Labs: when updating my p
 Only labs that are unusable in this case have survived.</p>
 <p>Well, I&rsquo;ll do another NSX 4.2.1 deployment at some point. But that will be another blog post.
 If you have any questions or comments, please feel free to send me a message on LinkedIn or to my blog email address.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VMware Explore 2025</title>
 			<link>https://sdn-warrior.org/posts/explore-2025/</link>
 			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+
+			
 			<description><![CDATA[My VMware Explore 2025]]></description>
-			<content type="html"><![CDATA[<h2 id="viva-las-vegas---a-kind-of-travelogue">Viva Las Vegas - A kind of travelogue.</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="viva-las-vegas---a-kind-of-travelogue">Viva Las Vegas - A kind of travelogue.</h2>
 <p>At the beginning of the year, I had the pleasure of flying to the <a href="https://sdn-warrior.org/posts/vmug-connect-stl-2025/">USA</a>, and now I&rsquo;m on my way to Las Vegas.
 After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &ldquo;comfortable&rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.
 Perhaps one more small note. I won&rsquo;t write much about the sessions; anyone who wants to can look them up in <a href="https://github.com/lamw/vmware-explore-2025-session-urls">William Lam&rsquo;s repository</a>. I want to focus more on the vibe of the event here—that is, I&rsquo;ll try to. I&rsquo;m not really a travel blogger.</p>
@@ -4527,17 +4646,23 @@ What remains? A great event, wonderful conversations, new and old faces, and a l
 Thanks also to my employer, <a href="https://evoila.com/">evoila</a>, who sent 13 people to Las Vegas, making us the largest German group there.
 Oh, and we achieved <a href="https://evoila.com/de/partner/vmware/">Pinnacle status</a>, which is also worth mentioning.
 I&rsquo;m already looking forward to the upcoming Knight exclusive events and Explore on Tour in Germany.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>
 			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
 			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+
+			
 			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
-			<content type="html"><![CDATA[<h2 id="certificates--the-mother-of-all-evils">Certificates – the mother of all evils</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="certificates--the-mother-of-all-evils">Certificates – the mother of all evils</h2>
 <p>In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.
 Certificates are like printers: everyone hates them, but we need them.
 Fortunately, VCF and VCF9 have greatly simplified the entire procedure.
@@ -4748,17 +4873,23 @@ Many of the things just shown were already possible in older VCF versions, but n
 <p>Maybe one more thing:
 It is also possible to exchange the certificates of the ESX servers. You just have to activate the <em><strong>Show ESX Hosts</strong></em> slider.</p>
 <p>Now that you&rsquo;ve read this far, how painful is certificate exchange for you, and how much coffee have you had? Feel free to let me know on <a href="https://www.linkedin.com/in/daniel-krieger-6476591a9/">LinkedIn</a>.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
 			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
 			<pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
+
+			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 3.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In my two other VPC articles, I showed you the basics and the differences between <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">centralized deployment</a> and <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">distributed deployment</a>.
 Today, I would like to write something about security, as VPCs offer various possibilities in this area.
 VPCs provide a certain degree of isolation through their private networks, as these cannot be easily routed from outside the VPC.
@@ -5055,17 +5186,23 @@ Use Apply To, even on VPC rules, even if they are already restricted to the VPC.
 I have written about why <a href="https://sdn-warrior.org/posts/nsx-apply-to/">Apply To</a> is useful in another article. This also applies to the VPC topic.</p>
 <p>Otherwise, all I can say is get yourself a KALI Linux and test your lab. I noticed the behavior with TCP Strict more by accident. It&rsquo;s not a huge vulnerability, but you should be aware of what defaults and automatically generated rules or settings do. I don&rsquo;t know yet if there will be another article on the topic of VPCs. My esteemed colleague <a href="https://sdn-techtalk.com/posts/vks-vpc/">Steven Schramm</a> has taken a closer look at the topic of VPCs and VKS. It&rsquo;s a very readable article.</p>
 <p>So all that&rsquo;s left for me to say is happy pen testing!</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF 9 - Migration to central VCF Operations instance</title>
 			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
 			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
+
+			
 			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Where should I start? Perhaps I should describe my starting point.
 I deployed a nested lab with VCF9 for the VCF9 beta, so far so good.
 This lab came with its own VCF Operations. Now we are GA and I am lucky enough to have 256 core VCF9 licenses.
@@ -5316,17 +5453,23 @@ It is important that you have configured your Broadcom token under Depot Configu
 <h2 id="summary">Summary</h2>
 <p>Manual deployment is not as intuitive and simple as it is with the VCF installer. However, this setup allows me to easily control and manage my licenses via VCF Operations, which is particularly useful in an environment with nested Labs. For a production environment, I would prefer deployment in a VCF Management Domain.
 The components can still be shared by multiple instances if the security concept allows it. I think the blog has shown that import is also possible at a later date.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
 			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
+
+			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 2.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This is the second article in a series of articles (number of articles unknown) about VPCs in VCF 9.
 If you are not familiar with VPCs and have not yet come across this topic, I recommend reading <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Part 1</a> first.
 I will not go into all the basics again in this article, as these were already explained in the first article.
@@ -6051,17 +6194,23 @@ The complete communication is as follows:</p>
 <p>This article shows how VPCs can be operated in NSX 9 in a distributed architecture without any edge clusters. Of particular interest is the functionality of the Distributed Transit Gateway, which transparently mediates between overlay and physical VLAN networks. Despite the absence of edges, many core functions such as routing, public access, and external connections remain fully usable via Reflexive NAT and distributed routing.</p>
 <p>The setup allows virtual network functions to be deployed independently of the NSX Edges in a tenant. These could, for example, be provided by a tenant customer themselves. VPCs have become significantly more powerful and exciting than they were in NSX 4.X. This increases flexibility, but also, to be fair, increases complexity. When designing, you have to think more about traffic flow and when traffic is distributed and when it is not. The transit gateway is an exciting new feature and is already familiar from the public cloud sector.</p>
 <p>I think in the next VPC article I will deal with the topic of security.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
 			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
 			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+
+			
 			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Today, I would like to keep it brief and share a quick tip for all Identity (distributed) firewall administrators.
 I&rsquo;m sure everyone has been in this situation: you&rsquo;ve written a nice new Identity firewall, but for some reason it doesn&rsquo;t work.
 If it were a normal firewall rule in NSX, I would first check the Traceflow Tool, but unfortunately that doesn&rsquo;t work with the Identity firewall.</p>
@@ -6185,17 +6334,23 @@ The same would be the case if I had an error with the apply to field. The rule w
 <h2 id="summary">Summary</h2>
 <p>Troubleshooting the IDFW can sometimes be a little difficult, but it&rsquo;s not impossible.
 I hope this quick practical tip helps you. It has often helped me when the GUI has tricked me. In combination with the check mechanisms in the GUI (even if these are sometimes slow) and the logging the IDFW / DFW is easy to troubleshoot.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
 			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
 			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+
+			
 			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I&rsquo;ve had an exciting few weeks. I was part of the VCF9 beta and ran several VCF instances in parallel, which meant I kept running into performance bottlenecks.
 On top of that, the Minisforum A2 was finally available. But first things first.</p>
 <h2 id="25-gbs-lan---and-what-i-have-learned">2.5 Gb/s LAN - and what I have learned</h2>
@@ -6271,17 +6426,23 @@ I currently have 896 GB of RAM. I could upgrade the MS-01 to 128 GB, but that wo
         </picture></a><figcaption><p>Lab v6 (click to enlarge)</p></figcaption></figure>
 <p>Yes, there is another NUC extreme, and it will remain. However, that is my self-built NAS and does not run any VMware workloads. It is also connected with 2x10G.
 Thus, it has never really been considered part of the NUC era.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
 			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+
+			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Where to start? The VPC feature has been available in NSX for a long time, but it has often been somewhat under the radar. In VCF 9, VPC is now more than present and small spoiler - I say rightly so!</p>
 <p>But wait, from the top, what are VPCs anyway?
 VMware says NSX Virtual Private Clouds is an abstraction layer that enables the creation of standalone virtual private cloud networks within an NSX project in order to use network and security services in a self-service usage model.</p>
@@ -6816,17 +6977,23 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 <p>VPCs are more prevalent than ever, and VMware is pursuing a clear path toward multi-tenancy in VCF9 and NSX9. Many familiar mechanisms have now been combined in NSX 9, and exciting developments are still on the way. In this article, I have only discussed centralized deployment. Distributed deployment is perhaps even more exciting, but it would have made this article too long. I also haven&rsquo;t talked about security or NSX projects, because both deployment options can be combined to bring significant added value to an on-premises cloud. I will therefore be publishing further articles on VCF 9, NSX 9, and VPCs in the near future. I look forward to many more exciting topics with VCF9. In my opinion, VCF 9 is a really big leap forward, and a lot has really happened in NSX 9 in particular. One thing is clear: the next few weeks and months will not be boring.</p>
 <h3 id="one-more-thing">One more thing</h3>
 <p>Perhaps a little fun fact. Anyone who has read my article on <a href="https://sdn-warrior.org/posts/ms-a2/">MS-A2</a> will know that I wrote that I run a VCF installation on it – well, now I can reveal that my VCF 9 lab is currently running nested on my single Minisforum MS-A2 server.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
 			<link>https://sdn-warrior.org/posts/ms-a2/</link>
 			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+
+			
 			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>After being impressed with the performance and form factor of the Minisforum <strong>MS-01</strong>, I had to get my hands on their latest beast: the <strong>MS-A2</strong>, powered by AMD&rsquo;s latest Zen 5 architecture.
 It&rsquo;s also exciting to test a gadget before <a href="https://williamlam.com/">William Lam</a>. Thanks for letting me be the first (I&rsquo;m just kidding, of course).</p>
 <p>In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.</p>
@@ -7184,17 +7351,23 @@ I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, 
         </div>
         <div class="admonition-content">And as always, I pay for the fun out of my own pocket, as I do not place any advertisements nor am I sponsored by any company.</div>
     </aside>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>ReSTNSX with HCX</title>
 			<link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
 			<pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+
+			
 			<description><![CDATA[How can ReSTNSX help me with the migration with HCX]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I have already written about my experiences with HCX in the past and as brilliant as the tool is for the migration of different workloads, the rework with the distributed firewall can be painful. Because what HCX can&rsquo;t do is move firewall rules or security objects. Fortunately, there is a solution for this: ReSTNSX.</p>
 <p>But what exactly is ReSTNSX? ReSTNSX describes itself as follows: The ReSTNSX platform simplifies consumption of VMware&rsquo;s NSX API to increase visibility and reduce the risk of errors. Our mission is to enable administrators to easily configure and operate NSX with a straightforward and intuitive user experience.
 We will see in this post whether it is really that simple.</p>
@@ -7380,20 +7553,26 @@ After successful synchronization, the complete policy is available 1:1 in my VCF
 ReSTNSX also features a comprehensive reporting system and enables NSX documentation and auditing. Bulk Provisioning is a powerful tool for manipulating, creating, and detaching security tags, groups, firewall rules, and other items. You can even clone an entire NSX environment.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>ReSTNSX is not just a simple migration tool, it also accelerates Day 2 operations in NSX and VCF. Combined with HCX, it has never been easier to migrate existing microsegmented workloads from one workload domain to a new workload domain or VCF instance. ReSTNSX uses APIs from vCenter and NSX and offers a centralized CLI. It also offers true multi-cloud management (VMware Cloud on AWS (VMCoAWS), Google (GCVE), Azure, Oracle, and IBM). I&rsquo;m sure I&rsquo;ve only scratched the surface, as some things are not so easy to test, especially when it comes to multi-cloud, but I hope I&rsquo;ve been able to provide some insight into a cool tool that can make everyday life and migration tasks easier.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>NSX Expiring Transport Node Certificates</title>
 			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
 			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+
+			
 			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
 NSX-T 3.x and NSX 4.2.1 and higher create Transport Nodes using a certificate with validity period of 10 years.
 The Transport Node certificate used at create time is not replaced on upgrade.
 Any Edge that may have been deployed on these versions or any Hosts prepared or re-prepared on these versions will have this shorter validity period certificate.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>In NSX versions <strong>4.1.x</strong> and <strong>4.2.0</strong>, <strong>edge transport nodes</strong> and <strong>host transport nodes</strong> are instantiated using certificates with a <strong>validity period of only 825 days</strong>.
 This is obviously not desirable behavior and has been fixed in newer versions of NSX. Interestingly, I haven&rsquo;t seen anything about this in the changelog.
 In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 years. But what exactly does that mean?</p>
@@ -7750,17 +7929,23 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 </span></span></code></pre></div><p>The official Broadcom KB article can be found here: <a href="https://knowledge.broadcom.com/external/article/345802/alarm-for-transport-node-certificate-is.html">Broadcom: Alarm For Transport Node Certificate is About to Expire.</a></p>
 <h2 id="conclusion">Conclusion</h2>
 <p>At first glance, this problem sounds quite drastic, but if you have monitoring in place and regularly check the status of your NSX installation, the outage can be avoided relatively easily. The most important thing to know, however, is that upgrading your NSX version does <strong>not</strong> extend existing certificate lifetimes!</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>
 			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
 			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
+
+			
 			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
-			<content type="html"><![CDATA[<h2 id="vmug-st-louis--between-tech-talks-and-travel-vibes">VMUG St. Louis – Between Tech Talks and Travel Vibes</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="vmug-st-louis--between-tech-talks-and-travel-vibes">VMUG St. Louis – Between Tech Talks and Travel Vibes</h2>
 <p>This week, I had the chance to combine two things I really enjoy – community and travel. Together with two colleagues from <a href="https://www.evoila.de">evoila</a>, I made my way to the VMUG Connect in St. Louis. While the trip started as a tech-focused event, it turned into much more than just work. Exploring a new city, meeting passionate people from the community, and exchanging ideas over a coffee (or two) made this a truly special experience. And when I write coffee, I usually mean beer. I guess I&rsquo;m German after all.</p>
 <figure><picture><source srcset="/vmug-stl-25/vmug01_hu_86e1af604fe93993.jpg" type="image/jpeg">
           <img
@@ -7883,17 +8068,23 @@ The exchange with others – whether it’s VMUG members, Broadcom folks, or fel
 <p>Still, I have to wrap this up at some point – my MacBook battery is nearly dead, and I want to enjoy the last evening in St. Louis with Andreas. By the time you’re reading this, I’m probably already on the flight back home. I hope there will be more <strong>VMUG Connect</strong> events like this in the future – and that I’ll continue to be part of this amazing community.<br>
 To share knowledge, to learn from others, and to keep growing – together.</p>
 <p><strong>In this spirit: sharing is caring.</strong></p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
 			<link>https://sdn-warrior.org/posts/vcf-token/</link>
 			<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
+
+			
 			<description><![CDATA[A short article on how to use the Broadcom Download Token.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.
 The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.</p>
 
@@ -8007,17 +8198,23 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 <p>Here is a summary KB article that links to all other KB articles for the other products. For some products, there is currently no scripted method. <a href="https://knowledge.broadcom.com/external/article/390098">Broadcom KB</a></p>
 <h2 id="conclusion">Conclusion</h2>
 <p>The manual way is relatively simple and quick if you do not want to execute the Powershell script from Broadcom for certain reasons. I have tested both variants and the Powershell script has the advantage that entries are validated. However, the execution policy must be changed to unrestricted for the Powershell script from Broadcom and there are customers who do not allow this. The manual method may then be preferable.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF Quick Tip - WLD with single NSX Manager</title>
 			<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
 			<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
+
+			
 			<description><![CDATA[Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.
 We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.</p>
 
@@ -8290,17 +8487,23 @@ However, the process is not particularly complicated.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">systemctl restart domainmanager.service
 </span></span></code></pre></div><p>After the adjustments, we can deploy the workload domain with just one NSX manager via the API and a JSON file. I will describe in detail how exactly this works in a separate article.
 Happy VCF deployment!</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF Stretched Cluster</title>
 			<link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
 			<pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
+
+			
 			<description><![CDATA[A short article on how to build a stretched vSAN cluster in the VCF.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This is my third article in my VCF Homelab series.
 On second thought, I may have put the cart before the horse, because a stretched vSAN cluster requires a functioning management domain.
 But ok, that shouldn&rsquo;t bother us now. I&rsquo;ll try to cover all the essentials of the deployment in this article.</p>
@@ -8756,17 +8959,23 @@ I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witne
 <p>After the lab has booted and all services are running as they should, the resource requirements calm down a bit. I still have 200GB of RAM free on my physical hosts, so there is room for expansion and further tests.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Deploying a stretched cluster is not that difficult if you follow all the preparations and meet all the requirements. The real challenge lies elsewhere, namely in the design of the actual stretched cluster.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
 			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
 			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
+
+			
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>My blog is a follow-up to my article <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">&ldquo;VCF Import Tool - Run VCF with NFS as principal Storage&rdquo;</a> and covers the activation of the overlay network after I have successfully converted an ESXi cluster to a VCF management domain using the VCF Import Tool.</p>
 <p>The VCF import tool still has a few limitations. Among other things, no NSX TEP interface is configured in VCF 5.2.1 after the convert or import. Without the tunnel endpoints it is not possible to use NSX overlay networks. In this blog I will show which steps you have to take to prepare NSX so that we can create and use overlay networks.</p>
 <h2 id="creating-an-ip-pool">Creating an IP pool</h2>
@@ -8902,17 +9111,23 @@ This is used to test the transport over the <strong>NSX Geneve overlay</strong>.
 <p>I really like the VCF Import tool, even though it still needs some fine-tuning here and there.
 The sync function is quite practical and is a good way to bring changes made outside of the SDDC Manager back into the SDDC Manager.
 Hopefully Broadcom will also provide the sync for a regularly deployed VCF, which from NSX&rsquo;s point of view would significantly enrich the VCF in terms of flexibility.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
 			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
 			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
+
+			
 			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>VCF is a powerful platform designed to simplify the deployment of vSphere, NSX and the Aria product family.
 This is both a blessing and a curse. On the one hand, the Cloudbuilder and SDDC Manager significantly simplify deployment, but this also takes away a certain amount of flexibility.
 In addition, not every customer starts on a greenfield site.
@@ -9246,17 +9461,23 @@ We also still need to install licenses in the SDDC manager and setup the softwar
         </div>
         <div class="admonition-content">I wouldn&rsquo;t recommend importing or converting an existing workload productively just yet. The feature is still quite new and, although many errors are already caught in the prechecks, it&rsquo;s not yet perfect and bulletproof. For customer PoCs, I would always set up a fresh cluster and then import it so that you don&rsquo;t end up with any legacy issues.</div>
     </aside>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>
 			<link>https://sdn-warrior.org/posts/jetkvm/</link>
 			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
+
+			
 			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
-			<content type="html"><![CDATA[<h2 id="jetkvm-a-kickstarter-project">JetKVM a Kickstarter Project</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="jetkvm-a-kickstarter-project">JetKVM a Kickstarter Project</h2>
 <p>Yes, there we have another kickstarter project. JetKVM advertises itself as a cheap, fast and open-source network KVM solution. It should provide 60FPS with an average latency of 30-60 ms, H264 endoding and an RJ11 extension port. All for a modest $69 - it almost sounds too good to be true. Well, I got hooked by all the influencer videos and ordered two of them right away. Since one of the two arrived as DOA (defect on arrival), I&rsquo;m only now getting to my conclusion and test.</p>
 <figure><picture><source srcset="/jetkvm/01_hu_3bd23bd8c8625c79.jpeg" type="image/jpeg">
           <img
@@ -9297,17 +9518,23 @@ We also still need to install licenses in the SDDC manager and setup the softwar
 <p>Do I regret the purchase? Is JetKVM a kickstarter cashcrap? Hell no. The software is of course still in beta status and matures with the customer - if we are honest, we are used to nothing else. The power requirement of 0.6 watts in operation is terrific. Overall, I&rsquo;m satisfied and hope for the community or JetKVM for future software updates.</p>
 <p>I&rsquo;ll definitely write another article if missing features have been added or the JetKVM has stopped working.
 Time will tell whether the saying “all show and no substance” applies.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Migration with HCX</title>
 			<link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
 			<pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
+
+			
 			<description><![CDATA[Live Migration of Workloads with VMware HCX: A Customer Story]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I was brought in to help with a customer project that involved a VCF setup and migrating the workload domains to a new VCF deployment. The challenge of this project was that we had to adopt the existing networks without making any changes while also reducing the downtime of the workloads to an absolute minimum. We used HCX and network extension to solve this problem.</p>
 <h2 id="what-is-hcx">What is HCX?</h2>
 <p>VMware HCX is an application mobility platform designed to simplify application migration, workload redeployment, and disaster recovery in data centers and clouds.</p>
@@ -9658,17 +9885,23 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 </span></span></code></pre></div><p>After all VMs have been migrated from the source to the target, the network extension for the network via HCX can be removed. If desired, HCX can automatically connect the segments at the target to the T1 router. The segments at the source must then be manually disconnected from the source T1. As long as the same segment subnet is connected to the source and target at the local T1, routing problems may occur. This can be successfully prevented with local preference and AS-Path prepend, by making the segments on the source side less favorable if BGP is used. This only affects north/south connectivity. East/west connectivity is not affected.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I am aware that I have not even touched on all the functions of HCX. The tool is extremely powerful and you always have to look at the scenario for which you are using the right HCX use case. So I have not addressed the WAN optimization or the MON feature, nor have I gone into detail about the other migration options. The whole thing would go beyond the scope by far and I wanted to write about a scenario that I have already implemented for a customer. I can advise everyone to take a closer look at HCX. With HCX, you have a powerful migration tool that can help you out of unpleasant situations or simply simplifies mass migrations from A to B. Since HCX is now part of the VCF product portfolio, there is no reason not to use the tool.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>How Apply To works in NSX DFW</title>
 			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
 			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
+
+			
 			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>When working with the <strong>NSX Distributed Firewall (DFW)</strong>, one feature that often goes unnoticed or misunderstood is <strong>&lsquo;Apply To&rsquo;</strong>. Despite its importance, it is frequently underestimated or even ignored. This is unfortunate, as <strong>&lsquo;Apply To&rsquo;</strong> is a powerful feature that can significantly influence how firewall rules are applied within an NSX environment.</p>
 <p>In many VMware training courses, <strong>&lsquo;Apply To&rsquo;</strong> is either poorly explained or not mentioned at all. As a result, administrators and engineers might miss out on opportunities to optimize their firewall rule configurations. Misunderstanding or neglecting this feature can lead to overly complex rulesets or unexpected behavior in distributed environments.</p>
 <p>In this post, I aim to demystify the <strong>&lsquo;Apply To&rsquo;</strong> feature. I will explore its functionality, demonstrate its practical use cases, and analyze how it impacts the behavior of firewall rules. By the end, you should have a solid understanding of how and when to use <strong>&lsquo;Apply To&rsquo;</strong> effectively in your NSX environment.</p>
@@ -10062,17 +10295,23 @@ All traffic is rejected at the main ruleset level (rule 2), confirming that the 
 <h3 id="conclusion">Conclusion</h3>
 <p>While the <strong><code>&lt;Applied To&gt;</code></strong> field might add an extra layer of configuration, it plays a vital role in optimizing NSX Distributed Firewall performance, clarity, and security. By carefully designing and applying <code>&lt;Applied To&gt;</code> settings at both the policy and rule levels, administrators can achieve a more efficient, secure, and manageable firewall implementation.
 In addition, there is a limit to the number of firewall rules that can be applied to an ESX host and to a virtual NIC. The current limits may change with the NSX version and can be looked up in the Configmax tool from Broadcom.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>
 			<link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
 			<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
+
+			
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>My esteemed colleague, Steven Schramm, recently published an excellent article titled <em><a href="https://sdn-techtalk.com/posts/multitep-ha/">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></em>. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.</p>
 <h2 id="what-are-tep-groups-and-why-are-they-interesting">What Are TEP Groups and Why Are They Interesting?</h2>
 <p>With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.</p>
@@ -10385,17 +10624,23 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 <li><a href="https://sdn-techtalk.com/posts/multitep-ha/">Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability</a></li>
 <li><a href="https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-2/administration-guide/host-switches/multi-tep-high-availability.html">VMware NSX Administration Guide: Multi-TEP High Availability</a></li>
 </ul>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Redeploy an NSX Edge VM Appliance</title>
 			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
 			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
+
+			
 			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.</p>
 <p>It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.</p>
 <h2 id="prerequisites">Prerequisites</h2>
@@ -10654,17 +10899,23 @@ Ensure these values align with those defined in the node_settings section.</p>
         </div>
         <div class="admonition-content">After the NSX Manager successfully deploys the new NSX Edge node, it <strong>power on the Edge VM automatically</strong>.</div>
     </aside>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>
 			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
 			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
+
+			
 			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
-			<content type="html"><![CDATA[<h2 id="yet-another-ansible-post">Yet Another Ansible Post</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="yet-another-ansible-post">Yet Another Ansible Post</h2>
 <p>As the year comes to a close, I can&rsquo;t help but reflect on the progress I&rsquo;ve made with Ansible in the past few weeks. Looking back, there&rsquo;s a lot to be satisfied with. After automating my IPAM system and the startup/shutdown process for my lab, I decided to tackle a long-standing annoyance: deploying VLANs for new lab environments.</p>
 <h2 id="goals">Goals</h2>
 <p>The main goal is to have a single file that describes all the required VLANs. This file should also allow me to delete or reuse VLANs as needed. Each VLAN must be deployed across three switches and configured as a tagged VLAN on specific ports.</p>
@@ -10918,17 +11169,23 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 </li>
 </ol>
 <p>By addressing these points, the project will become more robust, scalable, and aligned with modern automation practices.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
 			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
 			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
+
+			
 			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Managing IP addresses and DNS records manually can be a daunting task, especially in dynamic IT environments. This blog post demonstrates how to leverage NetBox, Ansible, and Microsoft Windows DNS Server to automate IP Address Management (IPAM) and DNS record updates, making your infrastructure more efficient and reliable.</p>
 <h2 id="why-automate-ipam-and-dns">Why Automate IPAM and DNS?</h2>
 <ul>
@@ -11183,17 +11440,23 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 </span></span></span><span class="line"><span class="cl"><span class="sd">    Add-DnsServerResourceRecordPtr -ZoneName $reverseZone -Name ($ip.Split(&#34;.&#34;)[3]) -PtrDomainName &#34;$hostname.$zoneName&#34; </span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">executable</span><span class="p">:</span><span class="w"> </span><span class="l">powershell</span><span class="w">
-</span></span></span></code></pre></div>]]></content>
+</span></span></span></code></pre></div>]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
 			<link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
 			<pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
+
+			
 			<description><![CDATA[How I Used ChatGPT to Create My First Ansible Playbook]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>I recently decided to automate the startup and shutdown of my lab environments—both standard and nested labs. While the idea sounded simple, it quickly turned into an interesting challenge. Having never written an Ansible Playbook before, I turned to ChatGPT for help.</p>
 <h2 id="why-chatgpt">Why ChatGPT?</h2>
 <p>Let’s be honest: starting with Ansible can feel overwhelming, especially if you&rsquo;re new to it. My last experience with something remotely similar was years ago, working with PowerShell scripts or even earlier with .NET 3 (yes, I’m &ldquo;that old&rdquo;).</p>
@@ -11635,17 +11898,23 @@ Efficiency:</p>
 <p>ChatGPT gave me a solid starting point and explained a lot of the foundational concepts, which was extremely helpful as a beginner with Ansible. However, it wasn’t perfect—there were several significant errors in the generated playbooks, and more than once, the AI proposed the same incorrect solution repeatedly.</p>
 <p>Despite these challenges, I still found the process enjoyable. With some manual corrections and adjustments, I was able to create playbooks that worked for my specific environment. Within just a few hours, I achieved a usable result—something that would have taken considerably longer without ChatGPT&rsquo;s assistance.</p>
 <p>Ultimately, while ChatGPT cannot replace expertise or thorough testing, it’s a powerful tool to accelerate development and simplify learning, especially when working with automation tools like Ansible.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Homelab V5</title>
 			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
 			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
+
+			
 			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
-			<content type="html"><![CDATA[<h2 id="my-homelab-journey-from-unraid-beginnings-to-version-5">My Homelab Journey: From Unraid Beginnings to Version 5</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="my-homelab-journey-from-unraid-beginnings-to-version-5">My Homelab Journey: From Unraid Beginnings to Version 5</h2>
 <p>Building and optimizing a homelab has always been a passion of mine. Since its inception, my homelab has gone through several iterations, constantly evolving to meet my goals of achieving maximum performance while minimizing power consumption, noise, and physical space requirements. Here is a snapshot of my journey, culminating in the current Version 5 of my homelab.</p>
 <h2 id="the-beginning-unraid-with-custom-hardware">The Beginning: Unraid with Custom Hardware</h2>
 <p>My homelab journey began with a custom-built Unraid server featuring an Intel i3 11th Generation processor and 64 GB of RAM. This setup acted as an all-in-one solution for storage, virtualization, and container workloads. I even conducted simple nested vSphere tests on this server during its early days. Today, the server is still in use as a storage and Docker host, although I have replaced the underlying hardware four times to keep up with evolving requirements.</p>
@@ -11874,17 +12143,23 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
             src="/labv5/rack_hu_6fd835531a7fbd96.jpg"alt="Rack"width="1200"
             height="1600"/>
         </picture><figcaption><p>Rack view</p></figcaption></figure></p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>How to use QoS in NSX</title>
 			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
 			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
+
+			
 			<description><![CDATA[How to use QoS in NSX]]></description>
-			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.</p>
 <p>In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.</p>
 <h2 id="qos-on-an-nsx-segment">QoS on an NSX Segment</h2>
@@ -12151,6 +12426,7 @@ Where:</p>
 </ul>
 <ol start="2">
 <li><strong>Minimum Refill Interval</strong>:
+
 \[ B \geq \frac{R \times 1000000 \times 1}{1,000 \times 8} \]</li>
 </ol>
 <ul>
@@ -12158,7 +12434,8 @@ Where:</p>
 </ul>
 <ol start="3">
 <li><strong>MTU Constraint</strong>:
-\[ B \geq MTU \] of the Service Router (SR) port.</li>
+
+\[ B \geq MTU \]of the Service Router (SR) port.</li>
 </ol>
 <ul>
 <li>The Burst Size must accommodate at least one full MTU-size packet.</li>
@@ -12389,17 +12666,23 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 <li><strong>Performance Impact</strong>: Avoid using Gateway QoS Profiles in scenarios requiring high performance and scalability. The active/standby limitation can create bottlenecks, making distributed T1 Gateways the better choice for performance-critical environments.</li>
 </ul>
 <p>By understanding these differences, you can effectively apply QoS profiles to achieve desired traffic shaping and bandwidth management goals in your NSX environment.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
 			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
+
+			
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
-			<content type="html"><![CDATA[<p>The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:</p>
+			
+
+			<content:encoded><![CDATA[<p>The latest NSX update delivers a comprehensive set of fixes to enhance stability, performance, and security. Here’s a summary of the resolved issues and their impact:</p>
 <h2 id="1-enhanced-stability-for-virtual-environments">1. Enhanced Stability for Virtual Environments</h2>
 <ul>
 <li>Loss of IP Bindings after VMotion (Issue 3453866): Addressed the removal of IP bindings and logical ports associated with VMs during vMotion events.</li>
@@ -12436,17 +12719,23 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>This NSX update resolves critical issues to improve operational reliability, security, and performance in virtual environments. For a seamless experience, upgrading to this release is highly recommended. As always, thorough testing in a staging environment before deployment in production is advised.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>iSCSI Tuning</title>
 			<link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
 			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
+
+			
 			<description><![CDATA[Optimizing iSCSI Performance in an Unraid Environment]]></description>
-			<content type="html"><![CDATA[<p>In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.</p>
+			
+
+			<content:encoded><![CDATA[<p>In my setup, I use iSCSI in combination with Unraid to create a DIY block storage solution. Unraid, with its flexibility, serves as the foundation, and I utilize the Linux iSCSI implementation installed via a plugin to enable block-level storage.</p>
 <p>For my setup, I use an Intel NUC of the 13th generation, equipped with two 2.5G network adapters. These provide the necessary connectivity for storage traffic. I configured two VMkernel (VMK) adapters specifically for iSCSI traffic, ensuring redundancy and optimized throughput.</p>
 <p>To further enhance performance, I’ve implemented several optimizations, including fine-tuning settings on my ESXi servers.</p>
 <h2 id="optimize-maxiosizekb">Optimize MaxIoSizeKB</h2>
@@ -12608,17 +12897,23 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <p>In my tests with CrystalDiskMark, I observed that both network adapters showed significant performance improvements as a result of these optimizations. These adjustments allow my Unraid and iSCSI configuration to deliver a robust and high-performance block storage solution tailored to my workloads.</p>
 <h2 id="disclaimer">Disclaimer</h2>
 <p>The settings and configurations described in this article are specific to my environment and were tested extensively within my setup. While these adjustments significantly improved performance for my use case, they may not be universally applicable. It’s essential to test these settings in your environment before implementing them, as results may vary depending on hardware, network, and workload specifics. These optimizations are not intended as a blanket recommendation.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>MAC Learning is your friend</title>
 			<link>https://sdn-warrior.org/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
+
+			
 			<description><![CDATA[Why you should use MAC Learning]]></description>
-			<content type="html"><![CDATA[<h2 id="intro">Intro</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="intro">Intro</h2>
 <p>When working with nested ESXi environments, understanding the interplay between MAC Learning, Promiscuous Mode, and Forged Transmits is critical. These settings significantly affect how traffic flows in virtualized networks, especially in scenarios involving virtualized hypervisors or advanced network configurations.</p>
 <ul>
 <li>
@@ -12769,17 +13064,23 @@ Stronger security, since traffic is not broadcast unnecessarily.</div>
     </aside>
 <p>MAC Learning with Forged Transmits is a significant performance gamechanger, especially when running multiple nested VMs on a single physical ESXi host.
 However, it&rsquo;s important to note that MAC Learning with Forged Transmits requires a Distributed Switch. If you&rsquo;re using a Standard Switch, you&rsquo;ll still need to rely on Promiscuous Mode to achieve similar functionality.</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
 			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
+
+			
 			<description><![CDATA[How i use Unraid]]></description>
-			<content type="html"><![CDATA[<h2 id="my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing">My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="my-custom-unraid-storage-build---flexibility-simplicity-and-future-proofing">My Custom Unraid Storage Build - Flexibility, Simplicity, and Future-Proofing</h2>
 <p>As a passionate homelaber, I enjoy not only using technology but also understanding and customizing it to suit my needs. My Unraid storage system is one of my longest-running projects, continuously evolving to meet the demands of my homelab.</p>
 <p>After thorough research, I decided to go with Unraid – an operating system renowned for its simplicity, flexibility, and scalability. These key features were the deciding factors for me:</p>
 <ul>
@@ -12881,17 +13182,23 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 <p><img src="das.jpg" alt="DAS Disk Array">
 <img src="unraid.jpg" alt="Unraid"></p>
 <h3 id="fun-fact-my-unraid-server-has-underglow-lighting">Fun fact: My Unraid server has underglow lighting!</h3>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
 			<link>https://sdn-warrior.org/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nuc/</guid>
+
+			
 			<description><![CDATA[Performance tuning for NUCs]]></description>
-			<content type="html"><![CDATA[<h2 id="first-things-first">First things first</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="first-things-first">First things first</h2>
 <p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
 Unfortunately, these are relatively difficult to get in Germany, but it&rsquo;s worth the effort.
 
@@ -13013,17 +13320,23 @@ Fortunately, there are a few workarounds here.</p>
             src="/nuc_hu_21e9fb84617f65c0.jpg"alt="NUC i7"width="1098"
             height="458"/>
         </picture><figcaption><p>NUC i7 13th Gen with Memory Tiering and P/E Cores</p></figcaption></figure></p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>Homelab V4</title>
 			<link>https://sdn-warrior.org/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/labv4/</guid>
+
+			
 			<description><![CDATA[Homelab v4]]></description>
-			<content type="html"><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="ready-for-vcf">Ready for VCF</h2>
 <p>I have done a huge redesign of my Homelab.
 To better test VCF scenarios, 3 new Minisforum MS-01 have been added.
 These have a 13th generation i9 and are equipped with fast NVMes for memory tiering.
@@ -13042,17 +13355,23 @@ I manage about 2 GB/s read / 1.2 GB GB/s write and 78K IOPS (Random 4K with 32Q)
         </picture><figcaption><p>IOPS iSCSI Multipathing</p></figcaption></figure>
 <p>Pretty impressive for my setup. I still have to customize the rack a bit so that I can add the 10G Mikrotik switch and clean up the VLANs from old labs.
 I&rsquo;m already planning a further expansion stage though.\</p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
 			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+
+			
 			<description><![CDATA[NSX and Fortigate]]></description>
-			<content type="html"><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
+			
+
+			<content:encoded><![CDATA[<h2 id="nsx-integration-for-fortinet-fortigate-firewalls">NSX integration for Fortinet Fortigate Firewalls</h2>
 <p>Modern SDN solutions are flexible, fast and effective. The rules of the classic perimeter firewall should be exactly the same. To make life easier, Fortinet has an NSX integration that allows us to write our perimeter rules to dynamic NSX groups.</p>
 <h2 id="first-things-first">First things first</h2>
 <p>The Fortinet NSX integration works via a so-called external connector. For this purpose, the Fortigate contacts the NSX Manager at regular intervals and updates the previously imported groups.
@@ -13116,17 +13435,23 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>The firewall rule allows everything that does not go into RFC1918 networks (private IP range). Of course, this is only a simple example and more complex setups are possible.</p>
 <h2 id="additional-information">Additional information</h2>
 <p><a href="https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/753961/public-and-private-sdn-connectors">Fortinet Documentation: Public and private SDN connectors</a></p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
 			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
+
+			
 			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
-			<content type="html"><![CDATA[
+			
+
+			<content:encoded><![CDATA[
     <aside class="admonition info">
         <div class="admonition-title">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -13284,17 +13609,23 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 <p>The Identity Firewall is a wonderful extension of the Distributed firewall and should be treated as such. Used correctly, it provides a very nice way to manage and delegate firewall permissions dynamically and centrally for individual users or user groups. It enables generic VDIs that can be used for different purposes depending on the user. This can reduce the number of VDI pools required, which in turn makes it easier to manage the customers VDI environment. The RBAC concept is even more tightly bound to the firewall policies and AD tiering can also be enforced via the firewall. And best of all, this great feature is included in the NSX Firewall license. I would recommend every NSX firewall administrator to take a closer look at the Identity Firewall.</p>
 <h2 id="additional-resources">Additional resources</h2>
 <p><a href="https://docs.vmware.com/en/VMware-NSX/4.1/administration/GUID-9CD3FC21-9ED4-4FB3-9E19-67A7C4D1F53E.html">VMware Docs Idendity Firewall</a></p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
 			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
+
 			
+
 			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
+
+			
 			<description><![CDATA[Exchange your NSX Manager certificates]]></description>
-			<content type="html"><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
+			
+
+			<content:encoded><![CDATA[<h1 id="nsx-4x-certificate-exchange-of-the-nsx-manager">NSX 4.X Certificate exchange of the NSX Manager</h1>
 <h1 id="certificate-creation">Certificate creation</h1>
 <p>First of all, we need a CSR request. This can be created with OPENSSL. It is important that the key is also exported. You can either create 4 individual certificates (VIP and the three manager nodes) or a SAN certificate with all DNS and IP names of the manager nodes. The easiest way is to carry out the request on a manager node. To do this, I create an openssl config file with VIM.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[req]
@@ -13359,7 +13690,7 @@ API calls may vary depending on the NSX-T versions, in my example NSX version 4.
 </span></span></code></pre></div><p>After replacing the certificates, you should close all browser windows and log in to the NSX Manager again. The certificate should now have been successfully replaced.</p>
 <h2 id="further-resources">Further resources:</h2>
 <p><a href="https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.2/administration/GUID-50C36862-A29D-48FA-8CE7-697E64E10E37.html">VMware Administration Handbook</a></p>
-]]></content>
+]]></content:encoded>
 		</item>
 		
 	</channel>
