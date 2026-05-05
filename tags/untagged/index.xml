@@ -7,13 +7,13 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 27 Apr 2026 13:56:15 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 04 May 2026 21:15:49 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Homelab Update 2026</title>
-      <link>http://localhost:1313/posts/homelab-update-2026/</link>
-      <pubDate>Mon, 27 Apr 2026 13:56:15 +0200</pubDate>
-      <guid>http://localhost:1313/posts/homelab-update-2026/</guid>
+      <title>Vcf9.1 Vpcs Connectivity Policy</title>
+      <link>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</link>
+      <pubDate>Mon, 04 May 2026 21:15:49 +0200</pubDate>
+      <guid>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</guid>
       <description></description>
     </item>
   </channel>
