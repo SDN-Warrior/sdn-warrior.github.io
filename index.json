@@ -1,4 +1,10 @@
 [{
+    "title": "VCF 9.1 - VPCs Connectivity Policies",
+    "url": "/posts/vcf9.1-vpcs-connectivity-policy/",
+    "date": "2026-05-05",
+    "description": "In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.",
+    "tags": ["security","vcf9.1","nsx","vpc"]
+  },{
     "title": "Homelab Update 2026",
     "url": "/posts/homelab-update-2026/",
     "date": "2026-05-01",
