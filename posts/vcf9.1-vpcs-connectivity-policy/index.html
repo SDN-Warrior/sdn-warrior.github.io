@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -30,8 +30,8 @@
   <meta itemprop="datePublished" content="2026-05-05T17:00:00+02:00">
   <meta itemprop="dateModified" content="2026-05-05T17:00:00+02:00">
   <meta itemprop="wordCount" content="1299">
-  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
-  <meta itemprop="keywords" content="Security,Vcf9.1,Nsx,Vpc"><meta property="og:url" content="http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/">
+  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+  <meta itemprop="keywords" content="Security,Vcf9.1,NSX,Vpc"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF 9.1 - VPCs Connectivity Policies">
   <meta property="og:description" content="In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.">
@@ -42,12 +42,12 @@
     <meta property="article:modified_time" content="2026-05-05T17:00:00+02:00">
     <meta property="article:tag" content="Security">
     <meta property="article:tag" content="Vcf9.1">
-    <meta property="article:tag" content="Nsx">
+    <meta property="article:tag" content="NSX">
     <meta property="article:tag" content="Vpc">
-    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
   <meta name="twitter:title" content="VCF 9.1 - VPCs Connectivity Policies">
   <meta name="twitter:description" content="In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.">
 
@@ -62,16 +62,16 @@
     "articleBody": "Introduction A new VCF release is just around the corner, and just like the transition from VCF 5.X to 9.0, this one brings massive changes as well. Not only is the entire fleet being turned upside down, but there have also been a ton of changes to my favorite topic: VPCs in NSX. One of the many new features is VPC Connectivity Policies. Today, in this blog post, I’ll explain what you can do with them and how they work. So let’s dive into VPC’s rabbit hole.\nA short disclaimer\rThis blog post was created using the 9.1 beta version.\rWhat are Connectivity Policies? Just a quick note before we begin: if you’re not sure how VPCs work, you can read about them in my articles on VPCs in VCF9. I won’t be going over the basics here. Here’s a good place to start on this topic.\nFirst, I should probably outline the test setup. In total, I will have 4 VPCs, numbered 01–04 for simplicity. Since the connectivity policy applies only to a VPC’s public networks, private transit gateway subnet or external IP addresses, my VPCs have only one public subnet and one private transit gateway subnet for simplicity. In each subnet, I have deployed an Alpine VM that has obtained an IP address via DHCP. Without a connectivity policy, the public VMs are accessible as usual both inside and outside my lab, and the private transit gateway VMs are accessible only between VPCs on the same transit gateway—business as usual.\nThere are currently 3 different policy types, which is why I need 4 VPCs. As an additional test, I have set up a classic overlay segment on a T1 router connected to the shared T0 router to test access from non-VPC networks.\nVPC Setup VPC Topology VPC Connectivity Policies The attentive reader has probably already noticed that I have created three different connectivity policies.\nBlue-Community for VPC01 and VPC02 Red-Isolated for VPC03 Grey-Promiscuous for VPC04 These also reflect the three types of security policies. The whole concept of the policies is somewhat reminds me a little bit of the private VLAN concept, for the network-savvy readers among you. And for anyone who’s wondering what on earth I mean, I’ll explain it again briefly. The idea behind connectivity policies is relatively simple: the goal is to control traffic between VPCs connected to the same transit gateway. This should not be confused with VPC security profiles, which may use similar terminology in some places but function completely differently and also require a vDefend license.\nCommunity Policy The community policy allows traffic from VPCs that belong to the same community. A community consists of at least one VPC, but typically includes several VPCs. In my setup, the community is named “Blue.” You can create any number of communities, but a VPC can only have one policy and therefore belong to only one community. In my setup, VPC01 and VPC02 belong to the same community.\nIsolated Policy The Isolated Policy does exactly what its name implies: this VPC is not accessible from any other VPC on the same transit gateway. In practice, a Community Policy with only one VPC achieves the same result. The VPC is isolated, but this can be adjusted as needed by adding additional VPCs to the community. This is not possible with the Isolated Policy. A VPC in the Isolated policy will always be isolated from other VPCs on the same transit gateway.\nPromiscuous Policy With the “Promiscuous” policy, the name says it all—anyone can get in. Effectively, nothing is blocked, but it’s not the same as if no policy were attached. This is because VPCs with a promiscuous policy ignore all other policies, which means they can also reach isolated VPCs. But that’s all just theory; let’s take a look at how it works in practice.\nPractical test To test this out, I’ll run a variety of ICMP tests. First from my Alpine01 VM, which is connected via T1; then externally from my Mac, which is a computer located entirely outside the lab; and finally from the other VPC VMs, both via the public subnet and the private transit gateway subnet (I hate that name). I’ll also show some example screenshots from the NSX Traceflow tool, since it’s a great way to understand how things work.\nThe following matrix shows the expected connectivity between the test systems. SRC stands for the source system and is listed vertically in the table, while DEST refers to the destination system and is listed horizontally in the table.\nA ✅ indicates that communication is expected to work.\nA ❌ indicates that communication is not expected to work.\nA 🟨 indicates a self-test and is not tested.\nSRC \\ DEST alpine01 vpc01-public vpc01-ptgw vpc02-public vpc02-ptgw vpc03-public vpc03-ptgw vpc04-public vpc04-ptgw alpine01 🟨 ✅ ❌ ✅ ❌ ✅ ❌ ✅ ❌ vpc01-public ✅ 🟨 ✅ ✅ ✅ ❌ ❌ ✅ ✅ vpc01-ptgw ✅ ✅ 🟨 ✅ ✅ ❌ ❌ ✅ ✅ vpc02-public ✅ ✅ ✅ 🟨 ✅ ❌ ❌ ✅ ✅ vpc02-ptgw ✅ ✅ ✅ ✅ 🟨 ❌ ❌ ✅ ✅ vpc03-public ✅ ❌ ❌ ❌ ❌ 🟨 ✅ ✅ ✅ vpc03-ptgw ✅ ❌ ❌ ❌ ❌ ✅ 🟨 ✅ ✅ vpc04-public ✅ ✅ ✅ ✅ ✅ ✅ ✅ 🟨 ✅ vpc04-ptgw ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ 🟨 My external Mac can access alpine01 and all public VPC networks, but not the private transit gateway networks. I did not list the Mac in the table because it acts as a control system. It behaves just like the Alpine01 test VM.\nTraceflow: VPC01 to VPC02 Traceflow: VPC01 to VPC03 Traceflow: VPC01 to VPC04 Traceflow: VPC04 to VPC03 Special Case: Promiscous Policy\rAs the test shows, a VPC with Promoiscus Policy can reach any VPC on the same transit gateway. To restrict this, you must use vDefend. VPCs that are not added to any connectivity policy behave like in a community. They can talk to other Promiscuous VPCs and VPCs that are not in any connectivity policy. As shown in the screenshot, VPC04 is able to communicate with the isolated VPC03. The Promiscuous VPC should therefore be chosen with care.\rBut where does this blocking actually take place? The answer is quite simple. The policy is enforced on the transit gateway, which is why the policies only work within a single transit gateway. If traffic from another VPC passes through a second transit gateway, the policy does not apply, and the traffic is treated as if it came from an external system.\nPolicies Overview So what do we do with this now? To be honest, it’s not that simple; at first glance, it offers a kind of enhanced isolation for VPCs within the transit gateway. Of course, this feature doesn’t replace vDefend, but depending on your network architecture, it can provide significant added value. You just have to follow a few rules. For example, you need to consider whether and how you want to use the promiscuous policy.\nOne possible scenario, for example, would be isolating specific VKS Kubernetes clusters by strictly using separate communities here. The services would be accessible from outside the Kubernetes clusters, but I don’t need to isolate the Kubernetes clusters from one another, because the exposed services aren’t accessible via the transit gateway to other VPCs/Kubernetes clusters.\nIn my opinion, that’s already a good use case. You could also isolate test environments from one another without having to purchase vDefend licenses. In combination with the Stateless Gateway Firewall (which currently requires no licenses), this allows you to set up a secure test system—or multiple test systems—that cannot communicate with one another. I think more possibilities will emerge over time. There are also the VPC Security Profiles I briefly mentioned, but that’s a topic for another blog post.\n",
     "wordCount" : "1299",
     "inLanguage": "en",
-    "image":"http://localhost:1313/images/head.jpg","datePublished": "2026-05-05T17:00:00+02:00",
+    "image":"https://sdn-warrior.org/images/head.jpg","datePublished": "2026-05-05T17:00:00+02:00",
     "dateModified": "2026-05-05T17:00:00+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "http://localhost:1313/about/"
+        "url": "https://sdn-warrior.org/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/"
+      "@id": "https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/"
     },
     "publisher": {
       "@type": "Organization",
@@ -79,21 +79,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "http://localhost:1313/favicon.ico"
+        "url": "https://sdn-warrior.org/favicon.ico"
       }
     }
 }
 </script><title>VCF 9.1 - VPCs Connectivity Policies</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.eafe13c46a824e4f8d2a7e1e4a190a4ff8fe21fe4fc0f31c8e10035bfe3e14c4.css" integrity="sha256-6v4TxGqCTk+NKn4eShkKT/j+If5PwPMcjhADW/4+FMQ=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
 	<div class="hdr-wrapper section-inner">
 		<div class="hdr-left">
 			<div class="site-branding">
-				<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
 			</div>
-			<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
 		</div>
 
 		<div class="hdr-right hdr-icons">
@@ -123,26 +123,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f&amp;text=VCF%209.1%20-%20VPCs%20Connectivity%20Policies" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f&amp;text=VCF%209.1%20-%20VPCs%20Connectivity%20Policies" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF%209.1%20-%20VPCs%20Connectivity%20Policies&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF%209.1%20-%20VPCs%20Connectivity%20Policies&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%209.1%20-%20VPCs%20Connectivity%20Policies&amp;summary=VCF%209.1%20-%20VPCs%20Connectivity%20Policies%2c%20by%20SDN-Warrior%0a%0aIn%20this%20blog%20post%2c%20I%e2%80%99ll%20discuss%20the%20new%20VPC%20connectivity%20Policies%20and%20how%20they%20can%20be%20used%20to%20enhance%20security.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-vpcs-connectivity-policy%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209.1%20-%20VPCs%20Connectivity%20Policies&amp;summary=VCF%209.1%20-%20VPCs%20Connectivity%20Policies%2c%20by%20SDN-Warrior%0a%0aIn%20this%20blog%20post%2c%20I%e2%80%99ll%20discuss%20the%20new%20VPC%20connectivity%20Policies%20and%20how%20they%20can%20be%20used%20to%20enhance%20security.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -150,7 +150,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF 9.1 - VPCs Connectivity Policies&#34;,&#34;http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/&#34;,&#34;VCF 9.1 - VPCs Connectivity Policies, by SDN-Warrior\n\nIn this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF 9.1 - VPCs Connectivity Policies&#34;,&#34;https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/&#34;,&#34;VCF 9.1 - VPCs Connectivity Policies, by SDN-Warrior\n\nIn this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -169,10 +169,10 @@
 
 <div id="mobile-menu" class="animated fast">
 	<ul>
-		<li><a href="http://localhost:1313/posts/">Posts</a></li>
-		<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
-		<li><a href="http://localhost:1313/links/">Links</a></li>
-		<li><a href="http://localhost:1313/about/">About Me</a></li>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
 	</ul>
 </div>
 
@@ -193,7 +193,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="http://localhost:1313/tags/security">security</a></span><span class="tag"><a href="http://localhost:1313/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vpc">vpc</a></span></p>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/security">security</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vpc">vpc</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -450,7 +450,7 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 
 		</article>
 		<div class="post-nav thin">
-			<a class="prev-post" href="http://localhost:1313/posts/homelab-update-2026/">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/homelab-update-2026/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -463,9 +463,9 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2026 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
    <path d="M4 11a9 9 0 0 1 9 9"></path>
    <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -477,7 +477,7 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 <script defer src="/klaro/klaro.js"></script>
 <link rel="stylesheet" href="/klaro/klaro.css?v=1">
 </footer>
-<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

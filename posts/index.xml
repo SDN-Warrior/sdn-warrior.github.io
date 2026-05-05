@@ -6,8 +6,221 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>Daniel Krieger</copyright>
-		<lastBuildDate>Fri, 01 May 2026 18:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Tue, 05 May 2026 17:00:00 +0200</lastBuildDate>
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VCF 9.1 - VPCs Connectivity Policies</title>
+			<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
+			<pubDate>Tue, 05 May 2026 17:00:00 +0200</pubDate>
+			
+			<guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+			<description><![CDATA[In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.]]></description>
+			<content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>A new VCF release is just around the corner, and just like the transition from VCF 5.X to 9.0, this one brings massive changes as well. Not only is the entire fleet being turned upside down, but there have also been a ton of changes to my favorite topic: VPCs in NSX. One of the many new features is VPC Connectivity Policies. Today, in this blog post, I’ll explain what you can do with them and how they work. So let&rsquo;s dive into VPC&rsquo;s rabbit hole.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>A short disclaimer</b>
+        </div>
+        <div class="admonition-content">This blog post was created using the 9.1 beta version.</div>
+    </aside>
+<h2 id="what-are-connectivity-policies">What are Connectivity Policies?</h2>
+<p>Just a quick note before we begin: if you’re not sure how VPCs work, you can read about them in my articles on VPCs in VCF9. I won’t be going over the basics here. <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/">Here&rsquo;s</a> a good place to start on this topic.</p>
+<p>First, I should probably outline the test setup. In total, I will have 4 VPCs, numbered 01–04 for simplicity. Since the connectivity policy applies only to a VPC’s public networks, private transit gateway subnet or external IP addresses, my VPCs have only one public subnet and one private transit gateway subnet for simplicity. In each subnet, I have deployed an Alpine VM that has obtained an IP address via DHCP. Without a connectivity policy, the public VMs are accessible as usual both inside and outside my lab, and the private transit gateway VMs are accessible only between VPCs on the same transit gateway—business as usual.</p>
+<p>There are currently 3 different policy types, which is why I need 4 VPCs. As an additional test, I have set up a classic overlay segment on a T1 router connected to the shared T0 router to test access from non-VPC networks.</p>
+
+
+<div class="image-gallery" id="gallery-08794289"><a href="/vcf91-vpc-con-policy/Setup.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Setup"><img src="/vcf91-vpc-con-policy/Setup_hu_3fa9d0626df11402.jpg" alt="VPC Setup" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VPC Setup</div>
+                    </a><a href="/vcf91-vpc-con-policy/Topology.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Topology"><img src="/vcf91-vpc-con-policy/Topology_hu_939548e208522d17.jpg" alt="VPC Topology" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VPC Topology</div>
+                    </a><a href="/vcf91-vpc-con-policy/Connectivity%20Policies.jpg" class="gallery-item" data-lightbox-group="gallery-08794289" data-title="VPC Connectivity Policies"><img src="/vcf91-vpc-con-policy/Connectivity%20Policies_hu_e063f95d6effc1ef.jpg" alt="VPC Connectivity Policies" width="300" height="300" loading="lazy"><div class="gallery-item-caption">VPC Connectivity Policies</div>
+                    </a></div>
+<p>The attentive reader has probably already noticed that I have created three different connectivity policies.</p>
+<ul>
+<li>Blue-Community for VPC01 and VPC02</li>
+<li>Red-Isolated for VPC03</li>
+<li>Grey-Promiscuous for VPC04</li>
+</ul>
+<p>These also reflect the three types of security policies. The whole concept of the policies is somewhat reminds me a little bit of the private VLAN concept, for the network-savvy readers among you.
+And for anyone who&rsquo;s wondering what on earth I mean, I&rsquo;ll explain it again briefly. The idea behind connectivity policies is relatively simple: the goal is to control traffic between VPCs connected to the same transit gateway. This should not be confused with VPC security profiles, which may use similar terminology in some places but function completely differently and also require a vDefend license.</p>
+<h3 id="community-policy">Community Policy</h3>
+<p>The community policy allows traffic from VPCs that belong to the same community. A community consists of at least one VPC, but typically includes several VPCs. In my setup, the community is named “Blue.” You can create any number of communities, but a VPC can only have one policy and therefore belong to only one community. In my setup, VPC01 and VPC02 belong to the same community.</p>
+<h3 id="isolated-policy">Isolated Policy</h3>
+<p>The Isolated Policy does exactly what its name implies: this VPC is not accessible from any other VPC on the same transit gateway. In practice, a Community Policy with only one VPC achieves the same result. The VPC is isolated, but this can be adjusted as needed by adding additional VPCs to the community. This is not possible with the Isolated Policy. A VPC in the Isolated policy will always be isolated from other VPCs on the same transit gateway.</p>
+<h3 id="promiscuous-policy">Promiscuous Policy</h3>
+<p>With the “Promiscuous” policy, the name says it all—anyone can get in. Effectively, nothing is blocked, but it&rsquo;s not the same as if no policy were attached.
+This is because VPCs with a promiscuous policy ignore all other policies, which means they can also reach isolated VPCs.
+But that&rsquo;s all just theory; let&rsquo;s take a look at how it works in practice.</p>
+<h2 id="practical-test">Practical test</h2>
+<p>To test this out, I’ll run a variety of ICMP tests. First from my Alpine01 VM, which is connected via T1; then externally from my Mac, which is a computer located entirely outside the lab; and finally from the other VPC VMs, both via the public subnet and the private transit gateway subnet (I hate that name). I’ll also show some example screenshots from the NSX Traceflow tool, since it’s a great way to understand how things work.</p>
+<p>The following matrix shows the expected connectivity between the test systems. <code>SRC</code> stands for the source system and is listed vertically in the table, while <code>DEST</code> refers to the destination system and is listed horizontally in the table.</p>
+<p>A <code>✅</code> indicates that communication is expected to work.<br>
+A <code>❌</code> indicates that communication is not expected to work.<br>
+A <code>🟨</code> indicates a self-test and is not tested.</p>
+<table>
+  <thead>
+      <tr>
+          <th>SRC \ DEST</th>
+          <th><code>alpine01</code></th>
+          <th><code>vpc01-public</code></th>
+          <th><code>vpc01-ptgw</code></th>
+          <th><code>vpc02-public</code></th>
+          <th><code>vpc02-ptgw</code></th>
+          <th><code>vpc03-public</code></th>
+          <th><code>vpc03-ptgw</code></th>
+          <th><code>vpc04-public</code></th>
+          <th><code>vpc04-ptgw</code></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>alpine01</code></td>
+          <td>🟨</td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td><code>vpc01-public</code></td>
+          <td>✅</td>
+          <td>🟨</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc01-ptgw</code></td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>🟨</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc02-public</code></td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>🟨</td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc02-ptgw</code></td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>🟨</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc03-public</code></td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>🟨</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc03-ptgw</code></td>
+          <td>✅</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>🟨</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc04-public</code></td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>🟨</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><code>vpc04-ptgw</code></td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>🟨</td>
+      </tr>
+  </tbody>
+</table>
+<p>My external Mac can access <code>alpine01</code> and all public VPC networks, but not the private transit gateway networks. I did not list the Mac in the table because it acts as a control system. It behaves just like the Alpine01 test VM.</p>
+
+
+<div class="image-gallery" id="gallery-14d39bc1"><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC02.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC02"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC02_hu_4c24d51669925453.jpg" alt="Traceflow: VPC01 to VPC02" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC02</div>
+                    </a><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC03.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC03"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC03_hu_b012a6fa533e48b7.jpg" alt="Traceflow: VPC01 to VPC03" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC03</div>
+                    </a><a href="/vcf91-vpc-con-policy/VPC01%20to%20VPC04.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC01 to VPC04"><img src="/vcf91-vpc-con-policy/VPC01%20to%20VPC04_hu_240bf53b7df10a38.jpg" alt="Traceflow: VPC01 to VPC04" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC01 to VPC04</div>
+                    </a><a href="/vcf91-vpc-con-policy/VPC04%20to%20VPC03.jpg" class="gallery-item" data-lightbox-group="gallery-14d39bc1" data-title="Traceflow: VPC04 to VPC03"><img src="/vcf91-vpc-con-policy/VPC04%20to%20VPC03_hu_8d033c6e4e8abf4.jpg" alt="Traceflow: VPC04 to VPC03" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Traceflow: VPC04 to VPC03</div>
+                    </a></div>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Special Case: Promiscous Policy</b>
+        </div>
+        <div class="admonition-content">As the test shows, a VPC with Promoiscus Policy can reach any VPC on the same transit gateway.
+To restrict this, you must use vDefend. VPCs that are not added to any connectivity policy behave like in a community. They can talk to other Promiscuous VPCs and VPCs that are not in any connectivity policy. As shown in the screenshot, VPC04 is able to communicate with the isolated VPC03. The Promiscuous VPC should therefore be chosen with care.</div>
+    </aside>
+<h2 id="but-where-does-this-blocking-actually-take-place">But where does this blocking actually take place?</h2>
+<p>The answer is quite simple. The policy is enforced on the transit gateway, which is why the policies only work within a single transit gateway. If traffic from another VPC passes through a second transit gateway, the policy does not apply, and the traffic is treated as if it came from an external system.</p>
+
+
+<div class="image-gallery" id="gallery-4189b13a"><a href="/vcf91-vpc-con-policy/Policies%20Overview.jpg" class="gallery-item" data-lightbox-group="gallery-4189b13a" data-title="Policies Overview"><img src="/vcf91-vpc-con-policy/Policies%20Overview_hu_d55c7b453d3d3084.jpg" alt="Policies Overview" width="300" height="300" loading="lazy"><div class="gallery-item-caption">Policies Overview</div>
+                    </a></div>
+<h2 id="so-what-do-we-do-with-this-now">So what do we do with this now?</h2>
+<p>To be honest, it’s not that simple; at first glance, it offers a kind of enhanced isolation for VPCs within the transit gateway. Of course, this feature doesn’t replace vDefend, but depending on your network architecture, it can provide significant added value. You just have to follow a few rules. For example, you need to consider whether and how you want to use the promiscuous policy.</p>
+<p>One possible scenario, for example, would be isolating specific VKS Kubernetes clusters by strictly using separate communities here. The services would be accessible from outside the Kubernetes clusters, but I don’t need to isolate the Kubernetes clusters from one another, because the exposed services aren’t accessible via the transit gateway to other VPCs/Kubernetes clusters.</p>
+<p>In my opinion, that’s already a good use case. You could also isolate test environments from one another without having to purchase vDefend licenses. In combination with the Stateless Gateway Firewall (which currently requires no licenses), this allows you to set up a secure test system—or multiple test systems—that cannot communicate with one another. I think more possibilities will emerge over time. There are also the VPC Security Profiles I briefly mentioned, but that’s a topic for another blog post.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Homelab Update 2026</title>

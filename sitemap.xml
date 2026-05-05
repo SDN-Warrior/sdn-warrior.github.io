@@ -2,6 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/nsx/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/security/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vpc/</loc>
+    <lastmod>2026-05-05T17:00:00+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/esx/</loc>
     <lastmod>2026-05-01T18:00:00+02:00</lastmod>
   </url><url>
@@ -14,16 +38,7 @@
     <loc>https://sdn-warrior.org/tags/nutanix/</loc>
     <lastmod>2026-05-01T18:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-05-01T18:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/proxmox/</loc>
-    <lastmod>2026-05-01T18:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2026-05-01T18:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
     <lastmod>2026-05-01T18:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/unraid/</loc>
@@ -65,9 +80,6 @@
     <loc>https://sdn-warrior.org/posts/ipv6-nsx/</loc>
     <lastmod>2026-03-01T12:00:00+01:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2026-03-01T12:00:00+01:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/nutanix-install-ce/</loc>
     <lastmod>2026-02-08T19:00:00+01:00</lastmod>
   </url><url>
@@ -75,9 +87,6 @@
     <lastmod>2026-01-27T21:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/avi-keycloak/</loc>
-    <lastmod>2026-01-27T21:30:00+01:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/security/</loc>
     <lastmod>2026-01-27T21:30:00+01:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/sso/</loc>
@@ -156,9 +165,6 @@
     <lastmod>2025-08-19T09:21:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</loc>
-    <lastmod>2025-07-29T00:10:05+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vpc/</loc>
     <lastmod>2025-07-29T00:10:05+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf-operations-migration/</loc>
