@@ -2,18 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vcf9.1 on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/vcf9.1/</link>
+    <link>http://localhost:1313/tags/vcf9.1/</link>
     <description>Recent content in Vcf9.1 on SDN-Warrior | Daniel Krieger</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Tue, 05 May 2026 16:00:00 +0200</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/vcf9.1/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 May 2026 00:00:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/vcf9.1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF 9.1 - VNA and VPCs</title>
+      <link>http://localhost:1313/posts/vcf9.1-vna-vpc/</link>
+      <pubDate>Mon, 11 May 2026 00:00:00 +0200</pubDate>
+      <guid>http://localhost:1313/posts/vcf9.1-vna-vpc/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VMware has been cooking up something and has introduced another feature for VPCs and the Transit Gateway. The VNA, or Virtual Network Appliance.&#xA;But what is it all about, and what can you do with it? Doesn’t this just add even more complexity to an already complex network setup with NSX? Well, as always, the answer is yes and no. What exactly you can do with the VNA, how it’s deployed, why it might make it easier to get started with VPCs and SDN, and what all of this means for people who want to use VKS—I’d like to get to the bottom of all that in today’s article.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9.1 - VPCs Connectivity Policies</title>
-      <link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
+      <link>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</link>
       <pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+      <guid>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;A new VCF release is just around the corner, and just like the transition from VCF 5.X to 9.0, this one brings massive changes as well. Not only is the entire fleet being turned upside down, but there have also been a ton of changes to my favorite topic: VPCs in NSX. One of the many new features is VPC Connectivity Policies. Today, in this blog post, I’ll explain what you can do with them and how they work. So let&amp;rsquo;s dive into VPC&amp;rsquo;s rabbit hole.&lt;/p&gt;</description>
     </item>
   </channel>

@@ -1,7 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>https://sdn-warrior.org/posts/</link>
+		<link>http://localhost:1313/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 
@@ -18,22 +18,453 @@
 		
 
 		
-		<lastBuildDate>Tue, 05 May 2026 16:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Mon, 11 May 2026 00:00:00 +0200</lastBuildDate>
 		
 
 		
-		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 
 		
 		<item>
+			<title>VCF 9.1 - VNA and VPCs</title>
+			<link>http://localhost:1313/posts/vcf9.1-vna-vpc/</link>
+			<pubDate>Mon, 11 May 2026 00:00:00 +0200</pubDate>
+
+			
+
+			<guid>http://localhost:1313/posts/vcf9.1-vna-vpc/</guid>
+
+			
+			<description><![CDATA[In this new blog post, I will describe the benefits of virtual network appliances and how to use them.]]></description>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>VMware has been cooking up something and has introduced another feature for VPCs and the Transit Gateway. The VNA, or Virtual Network Appliance.
+But what is it all about, and what can you do with it? Doesn’t this just add even more complexity to an already complex network setup with NSX? Well, as always, the answer is yes and no. What exactly you can do with the VNA, how it’s deployed, why it might make it easier to get started with VPCs and SDN, and what all of this means for people who want to use VKS—I’d like to get to the bottom of all that in today’s article.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>A short disclaimer</b>
+        </div>
+        <div class="admonition-content">This blog post was created using the 9.1 beta version. Since VCF 9.1 does not yet have GA status at the time of writing, and some of the documentation has not yet been made fully public, changes may still occur.</div>
+    </aside>
+<p>But anyway, let&rsquo;s get started and begin with the simplest part: deploying the VNA.</p>
+<h2 id="deploying-a-vna-cluster">Deploying a VNA Cluster</h2>
+<p>As with Edge clusters, there are two options for VNA as well. Either via vCenter or via NSX. At the end of the day, the process is the same, whether I initiate it via vCenter or via NSX. In NSX, you can create the cluster under <em><strong>System &gt; Fabric &gt; VNA Cluster</strong></em>, and in vCenter, it’s a bit harder to find: click on vCenter, then on Configure, scroll down to Networking, and then click on VNA Clusters. I&rsquo;ll deploy it via vCenter as an example.</p>
+<p>The setup is completed in 4 simple steps. First, you need to create a cluster. To do this, select the cluster name and form factor. These are the same form factors used for an Edge Cluster, by the way. Next, configure the first cluster node by clicking <em><strong>ADD</strong></em>. At least one cluster node is required per cluster, but for high availability (HA) reasons, you should always deploy at least two.
+Setting up the first cluster node is very similar to setting up an edge node. You need an FQDN, and you must select the appropriate Compute Manager, vSphere cluster, and datastore. For the management network, you can choose between DHCP or static.
+I generally always use static addresses. Finally, a suitable port group must be selected. For some reason, VCF 9.1 always selects the ESX management network here.
+In my setup, I have the VNA management addresses in the VM management network. That’s all there is to it—you don’t need any more information for the first node. You can then simply create the second node from the first using the <em><strong>CLONE</strong></em> button, saving yourself a lot of typing. Here, you just need to specify the delta, i.e., FQDN and IP addresses.
+After confirmation, the VNA nodes are automatically deployed, and after a short time, they should be visible in vCenter and NSX, with the status showing as Success. The entire setup is now complete.</p>
+
+
+<div class="image-gallery" id="gallery-897ed09f"><a href="/vcf91-vna-vpc/01%20Create%20VNA%20Cluster.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  01 Create VNA Cluster"><img src="/vcf91-vna-vpc/01%20Create%20VNA%20Cluster_hu_c7841f4349176983.jpg" alt="VNA Cluster:  01 Create VNA Cluster" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  01 Create VNA Cluster</div>
+                    </a><a href="/vcf91-vna-vpc/02%20Cluster%20Size.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  02 Cluster Size"><img src="/vcf91-vna-vpc/02%20Cluster%20Size_hu_4d825bdb785ef00c.jpg" alt="VNA Cluster:  02 Cluster Size" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  02 Cluster Size</div>
+                    </a><a href="/vcf91-vna-vpc/03%20Setup%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  03 Setup Node"><img src="/vcf91-vna-vpc/03%20Setup%20Node_hu_b2fae754135f9309.jpg" alt="VNA Cluster:  03 Setup Node" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  03 Setup Node</div>
+                    </a><a href="/vcf91-vna-vpc/04%20Clone%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  04 Clone Node"><img src="/vcf91-vna-vpc/04%20Clone%20Node_hu_976b5d584c063cfc.jpg" alt="VNA Cluster:  04 Clone Node" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  04 Clone Node</div>
+                    </a><a href="/vcf91-vna-vpc/05%20Final%20cluster.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  05 Final cluster"><img src="/vcf91-vna-vpc/05%20Final%20cluster_hu_8b46e91cee6683e0.jpg" alt="VNA Cluster:  05 Final cluster" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  05 Final cluster</div>
+                    </a></div>
+<p>To be honest, that was super easy. But if you take a closer look, there’s actually a bit more going on behind the scenes. That’s because each VNA has been assigned a BFD session. I’ll explain exactly how that works a little later. For now, it’s enough to know that our VNA cluster is up and running.</p>
+<h3 id="choosing-the-right-vna-size">Choosing the right VNA Size</h3>
+<ul>
+<li>Small
+vCPU: 2 | Memory: 4 GB
+Use Case: Suitable for Proof of Concept (PoC) and lab environments only.</li>
+<li>Medium
+vCPU: 4 | Memory: 8 GB
+Use Case: Suitable for non-critical environments with low volumes of redirected traffic and minimal stateful service processing requirements.</li>
+<li>Large
+vCPU: 8 | Memory: 32 GB
+Use Case: Recommended for production environments with high volume of redirected traffic and high stateful service processing requirements.</li>
+<li>Extra Large
+vCPU: 16 | Memory: 64 GB
+Use Case: Recommended for environments optimised for NSX Layer 7 load balancer processing requirements.</li>
+</ul>
+<h2 id="using-the-vna">Using the VNA</h2>
+<p>Now that our VNA cluster has been successfully deployed, the obvious question is: what do I do with it now? Well, to put it simply, the VNA cluster does not replace an Edge cluster. I cannot run a T0 or T1 router on the VNA cluster. At least for now, it is only possible to use the VNA cluster with a Transit Gateway—and not even with every type of Transit Gateway.
+The VNA is specifically designed to enable a Distributed Transit Gateway to use Stateful Services; it is also used when implementing VXLAN with VPCs. However, that is not the focus of this article. This topic is still on my roadmap, but I first need to figure out how to create a test scenario with virtual Sonic switches.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">To understand this properly, you first need to understand the limitations of the Distributed Transit Gateway in VCF 9.0.X. I recommend my article on this topic, which you can read <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">here</a>.</div>
+    </aside>
+<p>To create a VPC with stateful services on a distributed transit gateway, a few steps are required.</p>
+<h3 id="new-transit-gateway">New transit gateway</h3>
+<p>First, you need to create an external connection. In NSX, you can do this under <em><strong>Networking -&gt; VPC Connectivity -&gt; External Connection</strong></em>. To do this, you need a VLAN ID and a physical gateway capable of routing traffic. This external network will later serve as our public subnet within the VPC. In my case, I am using VLAN 200.</p>
+<p>Next, you need to configure an external IP block. This is the IP range from VLAN 200 that can be used. To do this, navigate to <em><strong>Networking -&gt; IP Address Pools -&gt; IP Address Blocks</strong></em> in NSX. It is important to set the visibility to “External”; otherwise, the IP block cannot be used for external connectivity. In my case, I am using the entire 192.168.200.0/24 subnet.</p>
+
+
+<div class="image-gallery" id="gallery-7e1121f7"><a href="/vcf91-vna-vpc/External%20Connection.jpg" class="gallery-item" data-lightbox-group="gallery-7e1121f7" data-title="VPC:  External Connection"><img src="/vcf91-vna-vpc/External%20Connection_hu_8ecc9b8e2edca9bf.jpg" alt="VPC:  External Connection" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  External Connection</div>
+                    </a><a href="/vcf91-vna-vpc/External%20IP%20Block.jpg" class="gallery-item" data-lightbox-group="gallery-7e1121f7" data-title="VPC:  External IP Block"><img src="/vcf91-vna-vpc/External%20IP%20Block_hu_ece627daaea5059c.jpg" alt="VPC:  External IP Block" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  External IP Block</div>
+                    </a></div>
+<p>After these two simple steps, you can create the distributed transit gateway. To do this, navigate to <em><strong>Networking -&gt; VPC Connectivity -&gt; Transit Gateways -&gt; ADD TRANSIT GATEWAY</strong></em> and create a new transit gateway. It is important here that you set the connection type to “Distributed VLAN Connection,” since we do not want to use an edge.
+Next, select the previously created External Connection and the External IP Block. The Private - Transit Gateway IP Block is optional if you want inter-VPC connectivity via the private transit gateway subnet. Here, I simply select the default IP block created by VCF. Then comes what is probably the most important step. Select the VNA cluster and enable default outbound NAT. This is a new feature when creating the distributed transit gateway. All other steps were already available in VCF 9.0.X.</p>
+
+
+<div class="image-gallery" id="gallery-6a331773"><a href="/vcf91-vna-vpc/01%20New%20Transitgateway.jpg" class="gallery-item" data-lightbox-group="gallery-6a331773" data-title="Transit Gateway:  01 New Transitgateway"><img src="/vcf91-vna-vpc/01%20New%20Transitgateway_hu_ca04a4158a156689.jpg" alt="Transit Gateway:  01 New Transitgateway" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway:  01 New Transitgateway</div>
+                    </a><a href="/vcf91-vna-vpc/02%20External%20Connectivity.jpg" class="gallery-item" data-lightbox-group="gallery-6a331773" data-title="Transit Gateway:  02 External Connectivity"><img src="/vcf91-vna-vpc/02%20External%20Connectivity_hu_d0c6efd67f347351.jpg" alt="Transit Gateway:  02 External Connectivity" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway:  02 External Connectivity</div>
+                    </a><a href="/vcf91-vna-vpc/03%20VPC%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-6a331773" data-title="Transit Gateway:  03 VPC Services"><img src="/vcf91-vna-vpc/03%20VPC%20Services_hu_eb4eeae411fb08d7.jpg" alt="Transit Gateway:  03 VPC Services" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway:  03 VPC Services</div>
+                    </a></div>
+<p>Congratulations! We’ve just created a new transit gateway, and what’s especially cool in VCF 9.1 is that we can create multiple transit gateways within the same NSX project. This means all kinds of configurations are possible. A VPC connectivity profile is automatically created in the background for our transit gateway. This is required when creating the VPC.</p>
+<h3 id="new-vpc">New VPC</h3>
+<p>The process of creating a new VPC is essentially the same as in 9.0.X. That’s why I won’t explain it separately. The only important thing here is to select the correct connectivity profile under Advanced Settings. The default connectivity profile is preselected here. The Connectivity Profile ultimately determines which transit gateway my VPC will be connected to. Next, I’ll create a private subnet in my new VPC and clone an Alpine test VM to run my tests.</p>
+
+
+<div class="image-gallery" id="gallery-7a21019b"><a href="/vcf91-vna-vpc/01-New%20VPC.jpg" class="gallery-item" data-lightbox-group="gallery-7a21019b" data-title="VPC:  01-New VPC"><img src="/vcf91-vna-vpc/01-New%20VPC_hu_a11d54f5e45ea4e9.jpg" alt="VPC:  01-New VPC" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  01-New VPC</div>
+                    </a><a href="/vcf91-vna-vpc/02%20New%20VPC%20Subnet.jpg" class="gallery-item" data-lightbox-group="gallery-7a21019b" data-title="VPC:  02 New VPC Subnet"><img src="/vcf91-vna-vpc/02%20New%20VPC%20Subnet_hu_4e112bd8127119e0.jpg" alt="VPC:  02 New VPC Subnet" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  02 New VPC Subnet</div>
+                    </a></div>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I’ll be writing an article on VLAN Extension at some point. For now, though, I’m going to ignore that topic. There are just too many new features in 9.1, and I haven’t had time to test them all yet.</div>
+    </aside>
+<h2 id="testing-the-new-vpc">Testing the new VPC</h2>
+<p>To perform the first connectivity test, I log in to my newly created Linux VM via the VMware console and check which IP address it was assigned. Since my private subnet is in the 192.168.5.0/24 range and isn&rsquo;t routed on my network, the VM should have received an IP address from this range via DHCP.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">vna-external01:~# ip a
+</span></span><span class="line"><span class="cl">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span class="m">1500</span> qdisc pfifo_fast state UP qlen <span class="m">1000</span>
+</span></span><span class="line"><span class="cl">    link/ether 00:50:56:8d:f9:3d brd ff:ff:ff:ff:ff:ff
+</span></span><span class="line"><span class="cl">    inet 192.168.5.3/29 scope global eth0
+</span></span><span class="line"><span class="cl">       valid_lft forever preferred_lft forever
+</span></span><span class="line"><span class="cl">    inet6 fe80::250:56ff:fe8d:f93d/64 scope link 
+</span></span><span class="line"><span class="cl">       valid_lft forever preferred_lft forever
+</span></span><span class="line"><span class="cl">vna-external01:~# 
+</span></span></code></pre></div><p>Next, I&rsquo;ll run a simple ping test on Google&rsquo;s DNS.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">vna-external01:~# ping 8.8.8.8
+</span></span><span class="line"><span class="cl">PING 8.8.8.8 <span class="o">(</span>8.8.8.8<span class="o">)</span>: <span class="m">56</span> data bytes
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 8.8.8.8: <span class="nv">seq</span><span class="o">=</span><span class="m">0</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>7.766 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 8.8.8.8: <span class="nv">seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>8.112 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 8.8.8.8: <span class="nv">seq</span><span class="o">=</span><span class="m">2</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>7.458 ms
+</span></span><span class="line"><span class="cl">^C
+</span></span><span class="line"><span class="cl">--- 8.8.8.8 ping statistics ---
+</span></span><span class="line"><span class="cl"><span class="m">3</span> packets transmitted, <span class="m">3</span> packets received, 0% packet loss
+</span></span><span class="line"><span class="cl">round-trip min/avg/max <span class="o">=</span> 7.458/7.778/8.112 ms
+</span></span></code></pre></div><h3 id="how-does-it-all-work">How does it all work?</h3>
+<p>Let&rsquo;s go into the rabbit hole and take a look at the Traceflow results first.</p>
+
+
+<div class="image-gallery" id="gallery-223dd1c2"><a href="/vcf91-vna-vpc/Traceflow.jpg" class="gallery-item" data-lightbox-group="gallery-223dd1c2" data-title="Traffic:  Traceflow"><img src="/vcf91-vna-vpc/Traceflow_hu_30e3d78d8471cf82.jpg" alt="Traffic:  Traceflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traffic:  Traceflow</div>
+                    </a></div>
+<p>Since the traceflow is too long and unfortunately doesn&rsquo;t fit in a screenshot, I took the time to write it all out in a table. Okay, to be honest, I just selected everything and told ChatGPT to create a Markdown table and shorten the columns, but there’s no need to make more work for yourself than necessary.</p>
+<p>To fully understand Traceflow, you need to know that my test VM is running on ESX03 and my actively used VNA is on ESX02. Additionally—and I haven’t mentioned this yet—every VPC connected to a distributed transit gateway with stateful services has a private service subnet. This is created automatically and cannot be modified. In my case, this is a /24 subnet from the 100.64.0.0/16 range. Unfortunately, the documentation does not specify exactly what this service subnet does at the time of writing this article. So I can only speculate.</p>
+<table>
+  <thead>
+      <tr>
+          <th>ID</th>
+          <th style="text-align: right">Hop</th>
+          <th>Observation</th>
+          <th>Node</th>
+          <th>Component</th>
+          <th>IP Address</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>T01</td>
+          <td style="text-align: right">0</td>
+          <td>Injected</td>
+          <td>ESX03</td>
+          <td><!-- raw HTML omitted -->vna-private.vmx@0ced54c1-ac22-4fd6-9a2d-12f9a9ed9a7e<!-- raw HTML omitted --></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T02</td>
+          <td style="text-align: right">0</td>
+          <td>Forwarded</td>
+          <td>ESX03</td>
+          <td>VNA01-Private</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T03</td>
+          <td style="text-align: right">0</td>
+          <td>Received</td>
+          <td>ESX03</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T04</td>
+          <td style="text-align: right">0</td>
+          <td>Forwarded</td>
+          <td>ESX03</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T05</td>
+          <td style="text-align: right">0</td>
+          <td>Received</td>
+          <td>ESX03</td>
+          <td>Services Subnet</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T06</td>
+          <td style="text-align: right">0</td>
+          <td>Forwarded</td>
+          <td>ESX03</td>
+          <td>Physical</td>
+          <td>Local endpoint IP: <code>10.28.17.2</code><!-- raw HTML omitted -->Remote endpoint IP: <code>10.28.17.4</code></td>
+      </tr>
+      <tr>
+          <td>T07</td>
+          <td style="text-align: right">1</td>
+          <td>Received</td>
+          <td>ESX02</td>
+          <td>Physical</td>
+          <td>Local endpoint IP: <code>10.28.17.4</code><!-- raw HTML omitted -->Remote endpoint IP: <code>10.28.17.2</code></td>
+      </tr>
+      <tr>
+          <td>T08</td>
+          <td style="text-align: right">1</td>
+          <td>Forwarded</td>
+          <td>ESX02</td>
+          <td>Physical</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T09</td>
+          <td style="text-align: right">2</td>
+          <td>Received</td>
+          <td>VNA02</td>
+          <td>Physical</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T10</td>
+          <td style="text-align: right">2</td>
+          <td>Forwarded</td>
+          <td>VNA02</td>
+          <td>Edge Host Switch</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T11</td>
+          <td style="text-align: right">2</td>
+          <td>Received</td>
+          <td>VNA02</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T12</td>
+          <td style="text-align: right">2</td>
+          <td>Forwarded</td>
+          <td>VNA02</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T13</td>
+          <td style="text-align: right">2</td>
+          <td>Received</td>
+          <td>VNA02</td>
+          <td>NAT</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T14</td>
+          <td style="text-align: right">2</td>
+          <td>Forwarded</td>
+          <td>VNA02</td>
+          <td>NAT</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T15</td>
+          <td style="text-align: right">2</td>
+          <td>Forwarded</td>
+          <td>VNA02</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T16</td>
+          <td style="text-align: right">2</td>
+          <td>Received</td>
+          <td>VNA02</td>
+          <td>Edge Host Switch</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T17</td>
+          <td style="text-align: right">2</td>
+          <td>Forwarded</td>
+          <td>VNA02</td>
+          <td>Physical</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T18</td>
+          <td style="text-align: right">3</td>
+          <td>Received</td>
+          <td>ESX02</td>
+          <td>Physical</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T19</td>
+          <td style="text-align: right">3</td>
+          <td>Forwarded</td>
+          <td>ESX02</td>
+          <td>Services Subnet</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T20</td>
+          <td style="text-align: right">3</td>
+          <td>Received</td>
+          <td>ESX02</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T21</td>
+          <td style="text-align: right">3</td>
+          <td>Forwarded</td>
+          <td>ESX02</td>
+          <td>VPC-VNA-01</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T22</td>
+          <td style="text-align: right">3</td>
+          <td>Forwarded</td>
+          <td>ESX02</td>
+          <td><!-- raw HTML omitted -->transit-rl-2d08df91-91ba-4d66-89ec-82a45ad526e6<!-- raw HTML omitted --></td>
+          <td>View Details</td>
+      </tr>
+      <tr>
+          <td>T23</td>
+          <td style="text-align: right">3</td>
+          <td>Received</td>
+          <td>ESX02</td>
+          <td>VNA-TGW</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T24</td>
+          <td style="text-align: right">3</td>
+          <td>Forwarded</td>
+          <td>ESX02</td>
+          <td>VNA-TGW</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>T25</td>
+          <td style="text-align: right">3</td>
+          <td>Delivered</td>
+          <td>ESX02</td>
+          <td>Physical</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>If you look at the traceflow, you can see that at ID T05, the traffic is routed to the service subnet.
+The VNA appliance has a service IP in this service network. Here is an example of the configuration for the VNA-02 appliance.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">    Interface     : 51c3e094-4818-4293-9070-cbcf488cbdc5
+</span></span><span class="line"><span class="cl">    Ifuid         : <span class="m">271</span>
+</span></span><span class="line"><span class="cl">    Name          : vpc-svclrp-1034
+</span></span><span class="line"><span class="cl">    Fwd-mode      : IPV4_ONLY
+</span></span><span class="line"><span class="cl">    Mode          : lif
+</span></span><span class="line"><span class="cl">    Port-type     : service
+</span></span><span class="line"><span class="cl">    IP/Mask       : 100.64.32.3/24
+</span></span><span class="line"><span class="cl">    MAC           : 00:50:56:8d:58:78
+</span></span><span class="line"><span class="cl">    VLAN          : <span class="m">1034</span>
+</span></span><span class="line"><span class="cl">    Access-VLAN   : untagged
+</span></span><span class="line"><span class="cl">    LS port       : 67c06caf-40b1-4559-b18a-43d2df01ad81
+</span></span><span class="line"><span class="cl">    Urpf-mode     : NONE
+</span></span><span class="line"><span class="cl">    DAD-mode      : LOOSE
+</span></span><span class="line"><span class="cl">    RA-mode       : SLAAC_DNS_THROUGH_RA<span class="o">(</span><span class="nv">M</span><span class="o">=</span>0, <span class="nv">O</span><span class="o">=</span>0<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    Admin         : up
+</span></span><span class="line"><span class="cl">    Op_state      : up
+</span></span><span class="line"><span class="cl">    Enable-mcast  : False
+</span></span><span class="line"><span class="cl">    MTU           : <span class="m">1500</span>
+</span></span><span class="line"><span class="cl">    arp_proxy     : 192.168.200.2
+</span></span></code></pre></div><p>What&rsquo;s interesting here is that there is a VRF on the VNA for each VPC, and each VRF has the same service IP but a different ARP proxy IP. This ARP proxy IP is therefore also the default outbound NAT IP for my VPC. But let&rsquo;s continue in Traceflow</p>
+<p>From there, traffic is transmitted normally via a TEP tunnel to the ESX 2 server (T06-T07). Once it reaches the ESX 2 server, the traffic is passed to the VNA via a transit segment (T09-T10). I suspect that child segments are being used here; I can&rsquo;t say for sure, but it seems likely, especially since the configuration shows that the service interface has a VLAN ID (1034), which makes the whole setup look like tagged VLAN traffic in an overlay network. Please take this statement with a grain of salt.</p>
+<p>Now the actual SNAT takes place on the proxy ARP IP address specified in the configuration. (T13-T14)
+The next interesting step is that the traffic is sent to the hypervisor—not to ESX 3, but to ESX 2, which is also running the VNA appliance. Based purely on the trace flow, as far as I can tell, the traffic doesn’t actually seem to pass through physical interfaces, but is simply passed from the VNA appliance’s FP-ETH to the host’s dvSwitch port. Unfortunately, this is also missing from the documentation and is just my speculation based on the trace flows and tests I’ve conducted. (T15-T19)</p>
+<p>After that, the traffic has reached the VPC gateway again. Since the VPC gateway is distributed, the traffic does not have to go back to ESX 3 (T20–T21) and can be forwarded to the Transit Gateway (T23–T24) and then finally passed into the physical network via the configured VLAN 200 (T25). What a wild ride. By the way, the packet responses flow in exactly the same way, just in reverse order.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Take this statement with a grain of salt</b>
+        </div>
+        <div class="admonition-content">As soon as the new NSX 9.1 Network Guide is released, I’ll go over everything again and post an update if necessary. I had to track the packet flow more or less manually. The blog by vGandalf (aka Tim Burkard) was also helpful; he presented the packet flow in a nice little <em>Lord of the Rings</em> story. Feel free to read about it <a href="https://vgandalf.com/2026/04/28/there-and-back-again-alasdair-carnie/">here</a>.</div>
+    </aside>
+<p>If you look at the statistics for the service interface, you can see that all traffic that needs to be NAT-ed passes through it.
+To view the subnet statistics, go to <em><strong>VPCs -&gt; Subnets</strong></em> and select the appropriate subnet. It is labeled “Services Subnet,” and when you expand the settings, you will see the <em><strong>VIEW SUBNET STATISTICS</strong></em> button.</p>
+
+
+<div class="image-gallery" id="gallery-a9e138c5"><a href="/vcf91-vna-vpc/Services%20Subnet.jpg" class="gallery-item" data-lightbox-group="gallery-a9e138c5" data-title="Traffic:  Services Subnet"><img src="/vcf91-vna-vpc/Services%20Subnet_hu_7ff3259212fa5b89.jpg" alt="Traffic:  Services Subnet" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traffic:  Services Subnet</div>
+                    </a><a href="/vcf91-vna-vpc/Service%20Subnet%20Statistics.jpg" class="gallery-item" data-lightbox-group="gallery-a9e138c5" data-title="Traffic:  Service Subnet Statistics"><img src="/vcf91-vna-vpc/Service%20Subnet%20Statistics_hu_1a4a183491a8c1c7.jpg" alt="Traffic:  Service Subnet Statistics" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traffic:  Service Subnet Statistics</div>
+                    </a></div>
+<h3 id="scaling">Scaling</h3>
+<p>The Virtual Network Appliance cluster provides a capacity pool and runs one or more service instances for stateful network services. One service instance is configured automatically per VPC when a stateful network service is set up. When two or more Virtual Network Appliance nodes form part of the cluster, the service instance is deployed in active/standby high availability mode; active/active mode is not supported. Each service instance connects to one of the four data plane fastpath interfaces, with multiple instances distributed across all four.</p>
+<p>All FastPath interfaces on the VNA are automatically connected to an overlay segment that is created automatically during deployment. To check the status of a VNA appliance, each VNA appliance establishes a BFD session with every other VNA appliance.</p>
+<p>To demonstrate how active services are distributed, I deployed two additional VNA appliances to the cluster. A newly created VPC named VNA-VPC3 was therefore distributed across VNA appliances 3 and 4.</p>
+
+
+<div class="image-gallery" id="gallery-3ff2572c"><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-01.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-01"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-01_hu_b94d83302f07b61d.jpg" alt="Scaling:  Active Services on VNA-01" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-01</div>
+                    </a><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-02.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-02"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-02_hu_714694bd86e72bd9.jpg" alt="Scaling:  Active Services on VNA-02" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-02</div>
+                    </a><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-03.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-03"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-03_hu_77de51ff1015b967.jpg" alt="Scaling:  Active Services on VNA-03" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-03</div>
+                    </a><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-04.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-04"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-04_hu_d86b639153281558.jpg" alt="Scaling:  Active Services on VNA-04" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-04</div>
+                    </a></div>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Distributing the Services</b>
+        </div>
+        <div class="admonition-content">The services are assigned during creation; to the best of my knowledge, it is not possible to move the VPCs to other VNA appliances after the fact.</div>
+    </aside>
+<h2 id="advantages">Advantages</h2>
+<p>The advantages are obvious. Traffic to and from VMs in public VPC networks is routed normally. Here, I don’t have an edge VM that could act as a bottleneck.
+Integration into existing network infrastructure is incredibly simple; in a pinch, I only need a VLAN and a routed network, yet I don’t have to sacrifice the advantages of private subnets as I would in VCF 9.0.X, and I can use Auto SNAT. You can also assign external IP addresses to VMs in private segments.
+But here’s what I consider the biggest advantage: I can use VKS with VPCs, which was previously only possible with an Edge cluster and a T0. This way, I get most of the benefits of centralized mode while still being able to easily integrate it into my existing network.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Deploying the VNA clusters is a breeze, and I think it will lead to significantly higher adoption among customers who have so far been resistant to NSX, T0, and dynamic routing protocols. The whole thing actually reminds me a bit of Nutanix’s current VPC implementation or the NSX-V days (which I more or less missed out on). It takes the distributed transit gateway to a higher level and really makes sense in combination with VKS. It definitely reduces complexity, since anyone can usually set up a routable VLAN. Still, there are a few downsides—for example, I’d like to be able to choose which service runs on which VNA appliance, but I suppose there has to be some room for optimization.</p>
+]]></content:encoded>
+		</item>
+		
+		<item>
 			<title>VCF 9.1 - VPCs Connectivity Policies</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
+			<link>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</link>
 			<pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+			<guid>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</guid>
 
 			
 			<description><![CDATA[In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.]]></description>
@@ -89,20 +520,20 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
   <thead>
       <tr>
           <th>SRC \ DEST</th>
-          <th><code>alpine01</code></th>
-          <th><code>vpc01-public</code></th>
-          <th><code>vpc01-ptgw</code></th>
-          <th><code>vpc02-public</code></th>
-          <th><code>vpc02-ptgw</code></th>
-          <th><code>vpc03-public</code></th>
-          <th><code>vpc03-ptgw</code></th>
-          <th><code>vpc04-public</code></th>
-          <th><code>vpc04-ptgw</code></th>
+          <th><!-- raw HTML omitted -->alpine01<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc01 public<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc01 ptgw<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc02 public<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc02 ptgw<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc03 public<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc03 ptgw<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc04 public<!-- raw HTML omitted --></th>
+          <th><!-- raw HTML omitted -->vpc04 ptgw<!-- raw HTML omitted --></th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td><code>alpine01</code></td>
+          <td><!-- raw HTML omitted -->alpine01<!-- raw HTML omitted --></td>
           <td>🟨</td>
           <td>✅</td>
           <td>❌</td>
@@ -114,7 +545,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>❌</td>
       </tr>
       <tr>
-          <td><code>vpc01-public</code></td>
+          <td><!-- raw HTML omitted -->vpc01 public<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>🟨</td>
           <td>✅</td>
@@ -126,7 +557,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc01-ptgw</code></td>
+          <td><!-- raw HTML omitted -->vpc01 ptgw<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>✅</td>
           <td>🟨</td>
@@ -138,7 +569,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc02-public</code></td>
+          <td><!-- raw HTML omitted -->vpc02 public<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>✅</td>
           <td>✅</td>
@@ -150,7 +581,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc02-ptgw</code></td>
+          <td><!-- raw HTML omitted -->vpc02 ptgw<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>✅</td>
           <td>✅</td>
@@ -162,7 +593,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc03-public</code></td>
+          <td><!-- raw HTML omitted -->vpc03 public<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>❌</td>
           <td>❌</td>
@@ -174,7 +605,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc03-ptgw</code></td>
+          <td><!-- raw HTML omitted -->vpc03 ptgw<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>❌</td>
           <td>❌</td>
@@ -186,7 +617,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc04-public</code></td>
+          <td><!-- raw HTML omitted -->vpc04 public<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>✅</td>
           <td>✅</td>
@@ -198,7 +629,7 @@ A <code>🟨</code> indicates a self-test and is not tested.</p>
           <td>✅</td>
       </tr>
       <tr>
-          <td><code>vpc04-ptgw</code></td>
+          <td><!-- raw HTML omitted -->vpc04 ptgw<!-- raw HTML omitted --></td>
           <td>✅</td>
           <td>✅</td>
           <td>✅</td>
@@ -247,12 +678,12 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 		
 		<item>
 			<title>Homelab Update 2026</title>
-			<link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
+			<link>http://localhost:1313/posts/homelab-update-2026/</link>
 			<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
+			<guid>http://localhost:1313/posts/homelab-update-2026/</guid>
 
 			
 			<description><![CDATA[Homelab Update 2026]]></description>
@@ -352,12 +783,12 @@ For many years, it has provided me with SMB shares, NFS, iSCSI, and all my Docke
 		
 		<item>
 			<title>Nutanix - Flow 7: virtual networking</title>
-			<link>https://sdn-warrior.org/posts/nutanix-flow/</link>
+			<link>http://localhost:1313/posts/nutanix-flow/</link>
 			<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
+			<guid>http://localhost:1313/posts/nutanix-flow/</guid>
 
 			
 			<description><![CDATA[In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.]]></description>
@@ -598,12 +1029,12 @@ I’m particularly interested in the setup with a transit VPC and a BGP gateway.
 		
 		<item>
 			<title>VCF9 - Extend Managment Domain Cluster</title>
-			<link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
+			<link>http://localhost:1313/posts/vcf9-extende-mgmt-domain/</link>
 			<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+			<guid>http://localhost:1313/posts/vcf9-extende-mgmt-domain/</guid>
 
 			
 			<description><![CDATA[How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.]]></description>
@@ -727,12 +1158,12 @@ After about 10 minutes, the whole thing was done and dusted, and my management d
 		
 		<item>
 			<title>2026 VMUG Connect - Amsterdam</title>
-			<link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
+			<link>http://localhost:1313/posts/2026-vmug-amsterdam/</link>
 			<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
+			<guid>http://localhost:1313/posts/2026-vmug-amsterdam/</guid>
 
 			
 			<description><![CDATA[A personal summary of the first VMUG Connect in Europe.]]></description>
@@ -826,12 +1257,12 @@ These PreConnect sessions were something new for me, and I found them really ent
 		
 		<item>
 			<title>IPv6 with NSX</title>
-			<link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
+			<link>http://localhost:1313/posts/ipv6-nsx/</link>
 			<pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
+			<guid>http://localhost:1313/posts/ipv6-nsx/</guid>
 
 			
 			<description><![CDATA[A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.]]></description>
@@ -1187,12 +1618,12 @@ In the official documentation for VCF9, there are exactly 143 search hits for IP
 		
 		<item>
 			<title>Nutanix - Get started with the CE Edition</title>
-			<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
+			<link>http://localhost:1313/posts/nutanix-install-ce/</link>
 			<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+			<guid>http://localhost:1313/posts/nutanix-install-ce/</guid>
 
 			
 			<description><![CDATA[Short blog about my experiences with Nutanix CE and which workarounds I needed.]]></description>
@@ -1416,12 +1847,12 @@ I hope that anyone who was hoping I would write a scathing review isn&rsquo;t to
 		
 		<item>
 			<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
-			<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
+			<link>http://localhost:1313/posts/avi-keycloak/</link>
 			<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+			<guid>http://localhost:1313/posts/avi-keycloak/</guid>
 
 			
 			<description><![CDATA[A short blog post on how to connect Keycloak to the AVI load balancer.]]></description>
@@ -1823,12 +2254,12 @@ In short, a flow is a chain of steps, conditions, and sub-flows with rules that 
 		
 		<item>
 			<title>VCF9 - Automation in All Apps mode</title>
-			<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
+			<link>http://localhost:1313/posts/vcf9-automation-all-apps/</link>
 			<pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+			<guid>http://localhost:1313/posts/vcf9-automation-all-apps/</guid>
 
 			
 			<description><![CDATA[A quick introduction to VCF 9 Automation in All Apps mode]]></description>
@@ -2448,12 +2879,12 @@ True multitenancy can only be achieved with VCF Automation. A rethink is necessa
 		
 		<item>
 			<title>VCF9 - Building a VCF Operations Dashboard</title>
-			<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+			<link>http://localhost:1313/posts/vcf9-operations-dashboard/</link>
 			<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+			<guid>http://localhost:1313/posts/vcf9-operations-dashboard/</guid>
 
 			
 			<description><![CDATA[A short blog about the joys of creating a dashboard in VCF 9 Operations.]]></description>
@@ -2816,12 +3247,12 @@ My thanks also go to <a href="https://www.vcrocs.info/">Dale Hassinger</a>, who 
 		
 		<item>
 			<title>VCF9 - Dark Site Edge - Part 2</title>
-			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+			<link>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</link>
 			<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+			<guid>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
@@ -3191,12 +3622,12 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 		
 		<item>
 			<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-			<link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
+			<link>http://localhost:1313/posts/bug-vcf-onboarding/</link>
 			<pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+			<guid>http://localhost:1313/posts/bug-vcf-onboarding/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
@@ -3319,12 +3750,12 @@ I have tried this several times and was able to verify that it works. Would I do
 		
 		<item>
 			<title>VCF9 - Dark Site Edge</title>
-			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+			<link>http://localhost:1313/posts/vcf9-dark-site-edge/</link>
 			<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+			<guid>http://localhost:1313/posts/vcf9-dark-site-edge/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9]]></description>
@@ -3594,12 +4025,12 @@ I must also say that I learned a lot. And as always, I have to express my gratit
 		
 		<item>
 			<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-			<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
+			<link>http://localhost:1313/posts/vcf9-ms-a2-special/</link>
 			<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+			<guid>http://localhost:1313/posts/vcf9-ms-a2-special/</guid>
 
 			
 			<description><![CDATA[A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.]]></description>
@@ -4001,12 +4432,12 @@ So, in total, I have 5 more MS-01s that I can use to test things out alongside V
 		
 		<item>
 			<title>Tales from the Lab – Lab setup</title>
-			<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
+			<link>http://localhost:1313/posts/tales-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
+			<guid>http://localhost:1313/posts/tales-from-the-lab-setup/</guid>
 
 			
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
@@ -4115,12 +4546,12 @@ My Ansible playbooks need to be revised because they no longer run properly with
 		
 		<item>
 			<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-			<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+			<link>http://localhost:1313/posts/vcf5-to-9-upgrade/</link>
 			<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+			<guid>http://localhost:1313/posts/vcf5-to-9-upgrade/</guid>
 
 			
 			<description><![CDATA[A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.]]></description>
@@ -4437,12 +4868,12 @@ If you have any questions or comments, please feel free to send me a message on 
 		
 		<item>
 			<title>VMware Explore 2025</title>
-			<link>https://sdn-warrior.org/posts/explore-2025/</link>
+			<link>http://localhost:1313/posts/explore-2025/</link>
 			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+			<guid>http://localhost:1313/posts/explore-2025/</guid>
 
 			
 			<description><![CDATA[My VMware Explore 2025]]></description>
@@ -4651,12 +5082,12 @@ I&rsquo;m already looking forward to the upcoming Knight exclusive events and Ex
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>
-			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+			<link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
 			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+			<guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
 
 			
 			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
@@ -4878,12 +5309,12 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
-			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
+			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
 			<pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
+			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 3.]]></description>
@@ -5191,12 +5622,12 @@ I have written about why <a href="https://sdn-warrior.org/posts/nsx-apply-to/">A
 		
 		<item>
 			<title>VCF 9 - Migration to central VCF Operations instance</title>
-			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
+			<link>http://localhost:1313/posts/vcf-operations-migration/</link>
 			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
+			<guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
 
 			
 			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
@@ -5458,12 +5889,12 @@ The components can still be shared by multiple instances if the security concept
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
+			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
+			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 2.]]></description>
@@ -6199,12 +6630,12 @@ The complete communication is as follows:</p>
 		
 		<item>
 			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
-			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
+			<link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
 			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+			<guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
 
 			
 			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
@@ -6339,12 +6770,12 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
+			<link>http://localhost:1313/posts/homelab-v6/</link>
 			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+			<guid>http://localhost:1313/posts/homelab-v6/</guid>
 
 			
 			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
@@ -6431,12 +6862,12 @@ Thus, it has never really been considered part of the NUC era.</p>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
+			<link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+			<guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
@@ -6982,12 +7413,12 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
-			<link>https://sdn-warrior.org/posts/ms-a2/</link>
+			<link>http://localhost:1313/posts/ms-a2/</link>
 			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+			<guid>http://localhost:1313/posts/ms-a2/</guid>
 
 			
 			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
@@ -7356,12 +7787,12 @@ I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, 
 		
 		<item>
 			<title>ReSTNSX with HCX</title>
-			<link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
+			<link>http://localhost:1313/posts/restnsx-with-hcx/</link>
 			<pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+			<guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
 
 			
 			<description><![CDATA[How can ReSTNSX help me with the migration with HCX]]></description>
@@ -7558,12 +7989,12 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 		
 		<item>
 			<title>NSX Expiring Transport Node Certificates</title>
-			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
+			<link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
 			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+			<guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
 
 			
 			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
@@ -7934,12 +8365,12 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>
-			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
+			<link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
 			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
+			<guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
 
 			
 			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
@@ -8073,12 +8504,12 @@ To share knowledge, to learn from others, and to keep growing – together.</p>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
-			<link>https://sdn-warrior.org/posts/vcf-token/</link>
+			<link>http://localhost:1313/posts/vcf-token/</link>
 			<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
+			<guid>http://localhost:1313/posts/vcf-token/</guid>
 
 			
 			<description><![CDATA[A short article on how to use the Broadcom Download Token.]]></description>
@@ -8203,12 +8634,12 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 		
 		<item>
 			<title>VCF Quick Tip - WLD with single NSX Manager</title>
-			<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
+			<link>http://localhost:1313/posts/vcf-single-nsx/</link>
 			<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
+			<guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
 
 			
 			<description><![CDATA[Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.]]></description>
@@ -8492,12 +8923,12 @@ Happy VCF deployment!</p>
 		
 		<item>
 			<title>VCF Stretched Cluster</title>
-			<link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
+			<link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
 			<pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
+			<guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
 
 			
 			<description><![CDATA[A short article on how to build a stretched vSAN cluster in the VCF.]]></description>
@@ -8964,12 +9395,12 @@ I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witne
 		
 		<item>
 			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
+			<link>http://localhost:1313/posts/vcf-import-overlay/</link>
 			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
+			<guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
 
 			
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
@@ -9116,12 +9547,12 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
+			<link>http://localhost:1313/posts/vcf-import-cluster/</link>
 			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
+			<guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
 
 			
 			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
@@ -9466,12 +9897,12 @@ We also still need to install licenses in the SDDC manager and setup the softwar
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>
-			<link>https://sdn-warrior.org/posts/jetkvm/</link>
+			<link>http://localhost:1313/posts/jetkvm/</link>
 			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
+			<guid>http://localhost:1313/posts/jetkvm/</guid>
 
 			
 			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
@@ -9523,12 +9954,12 @@ Time will tell whether the saying “all show and no substance” applies.</p>
 		
 		<item>
 			<title>Migration with HCX</title>
-			<link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
+			<link>http://localhost:1313/posts/migration-with-hcx/</link>
 			<pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
+			<guid>http://localhost:1313/posts/migration-with-hcx/</guid>
 
 			
 			<description><![CDATA[Live Migration of Workloads with VMware HCX: A Customer Story]]></description>
@@ -9890,12 +10321,12 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 		
 		<item>
 			<title>How Apply To works in NSX DFW</title>
-			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
+			<link>http://localhost:1313/posts/nsx-apply-to/</link>
 			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
+			<guid>http://localhost:1313/posts/nsx-apply-to/</guid>
 
 			
 			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
@@ -10300,12 +10731,12 @@ In addition, there is a limit to the number of firewall rules that can be applie
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>
-			<link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
+			<link>http://localhost:1313/posts/nsx-tep-groups/</link>
 			<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
+			<guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
 
 			
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
@@ -10629,12 +11060,12 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 		
 		<item>
 			<title>Redeploy an NSX Edge VM Appliance</title>
-			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
+			<link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
 			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
+			<guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
 
 			
 			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
@@ -10904,12 +11335,12 @@ Ensure these values align with those defined in the node_settings section.</p>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>
-			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
+			<link>http://localhost:1313/posts/vlan-automation/</link>
 			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
+			<guid>http://localhost:1313/posts/vlan-automation/</guid>
 
 			
 			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
@@ -11174,12 +11605,12 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
-			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
+			<link>http://localhost:1313/posts/ipam-automation/</link>
 			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
+			<guid>http://localhost:1313/posts/ipam-automation/</guid>
 
 			
 			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
@@ -11445,12 +11876,12 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-			<link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
+			<link>http://localhost:1313/posts/first-steps-ansible/</link>
 			<pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
+			<guid>http://localhost:1313/posts/first-steps-ansible/</guid>
 
 			
 			<description><![CDATA[How I Used ChatGPT to Create My First Ansible Playbook]]></description>
@@ -11903,12 +12334,12 @@ Efficiency:</p>
 		
 		<item>
 			<title>Homelab V5</title>
-			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
+			<link>http://localhost:1313/posts/homelab-v5/</link>
 			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
+			<guid>http://localhost:1313/posts/homelab-v5/</guid>
 
 			
 			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
@@ -12148,12 +12579,12 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 		
 		<item>
 			<title>How to use QoS in NSX</title>
-			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
+			<link>http://localhost:1313/posts/nsx-qos/</link>
 			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
+			<guid>http://localhost:1313/posts/nsx-qos/</guid>
 
 			
 			<description><![CDATA[How to use QoS in NSX]]></description>
@@ -12671,12 +13102,12 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
-			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
+			<link>http://localhost:1313/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
+			<guid>http://localhost:1313/posts/nsx4_2_1_1/</guid>
 
 			
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
@@ -12724,12 +13155,12 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>iSCSI Tuning</title>
-			<link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
+			<link>http://localhost:1313/posts/iscsi-tuning/</link>
 			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
+			<guid>http://localhost:1313/posts/iscsi-tuning/</guid>
 
 			
 			<description><![CDATA[Optimizing iSCSI Performance in an Unraid Environment]]></description>
@@ -12902,12 +13333,12 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>https://sdn-warrior.org/posts/mac-learning/</link>
+			<link>http://localhost:1313/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
+			<guid>http://localhost:1313/posts/mac-learning/</guid>
 
 			
 			<description><![CDATA[Why you should use MAC Learning]]></description>
@@ -13069,12 +13500,12 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
+			<link>http://localhost:1313/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
+			<guid>http://localhost:1313/posts/unraid-storage/</guid>
 
 			
 			<description><![CDATA[How i use Unraid]]></description>
@@ -13187,12 +13618,12 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>https://sdn-warrior.org/posts/nuc/</link>
+			<link>http://localhost:1313/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nuc/</guid>
+			<guid>http://localhost:1313/posts/nuc/</guid>
 
 			
 			<description><![CDATA[Performance tuning for NUCs]]></description>
@@ -13325,12 +13756,12 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>https://sdn-warrior.org/posts/labv4/</link>
+			<link>http://localhost:1313/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/labv4/</guid>
+			<guid>http://localhost:1313/posts/labv4/</guid>
 
 			
 			<description><![CDATA[Homelab v4]]></description>
@@ -13360,12 +13791,12 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
-			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+			<link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+			<guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
 
 			
 			<description><![CDATA[NSX and Fortigate]]></description>
@@ -13440,12 +13871,12 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
+			<link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
+			<guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
 
 			
 			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
@@ -13614,12 +14045,12 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
-			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
+			<link>http://localhost:1313/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
+			<guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
 
 			
 			<description><![CDATA[Exchange your NSX Manager certificates]]></description>

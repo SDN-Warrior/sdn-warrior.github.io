@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="In this new blog post, I will describe the benefits of virtual network appliances and how to use them.">
+
+  <meta itemprop="name" content="VCF 9.1 - VNA and VPCs">
+  <meta itemprop="description" content="In this new blog post, I will describe the benefits of virtual network appliances and how to use them.">
+  <meta itemprop="datePublished" content="2026-05-11T00:00:00+02:00">
+  <meta itemprop="dateModified" content="2026-05-11T00:00:00+02:00">
+  <meta itemprop="wordCount" content="2813">
+  <meta itemprop="image" content="http://localhost:1313/images/preview.png">
+  <meta itemprop="keywords" content="Vcf9.1,NSX,Vpc"><meta property="og:url" content="http://localhost:1313/posts/vcf9.1-vna-vpc/">
+  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+  <meta property="og:title" content="VCF 9.1 - VNA and VPCs">
+  <meta property="og:description" content="In this new blog post, I will describe the benefits of virtual network appliances and how to use them.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-11T00:00:00+02:00">
+    <meta property="article:modified_time" content="2026-05-11T00:00:00+02:00">
+    <meta property="article:tag" content="Vcf9.1">
+    <meta property="article:tag" content="NSX">
+    <meta property="article:tag" content="Vpc">
+    <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/preview.png">
+  <meta name="twitter:title" content="VCF 9.1 - VNA and VPCs">
+  <meta name="twitter:description" content="In this new blog post, I will describe the benefits of virtual network appliances and how to use them.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF 9.1 - VNA and VPCs",
+    "name": "VCF 9.1 - VNA and VPCs",
+    "description": "In this new blog post, I will describe the benefits of virtual network appliances and how to use them.",
+    "keywords": ["vcf9.1", "nsx", "vpc"],
+    "articleBody": "Introduction VMware has been cooking up something and has introduced another feature for VPCs and the Transit Gateway. The VNA, or Virtual Network Appliance. But what is it all about, and what can you do with it? Doesn’t this just add even more complexity to an already complex network setup with NSX? Well, as always, the answer is yes and no. What exactly you can do with the VNA, how it’s deployed, why it might make it easier to get started with VPCs and SDN, and what all of this means for people who want to use VKS—I’d like to get to the bottom of all that in today’s article.\nA short disclaimer\rThis blog post was created using the 9.1 beta version. Since VCF 9.1 does not yet have GA status at the time of writing, and some of the documentation has not yet been made fully public, changes may still occur.\rBut anyway, let’s get started and begin with the simplest part: deploying the VNA.\nDeploying a VNA Cluster As with Edge clusters, there are two options for VNA as well. Either via vCenter or via NSX. At the end of the day, the process is the same, whether I initiate it via vCenter or via NSX. In NSX, you can create the cluster under System \u003e Fabric \u003e VNA Cluster, and in vCenter, it’s a bit harder to find: click on vCenter, then on Configure, scroll down to Networking, and then click on VNA Clusters. I’ll deploy it via vCenter as an example.\nThe setup is completed in 4 simple steps. First, you need to create a cluster. To do this, select the cluster name and form factor. These are the same form factors used for an Edge Cluster, by the way. Next, configure the first cluster node by clicking ADD. At least one cluster node is required per cluster, but for high availability (HA) reasons, you should always deploy at least two. Setting up the first cluster node is very similar to setting up an edge node. You need an FQDN, and you must select the appropriate Compute Manager, vSphere cluster, and datastore. For the management network, you can choose between DHCP or static. I generally always use static addresses. Finally, a suitable port group must be selected. For some reason, VCF 9.1 always selects the ESX management network here. In my setup, I have the VNA management addresses in the VM management network. That’s all there is to it—you don’t need any more information for the first node. You can then simply create the second node from the first using the CLONE button, saving yourself a lot of typing. Here, you just need to specify the delta, i.e., FQDN and IP addresses. After confirmation, the VNA nodes are automatically deployed, and after a short time, they should be visible in vCenter and NSX, with the status showing as Success. The entire setup is now complete.\nVNA Cluster: 01 Create VNA Cluster VNA Cluster: 02 Cluster Size VNA Cluster: 03 Setup Node VNA Cluster: 04 Clone Node VNA Cluster: 05 Final cluster To be honest, that was super easy. But if you take a closer look, there’s actually a bit more going on behind the scenes. That’s because each VNA has been assigned a BFD session. I’ll explain exactly how that works a little later. For now, it’s enough to know that our VNA cluster is up and running.\nChoosing the right VNA Size Small vCPU: 2 | Memory: 4 GB Use Case: Suitable for Proof of Concept (PoC) and lab environments only. Medium vCPU: 4 | Memory: 8 GB Use Case: Suitable for non-critical environments with low volumes of redirected traffic and minimal stateful service processing requirements. Large vCPU: 8 | Memory: 32 GB Use Case: Recommended for production environments with high volume of redirected traffic and high stateful service processing requirements. Extra Large vCPU: 16 | Memory: 64 GB Use Case: Recommended for environments optimised for NSX Layer 7 load balancer processing requirements. Using the VNA Now that our VNA cluster has been successfully deployed, the obvious question is: what do I do with it now? Well, to put it simply, the VNA cluster does not replace an Edge cluster. I cannot run a T0 or T1 router on the VNA cluster. At least for now, it is only possible to use the VNA cluster with a Transit Gateway—and not even with every type of Transit Gateway. The VNA is specifically designed to enable a Distributed Transit Gateway to use Stateful Services; it is also used when implementing VXLAN with VPCs. However, that is not the focus of this article. This topic is still on my roadmap, but I first need to figure out how to create a test scenario with virtual Sonic switches.\nInfo\rTo understand this properly, you first need to understand the limitations of the Distributed Transit Gateway in VCF 9.0.X. I recommend my article on this topic, which you can read here.\rTo create a VPC with stateful services on a distributed transit gateway, a few steps are required.\nNew transit gateway First, you need to create an external connection. In NSX, you can do this under Networking -\u003e VPC Connectivity -\u003e External Connection. To do this, you need a VLAN ID and a physical gateway capable of routing traffic. This external network will later serve as our public subnet within the VPC. In my case, I am using VLAN 200.\nNext, you need to configure an external IP block. This is the IP range from VLAN 200 that can be used. To do this, navigate to Networking -\u003e IP Address Pools -\u003e IP Address Blocks in NSX. It is important to set the visibility to “External”; otherwise, the IP block cannot be used for external connectivity. In my case, I am using the entire 192.168.200.0/24 subnet.\nVPC: External Connection VPC: External IP Block After these two simple steps, you can create the distributed transit gateway. To do this, navigate to Networking -\u003e VPC Connectivity -\u003e Transit Gateways -\u003e ADD TRANSIT GATEWAY and create a new transit gateway. It is important here that you set the connection type to “Distributed VLAN Connection,” since we do not want to use an edge. Next, select the previously created External Connection and the External IP Block. The Private - Transit Gateway IP Block is optional if you want inter-VPC connectivity via the private transit gateway subnet. Here, I simply select the default IP block created by VCF. Then comes what is probably the most important step. Select the VNA cluster and enable default outbound NAT. This is a new feature when creating the distributed transit gateway. All other steps were already available in VCF 9.0.X.\nTransit Gateway: 01 New Transitgateway Transit Gateway: 02 External Connectivity Transit Gateway: 03 VPC Services Congratulations! We’ve just created a new transit gateway, and what’s especially cool in VCF 9.1 is that we can create multiple transit gateways within the same NSX project. This means all kinds of configurations are possible. A VPC connectivity profile is automatically created in the background for our transit gateway. This is required when creating the VPC.\nNew VPC The process of creating a new VPC is essentially the same as in 9.0.X. That’s why I won’t explain it separately. The only important thing here is to select the correct connectivity profile under Advanced Settings. The default connectivity profile is preselected here. The Connectivity Profile ultimately determines which transit gateway my VPC will be connected to. Next, I’ll create a private subnet in my new VPC and clone an Alpine test VM to run my tests.\nVPC: 01-New VPC VPC: 02 New VPC Subnet Info\rI’ll be writing an article on VLAN Extension at some point. For now, though, I’m going to ignore that topic. There are just too many new features in 9.1, and I haven’t had time to test them all yet.\rTesting the new VPC To perform the first connectivity test, I log in to my newly created Linux VM via the VMware console and check which IP address it was assigned. Since my private subnet is in the 192.168.5.0/24 range and isn’t routed on my network, the VM should have received an IP address from this range via DHCP.\nvna-external01:~# ip a 2: eth0: mtu 1500 qdisc pfifo_fast state UP qlen 1000 link/ether 00:50:56:8d:f9:3d brd ff:ff:ff:ff:ff:ff inet 192.168.5.3/29 scope global eth0 valid_lft forever preferred_lft forever inet6 fe80::250:56ff:fe8d:f93d/64 scope link valid_lft forever preferred_lft forever vna-external01:~# Next, I’ll run a simple ping test on Google’s DNS.\nvna-external01:~# ping 8.8.8.8 PING 8.8.8.8 (8.8.8.8): 56 data bytes 64 bytes from 8.8.8.8: seq=0 ttl=118 time=7.766 ms 64 bytes from 8.8.8.8: seq=1 ttl=118 time=8.112 ms 64 bytes from 8.8.8.8: seq=2 ttl=118 time=7.458 ms ^C --- 8.8.8.8 ping statistics --- 3 packets transmitted, 3 packets received, 0% packet loss round-trip min/avg/max = 7.458/7.778/8.112 ms How does it all work? Let’s go into the rabbit hole and take a look at the Traceflow results first.\nTraffic: Traceflow Since the traceflow is too long and unfortunately doesn’t fit in a screenshot, I took the time to write it all out in a table. Okay, to be honest, I just selected everything and told ChatGPT to create a Markdown table and shorten the columns, but there’s no need to make more work for yourself than necessary.\nTo fully understand Traceflow, you need to know that my test VM is running on ESX03 and my actively used VNA is on ESX02. Additionally—and I haven’t mentioned this yet—every VPC connected to a distributed transit gateway with stateful services has a private service subnet. This is created automatically and cannot be modified. In my case, this is a /24 subnet from the 100.64.0.0/16 range. Unfortunately, the documentation does not specify exactly what this service subnet does at the time of writing this article. So I can only speculate.\nID Hop Observation Node Component IP Address T01 0 Injected ESX03 vna-private.vmx@0ced54c1-ac22-4fd6-9a2d-12f9a9ed9a7e T02 0 Forwarded ESX03 VNA01-Private T03 0 Received ESX03 VPC-VNA-01 T04 0 Forwarded ESX03 VPC-VNA-01 T05 0 Received ESX03 Services Subnet T06 0 Forwarded ESX03 Physical Local endpoint IP: 10.28.17.2Remote endpoint IP: 10.28.17.4 T07 1 Received ESX02 Physical Local endpoint IP: 10.28.17.4Remote endpoint IP: 10.28.17.2 T08 1 Forwarded ESX02 Physical T09 2 Received VNA02 Physical T10 2 Forwarded VNA02 Edge Host Switch T11 2 Received VNA02 VPC-VNA-01 T12 2 Forwarded VNA02 VPC-VNA-01 T13 2 Received VNA02 NAT T14 2 Forwarded VNA02 NAT T15 2 Forwarded VNA02 VPC-VNA-01 T16 2 Received VNA02 Edge Host Switch T17 2 Forwarded VNA02 Physical T18 3 Received ESX02 Physical T19 3 Forwarded ESX02 Services Subnet T20 3 Received ESX02 VPC-VNA-01 T21 3 Forwarded ESX02 VPC-VNA-01 T22 3 Forwarded ESX02 transit-rl-2d08df91-91ba-4d66-89ec-82a45ad526e6 View Details T23 3 Received ESX02 VNA-TGW T24 3 Forwarded ESX02 VNA-TGW T25 3 Delivered ESX02 Physical If you look at the traceflow, you can see that at ID T05, the traffic is routed to the service subnet. The VNA appliance has a service IP in this service network. Here is an example of the configuration for the VNA-02 appliance.\nInterface : 51c3e094-4818-4293-9070-cbcf488cbdc5 Ifuid : 271 Name : vpc-svclrp-1034 Fwd-mode : IPV4_ONLY Mode : lif Port-type : service IP/Mask : 100.64.32.3/24 MAC : 00:50:56:8d:58:78 VLAN : 1034 Access-VLAN : untagged LS port : 67c06caf-40b1-4559-b18a-43d2df01ad81 Urpf-mode : NONE DAD-mode : LOOSE RA-mode : SLAAC_DNS_THROUGH_RA(M=0, O=0) Admin : up Op_state : up Enable-mcast : False MTU : 1500 arp_proxy : 192.168.200.2 What’s interesting here is that there is a VRF on the VNA for each VPC, and each VRF has the same service IP but a different ARP proxy IP. This ARP proxy IP is therefore also the default outbound NAT IP for my VPC. But let’s continue in Traceflow\nFrom there, traffic is transmitted normally via a TEP tunnel to the ESX 2 server (T06-T07). Once it reaches the ESX 2 server, the traffic is passed to the VNA via a transit segment (T09-T10). I suspect that child segments are being used here; I can’t say for sure, but it seems likely, especially since the configuration shows that the service interface has a VLAN ID (1034), which makes the whole setup look like tagged VLAN traffic in an overlay network. Please take this statement with a grain of salt.\nNow the actual SNAT takes place on the proxy ARP IP address specified in the configuration. (T13-T14) The next interesting step is that the traffic is sent to the hypervisor—not to ESX 3, but to ESX 2, which is also running the VNA appliance. Based purely on the trace flow, as far as I can tell, the traffic doesn’t actually seem to pass through physical interfaces, but is simply passed from the VNA appliance’s FP-ETH to the host’s dvSwitch port. Unfortunately, this is also missing from the documentation and is just my speculation based on the trace flows and tests I’ve conducted. (T15-T19)\nAfter that, the traffic has reached the VPC gateway again. Since the VPC gateway is distributed, the traffic does not have to go back to ESX 3 (T20–T21) and can be forwarded to the Transit Gateway (T23–T24) and then finally passed into the physical network via the configured VLAN 200 (T25). What a wild ride. By the way, the packet responses flow in exactly the same way, just in reverse order.\nTake this statement with a grain of salt\rAs soon as the new NSX 9.1 Network Guide is released, I’ll go over everything again and post an update if necessary. I had to track the packet flow more or less manually. The blog by vGandalf (aka Tim Burkard) was also helpful; he presented the packet flow in a nice little Lord of the Rings story. Feel free to read about it here.\rIf you look at the statistics for the service interface, you can see that all traffic that needs to be NAT-ed passes through it. To view the subnet statistics, go to VPCs -\u003e Subnets and select the appropriate subnet. It is labeled “Services Subnet,” and when you expand the settings, you will see the VIEW SUBNET STATISTICS button.\nTraffic: Services Subnet Traffic: Service Subnet Statistics Scaling The Virtual Network Appliance cluster provides a capacity pool and runs one or more service instances for stateful network services. One service instance is configured automatically per VPC when a stateful network service is set up. When two or more Virtual Network Appliance nodes form part of the cluster, the service instance is deployed in active/standby high availability mode; active/active mode is not supported. Each service instance connects to one of the four data plane fastpath interfaces, with multiple instances distributed across all four.\nAll FastPath interfaces on the VNA are automatically connected to an overlay segment that is created automatically during deployment. To check the status of a VNA appliance, each VNA appliance establishes a BFD session with every other VNA appliance.\nTo demonstrate how active services are distributed, I deployed two additional VNA appliances to the cluster. A newly created VPC named VNA-VPC3 was therefore distributed across VNA appliances 3 and 4.\nScaling: Active Services on VNA-01 Scaling: Active Services on VNA-02 Scaling: Active Services on VNA-03 Scaling: Active Services on VNA-04 Distributing the Services\rThe services are assigned during creation; to the best of my knowledge, it is not possible to move the VPCs to other VNA appliances after the fact.\rAdvantages The advantages are obvious. Traffic to and from VMs in public VPC networks is routed normally. Here, I don’t have an edge VM that could act as a bottleneck. Integration into existing network infrastructure is incredibly simple; in a pinch, I only need a VLAN and a routed network, yet I don’t have to sacrifice the advantages of private subnets as I would in VCF 9.0.X, and I can use Auto SNAT. You can also assign external IP addresses to VMs in private segments. But here’s what I consider the biggest advantage: I can use VKS with VPCs, which was previously only possible with an Edge cluster and a T0. This way, I get most of the benefits of centralized mode while still being able to easily integrate it into my existing network.\nConclusion Deploying the VNA clusters is a breeze, and I think it will lead to significantly higher adoption among customers who have so far been resistant to NSX, T0, and dynamic routing protocols. The whole thing actually reminds me a bit of Nutanix’s current VPC implementation or the NSX-V days (which I more or less missed out on). It takes the distributed transit gateway to a higher level and really makes sense in combination with VKS. It definitely reduces complexity, since anyone can usually set up a routable VLAN. Still, there are a few downsides—for example, I’d like to be able to choose which service runs on which VNA appliance, but I suppose there has to be some room for optimization.\n",
+    "wordCount" : "2813",
+    "inLanguage": "en",
+    "image":"http://localhost:1313/images/net2.jpg","datePublished": "2026-05-11T00:00:00+02:00",
+    "dateModified": "2026-05-11T00:00:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "http://localhost:1313/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http://localhost:1313/posts/vcf9.1-vna-vpc/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:1313/favicon.ico"
+      }
+    }
+}
+</script><title>VCF 9.1 - VNA and VPCs</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.96d56b5133d3975859fd10f3cc279339127da5817fd6972315d02bab68907f5d.css" integrity="sha256-ltVrUTPTl1hZ/RDzzCeTORJ9pYF/1pcjFdArq2iQf10=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/net2.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vna-vpc%2f&amp;text=VCF%209.1%20-%20VNA%20and%20VPCs" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vna-vpc%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF%209.1%20-%20VNA%20and%20VPCs&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vna-vpc%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-vna-vpc%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%209.1%20-%20VNA%20and%20VPCs&amp;summary=VCF%209.1%20-%20VNA%20and%20VPCs%2c%20by%20SDN-Warrior%0a%0aIn%20this%20new%20blog%20post%2c%20I%20will%20describe%20the%20benefits%20of%20virtual%20network%20appliances%20and%20how%20to%20use%20them.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF 9.1 - VNA and VPCs&#34;,&#34;http://localhost:1313/posts/vcf9.1-vna-vpc/&#34;,&#34;VCF 9.1 - VNA and VPCs, by SDN-Warrior\n\nIn this new blog post, I will describe the benefits of virtual network appliances and how to use them.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="http://localhost:1313/posts/">Posts</a></li>
+		<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+		<li><a href="http://localhost:1313/links/">Links</a></li>
+		<li><a href="http://localhost:1313/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>May 11, 2026</span></div>
+				<h1>VCF 9.1 - VNA and VPCs</h1>
+			</header>
+			<div class="post-info"><p>In this new blog post, I will describe the benefits of virtual network appliances and how to use them.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vpc">vpc</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>2813 Words
+     // ReadTime
+    
+    
+    
+    12 Minutes, 47 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-05-11 00:00 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>VMware has been cooking up something and has introduced another feature for VPCs and the Transit Gateway. The VNA, or Virtual Network Appliance.
+But what is it all about, and what can you do with it? Doesn’t this just add even more complexity to an already complex network setup with NSX? Well, as always, the answer is yes and no. What exactly you can do with the VNA, how it’s deployed, why it might make it easier to get started with VPCs and SDN, and what all of this means for people who want to use VKS—I’d like to get to the bottom of all that in today’s article.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>A short disclaimer</b>
+        </div>
+        <div class="admonition-content">This blog post was created using the 9.1 beta version. Since VCF 9.1 does not yet have GA status at the time of writing, and some of the documentation has not yet been made fully public, changes may still occur.</div>
+    </aside>
+<p>But anyway, let&rsquo;s get started and begin with the simplest part: deploying the VNA.</p>
+<h2 id="deploying-a-vna-cluster">Deploying a VNA Cluster<a href="#deploying-a-vna-cluster" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>As with Edge clusters, there are two options for VNA as well. Either via vCenter or via NSX. At the end of the day, the process is the same, whether I initiate it via vCenter or via NSX. In NSX, you can create the cluster under <em><strong>System &gt; Fabric &gt; VNA Cluster</strong></em>, and in vCenter, it’s a bit harder to find: click on vCenter, then on Configure, scroll down to Networking, and then click on VNA Clusters. I&rsquo;ll deploy it via vCenter as an example.</p>
+<p>The setup is completed in 4 simple steps. First, you need to create a cluster. To do this, select the cluster name and form factor. These are the same form factors used for an Edge Cluster, by the way. Next, configure the first cluster node by clicking <em><strong>ADD</strong></em>. At least one cluster node is required per cluster, but for high availability (HA) reasons, you should always deploy at least two.
+Setting up the first cluster node is very similar to setting up an edge node. You need an FQDN, and you must select the appropriate Compute Manager, vSphere cluster, and datastore. For the management network, you can choose between DHCP or static.
+I generally always use static addresses. Finally, a suitable port group must be selected. For some reason, VCF 9.1 always selects the ESX management network here.
+In my setup, I have the VNA management addresses in the VM management network. That’s all there is to it—you don’t need any more information for the first node. You can then simply create the second node from the first using the <em><strong>CLONE</strong></em> button, saving yourself a lot of typing. Here, you just need to specify the delta, i.e., FQDN and IP addresses.
+After confirmation, the VNA nodes are automatically deployed, and after a short time, they should be visible in vCenter and NSX, with the status showing as Success. The entire setup is now complete.</p>
+
+
+<div class="image-gallery" id="gallery-897ed09f"><a href="/vcf91-vna-vpc/01%20Create%20VNA%20Cluster.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  01 Create VNA Cluster"><img src="/vcf91-vna-vpc/01%20Create%20VNA%20Cluster_hu_c7841f4349176983.jpg" alt="VNA Cluster:  01 Create VNA Cluster" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  01 Create VNA Cluster</div>
+                    </a><a href="/vcf91-vna-vpc/02%20Cluster%20Size.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  02 Cluster Size"><img src="/vcf91-vna-vpc/02%20Cluster%20Size_hu_4d825bdb785ef00c.jpg" alt="VNA Cluster:  02 Cluster Size" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  02 Cluster Size</div>
+                    </a><a href="/vcf91-vna-vpc/03%20Setup%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  03 Setup Node"><img src="/vcf91-vna-vpc/03%20Setup%20Node_hu_b2fae754135f9309.jpg" alt="VNA Cluster:  03 Setup Node" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  03 Setup Node</div>
+                    </a><a href="/vcf91-vna-vpc/04%20Clone%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  04 Clone Node"><img src="/vcf91-vna-vpc/04%20Clone%20Node_hu_976b5d584c063cfc.jpg" alt="VNA Cluster:  04 Clone Node" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  04 Clone Node</div>
+                    </a><a href="/vcf91-vna-vpc/05%20Final%20cluster.jpg" class="gallery-item" data-lightbox-group="gallery-897ed09f" data-title="VNA Cluster:  05 Final cluster"><img src="/vcf91-vna-vpc/05%20Final%20cluster_hu_8b46e91cee6683e0.jpg" alt="VNA Cluster:  05 Final cluster" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  05 Final cluster</div>
+                    </a></div>
+<p>To be honest, that was super easy. But if you take a closer look, there’s actually a bit more going on behind the scenes. That’s because each VNA has been assigned a BFD session. I’ll explain exactly how that works a little later. For now, it’s enough to know that our VNA cluster is up and running.</p>
+<h3 id="choosing-the-right-vna-size">Choosing the right VNA Size<a href="#choosing-the-right-vna-size" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>Small
+vCPU: 2 | Memory: 4 GB
+Use Case: Suitable for Proof of Concept (PoC) and lab environments only.</li>
+<li>Medium
+vCPU: 4 | Memory: 8 GB
+Use Case: Suitable for non-critical environments with low volumes of redirected traffic and minimal stateful service processing requirements.</li>
+<li>Large
+vCPU: 8 | Memory: 32 GB
+Use Case: Recommended for production environments with high volume of redirected traffic and high stateful service processing requirements.</li>
+<li>Extra Large
+vCPU: 16 | Memory: 64 GB
+Use Case: Recommended for environments optimised for NSX Layer 7 load balancer processing requirements.</li>
+</ul>
+<h2 id="using-the-vna">Using the VNA<a href="#using-the-vna" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Now that our VNA cluster has been successfully deployed, the obvious question is: what do I do with it now? Well, to put it simply, the VNA cluster does not replace an Edge cluster. I cannot run a T0 or T1 router on the VNA cluster. At least for now, it is only possible to use the VNA cluster with a Transit Gateway—and not even with every type of Transit Gateway.
+The VNA is specifically designed to enable a Distributed Transit Gateway to use Stateful Services; it is also used when implementing VXLAN with VPCs. However, that is not the focus of this article. This topic is still on my roadmap, but I first need to figure out how to create a test scenario with virtual Sonic switches.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">To understand this properly, you first need to understand the limitations of the Distributed Transit Gateway in VCF 9.0.X. I recommend my article on this topic, which you can read <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/">here</a>.</div>
+    </aside>
+<p>To create a VPC with stateful services on a distributed transit gateway, a few steps are required.</p>
+<h3 id="new-transit-gateway">New transit gateway<a href="#new-transit-gateway" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>First, you need to create an external connection. In NSX, you can do this under <em><strong>Networking -&gt; VPC Connectivity -&gt; External Connection</strong></em>. To do this, you need a VLAN ID and a physical gateway capable of routing traffic. This external network will later serve as our public subnet within the VPC. In my case, I am using VLAN 200.</p>
+<p>Next, you need to configure an external IP block. This is the IP range from VLAN 200 that can be used. To do this, navigate to <em><strong>Networking -&gt; IP Address Pools -&gt; IP Address Blocks</strong></em> in NSX. It is important to set the visibility to “External”; otherwise, the IP block cannot be used for external connectivity. In my case, I am using the entire 192.168.200.0/24 subnet.</p>
+
+
+<div class="image-gallery" id="gallery-7e1121f7"><a href="/vcf91-vna-vpc/External%20Connection.jpg" class="gallery-item" data-lightbox-group="gallery-7e1121f7" data-title="VPC:  External Connection"><img src="/vcf91-vna-vpc/External%20Connection_hu_8ecc9b8e2edca9bf.jpg" alt="VPC:  External Connection" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  External Connection</div>
+                    </a><a href="/vcf91-vna-vpc/External%20IP%20Block.jpg" class="gallery-item" data-lightbox-group="gallery-7e1121f7" data-title="VPC:  External IP Block"><img src="/vcf91-vna-vpc/External%20IP%20Block_hu_ece627daaea5059c.jpg" alt="VPC:  External IP Block" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  External IP Block</div>
+                    </a></div>
+<p>After these two simple steps, you can create the distributed transit gateway. To do this, navigate to <em><strong>Networking -&gt; VPC Connectivity -&gt; Transit Gateways -&gt; ADD TRANSIT GATEWAY</strong></em> and create a new transit gateway. It is important here that you set the connection type to “Distributed VLAN Connection,” since we do not want to use an edge.
+Next, select the previously created External Connection and the External IP Block. The Private - Transit Gateway IP Block is optional if you want inter-VPC connectivity via the private transit gateway subnet. Here, I simply select the default IP block created by VCF. Then comes what is probably the most important step. Select the VNA cluster and enable default outbound NAT. This is a new feature when creating the distributed transit gateway. All other steps were already available in VCF 9.0.X.</p>
+
+
+<div class="image-gallery" id="gallery-6a331773"><a href="/vcf91-vna-vpc/01%20New%20Transitgateway.jpg" class="gallery-item" data-lightbox-group="gallery-6a331773" data-title="Transit Gateway:  01 New Transitgateway"><img src="/vcf91-vna-vpc/01%20New%20Transitgateway_hu_ca04a4158a156689.jpg" alt="Transit Gateway:  01 New Transitgateway" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway:  01 New Transitgateway</div>
+                    </a><a href="/vcf91-vna-vpc/02%20External%20Connectivity.jpg" class="gallery-item" data-lightbox-group="gallery-6a331773" data-title="Transit Gateway:  02 External Connectivity"><img src="/vcf91-vna-vpc/02%20External%20Connectivity_hu_d0c6efd67f347351.jpg" alt="Transit Gateway:  02 External Connectivity" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway:  02 External Connectivity</div>
+                    </a><a href="/vcf91-vna-vpc/03%20VPC%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-6a331773" data-title="Transit Gateway:  03 VPC Services"><img src="/vcf91-vna-vpc/03%20VPC%20Services_hu_eb4eeae411fb08d7.jpg" alt="Transit Gateway:  03 VPC Services" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway:  03 VPC Services</div>
+                    </a></div>
+<p>Congratulations! We’ve just created a new transit gateway, and what’s especially cool in VCF 9.1 is that we can create multiple transit gateways within the same NSX project. This means all kinds of configurations are possible. A VPC connectivity profile is automatically created in the background for our transit gateway. This is required when creating the VPC.</p>
+<h3 id="new-vpc">New VPC<a href="#new-vpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The process of creating a new VPC is essentially the same as in 9.0.X. That’s why I won’t explain it separately. The only important thing here is to select the correct connectivity profile under Advanced Settings. The default connectivity profile is preselected here. The Connectivity Profile ultimately determines which transit gateway my VPC will be connected to. Next, I’ll create a private subnet in my new VPC and clone an Alpine test VM to run my tests.</p>
+
+
+<div class="image-gallery" id="gallery-7a21019b"><a href="/vcf91-vna-vpc/01-New%20VPC.jpg" class="gallery-item" data-lightbox-group="gallery-7a21019b" data-title="VPC:  01-New VPC"><img src="/vcf91-vna-vpc/01-New%20VPC_hu_a11d54f5e45ea4e9.jpg" alt="VPC:  01-New VPC" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  01-New VPC</div>
+                    </a><a href="/vcf91-vna-vpc/02%20New%20VPC%20Subnet.jpg" class="gallery-item" data-lightbox-group="gallery-7a21019b" data-title="VPC:  02 New VPC Subnet"><img src="/vcf91-vna-vpc/02%20New%20VPC%20Subnet_hu_4e112bd8127119e0.jpg" alt="VPC:  02 New VPC Subnet" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC:  02 New VPC Subnet</div>
+                    </a></div>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">I’ll be writing an article on VLAN Extension at some point. For now, though, I’m going to ignore that topic. There are just too many new features in 9.1, and I haven’t had time to test them all yet.</div>
+    </aside>
+<h2 id="testing-the-new-vpc">Testing the new VPC<a href="#testing-the-new-vpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To perform the first connectivity test, I log in to my newly created Linux VM via the VMware console and check which IP address it was assigned. Since my private subnet is in the 192.168.5.0/24 range and isn&rsquo;t routed on my network, the VM should have received an IP address from this range via DHCP.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">vna-external01:~# ip a
+</span></span><span class="line"><span class="cl">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span class="m">1500</span> qdisc pfifo_fast state UP qlen <span class="m">1000</span>
+</span></span><span class="line"><span class="cl">    link/ether 00:50:56:8d:f9:3d brd ff:ff:ff:ff:ff:ff
+</span></span><span class="line"><span class="cl">    inet 192.168.5.3/29 scope global eth0
+</span></span><span class="line"><span class="cl">       valid_lft forever preferred_lft forever
+</span></span><span class="line"><span class="cl">    inet6 fe80::250:56ff:fe8d:f93d/64 scope link 
+</span></span><span class="line"><span class="cl">       valid_lft forever preferred_lft forever
+</span></span><span class="line"><span class="cl">vna-external01:~# 
+</span></span></code></pre></div><p>Next, I&rsquo;ll run a simple ping test on Google&rsquo;s DNS.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">vna-external01:~# ping 8.8.8.8
+</span></span><span class="line"><span class="cl">PING 8.8.8.8 <span class="o">(</span>8.8.8.8<span class="o">)</span>: <span class="m">56</span> data bytes
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 8.8.8.8: <span class="nv">seq</span><span class="o">=</span><span class="m">0</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>7.766 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 8.8.8.8: <span class="nv">seq</span><span class="o">=</span><span class="m">1</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>8.112 ms
+</span></span><span class="line"><span class="cl"><span class="m">64</span> bytes from 8.8.8.8: <span class="nv">seq</span><span class="o">=</span><span class="m">2</span> <span class="nv">ttl</span><span class="o">=</span><span class="m">118</span> <span class="nv">time</span><span class="o">=</span>7.458 ms
+</span></span><span class="line"><span class="cl">^C
+</span></span><span class="line"><span class="cl">--- 8.8.8.8 ping statistics ---
+</span></span><span class="line"><span class="cl"><span class="m">3</span> packets transmitted, <span class="m">3</span> packets received, 0% packet loss
+</span></span><span class="line"><span class="cl">round-trip min/avg/max <span class="o">=</span> 7.458/7.778/8.112 ms
+</span></span></code></pre></div><h3 id="how-does-it-all-work">How does it all work?<a href="#how-does-it-all-work" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Let&rsquo;s go into the rabbit hole and take a look at the Traceflow results first.</p>
+
+
+<div class="image-gallery" id="gallery-223dd1c2"><a href="/vcf91-vna-vpc/Traceflow.jpg" class="gallery-item" data-lightbox-group="gallery-223dd1c2" data-title="Traffic:  Traceflow"><img src="/vcf91-vna-vpc/Traceflow_hu_30e3d78d8471cf82.jpg" alt="Traffic:  Traceflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traffic:  Traceflow</div>
+                    </a></div>
+<p>Since the traceflow is too long and unfortunately doesn&rsquo;t fit in a screenshot, I took the time to write it all out in a table. Okay, to be honest, I just selected everything and told ChatGPT to create a Markdown table and shorten the columns, but there’s no need to make more work for yourself than necessary.</p>
+<p>To fully understand Traceflow, you need to know that my test VM is running on ESX03 and my actively used VNA is on ESX02. Additionally—and I haven’t mentioned this yet—every VPC connected to a distributed transit gateway with stateful services has a private service subnet. This is created automatically and cannot be modified. In my case, this is a /24 subnet from the 100.64.0.0/16 range. Unfortunately, the documentation does not specify exactly what this service subnet does at the time of writing this article. So I can only speculate.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th style="text-align: right">Hop</th>
+            <th>Observation</th>
+            <th>Node</th>
+            <th>Component</th>
+            <th>IP Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>T01</td>
+            <td style="text-align: right">0</td>
+            <td>Injected</td>
+            <td>ESX03</td>
+            <td><!-- raw HTML omitted -->vna-private.vmx@0ced54c1-ac22-4fd6-9a2d-12f9a9ed9a7e<!-- raw HTML omitted --></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T02</td>
+            <td style="text-align: right">0</td>
+            <td>Forwarded</td>
+            <td>ESX03</td>
+            <td>VNA01-Private</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T03</td>
+            <td style="text-align: right">0</td>
+            <td>Received</td>
+            <td>ESX03</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T04</td>
+            <td style="text-align: right">0</td>
+            <td>Forwarded</td>
+            <td>ESX03</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T05</td>
+            <td style="text-align: right">0</td>
+            <td>Received</td>
+            <td>ESX03</td>
+            <td>Services Subnet</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T06</td>
+            <td style="text-align: right">0</td>
+            <td>Forwarded</td>
+            <td>ESX03</td>
+            <td>Physical</td>
+            <td>Local endpoint IP: <code>10.28.17.2</code><!-- raw HTML omitted -->Remote endpoint IP: <code>10.28.17.4</code></td>
+        </tr>
+        <tr>
+            <td>T07</td>
+            <td style="text-align: right">1</td>
+            <td>Received</td>
+            <td>ESX02</td>
+            <td>Physical</td>
+            <td>Local endpoint IP: <code>10.28.17.4</code><!-- raw HTML omitted -->Remote endpoint IP: <code>10.28.17.2</code></td>
+        </tr>
+        <tr>
+            <td>T08</td>
+            <td style="text-align: right">1</td>
+            <td>Forwarded</td>
+            <td>ESX02</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T09</td>
+            <td style="text-align: right">2</td>
+            <td>Received</td>
+            <td>VNA02</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T10</td>
+            <td style="text-align: right">2</td>
+            <td>Forwarded</td>
+            <td>VNA02</td>
+            <td>Edge Host Switch</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T11</td>
+            <td style="text-align: right">2</td>
+            <td>Received</td>
+            <td>VNA02</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T12</td>
+            <td style="text-align: right">2</td>
+            <td>Forwarded</td>
+            <td>VNA02</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T13</td>
+            <td style="text-align: right">2</td>
+            <td>Received</td>
+            <td>VNA02</td>
+            <td>NAT</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T14</td>
+            <td style="text-align: right">2</td>
+            <td>Forwarded</td>
+            <td>VNA02</td>
+            <td>NAT</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T15</td>
+            <td style="text-align: right">2</td>
+            <td>Forwarded</td>
+            <td>VNA02</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T16</td>
+            <td style="text-align: right">2</td>
+            <td>Received</td>
+            <td>VNA02</td>
+            <td>Edge Host Switch</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T17</td>
+            <td style="text-align: right">2</td>
+            <td>Forwarded</td>
+            <td>VNA02</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T18</td>
+            <td style="text-align: right">3</td>
+            <td>Received</td>
+            <td>ESX02</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T19</td>
+            <td style="text-align: right">3</td>
+            <td>Forwarded</td>
+            <td>ESX02</td>
+            <td>Services Subnet</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T20</td>
+            <td style="text-align: right">3</td>
+            <td>Received</td>
+            <td>ESX02</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T21</td>
+            <td style="text-align: right">3</td>
+            <td>Forwarded</td>
+            <td>ESX02</td>
+            <td>VPC-VNA-01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T22</td>
+            <td style="text-align: right">3</td>
+            <td>Forwarded</td>
+            <td>ESX02</td>
+            <td><!-- raw HTML omitted -->transit-rl-2d08df91-91ba-4d66-89ec-82a45ad526e6<!-- raw HTML omitted --></td>
+            <td>View Details</td>
+        </tr>
+        <tr>
+            <td>T23</td>
+            <td style="text-align: right">3</td>
+            <td>Received</td>
+            <td>ESX02</td>
+            <td>VNA-TGW</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T24</td>
+            <td style="text-align: right">3</td>
+            <td>Forwarded</td>
+            <td>ESX02</td>
+            <td>VNA-TGW</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>T25</td>
+            <td style="text-align: right">3</td>
+            <td>Delivered</td>
+            <td>ESX02</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>If you look at the traceflow, you can see that at ID T05, the traffic is routed to the service subnet.
+The VNA appliance has a service IP in this service network. Here is an example of the configuration for the VNA-02 appliance.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">    Interface     : 51c3e094-4818-4293-9070-cbcf488cbdc5
+</span></span><span class="line"><span class="cl">    Ifuid         : <span class="m">271</span>
+</span></span><span class="line"><span class="cl">    Name          : vpc-svclrp-1034
+</span></span><span class="line"><span class="cl">    Fwd-mode      : IPV4_ONLY
+</span></span><span class="line"><span class="cl">    Mode          : lif
+</span></span><span class="line"><span class="cl">    Port-type     : service
+</span></span><span class="line"><span class="cl">    IP/Mask       : 100.64.32.3/24
+</span></span><span class="line"><span class="cl">    MAC           : 00:50:56:8d:58:78
+</span></span><span class="line"><span class="cl">    VLAN          : <span class="m">1034</span>
+</span></span><span class="line"><span class="cl">    Access-VLAN   : untagged
+</span></span><span class="line"><span class="cl">    LS port       : 67c06caf-40b1-4559-b18a-43d2df01ad81
+</span></span><span class="line"><span class="cl">    Urpf-mode     : NONE
+</span></span><span class="line"><span class="cl">    DAD-mode      : LOOSE
+</span></span><span class="line"><span class="cl">    RA-mode       : SLAAC_DNS_THROUGH_RA<span class="o">(</span><span class="nv">M</span><span class="o">=</span>0, <span class="nv">O</span><span class="o">=</span>0<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    Admin         : up
+</span></span><span class="line"><span class="cl">    Op_state      : up
+</span></span><span class="line"><span class="cl">    Enable-mcast  : False
+</span></span><span class="line"><span class="cl">    MTU           : <span class="m">1500</span>
+</span></span><span class="line"><span class="cl">    arp_proxy     : 192.168.200.2
+</span></span></code></pre></div><p>What&rsquo;s interesting here is that there is a VRF on the VNA for each VPC, and each VRF has the same service IP but a different ARP proxy IP. This ARP proxy IP is therefore also the default outbound NAT IP for my VPC. But let&rsquo;s continue in Traceflow</p>
+<p>From there, traffic is transmitted normally via a TEP tunnel to the ESX 2 server (T06-T07). Once it reaches the ESX 2 server, the traffic is passed to the VNA via a transit segment (T09-T10). I suspect that child segments are being used here; I can&rsquo;t say for sure, but it seems likely, especially since the configuration shows that the service interface has a VLAN ID (1034), which makes the whole setup look like tagged VLAN traffic in an overlay network. Please take this statement with a grain of salt.</p>
+<p>Now the actual SNAT takes place on the proxy ARP IP address specified in the configuration. (T13-T14)
+The next interesting step is that the traffic is sent to the hypervisor—not to ESX 3, but to ESX 2, which is also running the VNA appliance. Based purely on the trace flow, as far as I can tell, the traffic doesn’t actually seem to pass through physical interfaces, but is simply passed from the VNA appliance’s FP-ETH to the host’s dvSwitch port. Unfortunately, this is also missing from the documentation and is just my speculation based on the trace flows and tests I’ve conducted. (T15-T19)</p>
+<p>After that, the traffic has reached the VPC gateway again. Since the VPC gateway is distributed, the traffic does not have to go back to ESX 3 (T20–T21) and can be forwarded to the Transit Gateway (T23–T24) and then finally passed into the physical network via the configured VLAN 200 (T25). What a wild ride. By the way, the packet responses flow in exactly the same way, just in reverse order.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Take this statement with a grain of salt</b>
+        </div>
+        <div class="admonition-content">As soon as the new NSX 9.1 Network Guide is released, I’ll go over everything again and post an update if necessary. I had to track the packet flow more or less manually. The blog by vGandalf (aka Tim Burkard) was also helpful; he presented the packet flow in a nice little <em>Lord of the Rings</em> story. Feel free to read about it <a href="https://vgandalf.com/2026/04/28/there-and-back-again-alasdair-carnie/">here</a>.</div>
+    </aside>
+<p>If you look at the statistics for the service interface, you can see that all traffic that needs to be NAT-ed passes through it.
+To view the subnet statistics, go to <em><strong>VPCs -&gt; Subnets</strong></em> and select the appropriate subnet. It is labeled “Services Subnet,” and when you expand the settings, you will see the <em><strong>VIEW SUBNET STATISTICS</strong></em> button.</p>
+
+
+<div class="image-gallery" id="gallery-a9e138c5"><a href="/vcf91-vna-vpc/Services%20Subnet.jpg" class="gallery-item" data-lightbox-group="gallery-a9e138c5" data-title="Traffic:  Services Subnet"><img src="/vcf91-vna-vpc/Services%20Subnet_hu_7ff3259212fa5b89.jpg" alt="Traffic:  Services Subnet" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traffic:  Services Subnet</div>
+                    </a><a href="/vcf91-vna-vpc/Service%20Subnet%20Statistics.jpg" class="gallery-item" data-lightbox-group="gallery-a9e138c5" data-title="Traffic:  Service Subnet Statistics"><img src="/vcf91-vna-vpc/Service%20Subnet%20Statistics_hu_1a4a183491a8c1c7.jpg" alt="Traffic:  Service Subnet Statistics" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Traffic:  Service Subnet Statistics</div>
+                    </a></div>
+<h3 id="scaling">Scaling<a href="#scaling" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The Virtual Network Appliance cluster provides a capacity pool and runs one or more service instances for stateful network services. One service instance is configured automatically per VPC when a stateful network service is set up. When two or more Virtual Network Appliance nodes form part of the cluster, the service instance is deployed in active/standby high availability mode; active/active mode is not supported. Each service instance connects to one of the four data plane fastpath interfaces, with multiple instances distributed across all four.</p>
+<p>All FastPath interfaces on the VNA are automatically connected to an overlay segment that is created automatically during deployment. To check the status of a VNA appliance, each VNA appliance establishes a BFD session with every other VNA appliance.</p>
+<p>To demonstrate how active services are distributed, I deployed two additional VNA appliances to the cluster. A newly created VPC named VNA-VPC3 was therefore distributed across VNA appliances 3 and 4.</p>
+
+
+<div class="image-gallery" id="gallery-3ff2572c"><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-01.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-01"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-01_hu_b94d83302f07b61d.jpg" alt="Scaling:  Active Services on VNA-01" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-01</div>
+                    </a><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-02.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-02"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-02_hu_714694bd86e72bd9.jpg" alt="Scaling:  Active Services on VNA-02" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-02</div>
+                    </a><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-03.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-03"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-03_hu_77de51ff1015b967.jpg" alt="Scaling:  Active Services on VNA-03" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-03</div>
+                    </a><a href="/vcf91-vna-vpc/Active%20Services%20on%20VNA-04.jpg" class="gallery-item" data-lightbox-group="gallery-3ff2572c" data-title="Scaling:  Active Services on VNA-04"><img src="/vcf91-vna-vpc/Active%20Services%20on%20VNA-04_hu_d86b639153281558.jpg" alt="Scaling:  Active Services on VNA-04" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Scaling:  Active Services on VNA-04</div>
+                    </a></div>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Distributing the Services</b>
+        </div>
+        <div class="admonition-content">The services are assigned during creation; to the best of my knowledge, it is not possible to move the VPCs to other VNA appliances after the fact.</div>
+    </aside>
+<h2 id="advantages">Advantages<a href="#advantages" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The advantages are obvious. Traffic to and from VMs in public VPC networks is routed normally. Here, I don’t have an edge VM that could act as a bottleneck.
+Integration into existing network infrastructure is incredibly simple; in a pinch, I only need a VLAN and a routed network, yet I don’t have to sacrifice the advantages of private subnets as I would in VCF 9.0.X, and I can use Auto SNAT. You can also assign external IP addresses to VMs in private segments.
+But here’s what I consider the biggest advantage: I can use VKS with VPCs, which was previously only possible with an Edge cluster and a T0. This way, I get most of the benefits of centralized mode while still being able to easily integrate it into my existing network.</p>
+<h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Deploying the VNA clusters is a breeze, and I think it will lead to significantly higher adoption among customers who have so far been resistant to NSX, T0, and dynamic routing protocols. The whole thing actually reminds me a bit of Nutanix’s current VPC implementation or the NSX-V days (which I more or less missed out on). It takes the distributed transit gateway to a higher level and really makes sense in combination with VKS. It definitely reduces complexity, since anyone can usually set up a routable VLAN. Still, there are a few downsides—for example, I’d like to be able to choose which service runs on which VNA appliance, but I suppose there has to be some room for optimization.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf9.1-vpcs-connectivity-policy/">VCF 9.1 - VPCs Connectivity Policies</a></li>
+	
+	<li><a href="/posts/vcf9-nsx-vpc-part3/">VCF 9 - NSX VPC Part 3 - Security</a></li>
+	
+	<li><a href="/posts/vcf9-nsx-vpc-part2/">VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</a></li>
+	
+	<li><a href="/posts/vcf9-nsx-vpc/">VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</a></li>
+	
+	<li><a href="/posts/ipv6-nsx/">IPv6 with NSX</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF 9.1 - VPCs Connectivity Policies</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="http://localhost:1313/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+<link rel="stylesheet" href="/klaro/klaro.css?v=1">
+</footer>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

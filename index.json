@@ -1,4 +1,10 @@
 [{
+    "title": "VCF 9.1 - VNA and VPCs",
+    "url": "/posts/vcf9.1-vna-vpc/",
+    "date": "2026-05-11",
+    "description": "In this new blog post, I will describe the benefits of virtual network appliances and how to use them.",
+    "tags": ["vcf9.1","nsx","vpc"]
+  },{
     "title": "VCF 9.1 - VPCs Connectivity Policies",
     "url": "/posts/vcf9.1-vpcs-connectivity-policy/",
     "date": "2026-05-05",
