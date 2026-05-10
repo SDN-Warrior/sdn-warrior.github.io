@@ -1,7 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>http://localhost:1313/posts/</link>
+		<link>https://sdn-warrior.org/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 
@@ -22,18 +22,18 @@
 		
 
 		
-		<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 
 		
 		<item>
 			<title>VCF 9.1 - VNA and VPCs</title>
-			<link>http://localhost:1313/posts/vcf9.1-vna-vpc/</link>
+			<link>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</link>
 			<pubDate>Mon, 11 May 2026 00:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9.1-vna-vpc/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</guid>
 
 			
 			<description><![CDATA[In this new blog post, I will describe the benefits of virtual network appliances and how to use them.]]></description>
@@ -459,12 +459,12 @@ But here’s what I consider the biggest advantage: I can use VKS with VPCs, whi
 		
 		<item>
 			<title>VCF 9.1 - VPCs Connectivity Policies</title>
-			<link>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</link>
+			<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
 			<pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
 
 			
 			<description><![CDATA[In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.]]></description>
@@ -678,12 +678,12 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 		
 		<item>
 			<title>Homelab Update 2026</title>
-			<link>http://localhost:1313/posts/homelab-update-2026/</link>
+			<link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
 			<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/homelab-update-2026/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
 
 			
 			<description><![CDATA[Homelab Update 2026]]></description>
@@ -783,12 +783,12 @@ For many years, it has provided me with SMB shares, NFS, iSCSI, and all my Docke
 		
 		<item>
 			<title>Nutanix - Flow 7: virtual networking</title>
-			<link>http://localhost:1313/posts/nutanix-flow/</link>
+			<link>https://sdn-warrior.org/posts/nutanix-flow/</link>
 			<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nutanix-flow/</guid>
+			<guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
 
 			
 			<description><![CDATA[In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.]]></description>
@@ -1029,12 +1029,12 @@ I’m particularly interested in the setup with a transit VPC and a BGP gateway.
 		
 		<item>
 			<title>VCF9 - Extend Managment Domain Cluster</title>
-			<link>http://localhost:1313/posts/vcf9-extende-mgmt-domain/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
 			<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-extende-mgmt-domain/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
 
 			
 			<description><![CDATA[How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.]]></description>
@@ -1158,12 +1158,12 @@ After about 10 minutes, the whole thing was done and dusted, and my management d
 		
 		<item>
 			<title>2026 VMUG Connect - Amsterdam</title>
-			<link>http://localhost:1313/posts/2026-vmug-amsterdam/</link>
+			<link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
 			<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/2026-vmug-amsterdam/</guid>
+			<guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
 
 			
 			<description><![CDATA[A personal summary of the first VMUG Connect in Europe.]]></description>
@@ -1257,12 +1257,12 @@ These PreConnect sessions were something new for me, and I found them really ent
 		
 		<item>
 			<title>IPv6 with NSX</title>
-			<link>http://localhost:1313/posts/ipv6-nsx/</link>
+			<link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
 			<pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/ipv6-nsx/</guid>
+			<guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
 
 			
 			<description><![CDATA[A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.]]></description>
@@ -1618,12 +1618,12 @@ In the official documentation for VCF9, there are exactly 143 search hits for IP
 		
 		<item>
 			<title>Nutanix - Get started with the CE Edition</title>
-			<link>http://localhost:1313/posts/nutanix-install-ce/</link>
+			<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
 			<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nutanix-install-ce/</guid>
+			<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
 
 			
 			<description><![CDATA[Short blog about my experiences with Nutanix CE and which workarounds I needed.]]></description>
@@ -1847,12 +1847,12 @@ I hope that anyone who was hoping I would write a scathing review isn&rsquo;t to
 		
 		<item>
 			<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
-			<link>http://localhost:1313/posts/avi-keycloak/</link>
+			<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
 			<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/avi-keycloak/</guid>
+			<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
 
 			
 			<description><![CDATA[A short blog post on how to connect Keycloak to the AVI load balancer.]]></description>
@@ -2254,12 +2254,12 @@ In short, a flow is a chain of steps, conditions, and sub-flows with rules that 
 		
 		<item>
 			<title>VCF9 - Automation in All Apps mode</title>
-			<link>http://localhost:1313/posts/vcf9-automation-all-apps/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
 			<pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-automation-all-apps/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
 
 			
 			<description><![CDATA[A quick introduction to VCF 9 Automation in All Apps mode]]></description>
@@ -2879,12 +2879,12 @@ True multitenancy can only be achieved with VCF Automation. A rethink is necessa
 		
 		<item>
 			<title>VCF9 - Building a VCF Operations Dashboard</title>
-			<link>http://localhost:1313/posts/vcf9-operations-dashboard/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
 			<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-operations-dashboard/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
 
 			
 			<description><![CDATA[A short blog about the joys of creating a dashboard in VCF 9 Operations.]]></description>
@@ -3247,12 +3247,12 @@ My thanks also go to <a href="https://www.vcrocs.info/">Dale Hassinger</a>, who 
 		
 		<item>
 			<title>VCF9 - Dark Site Edge - Part 2</title>
-			<link>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
 			<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-dark-site-edge-part2/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
@@ -3622,12 +3622,12 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 		
 		<item>
 			<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-			<link>http://localhost:1313/posts/bug-vcf-onboarding/</link>
+			<link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
 			<pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/bug-vcf-onboarding/</guid>
+			<guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
@@ -3750,12 +3750,12 @@ I have tried this several times and was able to verify that it works. Would I do
 		
 		<item>
 			<title>VCF9 - Dark Site Edge</title>
-			<link>http://localhost:1313/posts/vcf9-dark-site-edge/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
 			<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-dark-site-edge/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9]]></description>
@@ -4025,12 +4025,12 @@ I must also say that I learned a lot. And as always, I have to express my gratit
 		
 		<item>
 			<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-			<link>http://localhost:1313/posts/vcf9-ms-a2-special/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
 			<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-ms-a2-special/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
 
 			
 			<description><![CDATA[A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.]]></description>
@@ -4432,12 +4432,12 @@ So, in total, I have 5 more MS-01s that I can use to test things out alongside V
 		
 		<item>
 			<title>Tales from the Lab – Lab setup</title>
-			<link>http://localhost:1313/posts/tales-from-the-lab-setup/</link>
+			<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/tales-from-the-lab-setup/</guid>
+			<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
 
 			
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
@@ -4546,12 +4546,12 @@ My Ansible playbooks need to be revised because they no longer run properly with
 		
 		<item>
 			<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-			<link>http://localhost:1313/posts/vcf5-to-9-upgrade/</link>
+			<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
 			<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf5-to-9-upgrade/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
 
 			
 			<description><![CDATA[A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.]]></description>
@@ -4868,12 +4868,12 @@ If you have any questions or comments, please feel free to send me a message on 
 		
 		<item>
 			<title>VMware Explore 2025</title>
-			<link>http://localhost:1313/posts/explore-2025/</link>
+			<link>https://sdn-warrior.org/posts/explore-2025/</link>
 			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/explore-2025/</guid>
+			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
 
 			
 			<description><![CDATA[My VMware Explore 2025]]></description>
@@ -5082,12 +5082,12 @@ I&rsquo;m already looking forward to the upcoming Knight exclusive events and Ex
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>
-			<link>http://localhost:1313/posts/vcf9-cert-exchange/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
 			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-cert-exchange/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
 
 			
 			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
@@ -5309,12 +5309,12 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
 			<pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part3/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 3.]]></description>
@@ -5622,12 +5622,12 @@ I have written about why <a href="https://sdn-warrior.org/posts/nsx-apply-to/">A
 		
 		<item>
 			<title>VCF 9 - Migration to central VCF Operations instance</title>
-			<link>http://localhost:1313/posts/vcf-operations-migration/</link>
+			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
 			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf-operations-migration/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
 
 			
 			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
@@ -5889,12 +5889,12 @@ The components can still be shared by multiple instances if the security concept
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc-part2/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 2.]]></description>
@@ -6630,12 +6630,12 @@ The complete communication is as follows:</p>
 		
 		<item>
 			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
-			<link>http://localhost:1313/posts/nsx-dfw-troubleshooting/</link>
+			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
 			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-dfw-troubleshooting/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
 
 			
 			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
@@ -6770,12 +6770,12 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-			<link>http://localhost:1313/posts/homelab-v6/</link>
+			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
 			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/homelab-v6/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
 
 			
 			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
@@ -6862,12 +6862,12 @@ Thus, it has never really been considered part of the NUC era.</p>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-			<link>http://localhost:1313/posts/vcf9-nsx-vpc/</link>
+			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf9-nsx-vpc/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
@@ -7413,12 +7413,12 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
-			<link>http://localhost:1313/posts/ms-a2/</link>
+			<link>https://sdn-warrior.org/posts/ms-a2/</link>
 			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/ms-a2/</guid>
+			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
 
 			
 			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
@@ -7787,12 +7787,12 @@ I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, 
 		
 		<item>
 			<title>ReSTNSX with HCX</title>
-			<link>http://localhost:1313/posts/restnsx-with-hcx/</link>
+			<link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
 			<pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/restnsx-with-hcx/</guid>
+			<guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
 
 			
 			<description><![CDATA[How can ReSTNSX help me with the migration with HCX]]></description>
@@ -7989,12 +7989,12 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 		
 		<item>
 			<title>NSX Expiring Transport Node Certificates</title>
-			<link>http://localhost:1313/posts/nsx-expiring-tn-certificates/</link>
+			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
 			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-expiring-tn-certificates/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
 
 			
 			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
@@ -8365,12 +8365,12 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>
-			<link>http://localhost:1313/posts/vmug-connect-stl-2025/</link>
+			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
 			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vmug-connect-stl-2025/</guid>
+			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
 
 			
 			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
@@ -8504,12 +8504,12 @@ To share knowledge, to learn from others, and to keep growing – together.</p>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
-			<link>http://localhost:1313/posts/vcf-token/</link>
+			<link>https://sdn-warrior.org/posts/vcf-token/</link>
 			<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf-token/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
 
 			
 			<description><![CDATA[A short article on how to use the Broadcom Download Token.]]></description>
@@ -8634,12 +8634,12 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 		
 		<item>
 			<title>VCF Quick Tip - WLD with single NSX Manager</title>
-			<link>http://localhost:1313/posts/vcf-single-nsx/</link>
+			<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
 			<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf-single-nsx/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
 
 			
 			<description><![CDATA[Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.]]></description>
@@ -8923,12 +8923,12 @@ Happy VCF deployment!</p>
 		
 		<item>
 			<title>VCF Stretched Cluster</title>
-			<link>http://localhost:1313/posts/vcf-stretched-cluster/</link>
+			<link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
 			<pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf-stretched-cluster/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
 
 			
 			<description><![CDATA[A short article on how to build a stretched vSAN cluster in the VCF.]]></description>
@@ -9395,12 +9395,12 @@ I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witne
 		
 		<item>
 			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-			<link>http://localhost:1313/posts/vcf-import-overlay/</link>
+			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
 			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf-import-overlay/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
 
 			
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
@@ -9547,12 +9547,12 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-			<link>http://localhost:1313/posts/vcf-import-cluster/</link>
+			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
 			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vcf-import-cluster/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
 
 			
 			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
@@ -9897,12 +9897,12 @@ We also still need to install licenses in the SDDC manager and setup the softwar
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>
-			<link>http://localhost:1313/posts/jetkvm/</link>
+			<link>https://sdn-warrior.org/posts/jetkvm/</link>
 			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/jetkvm/</guid>
+			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
 
 			
 			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
@@ -9954,12 +9954,12 @@ Time will tell whether the saying “all show and no substance” applies.</p>
 		
 		<item>
 			<title>Migration with HCX</title>
-			<link>http://localhost:1313/posts/migration-with-hcx/</link>
+			<link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
 			<pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/migration-with-hcx/</guid>
+			<guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
 
 			
 			<description><![CDATA[Live Migration of Workloads with VMware HCX: A Customer Story]]></description>
@@ -10321,12 +10321,12 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 		
 		<item>
 			<title>How Apply To works in NSX DFW</title>
-			<link>http://localhost:1313/posts/nsx-apply-to/</link>
+			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
 			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-apply-to/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
 
 			
 			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
@@ -10731,12 +10731,12 @@ In addition, there is a limit to the number of firewall rules that can be applie
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>
-			<link>http://localhost:1313/posts/nsx-tep-groups/</link>
+			<link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
 			<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-tep-groups/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
 
 			
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
@@ -11060,12 +11060,12 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 		
 		<item>
 			<title>Redeploy an NSX Edge VM Appliance</title>
-			<link>http://localhost:1313/posts/nsx-edge-redeploy/</link>
+			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
 			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-edge-redeploy/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
 
 			
 			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
@@ -11335,12 +11335,12 @@ Ensure these values align with those defined in the node_settings section.</p>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>
-			<link>http://localhost:1313/posts/vlan-automation/</link>
+			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
 			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/vlan-automation/</guid>
+			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
 
 			
 			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
@@ -11605,12 +11605,12 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
-			<link>http://localhost:1313/posts/ipam-automation/</link>
+			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
 			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/ipam-automation/</guid>
+			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
 
 			
 			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
@@ -11876,12 +11876,12 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-			<link>http://localhost:1313/posts/first-steps-ansible/</link>
+			<link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
 			<pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/first-steps-ansible/</guid>
+			<guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
 
 			
 			<description><![CDATA[How I Used ChatGPT to Create My First Ansible Playbook]]></description>
@@ -12334,12 +12334,12 @@ Efficiency:</p>
 		
 		<item>
 			<title>Homelab V5</title>
-			<link>http://localhost:1313/posts/homelab-v5/</link>
+			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
 			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/homelab-v5/</guid>
+			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
 
 			
 			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
@@ -12579,12 +12579,12 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 		
 		<item>
 			<title>How to use QoS in NSX</title>
-			<link>http://localhost:1313/posts/nsx-qos/</link>
+			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
 			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-qos/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
 
 			
 			<description><![CDATA[How to use QoS in NSX]]></description>
@@ -13102,12 +13102,12 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
-			<link>http://localhost:1313/posts/nsx4_2_1_1/</link>
+			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx4_2_1_1/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
 
 			
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
@@ -13155,12 +13155,12 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>iSCSI Tuning</title>
-			<link>http://localhost:1313/posts/iscsi-tuning/</link>
+			<link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
 			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/iscsi-tuning/</guid>
+			<guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
 
 			
 			<description><![CDATA[Optimizing iSCSI Performance in an Unraid Environment]]></description>
@@ -13333,12 +13333,12 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>http://localhost:1313/posts/mac-learning/</link>
+			<link>https://sdn-warrior.org/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/mac-learning/</guid>
+			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
 
 			
 			<description><![CDATA[Why you should use MAC Learning]]></description>
@@ -13500,12 +13500,12 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>http://localhost:1313/posts/unraid-storage/</link>
+			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/unraid-storage/</guid>
+			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
 
 			
 			<description><![CDATA[How i use Unraid]]></description>
@@ -13618,12 +13618,12 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>http://localhost:1313/posts/nuc/</link>
+			<link>https://sdn-warrior.org/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nuc/</guid>
+			<guid>https://sdn-warrior.org/posts/nuc/</guid>
 
 			
 			<description><![CDATA[Performance tuning for NUCs]]></description>
@@ -13756,12 +13756,12 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>http://localhost:1313/posts/labv4/</link>
+			<link>https://sdn-warrior.org/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/labv4/</guid>
+			<guid>https://sdn-warrior.org/posts/labv4/</guid>
 
 			
 			<description><![CDATA[Homelab v4]]></description>
@@ -13791,12 +13791,12 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
-			<link>http://localhost:1313/posts/nsx-integration-fortigate/</link>
+			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-integration-fortigate/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
 
 			
 			<description><![CDATA[NSX and Fortigate]]></description>
@@ -13871,12 +13871,12 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>http://localhost:1313/posts/nsx-idfw-vdi/</link>
+			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-idfw-vdi/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
 
 			
 			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
@@ -14045,12 +14045,12 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
-			<link>http://localhost:1313/posts/nsx-cert-exchange/</link>
+			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
 
 			
 
-			<guid>http://localhost:1313/posts/nsx-cert-exchange/</guid>
+			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
 
 			
 			<description><![CDATA[Exchange your NSX Manager certificates]]></description>
