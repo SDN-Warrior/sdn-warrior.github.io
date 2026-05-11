@@ -1,0 +1,167 @@
+/* =========================================================
+   SDN-Warrior Klaro Theme Override
+   Add this at the very end of static/klaro/klaro.css
+   ========================================================= */
+
+.klaro {
+  --dark1: #2d4052;
+  --dark2: #34495b;
+  --dark3: #6f8190;
+
+  --light1: #f2f5f7;
+  --light2: #d6bd6a;
+  --light3: #b8c4cc;
+
+  --green1: #2aa876;
+  --green2: #35c28b;
+  --green3: #4ad8a3;
+
+  --blue1: #d6bd6a;
+  --blue2: #e3ca75;
+
+  --button-text-color: #f2f5f7;
+  --border-radius: 6px;
+
+  --notice-max-width: 420px;
+  --notice-right: 20px;
+  --notice-bottom: 20px;
+}
+
+/* Main cookie banner */
+.klaro .cookie-notice:not(.cookie-modal-notice) {
+  background-color: #2d4052;
+  border: 1px solid rgba(214, 189, 106, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Banner body */
+.klaro .cookie-notice:not(.cookie-modal-notice) .cn-body {
+  padding: 1rem;
+}
+
+/* Text inside banner */
+.klaro .cookie-notice p,
+.klaro .cookie-notice strong,
+.klaro .cookie-notice h1,
+.klaro .cookie-notice h2,
+.klaro .cookie-notice ul,
+.klaro .cookie-notice li {
+  color: #f2f5f7;
+  line-height: 1.45;
+}
+
+/* Links, for example "Let me choose" */
+.klaro .cookie-notice a,
+.klaro .cookie-modal a,
+.klaro .context-notice a {
+  color: #d6bd6a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.klaro .cookie-notice a:hover,
+.klaro .cookie-modal a:hover,
+.klaro .context-notice a:hover {
+  color: #e3ca75;
+  text-decoration: underline;
+}
+
+/* Button base */
+.klaro .cookie-notice .cm-btn,
+.klaro .cookie-modal .cm-btn,
+.klaro .context-notice .cm-btn {
+  border-radius: 5px;
+  padding: 0.45em 0.7em;
+  font-weight: 600;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+/* Accept button */
+.klaro .cookie-notice .cm-btn.cm-btn-success,
+.klaro .cookie-modal .cm-btn.cm-btn-success,
+.klaro .context-notice .cm-btn.cm-btn-success {
+  background-color: #2aa876;
+  color: #ffffff;
+  border-color: #2aa876;
+}
+
+.klaro .cookie-notice .cm-btn.cm-btn-success:hover,
+.klaro .cookie-modal .cm-btn.cm-btn-success:hover,
+.klaro .context-notice .cm-btn.cm-btn-success:hover {
+  background-color: #35c28b;
+  border-color: #35c28b;
+}
+
+/* Decline / neutral buttons */
+.klaro .cookie-notice .cm-btn:not(.cm-btn-success),
+.klaro .cookie-modal .cm-btn:not(.cm-btn-success),
+.klaro .context-notice .cm-btn:not(.cm-btn-success) {
+  background-color: #34495b;
+  color: #f2f5f7;
+  border-color: rgba(214, 189, 106, 0.25);
+}
+
+.klaro .cookie-notice .cm-btn:not(.cm-btn-success):hover,
+.klaro .cookie-modal .cm-btn:not(.cm-btn-success):hover,
+.klaro .context-notice .cm-btn:not(.cm-btn-success):hover {
+  background-color: #3f566a;
+  border-color: rgba(214, 189, 106, 0.45);
+}
+
+/* Modal window */
+.klaro .cookie-modal .cm-modal.cm-klaro,
+.klaro .cookie-modal-notice {
+  background-color: #2d4052;
+  color: #f2f5f7;
+  border: 1px solid rgba(214, 189, 106, 0.35);
+  border-radius: 8px;
+}
+
+/* Modal header and footer */
+.klaro .cookie-modal .cm-modal .cm-header,
+.klaro .cookie-modal .cm-modal .cm-footer {
+  border-color: rgba(214, 189, 106, 0.25);
+}
+
+/* Toggle enabled */
+.klaro .cookie-modal .cm-list-input:checked + .cm-list-label .slider,
+.klaro .context-notice .cm-list-input:checked + .cm-list-label .slider,
+.klaro .cookie-notice .cm-list-input:checked + .cm-list-label .slider {
+  background-color: #2aa876;
+}
+
+/* Toggle disabled */
+.klaro .cookie-modal .cm-list-label .slider,
+.klaro .context-notice .cm-list-label .slider,
+.klaro .cookie-notice .cm-list-label .slider {
+  background-color: #34495b;
+  box-shadow: none;
+}
+
+/* Toggle knob */
+.klaro .cookie-modal .cm-list-label .slider::before,
+.klaro .context-notice .cm-list-label .slider::before,
+.klaro .cookie-notice .cm-list-label .slider::before {
+  background-color: #f2f5f7;
+}
+
+/* Service descriptions */
+.klaro .cookie-modal .cm-list-description,
+.klaro .context-notice .cm-list-description,
+.klaro .cookie-notice .cm-list-description,
+.klaro .cookie-modal .cm-modal .cm-body ul.cm-services li.cm-service p.purposes,
+.klaro .cookie-modal .cm-modal .cm-body ul.cm-purposes li.cm-purpose p.purposes {
+  color: #b8c4cc;
+}
+
+/* Mobile banner */
+@media (max-width: 1023px) {
+  .klaro .cookie-notice:not(.cookie-modal-notice) {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+}
