@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2024-12-14T02:00:26+01:00">
   <meta itemprop="wordCount" content="1490">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Unraid,Vmware,Esxi,Homelab,Vcf"><meta property="og:url" content="https://sdn-warrior.org/posts/homelab-v5/">
+  <meta itemprop="keywords" content="Unraid,Vmware,Esxi,Homelab,VCF"><meta property="og:url" content="https://sdn-warrior.org/posts/homelab-v5/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Homelab V5">
   <meta property="og:description" content="My Homelab Journey: From Unraid Beginnings to Version 5">
@@ -44,7 +44,7 @@
     <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Esxi">
     <meta property="article:tag" content="Homelab">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
   <meta name="twitter:card" content="summary_large_image">
@@ -85,7 +85,7 @@
     }
 }
 </script><title>Homelab V5</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -295,7 +295,8 @@
 </ul>
 <h3 id="network">Network<a href="#network" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>My network consists of multiple MikroTik switches. The centerpiece is my ToR (Top of Rack) switch, the MikroTik CRS309, which can route at line speed thanks to hardware offloading. This switch hosts all lab-relevant gateways and networks, ensuring they don&rsquo;t need to be routed through my Fortinet FortiGate F40. The servers themselves are connected to two access switches: the NUCs via dual 2.5Gbps connections, and the MS-01 units via 10Gbps connections per switch.
-I also have a service router (RB5009) that establishes a VPN tunnel to a fellow homelabber. Through this connection, I can utilize his Kubernetes resources, and we&rsquo;ve even tested the NSX Application Platform (NAPP) together. <a href="https://marschall.systems/">Visit marschall.systems</a></p>
+I also have a service router (RB5009) that establishes a VPN tunnel to a fellow homelabber. Through this connection, I can utilize his Kubernetes resources, and we&rsquo;ve even tested the NSX Application Platform (NAPP) together. 
+<a href="https://marschall.systems/" target="_blank" rel="noopener">Visit marschall.systems</a></p>
 <figure><a href="plan.png"><picture><source srcset="/labv5/plan_hu_371db67dcf765384.png" type="image/png">
           <img
             src="/labv5/plan_hu_371db67dcf765384.png"alt="Network setup"width="6206"
@@ -308,7 +309,9 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
             height="2917"/>
         </picture></a><figcaption><p>BGP setup (click to enlarge)</p></figcaption></figure>
 <h3 id="storage">Storage<a href="#storage" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-<p>As my primary storage solution, I use my Unraid server. After implementing several iSCSI optimizations <a href="https://sdn-warrior.org/posts/iscsi-tuning/">(my iSCSI Blog post)</a> and installing the iSCSI Target plugin <a href="https://sdn-warrior.org/posts/unraid-storage/">(my Unraid Blog post)</a>, the server provides a performant iSCSI storage capable of achieving around 2000 MB/s for both read and write operations.</p>
+<p>As my primary storage solution, I use my Unraid server. After implementing several iSCSI optimizations 
+<a href="https://sdn-warrior.org/posts/iscsi-tuning/" target="_blank" rel="noopener">(my iSCSI Blog post)</a> and installing the iSCSI Target plugin 
+<a href="https://sdn-warrior.org/posts/unraid-storage/" target="_blank" rel="noopener">(my Unraid Blog post)</a>, the server provides a performant iSCSI storage capable of achieving around 2000 MB/s for both read and write operations.</p>
 
     <aside class="admonition info">
         <div class="admonition-title">
@@ -442,7 +445,8 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
         </tr>
     </tbody>
   </table>
-</div><p>You can also find the detailed BOM with prices <a href="https://docs.google.com/spreadsheets/d/1XK32KJWiLBMlKLlPSKNDwBaX2mg4fmGFN2aEA3SIsEc/edit?pli=1&amp;gid=0#gid=0">here</a>, which I update regularly to reflect any changes in my setup.</p>
+</div><p>You can also find the detailed BOM with prices 
+<a href="https://docs.google.com/spreadsheets/d/1XK32KJWiLBMlKLlPSKNDwBaX2mg4fmGFN2aEA3SIsEc/edit?pli=1&amp;gid=0#gid=0" target="_blank" rel="noopener">here</a>, which I update regularly to reflect any changes in my setup.</p>
 <h2 id="final-result">Final result<a href="#final-result" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p><figure><picture><source srcset="/labv5/rackmount_hu_9af3bc7d3deeb923.jpg" type="image/jpeg">
           <img

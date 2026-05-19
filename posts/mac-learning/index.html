@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2024-11-27T19:54:18+01:00">
   <meta itemprop="wordCount" content="1744">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Homelab,Vcf,Nested Lab,Vmware,Esxi,Network,Performance"><meta property="og:url" content="https://sdn-warrior.org/posts/mac-learning/">
+  <meta itemprop="keywords" content="Homelab,VCF,Nested Lab,Vmware,Esxi,Network,Performance"><meta property="og:url" content="https://sdn-warrior.org/posts/mac-learning/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="MAC Learning is your friend">
   <meta property="og:description" content="Why you should use MAC Learning">
@@ -41,7 +41,7 @@
     <meta property="article:published_time" content="2024-11-27T19:54:18+01:00">
     <meta property="article:modified_time" content="2024-11-27T19:54:18+01:00">
     <meta property="article:tag" content="Homelab">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Nested Lab">
     <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Esxi">
@@ -86,7 +86,7 @@
     }
 }
 </script><title>MAC Learning is your friend</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -241,7 +241,8 @@
 <li>
 <p>MAC Learning: Think of it as a switch-like behavior in your virtual environment. It optimizes network traffic by ensuring that each virtual machine (VM) receives only the packets meant for its MAC address.
 Without MAC learning, when the ESXi VM&rsquo;s vNIC connects to a switch port, it only contains a static MAC address.
-<a href="https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html">(more Information about MAC learning)</a></p>
+
+<a href="https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-networking/GUID-E0246B3D-9FB1-4976-8217-5C085863EA9A.html" target="_blank" rel="noopener">(more Information about MAC learning)</a></p>
 </li>
 <li>
 <p>Promiscuous Mode: On the other hand, this allows a VM or virtual switch to capture all traffic on a port group, whether addressed to it or not. It&rsquo;s a useful feature for troubleshooting and monitoring but comes with potential security and performance implications.</p>
@@ -259,7 +260,8 @@ Without MAC learning, when the ESXi VM&rsquo;s vNIC connects to a switch port, i
 <p>However, everything changed when I upgraded my lab to dual 10 Gb/s network links and, powered by the i9 CPU, gained the ability to run multiple nested ESXi hosts on a single physical machine.
 One of the first challenges I encountered was during the configuration of a vSAN port group for my nested ESXi hosts. This port group was configured to use Active/Active load balancing across both 10 Gb/s uplinks on the MS-01 workstations.
 Almost immediately, I noticed unexpected performance issues. Nested VMs were experiencing slow network speeds, and vSAN operations were significantly hindered. Initially, I struggled to pinpoint the root cause. Given my past success with Promiscuous Mode, I didn’t suspect it could be contributing to the problem.</p>
-<p><a href="https://cybernils.net/2024/11/26/the-effect-of-using-mac-learning-in-esxi-nested-labs/">This article</a> by my fellow vExpert colleague Nils Kristiansen inspired me to delve deeper into the topic.</p>
+<p>
+<a href="https://cybernils.net/2024/11/26/the-effect-of-using-mac-learning-in-esxi-nested-labs/" target="_blank" rel="noopener">This article</a> by my fellow vExpert colleague Nils Kristiansen inspired me to delve deeper into the topic.</p>
 <h2 id="why-promiscuous-mode-became-a-problem">Why Promiscuous Mode Became a Problem<a href="#why-promiscuous-mode-became-a-problem" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The performance degradation stemmed from how traffic was handled with Promiscuous Mode in a dual-uplink, Active/Active configuration:</p>
 <ul>

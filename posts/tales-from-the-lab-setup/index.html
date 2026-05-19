@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-09-12T17:00:00+02:00">
   <meta itemprop="wordCount" content="1431">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,NSX,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tales-from-the-lab-setup/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Minisforum,Intel,Amd"><meta property="og:url" content="https://sdn-warrior.org/posts/tales-from-the-lab-setup/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Tales from the Lab – Lab setup">
   <meta property="og:description" content="A brief blog about setting up my nested lab.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-09-12T17:00:00+02:00">
     <meta property="article:modified_time" content="2025-09-12T17:00:00+02:00">
-    <meta property="article:tag" content="Vcf">
-    <meta property="article:tag" content="NSX">
+    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
     <meta property="article:tag" content="Intel">
@@ -86,7 +86,7 @@
     }
 }
 </script><title>Tales from the Lab – Lab setup</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -271,7 +271,8 @@ Most of my fleet runs on my small NUC, including a VKS Supervisor cluster as a s
 <p>Of course, the NUC is pretty busy, and I&rsquo;m considering getting a second one, because the boxes don&rsquo;t cost that much (used) and don&rsquo;t take up much space.
 Bonus points for the fact that every NUC is certified for 24/7 operation.</p>
 <p>Alternatively, I could use memory tiering, but that would require reinstalling the little guy, and somehow I&rsquo;m too lazy to do that.
-My self-built storage (which I&rsquo;ve described <a href="https://sdn-warrior.org/posts/unraid-storage/">here</a> before) runs another domain controller, my root CA and my Ansible host.<br>
+My self-built storage (which I&rsquo;ve described 
+<a href="https://sdn-warrior.org/posts/unraid-storage/" target="_blank" rel="noopener">here</a> before) runs another domain controller, my root CA and my Ansible host.<br>
 I obtain NTP globally from my ToR switch, as Mikrotik, the old Swiss Army knife, can do this wonderfully.</p>
 <h2 id="storage">Storage<a href="#storage" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Let&rsquo;s move on to the exciting topic of storage. Here, I have a combination of local and shared storage.
@@ -309,7 +310,8 @@ Another exception is my port group on which promiscuous mode is enabled. Here, I
             src="/lab-setup/03_hu_a602a93e6500ef42.png"alt="Network"width="2946"
             height="1820"/>
         </picture></a><figcaption><p>Lab Network (click to enlarge)</p></figcaption></figure>
-<p>If you want to know more about this topic, you can read my article on <a href="https://sdn-warrior.org/posts/mac-learning/">Mac Learning</a>.
+<p>If you want to know more about this topic, you can read my article on 
+<a href="https://sdn-warrior.org/posts/mac-learning/" target="_blank" rel="noopener">Mac Learning</a>.
 Here, I address the problem and also show the differences in performance.
 For VCF 9 installation, promiscuous mode is required, otherwise the deployment will fail when the VCF installer attempts to migrate the ESX servers to the distributed switch.</p>
 <h2 id="vcf-fleet">VCF Fleet<a href="#vcf-fleet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>

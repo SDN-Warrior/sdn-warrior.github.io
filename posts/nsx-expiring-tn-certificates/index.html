@@ -37,7 +37,7 @@ Any Edge that may have been deployed on these versions or any Hosts prepared or 
   <meta itemprop="dateModified" content="2025-05-06T18:00:00+02:00">
   <meta itemprop="wordCount" content="1591">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="NSX,Vmware,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/">
+  <meta itemprop="keywords" content="Nsx,Vmware,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="NSX Expiring Transport Node Certificates">
   <meta property="og:description" content="On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
@@ -49,7 +49,7 @@ Any Edge that may have been deployed on these versions or any Hosts prepared or 
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-05-06T18:00:00+02:00">
     <meta property="article:modified_time" content="2025-05-06T18:00:00+02:00">
-    <meta property="article:tag" content="NSX">
+    <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Vmware">
     <meta property="article:tag" content="Homelab">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -95,7 +95,7 @@ Any Edge that may have been deployed on these versions or any Hosts prepared or 
     }
 }
 </script><title>NSX Expiring Transport Node Certificates</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -287,7 +287,8 @@ Furthermore, it only affects transport nodes deployed with NSX 4.1.x - 4.2. If y
 <p>There is a solution for both scenarios. But let&rsquo;s start with the simple scenario A first.</p>
 <h2 id="find-the-problem">Find the problem<a href="#find-the-problem" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>If you don&rsquo;t know which NSX version you installed and want to check whether you are affected by this issue, Broadcom has a relatively simple solution. There is a script called CARR (Certificate Analyzer, Results and Recovery) that can be easily run on NSX Manager (NSX 4.1.x to 4.2) or on an external client (other NSX versions).
-Download <a href="https://knowledge.broadcom.com/external/article/369034">Certificate Analyzer, Results and Recovery (CARR)</a>from the official KB article.</p>
+Download 
+<a href="https://knowledge.broadcom.com/external/article/369034" target="_blank" rel="noopener">Certificate Analyzer, Results and Recovery (CARR)</a>from the official KB article.</p>
 <p>In all cases, the script requires the following ports to be open between the client machine and the 3 NSX Managers</p>
 <ul>
 <li>ssh port 22</li>
@@ -555,7 +556,8 @@ My example yaml. I have disabled validation of all certificates except HOST and 
    </svg></div><b>Warning</b>
         </div>
         <div class="admonition-content">In general, caution is advised when undertaking this task. Personally, I would always open a ticket with Broadcom, as errors can cause further damage in case of doubt. If an Edge Node is disconnected, you can also perform a redeployment via API, which may even be faster than troubleshooting with CARR or manually.
-You can find out how to do this in my blog here: <a href="https://sdn-warrior.org/posts/nsx-edge-redeploy/">SDN-warrior - NSX Edge Redeploy Guide</a></div>
+You can find out how to do this in my blog here: 
+<a href="https://sdn-warrior.org/posts/nsx-edge-redeploy/" target="_blank" rel="noopener">SDN-warrior - NSX Edge Redeploy Guide</a></div>
     </aside>
 <ul>
 <li>
@@ -603,7 +605,8 @@ You can find out how to do this in my blog here: <a href="https://sdn-warrior.or
 </span></span></code></pre></div><h4 id="host">Host<a href="#host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">nsxcli -c push host-certificate &lt;Manager hostname-or-IP&gt; username admin thumbprint &lt;thumbprint from step 4&gt;
 </span></span><span class="line"><span class="cl">Password for API user: &lt;enter admin password&gt;
-</span></span></code></pre></div><p>The official Broadcom KB article can be found here: <a href="https://knowledge.broadcom.com/external/article/345802/alarm-for-transport-node-certificate-is.html">Broadcom: Alarm For Transport Node Certificate is About to Expire.</a></p>
+</span></span></code></pre></div><p>The official Broadcom KB article can be found here: 
+<a href="https://knowledge.broadcom.com/external/article/345802/alarm-for-transport-node-certificate-is.html" target="_blank" rel="noopener">Broadcom: Alarm For Transport Node Certificate is About to Expire.</a></p>
 <h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>At first glance, this problem sounds quite drastic, but if you have monitoring in place and regularly check the status of your NSX installation, the outage can be avoided relatively easily. The most important thing to know, however, is that upgrading your NSX version does <strong>not</strong> extend existing certificate lifetimes!</p>
 

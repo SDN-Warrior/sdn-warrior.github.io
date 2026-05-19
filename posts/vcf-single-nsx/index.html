@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-04-01T00:42:39+02:00">
   <meta itemprop="wordCount" content="977">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,NSX,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-single-nsx/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-single-nsx/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF Quick Tip - WLD with single NSX Manager">
   <meta property="og:description" content="Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-04-01T00:42:39+02:00">
     <meta property="article:modified_time" content="2025-04-01T00:42:39+02:00">
-    <meta property="article:tag" content="Vcf">
-    <meta property="article:tag" content="NSX">
+    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
@@ -83,7 +83,7 @@
     }
 }
 </script><title>VCF Quick Tip - WLD with single NSX Manager</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/fan.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -254,7 +254,8 @@ In the directory <em><strong>/etc/vmware/vcf/bringup/</strong></em>, application
 </span></span></code></pre></div><p>After that, the bringup service must be restarted.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">systemctl restart vcf-bringup.service
 </span></span></code></pre></div><p>After the adjustments, we can deploy a management domain with only three hosts – nice.
-For this to work, the deployment must be done via a JSON. There is a good JSON generator from <a href="https://www.martingustafsson.com/vcf-ui-json/">Martin Gustafsson</a> (great tool) or you can upload the VMware Excel Sheet to the Cloudbuilder and use the built-in json generator.</p>
+For this to work, the deployment must be done via a JSON. There is a good JSON generator from 
+<a href="https://www.martingustafsson.com/vcf-ui-json/" target="_blank" rel="noopener">Martin Gustafsson</a> (great tool) or you can upload the VMware Excel Sheet to the Cloudbuilder and use the built-in json generator.</p>
 <h3 id="using-the-sos-utility-json-generator">Using the SoS Utility JSON Generator<a href="#using-the-sos-utility-json-generator" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The JSON generator options within the SoS Utility provide a method to execute the creation of the JSON file from a completed deployment parameter workbook. To run the JSON generator, you must provide, as a minimum, a path to the deployment parameter workbook and the design type using the following syntax:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/opt/vmware/sddc-support/sos --jsongenerator --jsongenerator-input /tmp/vcf-ems-deployment-parameter.xlsx --jsongenerator-design vcf-ems

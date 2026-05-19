@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-03-13T23:00:00+01:00">
   <meta itemprop="wordCount" content="2210">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vmware,Vcf,Homelab,Broadcom"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
+  <meta itemprop="keywords" content="Vmware,VCF,Homelab,Broadcom"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf-stretched-cluster/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="VCF Stretched Cluster">
   <meta property="og:description" content="A short article on how to build a stretched vSAN cluster in the VCF.">
@@ -41,7 +41,7 @@
     <meta property="article:published_time" content="2025-03-13T23:00:00+01:00">
     <meta property="article:modified_time" content="2025-03-13T23:00:00+01:00">
     <meta property="article:tag" content="Vmware">
-    <meta property="article:tag" content="Vcf">
+    <meta property="article:tag" content="VCF">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Broadcom">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -84,7 +84,7 @@
     }
 }
 </script><title>VCF Stretched Cluster</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -415,7 +415,8 @@ There are a few adjustments to be made to the witness host:</p>
 <li>Remove the network port group from the virtual machine on the vSAN witness host.</li>
 <li>Enable witness traffic on the VMkernel adapter for the management network of the vSAN witness host.</li>
 </ul>
-<p>A step-by-step guide can be found in the <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/stretching-clusters-admin/deploy-vsan-witness-host-admin/configure-the-vmkernel-adapters-on-the-vsan-witness-host-admin.html">VCF 5.2 Administration Guide</a>.</p>
+<p>A step-by-step guide can be found in the 
+<a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/stretching-clusters-admin/deploy-vsan-witness-host-admin/configure-the-vmkernel-adapters-on-the-vsan-witness-host-admin.html" target="_blank" rel="noopener">VCF 5.2 Administration Guide</a>.</p>
 <h2 id="commission-host">Commission Host<a href="#commission-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>As I already wrote in the intro, I assume for the article that a management domain is already deployed, but that it is not yet a stretched cluster.
 The physical network is configured and all VLANs and IP networks are available.
@@ -678,7 +679,8 @@ In addition, you have to worry about the placement of VMs, storage policies and 
 There is potential for savings in the NSX managers, where only one manager would have been needed with some adjustments or non nested edge vms.
 But I didn&rsquo;t want anything unexpected to happen to me during the deployment, so I decided to build the whole thing as close to reality as possible.
 My next attempt will be to build the setup as resource-efficient as possible.</p>
-<p>As a nested ESX server, I used the <a href="https://williamlam.com/nested-virtualization/nested-esxi-virtual-appliance">Nested ESXi Virtual Appliance from William Lam</a> and customized it for my use case.
+<p>As a nested ESX server, I used the 
+<a href="https://williamlam.com/nested-virtualization/nested-esxi-virtual-appliance" target="_blank" rel="noopener">Nested ESXi Virtual Appliance from William Lam</a> and customized it for my use case.
 Each of the 8 ESXi virtual servers has 10 cores, 40GB of RAM and 3 hard disks. 16GB for the OS, 40 GB as an OSA cache tier and 400 GB as an OSA capacity tier. I use 2 network cards.</p>
 <p>The virtual ESX servers run on 4 Minisforum MS-01 with 2x10 Gb network and 96 GB Ram each. I have 2 virtual servers running on each MS-01. The VMs run on local NVMe storage so that they are not unnecessarily moved via DRS.
 I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witness Appliance runs on my management ESX server.</p>

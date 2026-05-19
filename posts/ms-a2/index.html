@@ -31,7 +31,7 @@
   <meta itemprop="dateModified" content="2025-06-14T10:14:45+02:00">
   <meta itemprop="wordCount" content="3155">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf,NSX,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/ms-a2/">
+  <meta itemprop="keywords" content="VCF,Nsx,Homelab,Minisforum"><meta property="og:url" content="https://sdn-warrior.org/posts/ms-a2/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Tales from the Lab - Minisforum MS-A2">
   <meta property="og:description" content="A quick test of the new MS-A2 and how it compares to the MS-01.">
@@ -40,8 +40,8 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-06-14T10:14:45+02:00">
     <meta property="article:modified_time" content="2025-06-14T10:14:45+02:00">
-    <meta property="article:tag" content="Vcf">
-    <meta property="article:tag" content="NSX">
+    <meta property="article:tag" content="VCF">
+    <meta property="article:tag" content="Nsx">
     <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Minisforum">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
@@ -84,7 +84,7 @@
     }
 }
 </script><title>Tales from the Lab - Minisforum MS-A2</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -235,7 +235,8 @@
 			<div class="content">
 				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>After being impressed with the performance and form factor of the Minisforum <strong>MS-01</strong>, I had to get my hands on their latest beast: the <strong>MS-A2</strong>, powered by AMD&rsquo;s latest Zen 5 architecture.
-It&rsquo;s also exciting to test a gadget before <a href="https://williamlam.com/">William Lam</a>. Thanks for letting me be the first (I&rsquo;m just kidding, of course).</p>
+It&rsquo;s also exciting to test a gadget before 
+<a href="https://williamlam.com/" target="_blank" rel="noopener">William Lam</a>. Thanks for letting me be the first (I&rsquo;m just kidding, of course).</p>
 <p>In this post, I’ll give you a quick rundown of both systems and how they compare—especially from a homelab perspective focused on virtualization, low noise, and energy-efficient high performance.</p>
 <p>A quick disclaimer first: I am not a hardware tester and do not have any real measuring equipment. Everything I report here is based on my experience with both devices in my environment.</p>
 <figure><a href="01.jpg"><picture><source srcset="/ms-a2/01_hu_6cc83136bb904261.jpg" type="image/jpeg">
@@ -341,7 +342,8 @@ Nevertheless, I have installed 128 GB of RAM in both systems. I am using the Cru
         <div class="admonition-content">I tested both devices with 128 GB RAM and they work fine for me. However, I must point out that there is no guarantee that it will work.</div>
     </aside>
 <p>The second difference is the CPU architecture. While Intel relies on its Big/Little architecture, which gives us performance and efficiency cores, AMD Zen 5 has symmetrical cores and uses SMT, which is equivalent to Intel&rsquo;s Hyperthreading.
-I have described how to make P and E cores usable with ESXi <a href="https://sdn-warrior.org/posts/nuc/#using-pe-cores">here</a>.</p>
+I have described how to make P and E cores usable with ESXi 
+<a href="https://sdn-warrior.org/posts/nuc/#using-pe-cores" target="_blank" rel="noopener">here</a>.</p>
 <p>In my opinion, this is already a plus point for the MS-A2, as I can install ESXi just like that.
 What I find a little strange is the network card selection. While the MS-01 has two 2.5G cards from Intel, the MS-A2 comes with a strange configuration of one 2.5G Intel card and one 2.5G Realtek card. Unfortunately, there is no Realtek driver for built-in cards in ESXi. Fun fact: Realtek USB network cards do work, though. Overall, this isn&rsquo;t important to me, as I use the X710 Intel cards throughout, since my network is completely 10G.</p>
 <p>In summary, the following key data can be noted:</p>
@@ -521,7 +523,8 @@ Here&rsquo;s a brief overview of how my VCF lab is set up.</p>
 This isn&rsquo;t officially supported with VCF 5.X, but to be honest, I&rsquo;m constantly doing things that aren&rsquo;t supported, and that&rsquo;s not going to bother us here.
 I deployed the original lab on 2 MS-01 and have been using it for quite some time.
 The 3 nested ESXi hosts each have 8 vCPUs, 45 GB RAM, and a small boot disk.
-The principal storage is NFS. If you&rsquo;re wondering how that works, I wrote a blog post about it <a href="https://sdn-warrior.org/posts/vcf-import-cluster/">here</a>.</p>
+The principal storage is NFS. If you&rsquo;re wondering how that works, I wrote a blog post about it 
+<a href="https://sdn-warrior.org/posts/vcf-import-cluster/" target="_blank" rel="noopener">here</a>.</p>
 <p>If you&rsquo;re good at math, you&rsquo;ll have noticed that 3x 45 GB RAM is more than 128 GB RAM, but a little oversubscription never hurt anyone (except when it comes to licenses).</p>
 <p>After everything had been migrated offline, since Intel and AMD are not compatible at all and therefore no live migration between the two systems is possible, I started VCF and the poor MS-A2 immediately went into full load.</p>
 <figure><picture><source srcset="/ms-a2/05_hu_fd3a693a75c2dbc1.png" type="image/png">
@@ -548,7 +551,9 @@ Only NSX Manager is taking its time. But we are already familiar with that.</li>
             height="1021"/>
         </picture><figcaption><p>Stress on the EdgeVM</p></figcaption></figure>
 <p>So, at first, I was pretty clueless. Luckily, there&rsquo;s the awesome vExpert community, because a) I&rsquo;m getting older and forgetting more than I want to admit, and b) I don&rsquo;t always know everything.
-My thanks go to <a href="https://www.linkedin.com/in/abbed-sedkaoui-678718151/">Abbed Sedkaoui</a> for his quick help. He put me on the right track. By the way, he has a great <a href="https://strivevirtually.net/">blog</a>.</p>
+My thanks go to 
+<a href="https://www.linkedin.com/in/abbed-sedkaoui-678718151/" target="_blank" rel="noopener">Abbed Sedkaoui</a> for his quick help. He put me on the right track. By the way, he has a great 
+<a href="https://strivevirtually.net/" target="_blank" rel="noopener">blog</a>.</p>
 <p>The problem is that when the Edge VM is started, a Python script is executed that checks whether an AMD CPU is installed and, if it is not an AMD EPYC, simply throws an error and prevents DPDK from starting. This leaves Edge offline.
 <figure><picture><source srcset="/ms-a2/07_hu_31702297df6582ba.jpg" type="image/jpeg">
           <img

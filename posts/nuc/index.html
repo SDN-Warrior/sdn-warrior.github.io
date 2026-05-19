@@ -83,7 +83,7 @@
     }
 }
 </script><title>How to get most out of your Nuc </title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.48dfd2cbc4b314050177c0a15b4423eae120f41674c5df373526245b8917a0cb.css" integrity="sha256-SN/Sy8SzFAUBd8ChW0Qj6uEg9BZ0xd83NSYkW4kXoMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.c4d1e0a05738041aa3eb5a2210fb9b1d98420bcd0d4e21a581cc2cd6daadbeb1.css" integrity="sha256-xNHgoFc4BBqj61oiEPubHZhCC80NTiGlgcws1tqtvrE=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -278,7 +278,8 @@ It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the
 With memory tiering, you can use up to 400% of the physical RAM. This requires a fast NVMe.
 I would recommend a PCIe4 NVMe with at least 5000 MB/s read/write.
 Memory Tiering stores very cold (unused RAM pages) and cold RAM pages (less than 20% used) on the NVMe (Memory Tier).
-There is a wonderful <a href="https://www.vmware.com/explore/video-library/video/6360757998112" title="Explore USA">Explore Session</a> on this.</p>
+There is a wonderful 
+<a href="https://www.vmware.com/explore/video-library/video/6360757998112" title="Explore USA" target="_blank" rel="noopener">Explore Session</a> on this.</p>
 <p>To enable memory tiering, you have to enter the following commands via the ESX Cli:</p>
 <ul>
 <li>This command turns on memory tiering</li>
@@ -320,7 +321,8 @@ Fortunately, there are a few workarounds here.</p>
 <li>Use P and E cores and sacrifice hyperthreading for them</li>
 </ul>
 <p>My tests showed that I got significantly more performance out of my 13th generation i7 if I didn&rsquo;t use hyperthreading and only used “real” CPU cores, even if the E cores have a lower clock rate.
-<a href="https://williamlam.com/2023/01/video-of-esxi-install-workaround-for-fatal-cpu-mismatch-on-feature-for-intel-12th-gen-cpus-and-newer.html">William Lam</a> has written very detailed blog articles about this, I link to him here for more information, as this article was actually only intended to be a short summary.</p>
+
+<a href="https://williamlam.com/2023/01/video-of-esxi-install-workaround-for-fatal-cpu-mismatch-on-feature-for-intel-12th-gen-cpus-and-newer.html" target="_blank" rel="noopener">William Lam</a> has written very detailed blog articles about this, I link to him here for more information, as this article was actually only intended to be a short summary.</p>
 <p>We actually only need two ESX CLI commands to make it all work.</p>
 <ul>
 <li>With this command, we prevent the PSOD from occurring when the ESXi boots.</li>
