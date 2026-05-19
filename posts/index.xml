@@ -59,8 +59,20 @@ But what is it all about, and what can you do with it? Doesn’t this just add e
 <p>As with Edge clusters, there are two options for VNA as well. Either via vCenter or via NSX. At the end of the day, the process is the same, whether I initiate it via vCenter or via NSX. In NSX, you can create the cluster under <em><strong>System &gt; Fabric &gt; VNA Cluster</strong></em>, and in vCenter, it’s a bit harder to find: click on vCenter, then on Configure, scroll down to Networking, and then click on VNA Clusters. I&rsquo;ll deploy it via vCenter as an example.</p>
 <p>The setup is completed in 4 simple steps. First, you need to create a cluster. To do this, select the cluster name and form factor. These are the same form factors used for an Edge Cluster, by the way. Next, configure the first cluster node by clicking <em><strong>ADD</strong></em>. At least one cluster node is required per cluster, but for high availability (HA) reasons, you should always deploy at least two.
 Setting up the first cluster node is very similar to setting up an edge node. You need an FQDN, and you must select the appropriate Compute Manager, vSphere cluster, and datastore. For the management network, you can choose between DHCP or static.
-I generally always use static addresses. Finally, a suitable port group must be selected. For some reason, VCF 9.1 always selects the ESX management network here.
-In my setup, I have the VNA management addresses in the VM management network. That’s all there is to it—you don’t need any more information for the first node. You can then simply create the second node from the first using the <em><strong>CLONE</strong></em> button, saving yourself a lot of typing. Here, you just need to specify the delta, i.e., FQDN and IP addresses.
+I generally always use static addresses. Finally, a suitable port group must be selected.</p>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Info</b>
+        </div>
+        <div class="admonition-content">Just a quick note: if you deploy the VNA cluster as a Day 1 deployment using the VCF Installer, you cannot specify port groups, and the management network is always used. If you want to deploy the VNA as a Day 2 operation, it is important to select the Centralized Gateway in the installer. This skips the gateway deployment, allowing you to configure the gateways as a Day 2 operation with full flexibility.</div>
+    </aside>
+<p>In my setup, I have the VNA management addresses in the VM management network. That’s all there is to it—you don’t need any more information for the first node. You can then simply create the second node from the first using the <em><strong>CLONE</strong></em> button, saving yourself a lot of typing. Here, you just need to specify the delta, i.e., FQDN and IP addresses.
 After confirmation, the VNA nodes are automatically deployed, and after a short time, they should be visible in vCenter and NSX, with the status showing as Success. The entire setup is now complete.</p>
 
 
@@ -70,6 +82,18 @@ After confirmation, the VNA nodes are automatically deployed, and after a short 
                     </a><a href="/vcf91-vna-vpc/04%20Clone%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-d8442dfd" data-title="VNA Cluster:  04 Clone Node"><img src="/vcf91-vna-vpc/04%20Clone%20Node_hu_976b5d584c063cfc.jpg" alt="VNA Cluster:  04 Clone Node" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  04 Clone Node</div>
                     </a><a href="/vcf91-vna-vpc/05%20Final%20cluster.jpg" class="gallery-item" data-lightbox-group="gallery-d8442dfd" data-title="VNA Cluster:  05 Final cluster"><img src="/vcf91-vna-vpc/05%20Final%20cluster_hu_8b46e91cee6683e0.jpg" alt="VNA Cluster:  05 Final cluster" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA Cluster:  05 Final cluster</div>
                     </a></div>
+
+    <aside class="admonition info">
+        <div class="admonition-title">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div><b>Screenshots</b>
+        </div>
+        <div class="admonition-content">Some of the screenshots were taken in NSX Manager because I lost the original screenshots and didn&rsquo;t want to redeploy the VNA cluster. However, the UI is the same as when deploying from vCenter.</div>
+    </aside>
 <p>To be honest, that was super easy. But if you take a closer look, there’s actually a bit more going on behind the scenes. That’s because each VNA has been assigned a BFD session. I’ll explain exactly how that works a little later. For now, it’s enough to know that our VNA cluster is up and running.</p>
 <h3 id="choosing-the-right-vna-size">Choosing the right VNA Size</h3>
 <ul>
@@ -88,7 +112,7 @@ Use Case: Recommended for environments optimised for NSX Layer 7 load balancer p
 </ul>
 <h2 id="using-the-vna">Using the VNA</h2>
 <p>Now that our VNA cluster has been successfully deployed, the obvious question is: what do I do with it now? Well, to put it simply, the VNA cluster does not replace an Edge cluster. I cannot run a T0 or T1 router on the VNA cluster. At least for now, it is only possible to use the VNA cluster with a Transit Gateway—and not even with every type of Transit Gateway.
-The VNA is specifically designed to enable a Distributed Transit Gateway to use Stateful Services; it is also used when implementing VXLAN with VPCs. However, that is not the focus of this article. This topic is still on my roadmap, but I first need to figure out how to create a test scenario with virtual Sonic switches.</p>
+The VNA is specifically designed to enable a Distributed Transit Gateway to use Stateful Services; it is also used when implementing VXLAN with VPCs. When the VNA is used for VXLAN integration, it is referred to as a route controller. The VNA then functions fundamentally differently, although the underlying platform remains the same. Route controllers and VNAs for stateful services should not be confused. However, that is not the focus of this article. This topic is still on my roadmap, but I first need to figure out how to create a test scenario with virtual Sonic switches.</p>
 
     <aside class="admonition info">
         <div class="admonition-title">
