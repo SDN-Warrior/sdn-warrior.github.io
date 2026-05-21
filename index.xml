@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-US</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 11 May 2026 00:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 21 May 2026 22:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
+      <link>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</link>
+      <pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This article cost me a lot of sleep, long nights in the lab, and plenty of coffee. But let&amp;rsquo;s start from the beginning. I was fortunate enough to have a conversation with a very nice Broadcom employee &#xA;&lt;a href=&#34;https://www.linkedin.com/in/oliver-ziltener-4448785b/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;(Oliver Ziltener)&lt;/a&gt; about the VNA. Thank you for your time, for your comments on my first article, and for answering my questions. That really helped me a lot.&lt;/p&gt;&#xA;&lt;p&gt;If you’re not familiar with the VNA, please read that &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vcf9.1-vna-vpc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;article&lt;/a&gt; first. So let&amp;rsquo;s not beat around the bush—let&amp;rsquo;s dive right into the rabbit hole.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VCF 9.1 - VNA and VPCs</title>
       <link>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</link>
@@ -57,20 +64,6 @@
       <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
       <guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>2026</title>
-      <link>https://sdn-warrior.org/years/2026/</link>
-      <pubDate>Mon, 16 Feb 2026 01:17:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/years/2026/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>2025</title>
-      <link>https://sdn-warrior.org/years/2025/</link>
-      <pubDate>Mon, 16 Feb 2026 01:17:17 +0100</pubDate>
-      <guid>https://sdn-warrior.org/years/2025/</guid>
-      <description></description>
     </item>
     <item>
       <title>Nutanix - Get started with the CE Edition</title>
@@ -148,6 +141,13 @@
       <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
       <guid>https://sdn-warrior.org/posts/explore-2025/</guid>
       <description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &#xA;&lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>VCF 9 - Certificate exchange</title>
+      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+      <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
+      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+      <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

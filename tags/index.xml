@@ -7,33 +7,33 @@
     <generator>Hugo</generator>
     <language>en-US</language>
     <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Mon, 18 May 2026 21:04:18 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 21 May 2026 22:00:00 +0200</lastBuildDate>
     <atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>NSX</title>
+      <title>Nsx</title>
       <link>https://sdn-warrior.org/tags/nsx/</link>
-      <pubDate>Mon, 18 May 2026 21:04:18 +0200</pubDate>
+      <pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/nsx/</guid>
       <description></description>
     </item>
     <item>
       <title>Vcf9.1</title>
       <link>https://sdn-warrior.org/tags/vcf9.1/</link>
-      <pubDate>Mon, 18 May 2026 21:04:18 +0200</pubDate>
+      <pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
       <description></description>
     </item>
     <item>
       <title>Vna</title>
       <link>https://sdn-warrior.org/tags/vna/</link>
-      <pubDate>Mon, 18 May 2026 21:04:18 +0200</pubDate>
+      <pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vna/</guid>
       <description></description>
     </item>
     <item>
       <title>Vpc</title>
       <link>https://sdn-warrior.org/tags/vpc/</link>
-      <pubDate>Mon, 18 May 2026 21:04:18 +0200</pubDate>
+      <pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vpc/</guid>
       <description></description>
     </item>
@@ -80,7 +80,7 @@
       <description></description>
     </item>
     <item>
-      <title>Vmware</title>
+      <title>VMware</title>
       <link>https://sdn-warrior.org/tags/vmware/</link>
       <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
       <guid>https://sdn-warrior.org/tags/vmware/</guid>

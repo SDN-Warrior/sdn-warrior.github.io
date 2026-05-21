@@ -1,9 +1,15 @@
 [{
+    "title": "VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture",
+    "url": "/posts/vcf9.1-vna-part2/",
+    "date": "2026-05-21",
+    "description": "In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.",
+    "tags": ["vcf9.1","nsx","vpc","vna"]
+  },{
     "title": "VCF 9.1 - VNA and VPCs",
     "url": "/posts/vcf9.1-vna-vpc/",
     "date": "2026-05-11",
     "description": "In this new blog post, I will describe the benefits of virtual network appliances and how to use them.",
-    "tags": ["vcf9.1","nsx","vpc"]
+    "tags": ["vcf9.1","nsx","vpc","vna"]
   },{
     "title": "VCF 9.1 - VPCs Connectivity Policies",
     "url": "/posts/vcf9.1-vpcs-connectivity-policy/",
