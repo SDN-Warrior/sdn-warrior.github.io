@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short article about VPCs in NSX 9 and VCF 9 Part 2.">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -249,17 +250,19 @@ Perhaps I should mention NSX Projects again here. VMware writes in the VCF 9 Gui
 In addition, we can currently only have one transit gateway per project.
 Since our default tenant (aka default project) has a transit gateway in centralized deployment, I need a new tenant aka project.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">A small addition: whenever I refer to “tenant” in this article, I actually mean NSX project, but I find the name NSX project a bit cumbersome.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">A small addition: whenever I refer to “tenant” in this article, I actually mean NSX project, but I find the name NSX project a bit cumbersome.</div>
+</aside>
 <p>To create a new tenant, click on the Project drop-down menu in the NSX GUI and then click on Manage.</p>
 <figure><a href="01.png"><picture><source srcset="/vcf9-nsx-vpc-2/01_hu_14d967522d2c4386.png" type="image/png">
           <img
@@ -276,17 +279,19 @@ The same applies to the option of assigning an edge cluster to the tenant.
 Since I really want to avoid edges entirely in this article, we will also ignore this option.
 We also have the option of setting distributed firewall rules directly, which only allows communication within the tenant, but since firewalling will be covered in another article, we will ignore this option and disable it.</p>
 <p>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">In the NSX project create dialog, you can create a new external connection and external IP blocks using the three-dot menu.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">In the NSX project create dialog, you can create a new external connection and external IP blocks using the three-dot menu.</div>
+</aside>
 We save our Manhattan project and now we have a fresh new tenant.</p>
 <h2 id="external-connection---the-distributed-version">External Connection - the distributed version<a href="#external-connection---the-distributed-version" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>We should take another closer look at the topic of external connections.</p>
@@ -298,17 +303,19 @@ We save our Manhattan project and now we have a fresh new tenant.</p>
 <p>Since we have a distributed connection here, we need a VLAN and a gateway in my physical network.
 In my lab, it is VLAN 1011 and my Mikrotik Core Router has 10.28.11.1/24. My external IP block also comes from the network area of VLAN 1011, as my physical router has to route to this network.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">NSX 9 currently only supports static routing, and if I had used a different external IP block, I would have had to set up additional routes on my Mikrotik – laziness wins out in this case.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">NSX 9 currently only supports static routing, and if I had used a different external IP block, I would have had to set up additional routes on my Mikrotik – laziness wins out in this case.</div>
+</aside>
 <h2 id="lets-build-a-vpc-or-two-or">Let&rsquo;s build a VPC, or two, or&hellip;<a href="#lets-build-a-vpc-or-two-or" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Readers of 
 <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/" target="_blank" rel="noopener">Part 1</a> should now be quite familiar with all of this.</p>
@@ -322,17 +329,19 @@ This network is used to connect VPCs to each other and is an NSX overlay network
 Next, I configure the service profile, which is where I can configure a DHCP service for my VPC, and finally I create the private PVC IP CIDRs.
 As in my other article, this will again be 192.168.5.0/24.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The private VPC IP CIDRs may overlap with other private VPC networks, as they are not routed between VPCs.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The private VPC IP CIDRs may overlap with other private VPC networks, as they are not routed between VPCs.</div>
+</aside>
 <p>That&rsquo;s it, our VPC has been created and we can now create our first VPC subnets. I will create a public, a private, and a transit network, each with 16 IPs and DHCP enabled.
 In addition, I will create the VPC Core in the same way. I hope the Demon Core doesn&rsquo;t get too close - nudge nudge wink wink.</p>
 <p>The tenants&rsquo; VPC networks are displayed in vCenter, but they are managed by NSX. This means that they cannot be extended or created via vCenter as in our default project.</p>
@@ -809,31 +818,35 @@ In addition, my Mikrotik does not know the subnets that NSX creates for the VPCs
 The ESX server receives the traffic and sends it directly to the VM.</p>
 <p>Insert the “Nice Meme” here.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The NSX reference design guide for NSX 9 also describes this in great detail. However, I will try to show actual trace flows and screenshots here, rather than just pure theory.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The NSX reference design guide for NSX 9 also describes this in great detail. However, I will try to show actual trace flows and screenshots here, rather than just pure theory.</div>
+</aside>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content"><p>When connecting to multiple VLANs, administrators can configure optional routes to external networks, with each route specifying the external gateway of the corresponding VLAN as the next hop destination.</p>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content"><p>When connecting to multiple VLANs, administrators can configure optional routes to external networks, with each route specifying the external gateway of the corresponding VLAN as the next hop destination.</p>
 <p>In scenarios where multiple distributed Transit Gateways share the same VLAN, inter-DTGW communication occurs through hairpin routing via the external
 gateway.</p>
 </div>
-    </aside>
+</aside>
 <p>That was quite a lot, but we&rsquo;re still not quite done, because there&rsquo;s also a NAT column in my test table.</p>
 <h2 id="external-ips-aka-reflexive-nat">External IPs aka reflexive NAT<a href="#external-ips-aka-reflexive-nat" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Similar to centralized deployment, it is possible to expose a VM from a private VPC network. However, since we do not have an edge, this is only possible via reflexive (stateless) NAT.
@@ -944,17 +957,19 @@ The complete communication is as follows:</p>
   </table>
 </div><p>Unlike a VPC with Auto SNAT enabled, it is not possible to communicate from a private VPC network with static NAT to a transit network of another VPC.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Reflexive NAT is not visible or configurable for the VPC via the NSX GUI. You can only set the external IP to be assigned automatically.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Reflexive NAT is not visible or configurable for the VPC via the NSX GUI. You can only set the external IP to be assigned automatically.</div>
+</aside>
 <p>With <em><strong>get transport-node external-ip</strong></em>, you can view the external IPs implemented on the ESX host in nsxcli.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vcf09-m01-esx01.lab.home&gt; get transport-node external-ip 
 </span></span><span class="line"><span class="cl">Thu Jun 26 2025 UTC 17:08:36.740

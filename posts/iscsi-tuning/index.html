@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Optimizing iSCSI Performance in an Unraid Environment">
@@ -85,7 +86,7 @@
     }
 }
 </script><title>iSCSI Tuning</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -240,17 +241,19 @@
 <h2 id="optimize-maxiosizekb">Optimize MaxIoSizeKB<a href="#optimize-maxiosizekb" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>One such optimization involves adjusting the maximum I/O size for iSCSI traffic.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">By default, VMware ESXi uses a <em><strong>MaxIoSizeKB</strong></em> value of 128 KB.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">By default, VMware ESXi uses a <em><strong>MaxIoSizeKB</strong></em> value of 128 KB.</div>
+</aside>
 <p>While this is sufficient for many setups, it may not be optimal for environments
 like mine, where jumbo frames are enabled across the network. Larger packets perform better in such a configuration, reducing overhead and increasing throughput.</p>
 <p>To take advantage of my network&rsquo;s capabilities, I increased the <em><strong>MaxIoSizeKB</strong></em> parameter to 512 KB</p>
@@ -258,16 +261,18 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced set -o /ISCSI/MaxIoSizeKB -i 512
 </span></span></code></pre></div><p>This change allows the iSCSI initiator to send larger I/O requests, improving data transfer efficiency in my jumbo-frame-enabled network. With this configuration, I noticed a significant improvement in performance, as the network could handle larger blocks of data more effectively.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">For this change to take effect, a host reboot is required. After restarting the ESXi server, the new value will be applied, enabling the iSCSI initiator to send larger I/O requests.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">For this change to take effect, a host reboot is required. After restarting the ESXi server, the new value will be applied, enabling the iSCSI initiator to send larger I/O requests.</div>
+</aside>
 <p>After the reboot, you can verify that the change has been successfully applied by running the following command:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced list -o /ISCSI/MaxIoSizeKB
 </span></span></code></pre></div><p>The output should look like this:</p>
@@ -303,17 +308,19 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 </span></span><span class="line"><span class="cl">   Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
 </span></span><span class="line"><span class="cl">   Is USB: false
 </span></span></code></pre></div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content"><!-- raw HTML omitted --> The default multipath policy is &ldquo;Most Recently Used&rdquo; (VM_PSP_MRU).</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content"><!-- raw HTML omitted --> The default multipath policy is &ldquo;Most Recently Used&rdquo; (VM_PSP_MRU).</div>
+</aside>
 <ul>
 <li>Set the multipathing policy for the desired iSCSI device to RoundRobin:</li>
 </ul>
@@ -323,17 +330,19 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 </ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli storage nmp device list | grep &lt;DeviceIdentifier&gt;
 </span></span></code></pre></div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Replace <code>&lt;DeviceIdentifier&gt;</code> with the actual identifier of your iSCSI device (naa.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx).&quot;</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Replace <code>&lt;DeviceIdentifier&gt;</code> with the actual identifier of your iSCSI device (naa.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx).&quot;</div>
+</aside>
 <ul>
 <li>Output after chages</li>
 </ul>
@@ -347,17 +356,19 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 </span></span><span class="line"><span class="cl">   Working Paths: vmhba64:C1:T0:L1, vmhba64:C0:T0:L1
 </span></span><span class="line"><span class="cl">   Is USB: false
 </span></span></code></pre></div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">the multipath policy must now be VMW_PSP_RR</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">the multipath policy must now be VMW_PSP_RR</div>
+</aside>
 <p>To further optimize path usage and load distribution, I adjusted the IOPS parameter for the Round Robin policy. By default, ESXi switches storage paths after 1000 I/O operations, but I used the following command snippet to change this behavior to switch after every single I/O:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">for i in `esxcfg-scsidevs -c |awk &#39;{print $1}&#39; | grep naa.xxxx`; do 
 </span></span><span class="line"><span class="cl">   esxcli storage nmp psp roundrobin deviceconfig set --type=iops --iops=1 --device=$i
@@ -369,22 +380,24 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 <p>To verify that jumbo frames are functioning correctly in your environment, you can use the <em><strong>vmkping</strong></em> command on your ESXi host:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vmkping -I vmk1 -s 8973 -d 192.168.67.250
 </span></span></code></pre></div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b> vmkping parameters</b>
-        </div>
-        <div class="admonition-content"><ul>
+   </svg></div>
+        <b> vmkping parameters</b>
+    </div>
+    <div class="admonition-content"><ul>
 <li>Replace <em><strong>vmk1</strong></em> with the VMkernel adapter used for iSCSI.</li>
 <li><em><strong>-s 8972</strong></em> sets the packet size to match the jumbo frame size (8972 bytes, including headers).</li>
 <li><em><strong>-d</strong></em> enables the Don&rsquo;t Fragment flag to ensure the packet isn&rsquo;t fragmented along the way.</li>
 </ul>
 </div>
-    </aside>
+</aside>
 <p>If you see the error:  <em><strong>sendto() failed (Message too long)</strong></em> this indicates that the packet size is too large to be transmitted without fragmentation. For a setup with an MTU of 9000 configured on the distributed or standard switch, a packet size of 8972 bytes should work correctly. If the error occurs, check your vswitch settings, your physical switches and your iSCSI target.</p>
 <h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>By increasing the MaxIoSizeKB to 512 KB, verifying jumbo frame functionality with vmkping, and enabling Round Robin, I optimized my iSCSI setup to leverage the full potential of my 2.5G network.</p>

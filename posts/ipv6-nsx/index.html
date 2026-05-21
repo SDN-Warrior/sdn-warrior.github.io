@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.">
@@ -85,7 +86,7 @@
     }
 }
 </script><title>IPv6 with NSX</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -269,31 +270,35 @@ I had planned to use this for my NSX networks, but my OPNSense couldn&rsquo;t ha
 <h3 id="slaac">SLAAC<a href="#slaac" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>SLAAC stands for Stateless Address Autoconfiguration and enables a host to automatically generate its IPv6 address from a /64 prefix announced by the router. To do this, the router sends router advertisements containing the prefix and the default gateway. The client then independently forms its complete IPv6 address without the need for a DHCP server to assign the address.</p>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">SLAAC itself only distributes the prefix and the default gateway. DNS servers are only provided if the router supports RDNSS (DNS via RA). Not all operating systems—especially minimalist distributions such as Alpine—reliably accept DNS information from router advertisements. As a result, IPv6 may work, but name resolution may not (this is a minor spoiler).</div>
-    </aside>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">SLAAC itself only distributes the prefix and the default gateway. DNS servers are only provided if the router supports RDNSS (DNS via RA). Not all operating systems—especially minimalist distributions such as Alpine—reliably accept DNS information from router advertisements. As a result, IPv6 may work, but name resolution may not (this is a minor spoiler).</div>
+</aside>
 <h3 id="dhcpv6">DHCPv6<a href="#dhcpv6" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>DHCPv6 provides IPv6 addresses and additional network information centrally via a server. It can either assign the complete address (stateful) or only provide additional information such as DNS (stateless). If DHCP runs in stateless mode, SLAAC is used for IP address assignment.</p>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Not every device or operating system supports DHCPv6 stateful! Welcome to the brave new world of IPv6.</div>
-    </aside>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Not every device or operating system supports DHCPv6 stateful! Welcome to the brave new world of IPv6.</div>
+</aside>
 <h3 id="nat66">NAT66<a href="#nat66" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>NAT66 is the IPv6 variant of Network Address Translation, in which the source IPv6 address is replaced by another IPv6 address when leaving the network. It is often used when ULA addresses are used internally and the provider assigns a dynamic global prefix. NAT66 works statefully, which means that the router stores connection states for reverse translation. This keeps the internal address design stable, regardless of the external prefix. However, NAT66 contradicts the end-to-end principle of IPv6.</p>
 <h3 id="nsx-supportet-ipv6-features">NSX Supportet IPv6 features<a href="#nsx-supportet-ipv6-features" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
@@ -309,23 +314,25 @@ I had planned to use this for my NSX networks, but my OPNSense couldn&rsquo;t ha
 <li>SLAAC support</li>
 </ul>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content"><p>Unsupported IPv6 features are:</p>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content"><p>Unsupported IPv6 features are:</p>
 <ul>
 <li>EVPN</li>
 <li>Multicast Routing</li>
 <li>NSX Federation</li>
 <li>VPCs</li>
 </ul></div>
-    </aside>
+</aside>
 <h3 id="nsx-dad-profile">NSX DAD-Profile<a href="#nsx-dad-profile" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>I could make a DAD joke now, but&hellip;</p>
 <p><em><strong>Router:</strong></em> &ldquo;Doctor, it hurts when IP.&rdquo;
@@ -405,17 +412,19 @@ To keep everything clear, here is a short table:</p>
         </picture></a><figcaption><p>OPNSense config (click to enlarge)</p></figcaption></figure>
 <p>It is also important that I assign the IP address cleanly with /64, otherwise the network cannot be used for SLAAC, and SLAAC is what we want to use on the other end, as all devices and operating systems that are dual-stack capable can do this.</p>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Explicit IPv6 firewall rules must be written. In addition, IPv4 may be preferred in OPNSense. This can be deactivated under System -&gt; Settings -&gt; General -&gt; Prefer IPv4 over IPv6.</div>
-    </aside>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Explicit IPv6 firewall rules must be written. In addition, IPv4 may be preferred in OPNSense. This can be deactivated under System -&gt; Settings -&gt; General -&gt; Prefer IPv4 over IPv6.</div>
+</aside>
 <p>Next, IPv6 must be enabled on the Mikrotik. This requires a reboot and can be configured under IPv6 -&gt; Settings -&gt; Disable IPv6. By default, the checkbox is selected and must be deselected. One might almost think that none of the vendors are really interested in IPv6.</p>
 <p>But let&rsquo;s get to the first problem I had. My lab already had a BGP configuration between the lab router and OPNSense via IPv4. OPNSense Business Edition does not properly support IPv6 route exchange via IPv4.
 I saw my IPv6 routes in the FRR plugin, but not in the routing table of the OPNSense.
@@ -457,17 +466,19 @@ For IPv6 to work, the T0 router must receive IPv6 addresses in addition to IPv4 
         </picture></a><figcaption><p>NSX Edge Network Config (click to enlarge)</p></figcaption></figure>
 <p>Next, I configure my IPv6 routing, and this is where RFC 5549 comes into play. To minimize the number of BGP sessions and IPv4 addresses, you can exchange both IPv4 and IPv6 routes over a single IPv6 BGP session.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Support for encoding and processing an IPv4 route with an IPv6 next hop is negotiated as part of the capability exchange in the BGP OPEN message. If both sides of a peering session support the capability, IPv4 routes are advertised with an IPv6 next hop. Multi-protocol BGP (MP-BGP) is used to advertise the Network Layer Reachability Information of an IPv4 address family using the next hop of an IPv6 address family.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Support for encoding and processing an IPv4 route with an IPv6 next hop is negotiated as part of the capability exchange in the BGP OPEN message. If both sides of a peering session support the capability, IPv4 routes are advertised with an IPv6 next hop. Multi-protocol BGP (MP-BGP) is used to advertise the Network Layer Reachability Information of an IPv4 address family using the next hop of an IPv6 address family.</div>
+</aside>
 <p>Mikrotik now also supports RFC 5549. The Mikrotik configuration is very similar to the OPNSense configuration. The main difference is that both IPv4 and IPv6 address families are enabled in one session.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">;;; BGP_VCF09-E01-Edge01
 </span></span><span class="line"><span class="cl">     name=&#34;VCF09-E01-Edge1-01&#34; instance=VCF09-E01-Edge1-U1 
@@ -497,18 +508,20 @@ For IPv6 to work, the T0 router must receive IPv6 addresses in addition to IPv4 
                     </a><a href="/ipv6-nsx/ipv6.png" class="gallery-item" data-lightbox-group="gallery-3629e91e" data-title="ipv6"><img src="/ipv6-nsx/ipv6_hu_9f4cb5e4616150a8.png" alt="ipv6" width="350" height="350" loading="lazy"><div class="gallery-item-caption">ipv6</div>
                     </a></div>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Even if the IPv6 session is used for route exchange, routing to IPv4 networks only works if the EdgeVMs also have IPv4 addresses on the uplink interfaces.
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Even if the IPv6 session is used for route exchange, routing to IPv4 networks only works if the EdgeVMs also have IPv4 addresses on the uplink interfaces.
 If these configurations are missing, routes for the IPv4 networks exist but cannot be reached.</div>
-    </aside>
+</aside>
 <p>In the traceroute of the Mikrotik switch, you can also clearly see that for IPv4 networks, the next hop is actually the IPv4 address of the active EdgeVM.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[admin@router.lab.home] &gt; tool/traceroute 10.10.0.1
 </span></span><span class="line"><span class="cl">Columns: ADDRESS, LOSS, SENT, LAST, AVG, BEST, WORST, STD-DEV

@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
@@ -95,7 +96,7 @@ Any Edge that may have been deployed on these versions or any Hosts prepared or 
     }
 }
 </script><title>NSX Expiring Transport Node Certificates</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -255,30 +256,35 @@ In NSX versions 3.X and 4.2.1 and higher, these certificates are valid for 10 ye
 <p>First of all, don&rsquo;t panic. The affected certificates are not visible in the GUI, but NSX Manager will issue a warning and display an error 30 days in advance. If you don&rsquo;t see these messages in your NSX, you have more than 30 days to respond.
 Furthermore, it only affects transport nodes deployed with NSX 4.1.x - 4.2. If you have upgraded from NSX 3.X to one of the affected versions or have just deployed VCF version 5.2.x, you are safe.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The certificate issued at the time of Transport Node creation <strong>is not replaced automatically during an upgrade</strong>.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The certificate issued at the time of Transport Node creation <strong>is not replaced automatically during an upgrade</strong>.</div>
+</aside>
 <h2 id="why-it-matters">Why It Matters<a href="#why-it-matters" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>As the 825-day period approaches its end, you may encounter <strong>certificate expiration issues</strong>, potentially affecting NSX component communication and overall platform stability.
 
-    <aside class="admonition Warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Once the TransportNode certificate expires, there is a grace period of only 24 hours after which all impacted Edges and Hosts will be disconnected from NSX.</div>
-    </aside></p>
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Once the TransportNode certificate expires, there is a grace period of only 24 hours after which all impacted Edges and Hosts will be disconnected from NSX.</div>
+</aside></p>
 <p>If you are affected, there are two scenarios.</p>
 <ul>
 <li>Scenario A) The certificates will expire sometime in the near future, you may have received a warning in NSX Manager and therefore found my blog, or you are not yet aware of the problem because the certificates will expire sometime between 31 and 825 days from now.</li>
@@ -302,16 +308,19 @@ To do this, copy the script to your NSX Manager or Global NSX Manager using sftp
 </span></span><span class="line"><span class="cl"><span class="nb">cd</span> carr-1.15
 </span></span><span class="line"><span class="cl">./start.sh -d
 </span></span></code></pre></div>
-    <aside class="admonition Warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">The CARR script supports multiple parameters. Always perform an NSX backup first and, above all, run the script in dryrun mode. Dryrun mode executes the script in read-only mode.</div>
-    </aside>
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">The CARR script supports multiple parameters. Always perform an NSX backup first and, above all, run the script in dryrun mode. Dryrun mode executes the script in read-only mode.</div>
+</aside>
 <p>Script options:</p>
 <ul>
 <li>
@@ -406,16 +415,19 @@ To do this, copy the script to your NSX Manager or Global NSX Manager using sftp
 </div><p><em>All validations done.</em></p>
 <p>As you can see from the output for HOST and EDGE, my installation is not affected. However, it shows that my API and VIP certificate will expire in 680 days. CARR is also smart enough to recognize that it is a certificate signed by a CA and not a certificate issued by NSX itself.</p>
 
-    <aside class="admonition Warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">If I hadn&rsquo;t run the script in dry run mode, the script would have replaced my API and VIP certificates from NSX Manager with its own self-signed certificates. However, this is not desirable in this case. Caution is advised here, as it is easy to accidentally replace certificates that you do not want to replace.</div>
-    </aside>
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">If I hadn&rsquo;t run the script in dry run mode, the script would have replaced my API and VIP certificates from NSX Manager with its own self-signed certificates. However, this is not desirable in this case. Caution is advised here, as it is easy to accidentally replace certificates that you do not want to replace.</div>
+</aside>
 <p>To trigger TN cert replacement, environment details must be populated in a pre-existing file validation_config.yaml. This yaml file is located in the same folder as start.sh.
 My example yaml. I have disabled validation of all certificates except HOST and EDGE.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># user interface to provide the validation config</span><span class="w">
@@ -547,18 +559,21 @@ My example yaml. I have disabled validation of all certificates except HOST and 
 </div><h2 id="what-to-do-if-the-transport-nodes-are-already-disconnected">What to do if the transport nodes are already disconnected?<a href="#what-to-do-if-the-transport-nodes-are-already-disconnected" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>There is a solution for this as well. Unfortunately, CARR can no longer be used for separate transport nodes. The solution to this problem is to manually generate new certificates on the transport node and then push them from the transport node to the NSX Manager.</p>
 
-    <aside class="admonition Warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">In general, caution is advised when undertaking this task. Personally, I would always open a ticket with Broadcom, as errors can cause further damage in case of doubt. If an Edge Node is disconnected, you can also perform a redeployment via API, which may even be faster than troubleshooting with CARR or manually.
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">In general, caution is advised when undertaking this task. Personally, I would always open a ticket with Broadcom, as errors can cause further damage in case of doubt. If an Edge Node is disconnected, you can also perform a redeployment via API, which may even be faster than troubleshooting with CARR or manually.
 You can find out how to do this in my blog here: 
 <a href="https://sdn-warrior.org/posts/nsx-edge-redeploy/" target="_blank" rel="noopener">SDN-warrior - NSX Edge Redeploy Guide</a></div>
-    </aside>
+</aside>
 <ul>
 <li>
 <p>SSH to the Transport Node as root user</p>

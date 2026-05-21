@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="My Homelab Journey: From Unraid Beginnings to Version 5">
@@ -85,7 +86,7 @@
     }
 }
 </script><title>Homelab V5</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -313,17 +314,19 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 <a href="https://sdn-warrior.org/posts/iscsi-tuning/" target="_blank" rel="noopener">(my iSCSI Blog post)</a> and installing the iSCSI Target plugin 
 <a href="https://sdn-warrior.org/posts/unraid-storage/" target="_blank" rel="noopener">(my Unraid Blog post)</a>, the server provides a performant iSCSI storage capable of achieving around 2000 MB/s for both read and write operations.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">An iSCSI Target in Linux refers to a service or daemon that enables a Linux server to present storage devices over the network using the iSCSI protocol. This allows other machines, known as iSCSI Initiators, to connect to and use these storage devices as if they were local drives.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">An iSCSI Target in Linux refers to a service or daemon that enables a Linux server to present storage devices over the network using the iSCSI protocol. This allows other machines, known as iSCSI Initiators, to connect to and use these storage devices as if they were local drives.</div>
+</aside>
 <h2 id="firewall">Firewall<a href="#firewall" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>As my firewall, I use a Fortinet FortiGate F40, which I’ve had for two years. I am fortunate to have access to an NFR/LAB license through my employer at an affordable price. The FortiGate F40 handles both firewalling and IDS/IPS functionality. Additionally, I operate it in a dual-stack configuration and leverage its SD-WAN feature to load balance two WAN connections: 5G and DSL.</p>
 <h2 id="lessons-learned-and-future-goals">Lessons Learned and Future Goals<a href="#lessons-learned-and-future-goals" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>

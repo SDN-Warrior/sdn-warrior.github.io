@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short article on how to build a stretched vSAN cluster in the VCF.">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>VCF Stretched Cluster</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -280,17 +281,19 @@ This gives us the following requirements:</p>
 <li>Less than 150 ms latency RTT between NSX Managers and transport nodes.</li>
 </ul>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">I will only explain the stretching of the management domain in my article, as my resources in the lab are not infinite and the process is identical for the workload domain.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">I will only explain the stretching of the management domain in my article, as my resources in the lab are not infinite and the process is identical for the workload domain.</div>
+</aside>
 <h2 id="vlans">VLANs<a href="#vlans" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <div class="table-wrapper">
   <table>
@@ -397,17 +400,19 @@ It depends heavily on the underlay design which is the right one here. In my set
 <h2 id="deploy-vsan-witness-host">Deploy vSAN Witness Host<a href="#deploy-vsan-witness-host" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>A vSAN Witness Host is required for a Stretched vSAN Cluster. Ready-made appliances can be downloaded from the Broadcom support portal. These are delivered as OVA and must be deployed on a third independent site. vSAN Witness can be connected either Layer 2 or Layer 3.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Best Practice</b>
-        </div>
-        <div class="admonition-content">The recommended way would be a layer 3 connection and each site has an independent routed connection to the Witness Appliance.</div>
-    </aside>
+   </svg></div>
+        <b>Best Practice</b>
+    </div>
+    <div class="admonition-content">The recommended way would be a layer 3 connection and each site has an independent routed connection to the Witness Appliance.</div>
+</aside>
 <p>After the successful deployment, the witness host must be registered in the vCenter of the management domain. You must add the vSAN witness host to the datacenter. Do not add it to a folder. Use the fully qualified domain name (FQDN) of the vSAN witness host, not the IP address.
 There are a few adjustments to be made to the witness host:</p>
 <ul>
@@ -439,16 +444,18 @@ Next, the cluster stretch spec must be created – this is the fun part of the d
 <h2 id="stretch-a-vsan-cluster-aka-fun-part">Stretch a vSAN Cluster (aka Fun Part)<a href="#stretch-a-vsan-cluster-aka-fun-part" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Unfortunately, the actual stretch of the cluster cannot be conveniently carried out in the SDDC GUI. A JSON cluster stretch spec must be created and then passed to the SDDC manager via an API call.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">The ESXi hosts that you are adding to availability zone 2 must use the same vmnic to vSphere Distributed Switch mapping as the existing hosts in availability zone 1.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">The ESXi hosts that you are adding to availability zone 2 must use the same vmnic to vSphere Distributed Switch mapping as the existing hosts in availability zone 1.</div>
+</aside>
 <p>The ESXi host ID is required for the JSON. This can be read out via an API call. The easiest way to do this is to use the Developer Center in the SDDC. Of course, any API tool will also work. At this point, I was just too lazy to generate an API token and did all the queries in the developer center of the SDDC manager.</p>
 <figure><a href="03.png"><picture><source srcset="/vcf-stretch/03_hu_76e7587064ca4935.png" type="image/png">
           <img
@@ -646,34 +653,38 @@ To start the actual task, another API call must be made. This time <em><strong>P
             height="1084"/>
         </picture></a><figcaption><p>Stretched Cluster vCenter (click to enlarge)</p></figcaption></figure></p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Storage Policy</b>
-        </div>
-        <div class="admonition-content">When you stretch a cluster, VMware Cloud Foundation modifies the site disaster tolerance setting for storage policy associated with datastore of that cluster from None - standard cluster to Site mirroring - stretched cluster. This affects all VMs using default datastore policy in that cluster.</div>
-    </aside>
+   </svg></div>
+        <b>Storage Policy</b>
+    </div>
+    <div class="admonition-content">When you stretch a cluster, VMware Cloud Foundation modifies the site disaster tolerance setting for storage policy associated with datastore of that cluster from None - standard cluster to Site mirroring - stretched cluster. This affects all VMs using default datastore policy in that cluster.</div>
+</aside>
 <h2 id="notes">Notes<a href="#notes" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Further stretched cluster maintenence operations like upgrades can be carried out via GUI. A cluster shrink, expand or a cluster unstretch must currently still be carried out via API.</p>
 <p>You also need to think about BGP peering. Depending on the setup, each side has its own AS number for BGP and Broadcom recommends working with route maps and local preference to control traffic.
 Personally, I would say: it depends. However, this topic is so extensive that it may get its own blog article at some point.
 In addition, you have to worry about the placement of VMs, storage policies and much more&hellip;</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Opinion</b>
-        </div>
-        <div class="admonition-content">Design is always a matter of opinions and there is usually not just one perfect solution.</div>
-    </aside>
+   </svg></div>
+        <b>Opinion</b>
+    </div>
+    <div class="admonition-content">Design is always a matter of opinions and there is usually not just one perfect solution.</div>
+</aside>
 <h2 id="lab-hardware-and-sizing-of-the-vms">Lab Hardware and Sizing of the VMs<a href="#lab-hardware-and-sizing-of-the-vms" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Perhaps a brief word about the resources used. I could have set up the lab more economically.
 There is potential for savings in the NSX managers, where only one manager would have been needed with some adjustments or non nested edge vms.

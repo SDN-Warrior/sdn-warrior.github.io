@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -240,17 +241,19 @@ Since I had to reinstall one of them, I removed it according to the official
 <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html" target="_blank" rel="noopener">instructions</a>, and that&rsquo;s when the problems started.</p>
 <h2 id="disclaimer">Disclaimer<a href="#disclaimer" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so <strong>at your own risk.</strong></div>
-    </aside>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so <strong>at your own risk.</strong></div>
+</aside>
 <h2 id="error-pattern-and-impact">Error pattern and impact<a href="#error-pattern-and-impact" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:</p>
 <ul>
@@ -281,17 +284,19 @@ Together with the other issues I found in Operations, this was the reason why th
 I had exactly the same problem when switching from the public beta 9 to the final version of VCF 9. However, I attributed this to the beta installation and therefore did not spend much time troubleshooting.</p>
 <h2 id="problem-solving">Problem solving<a href="#problem-solving" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Warning</b>
-        </div>
-        <div class="admonition-content">Take a snapshot of your fleet manager</div>
-    </aside>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Take a snapshot of your fleet manager</div>
+</aside>
 <p>Since there is no official solution yet, here is my unofficial solution to the problem.
 I have tried this several times and was able to verify that it works. Would I do this in a production environment? Definitely not. You have been warned.</p>
 <p>First, the integration must be deleted, just as described in the official guide.</p>
@@ -335,18 +340,20 @@ I have tried this several times and was able to verify that it works. Would I do
         </picture></a><figcaption><p>Installation complete (click to enlarge)</p></figcaption></figure>
 <p>Of course, I can&rsquo;t say for sure whether all hidden entries from the old SDDC have been removed from the environment. The only thing to do here is wait until the bug is officially fixed. As I already mentioned, I was able to reproduce the behavior several times. Now that this problem has been solved, I can get back to working on the article I had originally planned.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Broadcom published an official KB article on this topic on January 7, 2026: 
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Broadcom published an official KB article on this topic on January 7, 2026: 
 <a href="https://knowledge.broadcom.com/external/article/424495" target="_blank" rel="noopener">https://knowledge.broadcom.com/external/article/424495</a></div>
-    </aside>
+</aside>
 
 			</div>
 			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">

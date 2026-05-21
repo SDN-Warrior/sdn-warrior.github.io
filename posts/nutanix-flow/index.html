@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.">
@@ -83,7 +84,7 @@
     }
 }
 </script><title>Nutanix - Flow 7: virtual networking</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -238,17 +239,19 @@
 But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).</p>
 <p>But I stray from the point. In this article, I’ll start by looking at the installation of Flow and, primarily, virtual networking. Security will certainly be covered in a separate article. Virtual networking offers standard features such as overlay networks, VPCs, NAT, VPN, routing, and much more. Furthermore, just like NSX, it relies on a three-tier architecture. I&rsquo;d say buckle up—here comes the wild ride!
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">I should probably mention that I generally don’t go into every last detail about VPCs, since the basics are the same for both Nutanix and NSX—that is, what VPCs are, what they’re used for, and so on. So I’m assuming you have a general understanding of the basics here, at least in terms of what VPCs are used for.</div>
-    </aside></p>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">I should probably mention that I generally don’t go into every last detail about VPCs, since the basics are the same for both Nutanix and NSX—that is, what VPCs are, what they’re used for, and so on. So I’m assuming you have a general understanding of the basics here, at least in terms of what VPCs are used for.</div>
+</aside></p>
 <h2 id="flow-virtual-networking-architecture">Flow Virtual Networking Architecture<a href="#flow-virtual-networking-architecture" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>I know, I know, nobody likes theory, but luckily you can skip chapters.
 But I don&rsquo;t think a little theory will hurt, and I&rsquo;ll keep it brief.</p>
@@ -277,17 +280,19 @@ The network controller manages the network services configured via Prism and mus
 <p>This article assumes that Prism Central is deployed and functioning properly. I am using the Nutanix CE edition as my base. You can read about exactly how I set it up 
 <a href="https://sdn-warrior.org/posts/nutanix-install-ce/" target="_blank" rel="noopener">here</a>.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Nutanix Version</b>
-        </div>
-        <div class="admonition-content">If, like me, you want to test Flow 7, you must update the CE Edition to Prism Version 7.5.x, AOS 7.5.x, and AHV 11. As of today, this can only be done by manually uploading the packages from the Partner Portal. Today, I’m not describing any features that you couldn’t do with an older version of Flow. X-Small Prism installations do not support Flow by the way.</div>
-    </aside>
+   </svg></div>
+        <b>Nutanix Version</b>
+    </div>
+    <div class="admonition-content">If, like me, you want to test Flow 7, you must update the CE Edition to Prism Version 7.5.x, AOS 7.5.x, and AHV 11. As of today, this can only be done by manually uploading the packages from the Partner Portal. Today, I’m not describing any features that you couldn’t do with an older version of Flow. X-Small Prism installations do not support Flow by the way.</div>
+</aside>
 <figure><a href="02.png"><picture><source srcset="/nutanix-flow/02_hu_1db04cffcf8695.png" type="image/png">
           <img
             src="/nutanix-flow/02_hu_1db04cffcf8695.png"alt="Software Components"width="2978"
@@ -304,30 +309,34 @@ P.S.: Flow 7 is supposed to be included in the next release of the CE Edition—
 <p>I really have to give Nutanix credit here—that was truly a great user experience. I wish NSX were this easy to deploy. Sure, I don’t have as many options for designing my environment as I do with NSX, though VCF’s approach is pretty rigid anyway, but everything here actually feels like it’s all part of a single solution. Flow integrates seamlessly into Prism Central, so no additional UI is needed.</p>
 <p>Of course, this all assumes that I set my MTU to somewhere between 1,500 and 9,000 bytes.
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>MTU</b>
-        </div>
-        <div class="admonition-content">The best practice recommendation here is the same as for VMware: use 9000 bytes on the virtual switch, and set the physical switches as high as possible (i.e. above 9000 bytes).</div>
-    </aside></p>
+   </svg></div>
+        <b>MTU</b>
+    </div>
+    <div class="admonition-content">The best practice recommendation here is the same as for VMware: use 9000 bytes on the virtual switch, and set the physical switches as high as possible (i.e. above 9000 bytes).</div>
+</aside></p>
 <p>By default, the Nutanix Controller VMs use the standard Ethernet MTU of 1500 bytes for all the network interfaces. The system advertises the MTU of 1442 bytes to guest VMs using DHCP to account for the extra 58 bytes used by Generic Network Virtualization Encapsulation (Geneve). However, some VMs ignore the MTU advertisements in the DHCP response. Therefore, to ensure that Flow Virtual Networking functions properly with such VMs, enable jumbo frame support on the physical network and the default virtual switch vs0.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Guest MTU</b>
-        </div>
-        <div class="admonition-content">If you cannot increase the MTU of the physical network, decrease the MTU of every VM in a VPC to 1442 bytes or lower in the guest VM console.</div>
-    </aside>
+   </svg></div>
+        <b>Guest MTU</b>
+    </div>
+    <div class="admonition-content">If you cannot increase the MTU of the physical network, decrease the MTU of every VM in a VPC to 1442 bytes or lower in the guest VM console.</div>
+</aside>
 <div class="table-wrapper">
   <table>
     <thead>

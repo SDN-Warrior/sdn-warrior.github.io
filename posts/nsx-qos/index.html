@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="How to use QoS in NSX">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>How to use QoS in NSX</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -245,17 +246,19 @@
             height="466"/>
         </picture></a><figcaption><p>QoS Profile</p></figcaption></figure>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">A crucial aspect of segment-level QoS is that it impacts all traffic originating from or destined for VMs on the segment. For example, if a Segment Profile specifies a guaranteed bandwidth of 30 Mbps, each VM on that segment will have this guarantee for all traffic, whether it is east-west within the same data center or north-south to external networks.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">A crucial aspect of segment-level QoS is that it impacts all traffic originating from or destined for VMs on the segment. For example, if a Segment Profile specifies a guaranteed bandwidth of 30 Mbps, each VM on that segment will have this guarantee for all traffic, whether it is east-west within the same data center or north-south to external networks.</div>
+</aside>
 <h2 id="explanation-of-segment-qos-profile-parameters-in-nsx">Explanation of Segment QoS Profile Parameters in NSX<a href="#explanation-of-segment-qos-profile-parameters-in-nsx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <h3 id="mode"><strong>Mode</strong><a href="#mode" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Defines how DSCP (Differentiated Services Code Point) values are handled for traffic originating from or destined for a logical port.</p>
@@ -278,17 +281,19 @@
 </li>
 </ul>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">DSCP settings affect only tunneled traffic and do not apply to traffic within the same hypervisor.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">DSCP settings affect only tunneled traffic and do not apply to traffic within the same hypervisor.</div>
+</aside>
 <h3 id="priority"><strong>Priority</strong><a href="#priority" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Specifies the <strong>DSCP priority value</strong>, which determines the level of importance for packets. The DSCP priority values range from <strong>0 to 63</strong>, with higher values indicating higher priority traffic.</p>
 <h3 id="class-of-service-cos"><strong>Class of Service (CoS)</strong><a href="#class-of-service-cos" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
@@ -429,21 +434,23 @@ By analyzing the test results, we can confirm the effectiveness of the QoS profi
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">iperf Done.
 </span></span></code></pre></div>
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Note on QoS Profiles and Perspective</b>
-        </div>
-        <div class="admonition-content"><p>When working with QoS profiles on a segment, it is important to understand that the traffic shaping perspective is always <strong>from the segment&rsquo;s point of view</strong>. For example:</p>
+   </svg></div>
+        <b>Note on QoS Profiles and Perspective</b>
+    </div>
+    <div class="admonition-content"><p>When working with QoS profiles on a segment, it is important to understand that the traffic shaping perspective is always <strong>from the segment&rsquo;s point of view</strong>. For example:</p>
 <ul>
 <li>A profile that shapes <strong>ingress traffic</strong> is applied to traffic <strong>entering the segment</strong>.</li>
 <li>From the VM&rsquo;s perspective, this same traffic is considered <strong>egress traffic</strong> (leaving the VM).
 This distinction can initially be confusing but is crucial for correctly interpreting and configuring QoS policies in NSX environments.</li>
 </ul></div>
-    </aside>
+</aside>
 <h4 id="qos-profiles-apply-to-all-vms-on-the-segment"><strong>QoS Profiles Apply to All VMs on the Segment</strong><a href="#qos-profiles-apply-to-all-vms-on-the-segment" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <p>QoS profiles applied at the segment level are effective for <strong>all VMs connected to that segment</strong>. In our example, this means:</p>
 <ul>
@@ -568,17 +575,19 @@ B = 3750000 \, \text{bytes}
 \]<h3 id="result"><strong>Result</strong><a href="#result" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The minimum Burst Size required is <strong>3750000 bytes</strong> to satisfy all constraints with the given parameters.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Minimum Refill Interval</b>
-        </div>
-        <div class="admonition-content">Use the <code>get dataplane</code> command from the NSX Edge CLI to retrieve the time interval, Qos_wakeup_interval_ms. The default value for Qos_wakeup_interval_ms is 50ms. However, this value is automatically adjusted by the dataplane based on the QoS configuration. In my lab, the QoS_wakeup_interval is relatively high, which is partly due to my hardware and the fact that it is a nested lab. In production environments, this value is typically lower.</div>
-    </aside>
+   </svg></div>
+        <b>Minimum Refill Interval</b>
+    </div>
+    <div class="admonition-content">Use the <code>get dataplane</code> command from the NSX Edge CLI to retrieve the time interval, Qos_wakeup_interval_ms. The default value for Qos_wakeup_interval_ms is 50ms. However, this value is automatically adjusted by the dataplane based on the QoS configuration. In my lab, the QoS_wakeup_interval is relatively high, which is partly due to my hardware and the fact that it is a nested lab. In production environments, this value is typically lower.</div>
+</aside>
 <h3 id="implementation-for-this-test"><strong>Implementation for This Test</strong><a href="#implementation-for-this-test" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <ul>
 <li>The T1 Gateway is configured with a 30 Mbps Committed Bandwidth and a Burst Size that satisfies the constraints above.</li>
@@ -700,21 +709,23 @@ B = 3750000 \, \text{bytes}
 <li>The QoS profile at the T1 Gateway effectively limits total ingress bandwidth to 30 Mbps. However, the concurrent traffic from the second VM reduces the available bandwidth for Alpine01.</li>
 </ul>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Note on QoS Profiles and Perspective</b>
-        </div>
-        <div class="admonition-content"><p>For a QoS profile applied at the gateway level, the <strong>Ingress</strong> direction refers to traffic entering the Tier-1 (T1) Gateway from the Tier-0 (T0) Gateway. This means:</p>
+   </svg></div>
+        <b>Note on QoS Profiles and Perspective</b>
+    </div>
+    <div class="admonition-content"><p>For a QoS profile applied at the gateway level, the <strong>Ingress</strong> direction refers to traffic entering the Tier-1 (T1) Gateway from the Tier-0 (T0) Gateway. This means:</p>
 <ul>
 <li>From the perspective of a VM, this is indeed <strong>ingress traffic</strong>, as it refers to traffic arriving at the VM via the T1 Gateway.</li>
 <li>The <strong>egress traffic</strong> of a VM (traffic leaving the VM) is not affected by an ingress QoS profile applied at the T1 Gateway.
 This distinction ensures that the QoS profile at the gateway level is only applied to traffic coming from the T0 to the T1, without influencing outgoing traffic generated by the VM.</li>
 </ul></div>
-    </aside>
+</aside>
 <h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>When working with QoS profiles in NSX, it is important to understand the key differences and use cases for <strong>Gateway QoS Profiles</strong> and <strong>Segment QoS Profiles</strong>:</p>
 <h3 id="gateway-qos-profiles"><strong>Gateway QoS Profiles</strong><a href="#gateway-qos-profiles" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>

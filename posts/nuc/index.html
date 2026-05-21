@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Performance tuning for NUCs">
@@ -31,7 +32,7 @@
   <meta itemprop="dateModified" content="2024-11-17T11:57:43+01:00">
   <meta itemprop="wordCount" content="624">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Homelab,NUC,Memory Tiering"><meta property="og:url" content="https://sdn-warrior.org/posts/nuc/">
+  <meta itemprop="keywords" content="Homelab,Nuc,Memory Tiering"><meta property="og:url" content="https://sdn-warrior.org/posts/nuc/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="How to get most out of your Nuc ">
   <meta property="og:description" content="Performance tuning for NUCs">
@@ -41,7 +42,7 @@
     <meta property="article:published_time" content="2024-11-17T11:57:43+01:00">
     <meta property="article:modified_time" content="2024-11-17T11:57:43+01:00">
     <meta property="article:tag" content="Homelab">
-    <meta property="article:tag" content="NUC">
+    <meta property="article:tag" content="Nuc">
     <meta property="article:tag" content="Memory Tiering">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
@@ -83,7 +84,7 @@
     }
 }
 </script><title>How to get most out of your Nuc </title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -236,17 +237,19 @@
 <p>Get a second NIC. The Intel NUC Pro has an IO expansion and supports an additional NIC.
 Unfortunately, these are relatively difficult to get in Germany, but it&rsquo;s worth the effort.
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Search for</b>
-        </div>
-        <div class="admonition-content">ASUS NUC LAN and USB Expansion Module (90AR0000-P00010)</div>
-    </aside></p>
+   </svg></div>
+        <b>Search for</b>
+    </div>
+    <div class="admonition-content">ASUS NUC LAN and USB Expansion Module (90AR0000-P00010)</div>
+</aside></p>
 <p><figure><picture><source srcset="/NIC_hu_b3293dbb6f8de30e.webp" type="image/webp">
           <img
             src="/NIC_hu_b3293dbb6f8de30e.webp"alt="Image of an IO expansion"width="1200"
@@ -256,9 +259,10 @@ vSphere 8 supports the cards natively and you don&rsquo;t have to install any dr
 It also supports jumbo frames, which is relevant for NSX Labs.
 It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the wonderful name <code>CRS326-4C +20G+2Q</code>.</p>
 
-    <aside class="admonition tip">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition tip" data-admonition-type="tip">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -269,10 +273,11 @@ It is recommended to use a 2.5 GB managed switch. I am using a Mikrotik with the
       <line x1="21" y1="12" x2="23" y2="12"></line>
       <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
       <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-   </svg></div><b>Practical tip</b>
-        </div>
-        <div class="admonition-content">My experience with 2.5 Gb/s Lan has shown that it makes sense to set the ports to a fixed speed in the hypervisor and on the switch, otherwise I kept having network failures.</div>
-    </aside>
+   </svg></div>
+        <b>Practical tip</b>
+    </div>
+    <div class="admonition-content">My experience with 2.5 Gb/s Lan has shown that it makes sense to set the ports to a fixed speed in the hypervisor and on the switch, otherwise I kept having network failures.</div>
+</aside>
 <h2 id="memory-tiering">Memory Tiering<a href="#memory-tiering" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Memory Tiering is very new in ESXi vSphere 8.0U3 and is still a Tech Preview.
 With memory tiering, you can use up to 400% of the physical RAM. This requires a fast NVMe.
@@ -295,21 +300,23 @@ There is a wonderful
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings advanced set -o /Mem/TierNvmePct -i 400
 </span></span></code></pre></div><p>After a reboot, you have the selected amount of additional memory.</p>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">The selected disk is no longer available to the ESXi.
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">The selected disk is no longer available to the ESXi.
 The minimum capacity must match the selected factor.
 If the disk is larger, it will still be used entirely for memory tiering.
 My recommendation is to use 1 TB NVMe with 64 GB of physical RAM and 400% as the factor.
 ESXi will use the NVMe evenly so that the disk doesn&rsquo;t break as quickly.</div>
-    </aside>
+</aside>
 <h2 id="using-pe-cores">Using P/E Cores<a href="#using-pe-cores" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Intel has introduced the big.little CPU architecture from the 12th generation of their consumer CPUs. This leads to some problems with ESXi. If the efficiency cores are activated, the ESXi starts with a PSOD (Purble Screen of Death).
 Fortunately, there are a few workarounds here.</p>
@@ -333,9 +340,10 @@ Fortunately, there are a few workarounds here.</p>
 </ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esxcli system settings kernel set -s ignoreMsrFaults -v TRUE
 </span></span></code></pre></div>
-    <aside class="admonition tip">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition tip" data-admonition-type="tip">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -346,10 +354,11 @@ Fortunately, there are a few workarounds here.</p>
       <line x1="21" y1="12" x2="23" y2="12"></line>
       <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
       <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-   </svg></div><b>Practical tip</b>
-        </div>
-        <div class="admonition-content">When reinstalling an ESXi server, I always switch off the E Cores, which saves me from having to manipulate the boot loader. After I have allowed memory tiering and the E/P Cores via the ESX CLI, I switch the E/P Cores back on in the BIOS.</div>
-    </aside>
+   </svg></div>
+        <b>Practical tip</b>
+    </div>
+    <div class="admonition-content">When reinstalling an ESXi server, I always switch off the E Cores, which saves me from having to manipulate the boot loader. After I have allowed memory tiering and the E/P Cores via the ESX CLI, I switch the E/P Cores back on in the BIOS.</div>
+</aside>
 <p>If everything is correct, an ESX NUC of the 13th generation looks like this.
 <figure><picture><source srcset="/nuc_hu_21e9fb84617f65c0.jpg" type="image/jpeg">
           <img

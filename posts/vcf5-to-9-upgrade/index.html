@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -248,18 +249,20 @@ NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore no
 <p>Since my last available VCF 5 lab was unfortunately already patched to the latest NSX version, I had no choice but to deploy a fresh VCF 5.2.1, as the NSX version here is low enough.
 And oh my God, I really didn&rsquo;t miss the Excel or Json deployment of VCF 5.X, but for my readers&rsquo; sake, I&rsquo;ll struggle through it once again.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">I will only deploy one management domain in VCF 5.2.1, and I will also skip deploying the edge VMs.
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">I will only deploy one management domain in VCF 5.2.1, and I will also skip deploying the edge VMs.
 However, this does not matter, as you always have to upgrade the management domain first, and the workload domains will function the same way afterwards.</div>
-    </aside>
+</aside>
 <h2 id="management-domain-and-basic-setup">Management domain and basic setup<a href="#management-domain-and-basic-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>I have deployed a management domain with 4 ESXi servers and vSAN. I have set up the whole thing in a nested configuration.
 Since the SDDC Manager does not yet support download tokens, I used the VMwareDepotChange script.
@@ -309,31 +312,35 @@ I have already covered this process in my
     </tbody>
   </table>
 </div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">I am not deploying Operations because I will integrate the VCF installation into my existing VCF 9 Operations later, after the upgrade.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">I am not deploying Operations because I will integrate the VCF installation into my existing VCF 9 Operations later, after the upgrade.</div>
+</aside>
 <p>After the initial deployment, I updated the SDDC to version 5.2.1.1, as it contained several bug fixes. Finally, I took a snapshot of the SDDC Manager, and we were ready to go.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Broadcom has published a 
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Broadcom has published a 
 <a href="https://knowledge.broadcom.com/external/article/390634/update-sequence-for-vcf-90-and-compatibl.html" target="_blank" rel="noopener">KB article</a> on the update sequence for VCF9. Feel free to take a look at it. Depending on which VCF components you are using, you may need to take other steps beforehand.</div>
-    </aside>
+</aside>
 <h2 id="uprade-sddc">Uprade SDDC<a href="#uprade-sddc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>In my setup, the first step is to upgrade the SDDC Manager. As I mentioned above, after the upgrade, the setup will be added to my VCF Operations, which is already up to date.</p>
 <p><figure><a href="02.png"><picture><source srcset="/vcf5-to-vcf9/02_hu_c9c6aff32408d3a0.png" type="image/png">
@@ -391,17 +398,19 @@ The order of the components is as follows:</p>
 <p>You can only configure the update for one component at a time. Pre-checks must be performed before each update.
 Here, too, the process is no different from a normal VCF update.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Since I have a nested VCF setup with vSAN, there will be some errors. However, these can be ignored.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Since I have a nested VCF setup with vSAN, there will be some errors. However, these can be ignored.</div>
+</aside>
 <h3 id="nsx">NSX<a href="#nsx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Since I don&rsquo;t have any edges deployed, the NSX upgrade runs without any problems.
 If I had edge VMs in my environment, I would have had to intervene because of the Ryzen processors, otherwise the edge upgrade would have failed.
@@ -469,32 +478,36 @@ The solution is relatively simple: you need to delete metadata from the vCenter 
 <p>For Image Mode, we still need to import an image into the SDDC; without this, the ESX servers cannot be upgraded to 9.
 After fixing the vCenter, I create a dummy cluster in the vCenter and select the correct image for VCF9.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">It is important that the image from the BOM is used. For VCF9.0.0.0, this is ESX 9.0.0.0 Build 24755229.
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">It is important that the image from the BOM is used. For VCF9.0.0.0, this is ESX 9.0.0.0 Build 24755229.
 There is now a patch for ESX 9 (9.0.0.0100), but this cannot be used for the upgrade to VCF9.
 Instead, it must be installed via VCF 9 Operations after the upgrade to VCF9 has been successfully completed.</div>
-    </aside>
+</aside>
 <p>The image is then imported into the SDDC and the dummy cluster can be deleted again in vCenter.
 The image is assigned to the management domain cluster in the “Configure Update” step, and after the pre-checks, the ESX servers can be updated.
 The process ran smoothly - easy, that&rsquo;s what I expected from the start.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">Before each update, I check vSAN Skyline Health and silence any alarms that may be present due to nested virtualization and the resulting non-certified hardware.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">Before each update, I check vSAN Skyline Health and silence any alarms that may be present due to nested virtualization and the resulting non-certified hardware.</div>
+</aside>
 <h3 id="vsan">vSAN<a href="#vsan" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The final step in the actual upgrade process is to update the vSAN storage.
 The process is straightforward, and all you need to do is press the upgrade button under cluster &ndash;&gt; configure &ndash;&gt; vSAN.
@@ -514,17 +527,19 @@ I have to configure the new VCF environment as a <em><strong>deployment target</
 <p>To onboard, I need to add the VCF instance to my Ops via VCF Operations —&gt; Administration —&gt; Integrations —&gt; Accounts —&gt; Vmware Cloud Foundation.
 Once the environment appears under Integrations, you can select it and press the Activate Management button. This allows you to assign a license to the VCF instance.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">It may take up to 15 minutes for the setting to become active and for VCF Operations to display the VCF instance in the licensing dialog.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">It may take up to 15 minutes for the setting to become active and for VCF Operations to display the VCF instance in the licensing dialog.</div>
+</aside>
 <p>Finally, the VCF instance is set up as an deployment target under —&gt; Lifecycle —&gt; VCF Management —&gt; Settings —&gt; Deployment Targets.</p>
 <p>The upgrade is now complete and the VCF 9 instance can be used as normal.
 Optionally, you can install the ESX patch under Lifecycle.

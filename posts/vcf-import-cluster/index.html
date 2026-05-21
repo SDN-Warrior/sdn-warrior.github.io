@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Importing from a vSphere cluster with NFS 3 as principal storage without losing support.">
@@ -85,7 +86,7 @@
     }
 }
 </script><title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -278,17 +279,19 @@ Thanks to VCF 5.2 and the VCF Import Tool, we can get around this relatively eas
     </tbody>
   </table>
 </div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>NFS Version</b>
-        </div>
-        <div class="admonition-content">Only supports NFS protocol version 3 when used as principal storage. Supplemental storage can use either vSphere supported NFS protocol version 3 or 4.1. Although NFS 3 and NFS 4.1 can coexist on the same host, you cannot use different NFS versions to mount the same datastore on different hosts.</div>
-    </aside>
+   </svg></div>
+        <b>NFS Version</b>
+    </div>
+    <div class="admonition-content">Only supports NFS protocol version 3 when used as principal storage. Supplemental storage can use either vSphere supported NFS protocol version 3 or 4.1. Although NFS 3 and NFS 4.1 can coexist on the same host, you cannot use different NFS versions to mount the same datastore on different hosts.</div>
+</aside>
 <p>What can we take from the table now? It is possible to deploy a standard VCF design with NFS3 and without vSAN, and the best part is that the whole thing is officially supported and is not a homemade solution.</p>
 <h2 id="deployment-and-preparation-of-the-management-domain">Deployment and preparation of the management domain<a href="#deployment-and-preparation-of-the-management-domain" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>First of all, we need to prepare our future management domain. To do this, I am deploying four virtual ESXi servers. I am using the Flings OVA from William Lam and adapting it for my lab.
@@ -300,17 +303,19 @@ My 4 ESX Nested Servers have the following hardware:</p>
 <li>2 Network Cards</li>
 </ul>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Virtual Hardware</b>
-        </div>
-        <div class="admonition-content">It is possible to carry out the deployment with fewer resources, but I had to deal with timeouts during the deployment and, based on my experience, these are the best sizing with my LAB hardware.</div>
-    </aside>
+   </svg></div>
+        <b>Virtual Hardware</b>
+    </div>
+    <div class="admonition-content">It is possible to carry out the deployment with fewer resources, but I had to deal with timeouts during the deployment and, based on my experience, these are the best sizing with my LAB hardware.</div>
+</aside>
 <p>NTP service and DNS including reverse lookup must be available and working. In addition, all VLANs, gateways and, if necessary, firewall rules must be in place. To keep this article short, I won&rsquo;t go into this part in detail. The required networks can be found in the VCF Guide.</p>
 <p>Of course, there are a few restrictions and things that we have to consider here as well.</p>
 <ul>
@@ -343,19 +348,21 @@ NFS 4.1, VVOLs, and native iSCSI are not supported</p>
 </li>
 </ul>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Limitations</b>
-        </div>
-        <div class="admonition-content">There are more limitations, but these should be the most important ones.
+   </svg></div>
+        <b>Limitations</b>
+    </div>
+    <div class="admonition-content">There are more limitations, but these should be the most important ones.
 10 Gb/s network is not necessary in a nested environment. The exact requirements can be found in the current 
 <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/considerations-before-converting-or-importing-existing-vsphere-environments-into-vcf-admin.html" target="_blank" rel="noopener">VCF 5.2 Administration Guide</a>.</div>
-    </aside>
+</aside>
 <p>So after I have prepared my future management domain, it should look similar to the screenshot below.</p>
 <figure><a href="vcf01.png"><picture><source srcset="/vcf-import/vcf01_hu_7174c1164184cb4c.png" type="image/png">
           <img
@@ -405,20 +412,22 @@ After that, I create a JSON file for the future NSX cluster. Here is my example 
 </span></span><span class="line"><span class="cl">  <span class="p">]</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div>
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>NSX Deployment</b>
-        </div>
-        <div class="admonition-content"><p>The importer tool would like to create a 3 node NSX cluster by default.
+   </svg></div>
+        <b>NSX Deployment</b>
+    </div>
+    <div class="admonition-content"><p>The importer tool would like to create a 3 node NSX cluster by default.
 By customizing the actual domainmanager properties, you can reduce this to a single node – however, this is then no longer supported by Broadcom and should not be used in a production environment.
 It is not enough to just customize the JSON file.</p>
 <p>In addition, I tried it first with the small form factor and my convert was not successful because not all services could be started successfully on the NSX cluster. I have experienced this several times in nested environments. Therefore, I always deploy my NSX manager to medium and after a successful deployment, I manually remove the RAM reservation and reduce the manager to 4 vCPUs and 20GB ram. In my environment, this is the best compromise between resource consumption and functionality and performance.</p>
 </div>
-    </aside>
+</aside>
 <h3 id="tipp-customizing-the-nsx-cluster-size">Tipp: Customizing the NSX cluster size<a href="#tipp-customizing-the-nsx-cluster-size" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>First, I log in to my SDDC manager with the VCF user via ssh and switch to the root context. Then I add the
 application-prod.properties file with the following addition.</p>
@@ -521,18 +530,20 @@ The upgrade bundle is placed in the directory specified in the NSX spec. In my c
     </tbody>
   </table>
 </div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The tool took about 80 minutes to complete the process on my system. Of course, it always depends on the performance of the environment.
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The tool took about 80 minutes to complete the process on my system. Of course, it always depends on the performance of the environment.
 You can view the progress at any time in the SDDC or in the vCenter. In between, there are queries, such as whether you have taken a snapshot at the SDDC manager. So it&rsquo;s not easy to run completely unattended. So grab a coffee and enjoy the show.</div>
-    </aside>
+</aside>
 <p>After the convert has hopefully been successful, the whole thing should now look like on my screenshot.</p>
 <figure><a href="vcf02.png"><picture><source srcset="/vcf-import/vcf02_hu_cc74f50353bd763d.png" type="image/png">
           <img
@@ -549,32 +560,36 @@ Of course, we still have some fine-tuning to do. For example, no NSX Edges have 
 This is work that we have to do manually in the NSX Manager.
 We also still need to install licenses in the SDDC manager and setup the software repository so that we can install updates directly via the SDDC if necessary.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>NSX Edge Cluster</b>
-        </div>
-        <div class="admonition-content">NSX is deployed on the convert without overlay configuration. After manually adjusting the overlay config in the NSX Manager, you have to perform a sync via the import tool, otherwise you cannot deploy edge clusters via the SDDC and cannot use AVNs, which in turn are needed for the Aria Suite.</div>
-    </aside>
+   </svg></div>
+        <b>NSX Edge Cluster</b>
+    </div>
+    <div class="admonition-content">NSX is deployed on the convert without overlay configuration. After manually adjusting the overlay config in the NSX Manager, you have to perform a sync via the import tool, otherwise you cannot deploy edge clusters via the SDDC and cannot use AVNs, which in turn are needed for the Aria Suite.</div>
+</aside>
 <p>There are now two options for the future workload domains: 1. import via the import tool (the process is analogous to the convert) or 2. normal deployment via the SDDC manager.</p>
 <h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Importing or converting existing ESXi clusters enables us to deploy VCF in a resource-efficient way in the lab and also offers the possibility for PoCs for customers who would like to test VCF but do not have vSAN Ready nodes. The import tool in VCF 5.2 extends the possibilities of VCF and gives us a bit more flexibility in deploying VCF. From my point of view, this is the right way to make VCF more widely accepted by customers. It also gives us the opportunity to become familiar with the product with fewer resources.</p>
 
-    <aside class="admonition warning">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
       <line x1="12" y1="16" x2="12.01" y2="16"></line>
-   </svg></div><b>A last word</b>
-        </div>
-        <div class="admonition-content">I wouldn&rsquo;t recommend importing or converting an existing workload productively just yet. The feature is still quite new and, although many errors are already caught in the prechecks, it&rsquo;s not yet perfect and bulletproof. For customer PoCs, I would always set up a fresh cluster and then import it so that you don&rsquo;t end up with any legacy issues.</div>
-    </aside>
+   </svg></div>
+        <b>A last word</b>
+    </div>
+    <div class="admonition-content">I wouldn&rsquo;t recommend importing or converting an existing workload productively just yet. The feature is still quite new and, although many errors are already caught in the prechecks, it&rsquo;s not yet perfect and bulletproof. For customer PoCs, I would always set up a fresh cluster and then import it so that you don&rsquo;t end up with any legacy issues.</div>
+</aside>
 
 			</div>
 			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">

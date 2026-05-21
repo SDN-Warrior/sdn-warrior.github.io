@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -245,18 +246,20 @@ And that could be the end of the blog article—could be, if it weren&rsquo;t fo
 Fortunately, there are workarounds, and thanks to 
 <a href="https://williamlam.com/" target="_blank" rel="noopener">William Lam</a>, I found them.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Most of the workarounds are not mine, and most has already been described in other blogs. I just want to show my new setup here and how I built it for myself.
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Most of the workarounds are not mine, and most has already been described in other blogs. I just want to show my new setup here and how I built it for myself.
 The lab does not claim to run on minimal resources, but rather to fulfill my use cases and help others build something similar.</div>
-    </aside>
+</aside>
 <p>But let&rsquo;s take it slowly, one step at a time.</p>
 <h2 id="hardware-setup">Hardware Setup<a href="#hardware-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>My plan is to build a two-node cluster without vSAN and with memory tiering. NFS will be provided via my good old Unraid storage system.
@@ -325,17 +328,19 @@ Fortunately, it can also be set globally. To do this, you must log in to each ES
 </span></span></code></pre></div><p>The workaround takes effect immediately and the ESX server does not need to be rebooted. If VMs were running, they must first be shut down for the workaround to take effect for these VMs.</p>
 <h3 id="ryzen-workaroud-no2-nsx-edge-cpu-check">Ryzen Workaroud No2 (NSX Edge CPU Check).<a href="#ryzen-workaroud-no2-nsx-edge-cpu-check" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The workaround with the script no longer works with VCF 9.0.2 because the position of the CPU check has changed. There is a new, more effective workaround, which I describe below.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The workaround with the script no longer works with VCF 9.0.2 because the position of the CPU check has changed. There is a new, more effective workaround, which I describe below.</div>
+</aside>
 <p>The next workaround concerns the problem with the Data Plane Development Kit (DPDK) and the lack of support for Ryzen CPUs.
 I already described how to solve this problem manually in my 
 <a href="https://sdn-warrior.org/posts/ms-a2/#wheres-the-poop-robin" target="_blank" rel="noopener">MS-A2</a> test.</p>
@@ -371,20 +376,22 @@ Two MS-A2s form my management domain and one MS-01 is a standalone host (without
 <a href="https://sdn-warrior.org/posts/nuc/#using-pe-cores" target="_blank" rel="noopener">here</a> and has nothing directly to do with the MS-A2).</p>
 <p>Why do I need the standalone host? Quite simply, I have two nested ESX servers running on it, which form my workload domain. Since the workload domain requires significantly fewer resources (in a lab), I can easily map it with an MS-01.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The nested workload domain is not actually necessary to test all products in the VCF9 stack, but since I also used the lab for a customer demo,
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The nested workload domain is not actually necessary to test all products in the VCF9 stack, but since I also used the lab for a customer demo,
 I wanted to set it up as close to reality as possible.
 Because the workload domain is nested, I still have enough capacity in my lab to deploy a nested VCF instance with vSAN or another workload domain, for example.
 This becomes interesting when you look at multi-tenancy with automation in a multi-instance single fleet design—something I would like to take a closer look at when I have the opportunity.</div>
-    </aside>
+</aside>
 <p>Since pictures say more than a thousand words, I have created a design drawing here. The whole thing is based on Broadcom&rsquo;s official design blueprints.</p>
 <figure><a href="03.png"><picture><source srcset="/vcf9-special/03_hu_c5eca1d081a6ede.png" type="image/png">
            <img
@@ -528,17 +535,19 @@ This becomes interesting when you look at multi-tenancy with automation in a mul
     </tbody>
   </table>
 </div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">The Automation Appliance is initially deployed with 24 vCPUs. After the initial start, I reduced the vCPUs to 16 and did not notice any negative impact. It may be possible to reduce this number even further.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The Automation Appliance is initially deployed with 24 vCPUs. After the initial start, I reduced the vCPUs to 16 and did not notice any negative impact. It may be possible to reduce this number even further.</div>
+</aside>
 <h3 id="cpu-resources">CPU resources<a href="#cpu-resources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Wow, that&rsquo;s a lot of appliances and a lot of power required. First, the good news: when I turn off the automation appliance, the entire setup runs smoothly and quickly on an MS-A2 without any problems.</p>
 <p>With automation turned on, the vCenter times out and many components no longer work properly.
@@ -567,18 +576,20 @@ So it&rsquo;s another little resource hog and I have more leeway to run everythi
 You also have to think about the future lifecycle.
 In addition, another nested workload domain is to be added, which will also bring with it another vCenter.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">It is not yet certain whether SSP will ultimately enable everything to run on an MS-A2. I will continue to explore whether I can further limit the appliances. There is definitely potential for savings here. Nevertheless, the main goal must be to ensure that all components affected by the VCF lifecycle can run on one host.
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">It is not yet certain whether SSP will ultimately enable everything to run on an MS-A2. I will continue to explore whether I can further limit the appliances. There is definitely potential for savings here. Nevertheless, the main goal must be to ensure that all components affected by the VCF lifecycle can run on one host.
 This primarily affects the Fleet, NSX, and vCenter components. If the workload domain and its management components have to be switched off during the lifecycle, this is not a problem, as these are updated separately, just like automation or SSP.</div>
-    </aside>
+</aside>
 <h2 id="vcf-901-nsx-edge-workaround">VCF 9.0.1 NSX Edge Workaround<a href="#vcf-901-nsx-edge-workaround" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>My colleague 
 <a href="https://vi-universe.github.io/" target="_blank" rel="noopener">Christian</a> and I encountered a spontaneous error. If, like him or me, you don&rsquo;t have the lab running 24/7, it can happen that the uplink port groups are deleted from the Edge VM.
@@ -591,20 +602,22 @@ The Edge VMs no longer have an uplink or a TEP network, meaning that all north-s
              height="811"/>
          </picture></a><figcaption><p>NSX Edge trouble (click to enlarge)</p></figcaption></figure>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">This is a known issue with VCF 9.0.1:
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">This is a known issue with VCF 9.0.1:
 When edge is created by Setup Network Connectivity UI, the System created dvpg consumed by edge gets deleted when edge is powered on after 24 hrs. The port group assigned to the NSX Edge uplink has disappeared making it impossible to use the network through NSX Edge.
 You can find the release notes 
 <a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-9-0-1-release-notes/nsx-9-0-1-0000.html#GUID-03f28b57-6cef-441a-acf7-1a0204a3bff2-en_id-e934abd0-6d05-4dc4-a878-64630bc97a68" target="_blank" rel="noopener">here</a></div>
-    </aside>
+</aside>
 <p>But first, let&rsquo;s take a step back. In VCF 9, a separate trunk port group is created for each Fastpath interface of the Edge VM.
 With two edges, each with two uplinks, you therefore have four port groups.</p>
 <figure><a href="06.png"><picture><source srcset="/vcf9-special/06_hu_cd06cfb446bfce90.png" type="image/png">
@@ -616,17 +629,19 @@ With two edges, each with two uplinks, you therefore have four port groups.</p>
 To fix this error, you simply need to create two new trunk port groups (note the teaming policy—trunk 1 uplink 1 active/uplink 2 standby and vice versa for trunk 2).
 These port groups must then be assigned as Adapter 1 and Adapter 2 in the vCenter of the Edge VM. Apparently, only Edge VMs are affected by the error if they were created via the vCenter.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Always check the uplink profile created in NSX. In VCF 9.0, the uplink profile was created without a TEP VLAN ID, which was stored directly in the edge. With the newly created port groups, the TEP network no longer works. In VCF 9.0.1, this no longer seems to be the case; my uplink profiles all have a TEP VLAN ID. Since I no longer have a VCF 9.0 setup, I can not reproduce the problem.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Always check the uplink profile created in NSX. In VCF 9.0, the uplink profile was created without a TEP VLAN ID, which was stored directly in the edge. With the newly created port groups, the TEP network no longer works. In VCF 9.0.1, this no longer seems to be the case; my uplink profiles all have a TEP VLAN ID. Since I no longer have a VCF 9.0 setup, I can not reproduce the problem.</div>
+</aside>
 <h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>With the new setup, I am prepared for all eventualities.
 I have enough space in my physical lab to create additional nested labs, and I have a complete solution lab where I can test all aspects of VCF 9. Best of all, I only need three physical hosts, which means I can get by with about 500 watts of power consumption.

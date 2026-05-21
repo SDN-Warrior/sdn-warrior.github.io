@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Short blog about my experiences with Nutanix CE and which workarounds I needed.">
@@ -82,7 +83,7 @@
     }
 }
 </script><title>Nutanix - Get started with the CE Edition</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -245,16 +246,18 @@
 <p>At first, it wasn&rsquo;t that easy to find the CE Edition. You need a free Nutanix account, and then you can download the CE 
 <a href="https://next.nutanix.com/discussion-forum-14/download-community-edition-38417" target="_blank" rel="noopener">here</a>.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Download Link</b>
-        </div>
-        <div class="admonition-content">If you are not logged in to Nutanix, you will receive a 403 error and will need to click the login button on the 403 page.</div>
-    </aside>
+   </svg></div>
+        <b>Download Link</b>
+    </div>
+    <div class="admonition-content">If you are not logged in to Nutanix, you will receive a 403 error and will need to click the login button on the 403 page.</div>
+</aside>
 <p>Of course, the CE version has a few limitations, and of course I had to implement a few workarounds with my hardware to ensure that everything runs smoothly. But we are already used to that here, and it should come as no surprise to readers.</p>
 <p>One limitation, for example, is the cluster size; Nutanix CE can only be deployed as a one, three, or four node cluster. Larger clusters or even two node clusters are reserved for the full version. The same applies to stretched clusters. In addition, the CE version only comes with AHV, which I personally don&rsquo;t find problematic; if I want to use ESX, I deploy VCF or VVF. I first tried Nutanix as a nested deployment, which worked fine, but the storage was really slow. That&rsquo;s not Nutanix&rsquo;s fault, though; it&rsquo;s the same with a nested vSAN cluster.</p>
 <p>If you want to install the CE Edition bare metal, you unfortunately have to use a specific version of Rufus, otherwise Nutanix will not boot from a USB stick. I don&rsquo;t know exactly why this is the case. I tried Mac alternatives because I no longer have a Windows PC, but it didn&rsquo;t work. In the end, I got the image to run in a Windows 11 VM with USB passthrough and Rufus 3.21. Rufus 3.2.2 or newer do not work.</p>
@@ -289,16 +292,18 @@
 <p>After logging in, you can change the uplinks of the default br0 using the following command. In my case, I only want to use the two 10 Gb/s interfaces of my MS-01.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">manage_ovs --bridge_name br0 --interfaces eth2,eth3 --bond_mode active-backup update_uplinks
 </span></span></code></pre></div>
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Modifying the network</b>
-        </div>
-        <div class="admonition-content">If the host is assigned to an existing cluster, the host should be in maintenance mode and the CVM should be shut down. Otherwise, significant problems may occur. Since no cluster has been initialized yet, this step is not necessary.</div>
-    </aside>
+   </svg></div>
+        <b>Modifying the network</b>
+    </div>
+    <div class="admonition-content">If the host is assigned to an existing cluster, the host should be in maintenance mode and the CVM should be shut down. Otherwise, significant problems may occur. Since no cluster has been initialized yet, this step is not necessary.</div>
+</aside>
 <p>After this change, the host and CVM are now accessible from my admin desktop. This must now also be done with the other two hosts.</p>
 <h3 id="workaround-due-to-identical-uuids-of-the-hosts">Workaround due to identical UUIDs of the hosts<a href="#workaround-due-to-identical-uuids-of-the-hosts" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>This brings me to the first real problem with the installation, and I noticed the error very late in the process. Unfortunately, all my MS-01 servers are assigned the same UUID. By default, the default source for the UUID is smbios, but all of my MS-01s have the same UUID. This should not happen and is clearly due to my hardware. I cannot say at this point whether this also happens with an MS-A2, but at least all 6 of my MS01s are affected.</p>
@@ -324,16 +329,18 @@ The fix is quite simple: a line needs to be commented out relatively far down, a
 </span></span></code></pre></div><p>Finally, restart the libvirt service and we are ready to go.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">systemctl restart libvirtd
 </span></span></code></pre></div>
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Persistence of the workaround</b>
-        </div>
-        <div class="admonition-content">Unfortunately, the workaround is not 100% persistent. Rebooting and completely shutting down the cluster or environment is not a problem, but when upgrading to a new AHV version, the file is overwritten with defaults again. A 100% permanent solution would probably only be a BIOS update where the manufacturer fixes the problem with the UUID.</div>
-    </aside>
+   </svg></div>
+        <b>Persistence of the workaround</b>
+    </div>
+    <div class="admonition-content">Unfortunately, the workaround is not 100% persistent. Rebooting and completely shutting down the cluster or environment is not a problem, but when upgrading to a new AHV version, the file is overwritten with defaults again. A 100% permanent solution would probably only be a BIOS update where the manufacturer fixes the problem with the UUID.</div>
+</aside>
 <h3 id="creating-the-cluster---now-really">Creating the cluster - now really!<a href="#creating-the-cluster---now-really" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Once network connectivity has been established and our UUIDs are once again unique, the cluster can be created. Since there is no GUI available for us to use at this point, this must also be done manually via the CLI. Don&rsquo;t worry, it&rsquo;s quick and painless.
 To do this, you must log in to any CVM via nutanix User. This should now also be possible via the configured IP from the installer.</p>
@@ -342,18 +349,20 @@ To do this, you must log in to any CVM via nutanix User. This should now also be
 </span></span></code></pre></div><p>After a certain amount of time, the cluster status can be checked with this command.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">cluster status
 </span></span></code></pre></div>
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>DNS, NTP, Cluster VIP</b>
-        </div>
-        <div class="admonition-content">The CE edition comes with public DNS and NTP server entries. If you don&rsquo;t want this, you can change it via the cluster&rsquo;s GUI or directly via CLI.
+   </svg></div>
+        <b>DNS, NTP, Cluster VIP</b>
+    </div>
+    <div class="admonition-content">The CE edition comes with public DNS and NTP server entries. If you don&rsquo;t want this, you can change it via the cluster&rsquo;s GUI or directly via CLI.
 Without adjustment, the cluster starts up without Cluster VIP, which must then be adjusted afterwards.</div>
-    </aside>
+</aside>
 <p>Additional settings via the CLI.</p>
 <p>Define the cluster name.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">ncli cluster edit-params new-name=cluster_name
@@ -400,17 +409,19 @@ Nutanix recommends Standard mode here, as adjusting the network also affects sto
 <h2 id="lifecycle">Lifecycle<a href="#lifecycle" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The lifecycle can be managed via Prism Element or Prism Central. Prism Central has its own lifecycle independent of Prism Element. Nutanix CE comes in AOS version 6.9.1. Currently, the maximum upgrade available via Lifecycle is to AOS version 7.3.1.2.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Current Bug with 7.5.x.x</b>
-        </div>
-        <div class="admonition-content">There is currently a problem with unofficially supported hardware hosts and Nutanix AOS versions higher than 7.3.x.x. In addition, if your host is affected by the UUID problem, the workaround must be applied after every AHV upgrade. I therefore first set the lifecycle to 7.3.x and then deployed Prism Central. To do this, I shut down all VMs (except for the CVM) so that I would not encounter any errors during the upgrade.</div>
-    </aside>
+   </svg></div>
+        <b>Current Bug with 7.5.x.x</b>
+    </div>
+    <div class="admonition-content">There is currently a problem with unofficially supported hardware hosts and Nutanix AOS versions higher than 7.3.x.x. In addition, if your host is affected by the UUID problem, the workaround must be applied after every AHV upgrade. I therefore first set the lifecycle to 7.3.x and then deployed Prism Central. To do this, I shut down all VMs (except for the CVM) so that I would not encounter any errors during the upgrade.</div>
+</aside>
 <h2 id="deploying-nutanix-prism">Deploying Nutanix Prism<a href="#deploying-nutanix-prism" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>To deploy Prism Central, I first created a new storage container. A storage container is a logical construct to which I can apply policies and where I can create my vDisks for VMs. It is not a volume or LUN. Each storage container can have different policies and therefore behave differently, but all storage containers run on the same storage pool (in my lab, I only have one storage pool consisting of the resources of the three servers).</p>
 <p>To create the storage container, I switch to Storage via the dropdown menu and create a new container called Workload. Compression and an error tolerance of 1N/1D are set by default. This means that 1 node from the cluster can fail.

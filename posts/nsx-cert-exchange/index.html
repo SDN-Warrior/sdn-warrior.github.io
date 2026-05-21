@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Exchange your NSX Manager certificates">
@@ -83,7 +84,7 @@
     }
 }
 </script><title>NSX 4.X Certificate exchange of the NSX Manager</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -268,16 +269,18 @@
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">openssl req -new -newkey rsa:4096 -nodes -keyout nsxm0001.key -out nsxm0001.csr -config opnssl.cnf
 </span></span></code></pre></div><p>Two files are generated, a private key file and the actual request, which must be submitted to the CA.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">The CA must issue the certificate with the extension basicConstraints = cA:FALSE, otherwise the certificate cannot be used. With a Windows CA, this must be explicitly permitted in the template. If the extension is missing, the certificate validation will fail with an error message that the certificate key does not match the certificate.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">The CA must issue the certificate with the extension basicConstraints = cA:FALSE, otherwise the certificate cannot be used. With a Windows CA, this must be explicitly permitted in the template. If the extension is missing, the certificate validation will fail with an error message that the certificate key does not match the certificate.</div>
+</aside>
 <h2 id="import-certificate">Import certificate<a href="#import-certificate" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The certificate can be imported in the NSX Manager under System &gt; Certificates &gt; Import. Here it must be ensured that the service certificate slider is set to NO. The complete certificate chain is also required. The certificate chain must be in the industry standard order of ‘certificate – intermediate – root.</p>
 <figure><picture><source srcset="/nsx-cert/01_hu_8b9c0ce65c7f3013.webp" type="image/webp">

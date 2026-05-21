@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="A short article about VPCs in NSX 9 and VCF 9 Part 3.">
@@ -85,7 +86,7 @@
     }
 }
 </script><title>VCF 9 - NSX VPC Part 3 - Security</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/head.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -263,18 +264,20 @@ All other communication is blocked.</p>
             height="846"/>
         </picture></a><figcaption><p>NSX 9 Projects FW Rules (click to enlarge)</p></figcaption></figure>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">It is not possible to automatically create such a set of rules for the default project.
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">It is not possible to automatically create such a set of rules for the default project.
 The default project will continue to have the familiar default policy and, by default, no traffic will be dropped.</div>
-    </aside>
+</aside>
 <p>The automatically generated rule set can be edited, expanded, and deactivated, but not deleted.
 A dynamic security group is automatically created, which includes all segments of the project. This security group creates an “allow any” rule within the project.</p>
 <figure><a href="03.png"><picture><source srcset="/vcf9-nsx-vpc-3/03_hu_ca9fb199ec66e758.png" type="image/png">
@@ -283,17 +286,19 @@ A dynamic security group is automatically created, which includes all segments o
             height="557"/>
         </picture></a><figcaption><p>NSX 9 Projects FW Group (click to enlarge)</p></figcaption></figure>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">I would not extend this default set of rules with my own rules, as NSX creates this policy without TCP-Strict.
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">I would not extend this default set of rules with my own rules, as NSX creates this policy without TCP-Strict.
 I will explain why I personally find this somewhat unsightly later in the article.</div>
-    </aside>
+</aside>
 <p>This completes the initial isolation between tenants, because even if the default tenant has an allow Any rule, the default drop rule of the project will reject the traffic if it comes from outside the tenant.
 However, this also means that my public VMs are no longer public, as they can only be accessed within the project.
 Internet access is also no longer possible, as all traffic to and from the project is blocked.
@@ -341,16 +346,18 @@ And the placement of the firewall rules is important for enforcing the rules or 
             height="697"/>
         </picture></a><figcaption><p>Firewall on VPC level (click to enlarge)</p></figcaption></figure>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">To use this feature, an additional license is required for both the gateway firewall and the distributed firewall. Unfortunately, VCF 9 does not come with the firewall add-on license.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">To use this feature, an additional license is required for both the gateway firewall and the distributed firewall. Unfortunately, VCF 9 does not come with the firewall add-on license.</div>
+</aside>
 <h3 id="rule-order">Rule order<a href="#rule-order" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>It is important to note that if you create a firewall rule via the VPC and not via <em><strong>Security / Distributed Firewall</strong></em>, it will be created in the application category and will be applied according to the conventionally created Distributed Firewall rules, but will take precedence over the default Layer 3 policy.
 This means that the Project Admin or Enterprise Admin can override VPC rules at any time. By default, VPC rules are hidden in the Distributed Firewall. However, you can display the VPC objects in the DFW.</p>
@@ -421,17 +428,19 @@ The gateway firewall is implemented on the VPC gateway for VPCs and not on a T1 
 To activate the gateway firewall for a project, you must have at least project admin rights and can then activate it in the <em><strong>VPC Security Profile</strong></em>.
 It is then activated project-wide and can be configured by a VPC admin.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">If a project admin disables the gateway firewall for the project and rules are still configured in the VPC, these will continue to be displayed as active but will no longer be enforced.
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">If a project admin disables the gateway firewall for the project and rules are still configured in the VPC, these will continue to be displayed as active but will no longer be enforced.
 The VPC admin cannot see whether the gateway firewall is still active or not.</div>
-    </aside>
+</aside>
 <p>The rules are configured in the VPC setup under <em><strong>N-S Firewall Rules</strong></em>.
 They are not visible under <em><strong>Security / Gateway Firewall</strong></em>, regardless of the permissions my user has.</p>
 <figure><a href="08.png"><picture><source srcset="/vcf9-nsx-vpc-3/08_hu_7d96f9c7edbc1e61.png" type="image/png">
@@ -493,16 +502,18 @@ To double-check, I create a new firewall policy. NSX always has TCP Strict enabl
         </picture></a><figcaption><p>Firewall rule statistic  (click to enlarge)</p></figcaption></figure>
 <p>As you can see in the rule statistics, the new rules receive a large number of hits, but since there is no valid TCP handshake, the distributed firewall discards all packets and no packets arrive at the VM.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">Just because the firewall rejects the traffic does not mean that you will not encounter problems. In my case, the transport node (ESX) received messages that the enhanced DP flow table usage was very high. However, the ESX host still received all packets, which caused problems in my small nested lab. When I perform the same test with VMs connected to a centralized transit gateway, my edge VMs start to lose their N/S connection because they go directly into overload. However, it should be noted that I have small edge VMs in the lab that are not designed for a data throughput of 10 Gb/s.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">Just because the firewall rejects the traffic does not mean that you will not encounter problems. In my case, the transport node (ESX) received messages that the enhanced DP flow table usage was very high. However, the ESX host still received all packets, which caused problems in my small nested lab. When I perform the same test with VMs connected to a centralized transit gateway, my edge VMs start to lose their N/S connection because they go directly into overload. However, it should be noted that I have small edge VMs in the lab that are not designed for a data throughput of 10 Gb/s.</div>
+</aside>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@vcf09-m01-esx03:~] vsipioctl getrules -f nic-1164294-eth0-vmware-sfw.2
 </span></span><span class="line"><span class="cl">ruleset mainrs {
 </span></span><span class="line"><span class="cl">  # generation number: 0

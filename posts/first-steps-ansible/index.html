@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="How I Used ChatGPT to Create My First Ansible Playbook">
@@ -84,7 +85,7 @@
     }
 }
 </script><title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -658,18 +659,20 @@ Efficiency:</p>
 </span></span><span class="line"><span class="cl">    vars_file: &#34;vcfesx_vars.yml&#34;
 </span></span></code></pre></div><p>Unlike the Power-On master playbook, the shutdown process does not require a pause or workaround. This is because during the shutdown, we can actively check if the respective VMs have already powered off using a loop. This makes the process cleaner and more efficient.</p>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content"><p>The playbooks presented in this article were generated with the help of AI and subsequently adjusted to work in my specific environment. While they function as intended for my use case, I strongly recommend exercising caution and thoroughly testing these playbooks in your own environment before implementing or relying on them.</p>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content"><p>The playbooks presented in this article were generated with the help of AI and subsequently adjusted to work in my specific environment. While they function as intended for my use case, I strongly recommend exercising caution and thoroughly testing these playbooks in your own environment before implementing or relying on them.</p>
 <p>Automation can be powerful, but every infrastructure is unique—always test in a controlled setting first!</p>
 </div>
-    </aside>
+</aside>
 <h2 id="conclusion-is-chatgpt-useful-for-ansible">Conclusion: Is ChatGPT Useful for Ansible?<a href="#conclusion-is-chatgpt-useful-for-ansible" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>From my perspective, the answer is both yes and no.</p>
 <p>ChatGPT gave me a solid starting point and explained a lot of the foundational concepts, which was extremely helpful as a beginner with Ansible. However, it wasn’t perfect—there were several significant errors in the generated playbooks, and more than once, the AI proposed the same incorrect solution repeatedly.</p>

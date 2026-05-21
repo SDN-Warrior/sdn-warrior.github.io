@@ -21,6 +21,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
 <meta name="theme-color" content="#494f5c">
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Live Migration of Workloads with VMware HCX: A Customer Story">
@@ -31,7 +32,7 @@
   <meta itemprop="dateModified" content="2025-01-28T20:00:00+01:00">
   <meta itemprop="wordCount" content="2629">
   <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="VCF,Hcx,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/migration-with-hcx/">
+  <meta itemprop="keywords" content="VCF,HCX,Vmware"><meta property="og:url" content="https://sdn-warrior.org/posts/migration-with-hcx/">
   <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
   <meta property="og:title" content="Migration with HCX">
   <meta property="og:description" content="Live Migration of Workloads with VMware HCX: A Customer Story">
@@ -41,7 +42,7 @@
     <meta property="article:published_time" content="2025-01-28T20:00:00+01:00">
     <meta property="article:modified_time" content="2025-01-28T20:00:00+01:00">
     <meta property="article:tag" content="VCF">
-    <meta property="article:tag" content="Hcx">
+    <meta property="article:tag" content="HCX">
     <meta property="article:tag" content="Vmware">
     <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
@@ -83,7 +84,7 @@
     }
 }
 </script><title>Migration with HCX</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.6337de55c05e58121ad769635e278aeb0ef38a9b1678fa7616b3f6553cc1315c.css" integrity="sha256-YzfeVcBeWBIa12ljXieK6w7zipsWePp2FrP2VTzBMVw=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net.jpg');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -255,17 +256,19 @@ Protect data center applications and workloads through asynchronous replication 
 <h2 id="first-things-first-what-are-the-requirements-for-hcx">First things first: what are the requirements for HCX?<a href="#first-things-first-what-are-the-requirements-for-hcx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Since HCX has been part of VCF since version 5.1.1, many customers have the opportunity to benefit from HCX. For those who want to test VCF, here is the good news: an eval license comes with HCX.
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Eval License</b>
-        </div>
-        <div class="admonition-content">The eval license has a runtime of 60 days and can migrate a maximum of 20 VMs per migration type.</div>
-    </aside></p>
+   </svg></div>
+        <b>Eval License</b>
+    </div>
+    <div class="admonition-content">The eval license has a runtime of 60 days and can migrate a maximum of 20 VMs per migration type.</div>
+</aside></p>
 <ul>
 <li>
 <p>For environments requiring NSX virtual networking, you must install and configure NSX, including integration with the vCenter Server, before deploying HCX Manager.</p>
@@ -297,49 +300,55 @@ Protect data center applications and workloads through asynchronous replication 
 Use the HCX Connector with the vCenter Server containing the virtual machines that will be migrated.
 The HCX Connector is always an HCX source that connects to an HCX Cloud.
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Note</b>
-        </div>
-        <div class="admonition-content">If the environment is also used as a destination for site pairing and Network Extension, use the HCX Cloud instead.
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">If the environment is also used as a destination for site pairing and Network Extension, use the HCX Cloud instead.
 Installations using OS Assisted Migration require HCX Connector at the source.</div>
-    </aside></p>
+</aside></p>
 </li>
 <li>
 <p><strong>HCX Cloud:</strong>
 Use the HCX Cloud installer with the vCenter Server that is the target of site pairing requests, network extensions, and virtual machine migrations. <br>
 The HCX Cloud can also serve as the source of a site pair in HCX cloud-to-cloud installations.
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Note</b>
-        </div>
-        <div class="admonition-content">OS Assisted Migration does not support cloud-to-cloud installations. For OS Assisted Migration, you must have HCX Connector installed as the source.</div>
-    </aside></p>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">OS Assisted Migration does not support cloud-to-cloud installations. For OS Assisted Migration, you must have HCX Connector installed as the source.</div>
+</aside></p>
 </li>
 </ul>
 
-    <aside class="admonition attention">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+
+<aside class="admonition attention" data-admonition-type="attention">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">If the HCX Cloud Manager is used at the source, NSX is required at the source.
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">If the HCX Cloud Manager is used at the source, NSX is required at the source.
 The HCX Cloud Manager installation carries higher requirements, but it can be both the source and the target for Site Pairing, HCX Network Extension operations and Service Mesh deployments.</div>
-    </aside>
+</aside>
 <h3 id="compute-ressources">Compute Ressources<a href="#compute-ressources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <div class="table-wrapper">
   <table>
@@ -375,17 +384,19 @@ The HCX Cloud Manager installation carries higher requirements, but it can be bo
 </div><h3 id="network-ressources">Network Ressources<a href="#network-ressources" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>I need one HCX appliance per workload domain. This needs access to the respective vCenter and the associated NSX manager. In addition, the HCX appliance must be placed in the vMotion network of the respective workload domain. This can be done by routing or the HCX appliance can be given an IP address directly in the vMotion network. I also need at least one uplink VLAN for the HCX appliances to communicate via. This could be done via WAN, for example. For my customer, this is a VLAN in the underlay network.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Info</b>
-        </div>
-        <div class="admonition-content">Of course, I can&rsquo;t cover all the migration scenarios that are possible with HCX in this article, which is why the requirements also vary. For my scenario at my customer&rsquo;s site, we decided on vMotion migration between the two VCF stacks. In addition, the Network Extension is to be used to minimize downtime.</div>
-    </aside>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Of course, I can&rsquo;t cover all the migration scenarios that are possible with HCX in this article, which is why the requirements also vary. For my scenario at my customer&rsquo;s site, we decided on vMotion migration between the two VCF stacks. In addition, the Network Extension is to be used to minimize downtime.</div>
+</aside>
 <h2 id="deploying-and-configuring-hcx-appliance">Deploying and configuring HCX appliance<a href="#deploying-and-configuring-hcx-appliance" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>After deploying the HCX appliance, it must be initially configured. To do this, you have to log in to the management interface via <strong>(https://hcx-ip-or-fqdn:9443)</strong> using the configured admin credentials.
 The HCX appliance must have access to the NSX manager, the vCenter must be configured, the public access URL (in my case only internally resolvable) and the SSO domain (vCenter). After successful configuration, you can log in to the HCX appliance with the vCenter credentials. The local admin account only works on the HCX management interface.</p>
@@ -411,17 +422,19 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
             height="821"/>
         </picture></a><figcaption><p>HCX network profiles settings (click to enlarge)</p></figcaption></figure>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Free Ip Adresses</b>
-        </div>
-        <div class="admonition-content">Note: I need one free IP in the MGMT network for each of the following: Pro Network Extension, HCX Appliane and Servicemesh (3 IPs). In the vMotion network, 1 IP is required per service mesh (if the vMotion network is not routed) and at least 1 uplink IP is required per service mesh. The HCX interface offers a calculator for the IP planning.</div>
-    </aside>
+   </svg></div>
+        <b>Free Ip Adresses</b>
+    </div>
+    <div class="admonition-content">Note: I need one free IP in the MGMT network for each of the following: Pro Network Extension, HCX Appliane and Servicemesh (3 IPs). In the vMotion network, 1 IP is required per service mesh (if the vMotion network is not routed) and at least 1 uplink IP is required per service mesh. The HCX interface offers a calculator for the IP planning.</div>
+</aside>
 <h3 id="compute-profiles">Compute Profiles<a href="#compute-profiles" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The compute profiles in HCX are used to specify which HCX services, compute resources such as clusters or resource pools or networks are connected. You can also set CPU and memory reservations for the interconnect appliance. Depending on the HCX service, you have to assign several networks, e.g. management network, uplink networks, vMotion network and the network container. In my case, the network container is the overlay transport zone from my source NSX, as I want to migrate machines from one NSX environment to another NSX environment.</p>
 <figure><a href="hcx03.png"><picture><source srcset="/hcx/hcx03_hu_64dfef72248e595.png" type="image/png">
@@ -438,17 +451,19 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
             height="611"/>
         </picture></a><figcaption><p>HCX Service Mesh (click to enlarge)</p></figcaption></figure>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Service Mesh</b>
-        </div>
-        <div class="admonition-content">The service mesh cannot be created until both sides of the site pair are configured and have compute and network profiles.</div>
-    </aside>
+   </svg></div>
+        <b>Service Mesh</b>
+    </div>
+    <div class="admonition-content">The service mesh cannot be created until both sides of the site pair are configured and have compute and network profiles.</div>
+</aside>
 <h2 id="firewall-settings-for-hcx">Firewall Settings for HCX<a href="#firewall-settings-for-hcx" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>After successfully setting up the interconnect compute profile, a firewall port matrix is created that you can easy copy and export over the HCX gui. Here is an example from my lab.</p>
 <div class="table-wrapper">
@@ -537,17 +552,19 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
         </picture></a><figcaption><p>HCX Network Extension (click to enlarge)</p></figcaption></figure>
 <p>The stretched  networks are created at the selected T1 router in the target environment and given a prefix. However, the segments are not connected to the T1. The north/south connection is via the T1 and T0 in the source environment. This ensures that no traffic for the VMs is routed into a black hole.</p>
 
-    <aside class="admonition info">
-        <div class="admonition-title">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
       <line x1="12" y1="8" x2="12.01" y2="8"></line>
-   </svg></div><b>Attention</b>
-        </div>
-        <div class="admonition-content">For each network that is stretched across the network extension, a network adapter is required on the appliance. Since the appliance is subject to the same limits as all other VMs, a maximum of 10 network adapters can be used. In my case, I lose 1 adapter for management and two adapters for my uplinks. So I can stretch a maximum of 7 NSX networks over this appliance. If I want to stretch more networks, I need another network extension appliance.</div>
-    </aside>
+   </svg></div>
+        <b>Attention</b>
+    </div>
+    <div class="admonition-content">For each network that is stretched across the network extension, a network adapter is required on the appliance. Since the appliance is subject to the same limits as all other VMs, a maximum of 10 network adapters can be used. In my case, I lose 1 adapter for management and two adapters for my uplinks. So I can stretch a maximum of 7 NSX networks over this appliance. If I want to stretch more networks, I need another network extension appliance.</div>
+</aside>
 <h3 id="how-does-network-extension-work">How does Network Extension work?<a href="#how-does-network-extension-work" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>The sink port on the HCX Network Extension serves as the endpoint for the extended Layer 2 traffic between the source and target environments. It is configured on the source and target sides to receive and send the incoming traffic from the extended network. This can be easily seen on the segment ports in the NSX of the HCX appliance. This is where MAC/IP bindings are exchanged between VMs. If you look at the destination side, you will see (provided that the source VMs are generating traffic) the IP/MAC bindings of the VMs on the source segment on the sink port and vice versa for VMs that have already been migrated to the destination side.</p>
 <figure><a href="hcx07.png"><picture><source srcset="/hcx/hcx07_hu_e4ffc5a85da85005.png" type="image/png">
