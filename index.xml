@@ -1,153 +1,159 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/</link>
-    <description>Recent content on SDN-Warrior | Daniel Krieger</description>
-    <generator>Hugo</generator>
-    <language>en-US</language>
-    <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Thu, 21 May 2026 22:00:00 +0200</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
-      <link>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</link>
-      <pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This article cost me a lot of sleep, long nights in the lab, and plenty of coffee. But let&amp;rsquo;s start from the beginning. I was fortunate enough to have a conversation with a very nice Broadcom employee &#xA;&lt;a href=&#34;https://www.linkedin.com/in/oliver-ziltener-4448785b/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;(Oliver Ziltener)&lt;/a&gt; about the VNA. Thank you for your time, for your comments on my first article, and for answering my questions. That really helped me a lot.&lt;/p&gt;&#xA;&lt;p&gt;If you’re not familiar with the VNA, please read that &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vcf9.1-vna-vpc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;article&lt;/a&gt; first. So let&amp;rsquo;s not beat around the bush—let&amp;rsquo;s dive right into the rabbit hole.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF 9.1 - VNA and VPCs</title>
-      <link>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</link>
-      <pubDate>Mon, 11 May 2026 00:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VMware has been cooking up something and has introduced another feature for VPCs and the Transit Gateway. The VNA, or Virtual Network Appliance.&#xA;But what is it all about, and what can you do with it? Doesn’t this just add even more complexity to an already complex network setup with NSX? Well, as always, the answer is yes and no. What exactly you can do with the VNA, how it’s deployed, why it might make it easier to get started with VPCs and SDN, and what all of this means for people who want to use VKS—I’d like to get to the bottom of all that in today’s article.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF 9.1 - VPCs Connectivity Policies</title>
-      <link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
-      <pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;A new VCF release is just around the corner, and just like the transition from VCF 5.X to 9.0, this one brings massive changes as well. Not only is the entire fleet being turned upside down, but there have also been a ton of changes to my favorite topic: VPCs in NSX. One of the many new features is VPC Connectivity Policies. Today, in this blog post, I’ll explain what you can do with them and how they work. So let&amp;rsquo;s dive into VPC&amp;rsquo;s rabbit hole.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Homelab Update 2026</title>
-      <link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
-      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;It’s been almost a year since the last lab &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/homelab-v6/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;update&lt;/a&gt;, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.&#xA;I will divide the article into several categories: hardware, networking, and the software stack.&#xA;But as they say, let&amp;rsquo;s not beat around the bush—just go for it!&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Nutanix - Flow 7: virtual networking</title>
-      <link>https://sdn-warrior.org/posts/nutanix-flow/</link>
-      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.&lt;/p&gt;&#xA;&lt;p&gt;But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.&#xA;But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 - Extend Managment Domain Cluster</title>
-      <link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
-      <pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>2026 VMUG Connect - Amsterdam</title>
-      <link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
-      <pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
-      <description>&lt;h2 id=&#34;vmug-connect-amsterdam--between-tech-talks-and-travel-vibes&#34;&gt;VMUG Connect Amsterdam – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;Wow, so here we are again. Another travel blog post and no tech content. Yes, unfortunately I’m a bit behind on my own &amp;ldquo;roadmap&amp;rdquo;, but right now I simply don’t have the personal time to write another tech article. I actually still have so much in the works and just can’t seem to get through it all. But that won’t stop me from sharing my impressions of VMUG Connect in Amsterdam here.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>IPv6 with NSX</title>
-      <link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
-      <pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Nutanix - Get started with the CE Edition</title>
-      <link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
-      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.&lt;/p&gt;&#xA;&lt;figure&gt;&lt;picture&gt;&lt;source srcset=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img&#xD;&#xA;            src=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34;alt=&#34;Yes, this is my happy face&#34;width=&#34;1988&#34;&#xD;&#xA;            height=&#34;1491&#34;/&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&lt;p&gt;Yes, this is my happy face&lt;/p&gt;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;p&gt;Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>AVI - Connect Keycloak to AVI Loadbalancer</title>
-      <link>https://sdn-warrior.org/posts/avi-keycloak/</link>
-      <pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.&#xA;In theory, this is relatively easy to implement, but in practice, there are a few challenges.&#xA;I would like to describe exactly what these are and also present a solution.&#xA;As a little bonus, I will also show you how to use a Fido Key (Yubikey) to log in.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 - Automation in All Apps mode</title>
-      <link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
-      <pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.&#xA;Anyway, over 60% wanted me to cover VCF9 automation in All Apps mode.&#xA;As most people know, there are two modes in VCF Automation: the so-called legacy mode, which is nothing more than VCF Automation 8.18, and the new and much more exciting All Apps mode.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 - Building a VCF Operations Dashboard</title>
-      <link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
-      <pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I currently have two different systems in my home lab for monitoring things.&#xA;I started everything but never really finished it.&#xA;I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.&#xA;As I have to run a VCF Operations anyway so that I can license my Baselab, I thought, why not use Operations for monitoring purposes, since it&amp;rsquo;s there anyway.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 - Dark Site Edge - Part 2</title>
-      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
-      <pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my last &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Dark Site&lt;/a&gt; article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).&#xA;However, this didn&amp;rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.&#xA;Spoiler alert: it works, and today I&amp;rsquo;m going to write down how to do it.&lt;/p&gt;&#xA;&lt;p&gt;Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.&#xA;So today I will use vSAN ESA, even though it requires significantly more resources than NFS.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-      <link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
-      <pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While preparing for an article that has not yet been published, I ran into an interesting VCF bug.&#xA;For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet.&#xA;Since I had to reinstall one of them, I removed it according to the official &#xA;&lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;instructions&lt;/a&gt;, and that&amp;rsquo;s when the problems started.&lt;/p&gt;&#xA;&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;aside class=&#34;admonition warning&#34; data-admonition-type=&#34;warning&#34;&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-circle&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&#xD;&#xA;        &lt;b&gt;Warning&lt;/b&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-content&#34;&gt;I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so &lt;strong&gt;at your own risk.&lt;/strong&gt;&lt;/div&gt;&#xD;&#xA;&lt;/aside&gt;&#xA;&lt;h2 id=&#34;error-pattern-and-impact&#34;&gt;Error pattern and impact&lt;/h2&gt;&#xA;&lt;p&gt;At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 - Dark Site Edge</title>
-      <link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
-      <pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-      <link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
-      <pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Tales from the Lab – Lab setup</title>
-      <link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
-      <pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-      <link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
-      <pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VMware Explore 2025</title>
-      <link>https://sdn-warrior.org/posts/explore-2025/</link>
-      <pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-      <guid>https://sdn-warrior.org/posts/explore-2025/</guid>
-      <description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &#xA;&lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>VCF 9 - Certificate exchange</title>
-      <link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
-      <pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
-      <description>&lt;h2 id=&#34;certificates--the-mother-of-all-evils&#34;&gt;Certificates – the mother of all evils&lt;/h2&gt;&#xA;&lt;p&gt;In the last 25 years of working in IT, I have never met anyone who is happy when certificates expire and need to be replaced – quite the opposite, in fact.&#xA;Certificates are like printers: everyone hates them, but we need them.&#xA;Fortunately, VCF and VCF9 have greatly simplified the entire procedure.&#xA;In this article, I would like to briefly explain how you can use VCF Operations and a Microsoft CA to exchange certificates easily and, in some cases, automatically – guaranteed pain-free.&#xA;However, it is still not an enjoyable process.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>SDN-Warrior | Daniel Krieger</title>
+		<link>https://sdn-warrior.org/</link>
+		<description>Recent content on SDN-Warrior | Daniel Krieger</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+			<copyright>Daniel Krieger</copyright>
+		
+		
+			<lastBuildDate>Sun, 14 Jun 2026 12:00:00 +0200</lastBuildDate>
+		
+			<atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - Platform Health Check Error</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</link>
+				<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I wanted to deploy another component in my VCF 9.1 cluster and ran into a cryptic error message that I couldn&amp;rsquo;t quite make sense of at first. Some of you might be familiar with this error message; in any case, I&amp;rsquo;ve seen posts on LinkedIn from people who seem to be having the same problem. I&amp;rsquo;m referring to the following error message.&lt;/p&gt;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;aside class=&#34;admonition bug&#34; data-admonition-type=&#34;bug&#34;&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-octagon&#34;&gt;&#xD;&#xA;      &lt;polygon points=&#34;7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2&#34;&gt;&lt;/polygon&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&#xD;&#xA;        &lt;b&gt;Error Message&lt;/b&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-content&#34;&gt;During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error&#xA;[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]&lt;/div&gt;&#xD;&#xA;&lt;/aside&gt;&#xA;&lt;p&gt;So I started looking into it, but I couldn&amp;rsquo;t find any relevant errors in VCF Operations. Everything looked fine at first glance, but no matter how many times I tried, I couldn&amp;rsquo;t deploy any more components. Since the VCF Service Cluster is essentially just a Kubernetes cluster, it was time to take a closer look.&#xA;Let&amp;rsquo;s get started.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</link>
+				<pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;This article cost me a lot of sleep, long nights in the lab, and plenty of coffee. But let&amp;rsquo;s start from the beginning. I was fortunate enough to have a conversation with a very nice Broadcom employee &#xA;&lt;a href=&#34;https://www.linkedin.com/in/oliver-ziltener-4448785b/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;(Oliver Ziltener)&lt;/a&gt; about the VNA. Thank you for your time, for your comments on my first article, and for answering my questions. That really helped me a lot.&lt;/p&gt;&#xA;&lt;p&gt;If you’re not familiar with the VNA, please read that &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vcf9.1-vna-vpc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;article&lt;/a&gt; first. So let&amp;rsquo;s not beat around the bush—let&amp;rsquo;s dive right into the rabbit hole.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF 9.1 - VNA and VPCs</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</link>
+				<pubDate>Mon, 11 May 2026 00:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;VMware has been cooking up something and has introduced another feature for VPCs and the Transit Gateway. The VNA, or Virtual Network Appliance.&#xA;But what is it all about, and what can you do with it? Doesn’t this just add even more complexity to an already complex network setup with NSX? Well, as always, the answer is yes and no. What exactly you can do with the VNA, how it’s deployed, why it might make it easier to get started with VPCs and SDN, and what all of this means for people who want to use VKS—I’d like to get to the bottom of all that in today’s article.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF 9.1 - VPCs Connectivity Policies</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
+				<pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;A new VCF release is just around the corner, and just like the transition from VCF 5.X to 9.0, this one brings massive changes as well. Not only is the entire fleet being turned upside down, but there have also been a ton of changes to my favorite topic: VPCs in NSX. One of the many new features is VPC Connectivity Policies. Today, in this blog post, I’ll explain what you can do with them and how they work. So let&amp;rsquo;s dive into VPC&amp;rsquo;s rabbit hole.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Homelab Update 2026</title>
+				<link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
+				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;It’s been almost a year since the last lab &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/homelab-v6/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;update&lt;/a&gt;, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.&#xA;I will divide the article into several categories: hardware, networking, and the software stack.&#xA;But as they say, let&amp;rsquo;s not beat around the bush—just go for it!&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Nutanix - Flow 7: virtual networking</title>
+				<link>https://sdn-warrior.org/posts/nutanix-flow/</link>
+				<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.&lt;/p&gt;&#xA;&lt;p&gt;But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.&#xA;But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 - Extend Managment Domain Cluster</title>
+				<link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
+				<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Even though it’s a financially unwise decision right now, I decided to buy a third Minisforum MS-A2 because of the upcoming VCF 9.1 release and because I wanted to test other services like SSP in my lab. Luckily, I still had some RAM in my drawer from the good old days, when you didn’t have to sacrifice your firstborn or donate a kidney to get 128 GB of RAM. Yes, friends of sophisticated over-engineering, I am a blessed man.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>2026 VMUG Connect - Amsterdam</title>
+				<link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
+				<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
+				<description>&lt;h2 id=&#34;vmug-connect-amsterdam--between-tech-talks-and-travel-vibes&#34;&gt;VMUG Connect Amsterdam – Between Tech Talks and Travel Vibes&lt;/h2&gt;&#xA;&lt;p&gt;Wow, so here we are again. Another travel blog post and no tech content. Yes, unfortunately I’m a bit behind on my own &amp;ldquo;roadmap&amp;rdquo;, but right now I simply don’t have the personal time to write another tech article. I actually still have so much in the works and just can’t seem to get through it all. But that won’t stop me from sharing my impressions of VMUG Connect in Amsterdam here.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>IPv6 with NSX</title>
+				<link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
+				<pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Nutanix - Get started with the CE Edition</title>
+				<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
+				<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.&lt;/p&gt;&#xA;&lt;figure&gt;&lt;picture&gt;&lt;source srcset=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img&#xD;&#xA;            src=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34;alt=&#34;Yes, this is my happy face&#34;width=&#34;1988&#34;&#xD;&#xA;            height=&#34;1491&#34;/&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&lt;p&gt;Yes, this is my happy face&lt;/p&gt;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;p&gt;Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
+				<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
+				<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Today, I would like to address the topic of how Keycloak can be used as a central identity management system with the Advanced Load Balancer.&#xA;In theory, this is relatively easy to implement, but in practice, there are a few challenges.&#xA;I would like to describe exactly what these are and also present a solution.&#xA;As a little bonus, I will also show you how to use a Fido Key (Yubikey) to log in.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 - Automation in All Apps mode</title>
+				<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
+				<pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Ah Sh*t, Here We Go Again - Happy New Year! What was I thinking, letting you guys vote on what my next topic would be? But okay, I guess I only have myself to blame.&#xA;Anyway, over 60% wanted me to cover VCF9 automation in All Apps mode.&#xA;As most people know, there are two modes in VCF Automation: the so-called legacy mode, which is nothing more than VCF Automation 8.18, and the new and much more exciting All Apps mode.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 - Building a VCF Operations Dashboard</title>
+				<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+				<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I currently have two different systems in my home lab for monitoring things.&#xA;I started everything but never really finished it.&#xA;I have a Grafana dashboard for power consumption and an Uptime Kuma to check the general availability of systems.&#xA;As I have to run a VCF Operations anyway so that I can license my Baselab, I thought, why not use Operations for monitoring purposes, since it&amp;rsquo;s there anyway.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 - Dark Site Edge - Part 2</title>
+				<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+				<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my last &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vcf9-dark-site-edge/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Dark Site&lt;/a&gt; article, I showed how to deploy a Dark Site Edge on a host (with a temporary second host).&#xA;However, this didn&amp;rsquo;t sit well with me, as I believe it should also be possible with just one host and without any additional tools.&#xA;Spoiler alert: it works, and today I&amp;rsquo;m going to write down how to do it.&lt;/p&gt;&#xA;&lt;p&gt;Of course, we need a few workarounds here, and I was unable to create the setup with external storage such as NFS.&#xA;So today I will use vSAN ESA, even though it requires significantly more resources than NFS.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
+				<link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
+				<pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While preparing for an article that has not yet been published, I ran into an interesting VCF bug.&#xA;For the article, I had to delete a VCF instance from my operations. For background information, I currently have three VCF instances onboarded in my fleet.&#xA;Since I had to reinstall one of them, I removed it according to the official &#xA;&lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/adding-an-existing-vcf-instance-to-a-vcf-fleet.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;instructions&lt;/a&gt;, and that&amp;rsquo;s when the problems started.&lt;/p&gt;&#xA;&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;aside class=&#34;admonition warning&#34; data-admonition-type=&#34;warning&#34;&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-circle&#34;&gt;&#xD;&#xA;      &lt;circle cx=&#34;12&#34; cy=&#34;12&#34; r=&#34;10&#34;&gt;&lt;/circle&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&#xD;&#xA;        &lt;b&gt;Warning&lt;/b&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-content&#34;&gt;I have reported the error to Broadcom, but as of now (December 3, 2025), the error and the solution have not been confirmed or acknowledged. I can reproduce and resolve the error multiple times, but I must reiterate that you do so &lt;strong&gt;at your own risk.&lt;/strong&gt;&lt;/div&gt;&#xD;&#xA;&lt;/aside&gt;&#xA;&lt;h2 id=&#34;error-pattern-and-impact&#34;&gt;Error pattern and impact&lt;/h2&gt;&#xA;&lt;p&gt;At first glance, the VCF instance can be deleted normally and everything appears to be functioning correctly. The error only becomes apparent when the vCLM (aka Fleet Manager) is required and the old VCF instance has been deleted. Typical errors:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 - Dark Site Edge</title>
+				<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+				<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
+				<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
+				<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Tales from the Lab – Lab setup</title>
+				<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
+				<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
+				<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+				<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VMware Explore 2025</title>
+				<link>https://sdn-warrior.org/posts/explore-2025/</link>
+				<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+				<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+				<description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &#xA;&lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

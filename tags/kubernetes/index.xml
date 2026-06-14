@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Kubernetes on SDN-Warrior | Daniel Krieger</title>
+		<link>https://sdn-warrior.org/tags/kubernetes/</link>
+		<description>Recent content in Kubernetes on SDN-Warrior | Daniel Krieger</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+			<copyright>Daniel Krieger</copyright>
+		
+		
+			<lastBuildDate>Sun, 14 Jun 2026 12:00:00 +0200</lastBuildDate>
+		
+			<atom:link href="https://sdn-warrior.org/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - Platform Health Check Error</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</link>
+				<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I wanted to deploy another component in my VCF 9.1 cluster and ran into a cryptic error message that I couldn&amp;rsquo;t quite make sense of at first. Some of you might be familiar with this error message; in any case, I&amp;rsquo;ve seen posts on LinkedIn from people who seem to be having the same problem. I&amp;rsquo;m referring to the following error message.&lt;/p&gt;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;aside class=&#34;admonition bug&#34; data-admonition-type=&#34;bug&#34;&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-title&#34;&gt;&#xD;&#xA;        &lt;div class=&#34;icon&#34;&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; width=&#34;24&#34; height=&#34;24&#34; viewBox=&#34;0 0 24 24&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34;&#xD;&#xA;      stroke-width=&#34;2&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; class=&#34;feather feather-alert-octagon&#34;&gt;&#xD;&#xA;      &lt;polygon points=&#34;7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2&#34;&gt;&lt;/polygon&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;8&#34; x2=&#34;12&#34; y2=&#34;12&#34;&gt;&lt;/line&gt;&#xD;&#xA;      &lt;line x1=&#34;12&#34; y1=&#34;16&#34; x2=&#34;12.01&#34; y2=&#34;16&#34;&gt;&lt;/line&gt;&#xD;&#xA;   &lt;/svg&gt;&lt;/div&gt;&#xD;&#xA;        &lt;b&gt;Error Message&lt;/b&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;    &lt;div class=&#34;admonition-content&#34;&gt;During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error&#xA;[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]&lt;/div&gt;&#xD;&#xA;&lt;/aside&gt;&#xA;&lt;p&gt;So I started looking into it, but I couldn&amp;rsquo;t find any relevant errors in VCF Operations. Everything looked fine at first glance, but no matter how many times I tried, I couldn&amp;rsquo;t deploy any more components. Since the VCF Service Cluster is essentially just a Kubernetes cluster, it was time to take a closer look.&#xA;Let&amp;rsquo;s get started.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

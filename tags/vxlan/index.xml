@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Vxlan on SDN-Warrior | Daniel Krieger</title>
+		<link>http://localhost:1313/tags/vxlan/</link>
+		<description>Recent content in Vxlan on SDN-Warrior | Daniel Krieger</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+			<copyright>Daniel Krieger</copyright>
+		
+		
+			<lastBuildDate>Thu, 04 Jun 2026 21:25:25 +0200</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/vxlan/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
+				<link>http://localhost:1313/posts/vcf9.1-dtgw-vxlan/</link>
+				<pubDate>Thu, 04 Jun 2026 21:25:25 +0200</pubDate>
+				<guid>http://localhost:1313/posts/vcf9.1-dtgw-vxlan/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you&amp;rsquo;ve brought enough coffee, because I&amp;rsquo;m afraid this might turn into another long journey down the rabbit hole.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

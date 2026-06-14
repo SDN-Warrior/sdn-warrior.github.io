@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Nutanix on SDN-Warrior | Daniel Krieger</title>
-    <link>https://sdn-warrior.org/tags/nutanix/</link>
-    <description>Recent content in Nutanix on SDN-Warrior | Daniel Krieger</description>
-    <generator>Hugo</generator>
-    <language>en-US</language>
-    <copyright>Daniel Krieger</copyright>
-    <lastBuildDate>Fri, 01 May 2026 18:00:00 +0200</lastBuildDate>
-    <atom:link href="https://sdn-warrior.org/tags/nutanix/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Homelab Update 2026</title>
-      <link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
-      <pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;It’s been almost a year since the last lab &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/homelab-v6/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;update&lt;/a&gt;, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.&#xA;I will divide the article into several categories: hardware, networking, and the software stack.&#xA;But as they say, let&amp;rsquo;s not beat around the bush—just go for it!&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Nutanix - Flow 7: virtual networking</title>
-      <link>https://sdn-warrior.org/posts/nutanix-flow/</link>
-      <pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
-      <guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.&lt;/p&gt;&#xA;&lt;p&gt;But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.&#xA;But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Nutanix - Get started with the CE Edition</title>
-      <link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
-      <pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
-      <guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.&lt;/p&gt;&#xA;&lt;figure&gt;&lt;picture&gt;&lt;source srcset=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img&#xD;&#xA;            src=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34;alt=&#34;Yes, this is my happy face&#34;width=&#34;1988&#34;&#xD;&#xA;            height=&#34;1491&#34;/&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&lt;p&gt;Yes, this is my happy face&lt;/p&gt;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;p&gt;Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Nutanix on SDN-Warrior | Daniel Krieger</title>
+		<link>https://sdn-warrior.org/tags/nutanix/</link>
+		<description>Recent content in Nutanix on SDN-Warrior | Daniel Krieger</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+			<copyright>Daniel Krieger</copyright>
+		
+		
+			<lastBuildDate>Fri, 01 May 2026 18:00:00 +0200</lastBuildDate>
+		
+			<atom:link href="https://sdn-warrior.org/tags/nutanix/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Homelab Update 2026</title>
+				<link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
+				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;It’s been almost a year since the last lab &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/homelab-v6/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;update&lt;/a&gt;, and a lot has happened since then. I did post all the updates on LinkedIn, but never on the blog. So it’s time to write down the changes again, since there have been changes in almost every area.&#xA;I will divide the article into several categories: hardware, networking, and the software stack.&#xA;But as they say, let&amp;rsquo;s not beat around the bush—just go for it!&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Nutanix - Flow 7: virtual networking</title>
+				<link>https://sdn-warrior.org/posts/nutanix-flow/</link>
+				<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;As you know, I like to look beyond my own product ecosystem, and my real passion lies in SDN—software-defined networking. Who would have guessed that from the blog’s name? That’s why I find Flow to be one of the most exciting aspects of Nutanix. Specifically, today I’m looking at Flow version 7.&lt;/p&gt;&#xA;&lt;p&gt;But perhaps I should briefly explain what Nutanix Flow actually is. Flow is Nutanix’s solution and an alternative to VMware NSX. Among other things, it offers two core features: virtual networking and network security. So far, this all sounds familiar and strongly resembles NSX. Nevertheless, Nutanix does things quite differently here than its well-known competitor—whether for better or worse, we’ll see as we go through the article.&#xA;But I’d like to approach this from a neutral standpoint first. It wouldn’t be entirely fair otherwise, since I’m still on the Community Edition and my VCF stack is at 9.0.2 (though only because there’s no Community Edition available, and as a Knight, I have more opportunities to obtain licenses than others).&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Nutanix - Get started with the CE Edition</title>
+				<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
+				<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In November 2025, I was a guest at Nutanix Next in Darmstadt, where I met up with old colleagues and wanted to take a look at what Nutanix had to offer. Visitors were kindly given the opportunity to obtain certification on the spot, which I naturally took advantage of.&lt;/p&gt;&#xA;&lt;figure&gt;&lt;picture&gt;&lt;source srcset=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34; type=&#34;image/jpeg&#34;&gt;&#xD;&#xA;          &lt;img&#xD;&#xA;            src=&#34;https://sdn-warrior.org/nutanix-ce/01_hu_f9ca88236445953f.jpg&#34;alt=&#34;Yes, this is my happy face&#34;width=&#34;1988&#34;&#xD;&#xA;            height=&#34;1491&#34;/&gt;&#xD;&#xA;        &lt;/picture&gt;&lt;figcaption&gt;&lt;p&gt;Yes, this is my happy face&lt;/p&gt;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;p&gt;Having worked with VMware for over 20 years, I was naturally skeptical about what Nutanix could do, and what can I say, the differences are perhaps less than I thought. You could also say same, same but different—at least when it comes to the core of virtualization. Nutanix is based on KVM, which is rock solid and which I have been running in my home lab for ages in the form of Unraid. When it comes to storage, Nutanix takes a different approach and primarily relies on HCI and its own storage solution.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

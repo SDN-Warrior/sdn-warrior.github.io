@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]">
+
+	<meta itemprop="name" content="VCF 9.1 - Platform Health Check Error">
+	<meta itemprop="description" content="During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]">
+	<meta itemprop="datePublished" content="2026-06-14T12:00:00+02:00">
+	<meta itemprop="dateModified" content="2026-06-14T12:00:00+02:00">
+	<meta itemprop="wordCount" content="1559">
+	<meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+	<meta itemprop="keywords" content="Vcf9.1,Servicecluster,Kubernetes"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/">
+	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+	<meta property="og:title" content="VCF 9.1 - Platform Health Check Error">
+	<meta property="og:description" content="During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-06-14T12:00:00+02:00">
+		<meta property="article:modified_time" content="2026-06-14T12:00:00+02:00">
+		<meta property="article:tag" content="Vcf9.1">
+		<meta property="article:tag" content="Servicecluster">
+		<meta property="article:tag" content="Kubernetes">
+		<meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta name="twitter:title" content="VCF 9.1 - Platform Health Check Error">
+	<meta name="twitter:description" content="During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF 9.1 - Platform Health Check Error",
+    "name": "VCF 9.1 - Platform Health Check Error",
+    "description": "During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error\n[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]",
+    "keywords": ["vcf9.1", "servicecluster", "kubernetes"],
+    "articleBody": "Introduction I wanted to deploy another component in my VCF 9.1 cluster and ran into a cryptic error message that I couldn’t quite make sense of at first. Some of you might be familiar with this error message; in any case, I’ve seen posts on LinkedIn from people who seem to be having the same problem. I’m referring to the following error message.\nError Message\rDuring the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error [platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]\rSo I started looking into it, but I couldn’t find any relevant errors in VCF Operations. Everything looked fine at first glance, but no matter how many times I tried, I couldn’t deploy any more components. Since the VCF Service Cluster is essentially just a Kubernetes cluster, it was time to take a closer look. Let’s get started.\nNote\rUnfortunately, I forgot to take screenshots while troubleshooting, so I have to recreate some of the steps. It wasn’t until the end of the troubleshooting process that it occurred to me this might actually make for a really interesting blog post. So please forgive me if there aren’t as many screenshots this time around.\rAccessing the VCF Service Cluster This was my first hurdle: how do I even access the service cluster? Well, that’s relatively simple. I connect via SSH to the control node of the service cluster. You can find the IP address of the control plane under Build -\u003e Lifecycle -\u003e VCF Managment -\u003e Components -\u003e VCF Services Runtime in VCF Operations, or you can retrieve the IP from vCenter. Of the service runtime VMs, the control plane VMs are the smallest. In a simple deployment, there is only one control plane VM.\nControl Plane IP SSH Session You can retrieve the password from the VCF Installer, as it is initially generated randomly. If you haven’t saved the passwords, you can still retrieve them via the API as usual. The user is the vmware-system-user, and you can use this account to log in to the control plane node. To work properly, you need the correct kubeconfig, because none is loaded at login, and without the correct kubeconfig, kubeclt will try to connect to localhost:8080 and fail. The correct kubeconfig is located at /etc/kubernetes/admin.conf, and to make things easier for myself, I set an alias.\nalias k='sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl' Tip\rThe alias is only valid for the current session and must be set each time. The first time you run a kubectl command, you will be prompted for the service user’s password.\rTo test the alias, you can run a simple cluster-info command; the result should look something like this:\nvmware-system-user@vcf09-runtime-g2zpc [ ~ ]$ k cluster-info [sudo] password for vmware-system-user: Kubernetes control plane is running at https://10.28.13.52:6443 CoreDNS is running at https://10.28.13.52:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'. Okay, now that we’ve successfully logged in, we can continue investigating the cause.\nWhere’s the Poop, Robin? I hope you catch the reference to the great show How I Met Your Mother. Anyway. The error message indicated that there seems to be an issue with Fluentd, so let’s take a closer look at it. There is a simple health check you can run:\ncurl -k https://:30006/status | jq You get a simple list in JSON format that lists all services and their status. If all services are running, it looks something like this (I have edited this excerpt.):\n{ \"checkset-vodap-ccs-http\": { \"ok\": true, \"lastError\": \"failed to execute \\\"GET\\\" request: Get \\\"https://vcf-obs-collector-controller-service.vodap.svc.cluster.local:8443/health/readiness\\\": dial tcp 198.18.129.65:8443: connect: connection refused\", \"timestamp\": \"2026-06-14T12:15:24Z\", \"duration\": \"14.66674ms\", \"contiguousFailures\": 0, \"lastTransitionTime\": \"2026-06-14T11:53:24Z\", \"labels\": { \"clustername\": \"vcf09-runtime\", \"component\": \"vcf-obs-data-platform\", \"name\": \"checkset-vodap-ccs\", \"status\": \"success\", \"type\": \"http\" } }, \"checkset-vodap-dqs-http\": { \"ok\": true, \"timestamp\": \"2026-06-14T12:15:25Z\", \"duration\": \"19.182295ms\", \"contiguousFailures\": 0, \"lastTransitionTime\": null, \"labels\": { \"clustername\": \"vcf09-runtime\", \"component\": \"vcf-obs-data-platform\", \"name\": \"checkset-vodap-dqs\", \"status\": \"success\", \"type\": \"http\" } } } There’s some interesting information to be found here. For one thing, you can see the current status, which can be “successful” or “error,” for example, and you can tell whether the service is working properly. The “Last Error” is also interesting. As the name suggests, this shows the last error the service encountered. In my example, the services are working properly.\nAnd here we have our problem child—and the reason why no further components can be deployed.\n{ \"platform-statefulsets-core\": { \"ok\": false, \"lastError\": \"1 of 10 resources are not ok: logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;\", \"timestamp\": \"2026-05-20T17:25:56Z\", \"duration\": \"6.461603ms\", \"contiguousFailures\": 547, \"lastTransitionTime\": \"2026-05-20T12:34:44Z\", \"labels\": { \"clustername\": \"vcf09-runtime\", \"component\": \"vsp\", \"name\": \"platform-statefulsets\", \"status\": \"error\", \"type\": \"core\" } } } Next, I’ll check to see if all the containers are ready. If the error message is correct, something in Fluentd isn’t in the “ready” state.T o do this, I run two commands:\nk get sts -A | grep logging-operator-fluentd\rk get pods -A -o wide | grep logging-operator-fluentd vmware-system-user@vcf09-runtime-g2zpc $ k get sts -A | grep logging-operator-fluentd vmsp-platform logging-operator-fluentd 0/1 7d20h vmware-system-user@vcf09-runtime-g2zpc $ k get pods -A -o wide | grep logging-operator-fluentd vmsp-platform logging-operator-fluentd-0 1/2 Running 221 (5m15s ago) 6d20h 198.18.2.38 vcf09-runtime-wfcps vmsp-platform logging-operator-fluentd-configcheck-97bae691 0/1 Completed 0 6d20h vcf09-runtime-wfcps As you can see in the output, only 1 of the 2 containers is running. The container named logging-operator-fluentd-0 has had over 221 restarts. This means it is stuck in a crash loop. Next, I’ll define a variable for the namespace NS=vmsp-platform so I don’t have to type it out every time. I’ll do the same for the actual pod POD=logging-operator-fluentd-0. I use k -n $NS describe pod $POD to get the description of the actual pod.\nThis is where it gets interesting. Fluentd checks two things: first, whether less than 80% of the storage space is used, and second, whether there are fewer than 10,000 files. If either of these two criteria is met, the pod will not start up properly. Excerpt from the issue of describe:\nFREESPACE_THRESHOLD=80 FREESPACE_CURRENT=$(df -h $BUFFER_PATH | grep / | awk '{ print $5}' | sed 's/%//g') MAX_FILE_NUMBER=10000 FILE_NUMBER_CURRENT=$(find $BUFFER_PATH -type f -name *.buffer | wc -l) Next, I used a small script to identify exactly these two potential issues.\nNS=vmsp-platform POD=logging-operator-fluentd-0 k -n $NS exec -it $POD -c fluentd -- bash -lc ' echo \"=== /buffers filesystem ===\" df -h /buffers echo echo \"=== buffer file count ===\" find /buffers -type f -name \"*.buffer\" | wc -l echo echo \"=== buffer directory size ===\" du -sh /buffers' This output clearly shows that the problem for me wasn’t the number of files, but simply the amount of memory being used. There are simply over 8 GB of files in the /buffers directory.\n=== /buffers filesystem === Filesystem Size Used Avail Use% Mounted on /dev/sde 10G 8.3G 1.7G 84% /buffers === buffer file count === 18 === buffer directory size === 8.2G\t/buffers With this simple Bash command, I can see which directory contains the files that are taking up my disk space.\nk -n $NS exec -it $POD -c fluentd -- bash -lc ' echo \"=== top level usage ===\" du -h --max-depth=2 /buffers 2\u003e/dev/null' === top level usage === 8.36G\t/buffers/backup/worker0 8.36G\t/buffers/backup 8.36G\t/buffers We’ve identified the problem, but not the cause. So I’m checking the logs to see if I can find anything out of the ordinary.\nk -n vmsp-platform logs logging-operator-fluentd-0 -c fluentd --tail=300 And while going through the logs, I noticed that the URL for my Operations for Logs kept popping up: vcf09-li.lab.vcf:9543/api/v2/events, which made me suspicious. It turns out that my Operations for Logs is currently unavailable because I had stopped it via the Operations UI before the last VCF shutdown and simply forgot to restart it. Since the service was properly stopped via Operations, it naturally doesn’t appear in the list of services with issues. That was a classic Layer 8 problem. Since Fluentd couldn’t get rid of its logs, they were moved to the backup directory, and so, slowly but surely, the storage space filled up.\nLab fix So my straightforward solution was to launch Operations for Logs and simply delete the Fluentd logs from the backup directory. I don’t know if Fluentd would have recovered on its own, but I just didn’t want to wait.\nWarning\rPlease note: I’m currently in a lab environment, so I’ve opted for a simple and practical solution. Don’t do this in production!\rYou can easily delete the logs using this bash command:\nk -n $NS exec -it $POD -c fluentd -- bash -lc ' find /buffers/backup -type f -delete df -h /buffers du -sh /buffers/backup ' After deleting the logs, I simply deleted the pod and redeployed it. After that, the pod started up without any issues, and I was able to deploy my VCF component without any errors.\nk delete pod -n $NS $POD k -n $NS rollout status sts/logging-operator-fluentd --timeout=10m Summary The whole troubleshooting process dragged on for several hours, and of course I went down the wrong path a few times. I’m no Kubernetes expert either, and if this were a production system, I would definitely have brought in Broadcom support. So take this solution with a grain of salt and think before you delete anything. It worked perfectly for me. I hope this helps someone out there.\n",
+    "wordCount" : "1559",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/fan.jpg","datePublished": "2026-06-14T12:00:00+02:00",
+    "dateModified": "2026-06-14T12:00:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>VCF 9.1 - Platform Health Check Error</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.0029d817201f3466aeb56b2b509e4d34a3fc2155c7a943bca1d905023e4678c1.css" integrity="sha256-ACnYFyAfNGautWsrUJ5NNKP8IVXHqUO8odkFAj5GeME=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/fan.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-platform-health-check-error%2f&amp;text=VCF%209.1%20-%20Platform%20Health%20Check%20Error" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-platform-health-check-error%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF%209.1%20-%20Platform%20Health%20Check%20Error&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-platform-health-check-error%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-platform-health-check-error%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209.1%20-%20Platform%20Health%20Check%20Error&amp;summary=VCF%209.1%20-%20Platform%20Health%20Check%20Error%2c%20by%20SDN-Warrior%0a%0aDuring%20the%20deployment%20of%20an%20additional%20VCF%209.1%20component%2c%20the%20precheck%20failed%20with%20the%20following%20platform%20health%20error%3a%20Platform%20Health%20Check%20Error%0a%5bplatform-statefulsets-core%20%3a%201%20of%2010%20resources%20are%20not%20ok%3alogging-operator-fluentd%3a%20wrong%20resource%20state%3a%20InProgress%20-%20Ready%3a%200%2f1%3b%5d%5bVCFMS-HEALTH-002%5d%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF 9.1 - Platform Health Check Error&#34;,&#34;https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/&#34;,&#34;VCF 9.1 - Platform Health Check Error, by SDN-Warrior\n\nDuring the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error\n[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster">
+
+<div class="thin">
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+                <a href="/">SDN-Warrior | Daniel Krieger</a>
+            </li>
+            <li class="breadcrumbs__item">
+                <a href="/posts/">Posts</a>
+            </li>
+
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">
+            VCF 9.1 - Platform Health Check Error
+        </li>
+    </ol>
+</nav>
+</div><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jun 14, 2026</span></div>
+				<h1>VCF 9.1 - Platform Health Check Error</h1>
+			</header>
+			<div class="post-info"><p>During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/servicecluster">servicecluster</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/kubernetes">kubernetes</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>1559 Words
+     // ReadTime
+    
+    
+    
+    7 Minutes, 5 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-06-14 12:00 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I wanted to deploy another component in my VCF 9.1 cluster and ran into a cryptic error message that I couldn&rsquo;t quite make sense of at first. Some of you might be familiar with this error message; in any case, I&rsquo;ve seen posts on LinkedIn from people who seem to be having the same problem. I&rsquo;m referring to the following error message.</p>
+
+
+<aside class="admonition bug" data-admonition-type="bug">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon">
+      <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Error Message</b>
+    </div>
+    <div class="admonition-content">During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]</div>
+</aside>
+<p>So I started looking into it, but I couldn&rsquo;t find any relevant errors in VCF Operations. Everything looked fine at first glance, but no matter how many times I tried, I couldn&rsquo;t deploy any more components. Since the VCF Service Cluster is essentially just a Kubernetes cluster, it was time to take a closer look.
+Let&rsquo;s get started.</p>
+
+
+<aside class="admonition note" data-admonition-type="note">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">Unfortunately, I forgot to take screenshots while troubleshooting, so I have to recreate some of the steps. It wasn&rsquo;t until the end of the troubleshooting process that it occurred to me this might actually make for a really interesting blog post. So please forgive me if there aren&rsquo;t as many screenshots this time around.</div>
+</aside>
+<h2 id="accessing-the-vcf-service-cluster">Accessing the VCF Service Cluster<a href="#accessing-the-vcf-service-cluster" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>This was my first hurdle: how do I even access the service cluster? Well, that&rsquo;s relatively simple. I connect via SSH to the control node of the service cluster. You can find the IP address of the control plane under <em><strong>Build -&gt; Lifecycle -&gt; VCF Managment -&gt; Components -&gt; VCF Services Runtime</strong></em> in VCF Operations, or you can retrieve the IP from vCenter. Of the service runtime VMs, the control plane VMs are the smallest. In a simple deployment, there is only one control plane VM.</p>
+
+
+<div class="image-gallery" id="gallery-cb1a6c4e"><a href="/vcf91-servicecluster-bug/Control%20Plane%20IP.jpg" class="gallery-item" data-lightbox-group="gallery-cb1a6c4e" data-title="Control Plane IP"><img src="/vcf91-servicecluster-bug/Control%20Plane%20IP_hu_3f28c89a138600a7.jpg" alt="Control Plane IP" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Control Plane IP</div>
+                    </a><a href="/vcf91-servicecluster-bug/SSH%20Session.jpg" class="gallery-item" data-lightbox-group="gallery-cb1a6c4e" data-title="SSH Session"><img src="/vcf91-servicecluster-bug/SSH%20Session_hu_730aaff87ba1d423.jpg" alt="SSH Session" width="350" height="350" loading="lazy"><div class="gallery-item-caption">SSH Session</div>
+                    </a></div>
+<p>You can retrieve the password from the VCF Installer, as it is initially generated randomly. If you haven&rsquo;t saved the passwords, you can still retrieve them via the API as usual. The user is the vmware-system-user, and you can use this account to log in to the control plane node. To work properly, you need the correct kubeconfig, because none is loaded at login, and without the correct kubeconfig, kubeclt will try to connect to localhost:8080 and fail. The correct kubeconfig is located at <em><strong>/etc/kubernetes/admin.conf</strong></em>, and to make things easier for myself, I set an alias.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alias k=&#39;sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl&#39;
+</span></span></code></pre></div>
+
+<aside class="admonition tip" data-admonition-type="tip">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+   </svg></div>
+        <b>Tip</b>
+    </div>
+    <div class="admonition-content">The alias is only valid for the current session and must be set each time. The first time you run a <code>kubectl</code> command, you will be prompted for the service user&rsquo;s password.</div>
+</aside>
+<p>To test the alias, you can run a simple <code>cluster-info</code> command; the result should look something like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vmware-system-user@vcf09-runtime-g2zpc [ ~ ]$ k cluster-info
+</span></span><span class="line"><span class="cl">[sudo] password for vmware-system-user: 
+</span></span><span class="line"><span class="cl">Kubernetes control plane is running at https://10.28.13.52:6443
+</span></span><span class="line"><span class="cl">CoreDNS is running at https://10.28.13.52:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</span></span></code></pre></div><p>Okay, now that we&rsquo;ve successfully logged in, we can continue investigating the cause.</p>
+<h2 id="wheres-the-poop-robin">Where&rsquo;s the Poop, Robin?<a href="#wheres-the-poop-robin" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I hope you catch the reference to the great show <em>How I Met Your Mother.</em> Anyway. The error message indicated that there seems to be an issue with Fluentd, so let&rsquo;s take a closer look at it. There is a simple health check you can run:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">curl -k https://&lt;PRIMARY_VIP&gt;:30006/status | jq
+</span></span></code></pre></div><p>You get a simple list in JSON format that lists all services and their status. If all services are running, it looks something like this (I have edited this excerpt.):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;checkset-vodap-ccs-http&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ok&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastError&#34;</span><span class="p">:</span> <span class="s2">&#34;failed to execute \&#34;GET\&#34; request: Get \&#34;https://vcf-obs-collector-controller-service.vodap.svc.cluster.local:8443/health/readiness\&#34;: dial tcp 198.18.129.65:8443: connect: connection refused&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-06-14T12:15:24Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;duration&#34;</span><span class="p">:</span> <span class="s2">&#34;14.66674ms&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;contiguousFailures&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastTransitionTime&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-06-14T11:53:24Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;labels&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clustername&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf09-runtime&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;component&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf-obs-data-platform&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;checkset-vodap-ccs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;success&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;http&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;checkset-vodap-dqs-http&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ok&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-06-14T12:15:25Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;duration&#34;</span><span class="p">:</span> <span class="s2">&#34;19.182295ms&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;contiguousFailures&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastTransitionTime&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;labels&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clustername&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf09-runtime&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;component&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf-obs-data-platform&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;checkset-vodap-dqs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;success&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;http&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>There’s some interesting information to be found here. For one thing, you can see the current status, which can be “successful” or “error,” for example, and you can tell whether the service is working properly. The “Last Error” is also interesting. As the name suggests, this shows the last error the service encountered. In my example, the services are working properly.</p>
+<p>And here we have our problem child—and the reason why no further components can be deployed.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl"> <span class="nt">&#34;platform-statefulsets-core&#34;</span><span class="p">:</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ok&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastError&#34;</span><span class="p">:</span> <span class="s2">&#34;1 of 10 resources are not ok: logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-05-20T17:25:56Z&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;duration&#34;</span><span class="p">:</span> <span class="s2">&#34;6.461603ms&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;contiguousFailures&#34;</span><span class="p">:</span> <span class="mi">547</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastTransitionTime&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-05-20T12:34:44Z&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;labels&#34;</span><span class="p">:</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clustername&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf09-runtime&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;component&#34;</span><span class="p">:</span> <span class="s2">&#34;vsp&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;platform-statefulsets&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;error&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;core&#34;</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> 
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>  
+</span></span></code></pre></div><p>Next, I&rsquo;ll check to see if all the containers are ready. If the error message is correct, something in Fluentd isn&rsquo;t in the “ready” state.T o do this, I run two commands:</p>
+<pre tabindex="0"><code>k get sts -A | grep logging-operator-fluentd
+k get pods -A -o wide | grep logging-operator-fluentd
+</code></pre><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vmware-system-user@vcf09-runtime-g2zpc $ k get sts -A | grep logging-operator-fluentd 
+</span></span><span class="line"><span class="cl">vmsp-platform logging-operator-fluentd 0/1 7d20h 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vmware-system-user@vcf09-runtime-g2zpc $ k get pods -A -o wide | grep logging-operator-fluentd 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vmsp-platform logging-operator-fluentd-0 1/2 Running 221 (5m15s ago) 6d20h 198.18.2.38 vcf09-runtime-wfcps &lt;none&gt; &lt;none&gt; 
+</span></span><span class="line"><span class="cl">vmsp-platform logging-operator-fluentd-configcheck-97bae691 0/1 Completed 0 6d20h &lt;none&gt; vcf09-runtime-wfcps &lt;none&gt; &lt;none&gt;
+</span></span></code></pre></div><p>As you can see in the output, only 1 of the 2 containers is running. The container named <code>logging-operator-fluentd-0</code> has had over 221 restarts. This means it is stuck in a crash loop. Next, I&rsquo;ll define a variable for the namespace <code>NS=vmsp-platform</code> so I don&rsquo;t have to type it out every time. I&rsquo;ll do the same for the actual pod <code>POD=logging-operator-fluentd-0</code>. I use <code>k -n $NS describe pod $POD</code> to get the description of the actual pod.</p>
+<p>This is where it gets interesting. Fluentd checks two things: first, whether less than 80% of the storage space is used, and second, whether there are fewer than 10,000 files. If either of these two criteria is met, the pod will not start up properly. Excerpt from the issue of describe:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">FREESPACE_THRESHOLD=80
+</span></span><span class="line"><span class="cl">FREESPACE_CURRENT=$(df -h $BUFFER_PATH | grep / | awk &#39;{ print $5}&#39; | sed &#39;s/%//g&#39;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">MAX_FILE_NUMBER=10000
+</span></span><span class="line"><span class="cl">FILE_NUMBER_CURRENT=$(find $BUFFER_PATH -type f -name *.buffer | wc -l)
+</span></span></code></pre></div><p>Next, I used a small script to identify exactly these two potential issues.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">NS=vmsp-platform
+</span></span><span class="line"><span class="cl">POD=logging-operator-fluentd-0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">k -n $NS exec -it $POD -c fluentd -- bash -lc &#39;
+</span></span><span class="line"><span class="cl">echo &#34;=== /buffers filesystem ===&#34;
+</span></span><span class="line"><span class="cl">df -h /buffers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">echo
+</span></span><span class="line"><span class="cl">echo &#34;=== buffer file count ===&#34;
+</span></span><span class="line"><span class="cl">find /buffers -type f -name &#34;*.buffer&#34; | wc -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">echo
+</span></span><span class="line"><span class="cl">echo &#34;=== buffer directory size ===&#34;
+</span></span><span class="line"><span class="cl">du -sh /buffers&#39;
+</span></span></code></pre></div><p>This output clearly shows that the problem for me wasn&rsquo;t the number of files, but simply the amount of memory being used. There are simply over 8 GB of files in the /buffers directory.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">=== /buffers filesystem ===
+</span></span><span class="line"><span class="cl">Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span class="line"><span class="cl">/dev/sde         10G  8.3G  1.7G  84% /buffers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">=== buffer file count ===
+</span></span><span class="line"><span class="cl">18
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">=== buffer directory size ===
+</span></span><span class="line"><span class="cl">8.2G	/buffers
+</span></span></code></pre></div><p>With this simple Bash command, I can see which directory contains the files that are taking up my disk space.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">k -n <span class="nv">$NS</span> <span class="nb">exec</span> -it <span class="nv">$POD</span> -c fluentd -- bash -lc <span class="s1">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">echo &#34;=== top level usage ===&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">du -h --max-depth=2 /buffers 2&gt;/dev/null&#39;</span> 
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">=== top level usage ===
+</span></span><span class="line"><span class="cl">8.36G	/buffers/backup/worker0
+</span></span><span class="line"><span class="cl">8.36G	/buffers/backup
+</span></span><span class="line"><span class="cl">8.36G	/buffers
+</span></span></code></pre></div><p>We&rsquo;ve identified the problem, but not the cause. So I&rsquo;m checking the logs to see if I can find anything out of the ordinary.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">k -n vmsp-platform logs logging-operator-fluentd-0 -c fluentd --tail=300
+</span></span></code></pre></div><p>And while going through the logs, I noticed that the URL for my Operations for Logs kept popping up: <code>vcf09-li.lab.vcf:9543/api/v2/events</code>, which made me suspicious. It turns out that my Operations for Logs is currently unavailable because I had stopped it via the Operations UI before the last VCF shutdown and simply forgot to restart it. Since the service was properly stopped via Operations, it naturally doesn’t appear in the list of services with issues. That was a classic Layer 8 problem. Since Fluentd couldn&rsquo;t get rid of its logs, they were moved to the backup directory, and so, slowly but surely, the storage space filled up.</p>
+<h2 id="lab-fix">Lab fix<a href="#lab-fix" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>So my straightforward solution was to launch Operations for Logs and simply delete the Fluentd logs from the backup directory. I don&rsquo;t know if Fluentd would have recovered on its own, but I just didn&rsquo;t want to wait.</p>
+
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Please note: I&rsquo;m currently in a lab environment, so I&rsquo;ve opted for a simple and practical solution. Don&rsquo;t do this in production!</div>
+</aside>
+<p>You can easily delete the logs using this bash command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">k -n <span class="nv">$NS</span> <span class="nb">exec</span> -it <span class="nv">$POD</span> -c fluentd -- bash -lc <span class="s1">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">find /buffers/backup -type f -delete
+</span></span></span><span class="line"><span class="cl"><span class="s1">df -h /buffers
+</span></span></span><span class="line"><span class="cl"><span class="s1">du -sh /buffers/backup
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;</span>
+</span></span></code></pre></div><p>After deleting the logs, I simply deleted the pod and redeployed it. After that, the pod started up without any issues, and I was able to deploy my VCF component without any errors.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">k delete pod -n $NS $POD
+</span></span><span class="line"><span class="cl">k -n $NS rollout status sts/logging-operator-fluentd --timeout=10m
+</span></span></code></pre></div><h2 id="summary">Summary<a href="#summary" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The whole troubleshooting process dragged on for several hours, and of course I went down the wrong path a few times. I’m no Kubernetes expert either, and if this were a production system, I would definitely have brought in Broadcom support. So take this solution with a grain of salt and think before you delete anything. It worked perfectly for me. I hope this helps someone out there.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf9.1-vna-part2/">VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</a></li>
+	
+	<li><a href="/posts/vcf9.1-vna-vpc/">VCF 9.1 - VNA and VPCs</a></li>
+	
+	<li><a href="/posts/vcf9.1-vpcs-connectivity-policy/">VCF 9.1 - VPCs Connectivity Policies</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9.1-vna-part2/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+<link rel="stylesheet" href="/klaro/klaro.css?v=1">
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -26,31 +26,31 @@
 <meta name="msapplication-TileColor" content="#494f5c">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
 
-  <meta itemprop="name" content="VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture">
-  <meta itemprop="description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
-  <meta itemprop="datePublished" content="2026-05-21T22:00:00+02:00">
-  <meta itemprop="dateModified" content="2026-05-21T22:00:00+02:00">
-  <meta itemprop="wordCount" content="4562">
-  <meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-  <meta itemprop="keywords" content="Vcf9.1,Nsx,Vpc,Vna"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1-vna-part2/">
-  <meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
-  <meta property="og:title" content="VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture">
-  <meta property="og:description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-05-21T22:00:00+02:00">
-    <meta property="article:modified_time" content="2026-05-21T22:00:00+02:00">
-    <meta property="article:tag" content="Vcf9.1">
-    <meta property="article:tag" content="Nsx">
-    <meta property="article:tag" content="Vpc">
-    <meta property="article:tag" content="Vna">
-    <meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta itemprop="name" content="VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture">
+	<meta itemprop="description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
+	<meta itemprop="datePublished" content="2026-05-21T22:00:00+02:00">
+	<meta itemprop="dateModified" content="2026-05-21T22:00:00+02:00">
+	<meta itemprop="wordCount" content="4562">
+	<meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+	<meta itemprop="keywords" content="Vcf9.1,NSX,Vpc,Vna"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1-vna-part2/">
+	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+	<meta property="og:title" content="VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture">
+	<meta property="og:description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-05-21T22:00:00+02:00">
+		<meta property="article:modified_time" content="2026-05-21T22:00:00+02:00">
+		<meta property="article:tag" content="Vcf9.1">
+		<meta property="article:tag" content="NSX">
+		<meta property="article:tag" content="Vpc">
+		<meta property="article:tag" content="Vna">
+		<meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
-  <meta name="twitter:title" content="VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture">
-  <meta name="twitter:description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta name="twitter:title" content="VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture">
+	<meta name="twitter:description" content="In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.">
 
 <script type="application/ld+json">
 {
@@ -85,7 +85,7 @@
     }
 }
 </script><title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.2aa82220044aabb79c8415125efcd8484f208ef06d89faa6f436417fd3722ccb.css" integrity="sha256-KqgiIARKq7echBUSXvzYSE8gjvBtifqm9DZBf9NyLMs=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.0029d817201f3466aeb56b2b509e4d34a3fc2155c7a943bca1d905023e4678c1.css" integrity="sha256-ACnYFyAfNGautWsrUJ5NNKP8IVXHqUO8odkFAj5GeME=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net2.JPG');}</style></head>
 <body id="page">
 <header id="site-header">
@@ -258,8 +258,8 @@
 </aside>
 
 
-<div class="image-gallery" id="gallery-d20d9f16"><a href="/vcf91-vna-2/VNA%20-%20Architecture.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Architecture"><img src="/vcf91-vna-2/VNA%20-%20Architecture_hu_c11381eb50142b29.jpg" alt="VNA - Architecture" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Architecture</div>
-                    </a><a href="/vcf91-vna-2/VNA%20-%20Overlay%20Segment.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Overlay Segment"><img src="/vcf91-vna-2/VNA%20-%20Overlay%20Segment_hu_ce164e8f9f3ecc5e.jpg" alt="VNA - Overlay Segment" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Overlay Segment</div>
+<div class="image-gallery" id="gallery-d20d9f16"><a href="/vcf91-vna-2/VNA%20-%20Architecture.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Architecture"><img src="/vcf91-vna-2/VNA%20-%20Architecture_hu_47f6729428bcb0cc.jpg" alt="VNA - Architecture" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Architecture</div>
+                    </a><a href="/vcf91-vna-2/VNA%20-%20Overlay%20Segment.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Overlay Segment"><img src="/vcf91-vna-2/VNA%20-%20Overlay%20Segment_hu_df18509ad67a5db8.jpg" alt="VNA - Overlay Segment" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Overlay Segment</div>
                     </a></div>
 <p>The parent segment serves two purposes: first, it establishes the BFD session between each HA VRF on the VNA appliances via fp-eth0, and second, it distributes traffic from the VPC service subnets (more on that later).</p>
 <p>Additionally, another BFD session is established via the management interface of the VNA appliances using a standard distributed switch port group. Since an overlay segment depends on the NSX TEP network, this ensures that there is an “independent” second path to check the status of the VNA cluster.</p>
@@ -269,7 +269,7 @@ In addition, a fast path interface is automatically selected. This assignment is
 <p>The service segment (system owned VPC private subnet) is what is known as a child segment in NSX, which is simply an overlay segment connected to a parent overlay segment via a child port. This child port extracts traffic for a specific VLAN from the parent segment and forwards it to the child segment. The parent segment is used only to transport the tagged packets. This design is what makes the VNA possible in the first place.</p>
 
 
-<div class="image-gallery" id="gallery-3cff706b"><a href="/vcf91-vna-2/VNA%20-%20Trafficflow.jpg" class="gallery-item" data-lightbox-group="gallery-3cff706b" data-title="VNA - Trafficflow"><img src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_ae81be913a1e95b9.jpg" alt="VNA - Trafficflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Trafficflow</div>
+<div class="image-gallery" id="gallery-3cff706b"><a href="/vcf91-vna-2/VNA%20-%20Trafficflow.jpg" class="gallery-item" data-lightbox-group="gallery-3cff706b" data-title="VNA - Trafficflow"><img src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_ad78284874cf7c5a.jpg" alt="VNA - Trafficflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Trafficflow</div>
                     </a></div>
 <p>My diagram clearly illustrates the actual egress traffic flow. Traffic from the Alpine test VM destined for the internet is first sent to the private segment and from there to the VPC gateway for VPC1. Like the transit gateway, the VPC gateway is implemented in a distributed manner, meaning it exists on every transport node.  Via the VPC gateway, the traffic is redirected to the service subnet of the VPC and sent there to the service port of the active service instance for VPC01. Each service instance always has the same IP address but resides in different VLANs and is thus isolated. Since the active service instance is running on a VNA on a different ESX host, the traffic is sent to the other ESX host via the parent segment. This happens in the usual way, as with any overlay network, via the TEP network between the ESX servers. Upon arriving at ESX Server 2, the child port extracts the VLAN-tagged traffic from the parent segment and forwards it into the corresponding child overlay segment to the active service instance for VPC01. After SNAT has been performed on the active service instance, the packet does not have to return to the original ESX host just to continue its north-south path. Instead, forwarding continues from the transport node where the active service instance is currently running. From the VPC Gateway, the traffic goes to the Transit Gateway and then into our Public VLAN, where the packets are handed over to the physical network. The public VLAN must be a VLAN within the physical infrastructure, and SNAT IP addresses and smaller subnets for VPC public networks are automatically provisioned from this network.</p>
 
@@ -322,7 +322,7 @@ By the way, if you don&rsquo;t want to wait for NSX&rsquo;s slow UI, you can als
 </span></span></code></pre></div><p>And the corresponding option in the NSX UI.</p>
 
 
-<div class="image-gallery" id="gallery-f7805c58"><a href="/vcf91-vna-2/VNA%20-%20Gateway%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-f7805c58" data-title="VNA - Gateway Services"><img src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_ec2d58d09f155734.jpg" alt="VNA - Gateway Services" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Gateway Services</div>
+<div class="image-gallery" id="gallery-f7805c58"><a href="/vcf91-vna-2/VNA%20-%20Gateway%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-f7805c58" data-title="VNA - Gateway Services"><img src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_90bc040966af2687.jpg" alt="VNA - Gateway Services" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Gateway Services</div>
                     </a></div>
 <p>The attentive reader will have noticed by now that all VPCs are displayed as T1 service routers in the VNA, and that the active service instances have a “1” in the ‘Neighbors’ column, while the passive ones have a “0.” This allows you to quickly check the status of the service instances via the CLI. Now I just need to explain auto-relocation, and hopefully it will all make sense.</p>
 <p>Automatic relocation is triggered when, while adding services (such as an L7 load balancer), resources are exhausted and the capacity of the current node pair is exceeded. This is checked every time a new service or VPC is created and is performed if necessary. Of course, this requires sufficient capacity within the cluster. The cluster does not scale out dynamically.</p>
@@ -428,8 +428,8 @@ My VNA is deployed in the “small” size, which means the VNA has 2 vCPUs avai
 <p>But enough talk—here are my measurement results.</p>
 
 
-<div class="image-gallery" id="gallery-d924245a"><a href="/vcf91-vna-2/Iperf3%20Results.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="Iperf3 Results"><img src="/vcf91-vna-2/Iperf3%20Results_hu_6c41b1c43afd707a.jpg" alt="Iperf3 Results" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Iperf3 Results</div>
-                    </a><a href="/vcf91-vna-2/VNA%20-%20CPU%20usage.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="VNA - CPU usage"><img src="/vcf91-vna-2/VNA%20-%20CPU%20usage_hu_1793fc4fad9c936.jpg" alt="VNA - CPU usage" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - CPU usage</div>
+<div class="image-gallery" id="gallery-d924245a"><a href="/vcf91-vna-2/Iperf3%20Results.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="Iperf3 Results"><img src="/vcf91-vna-2/Iperf3%20Results_hu_cfe707d83aee7827.jpg" alt="Iperf3 Results" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Iperf3 Results</div>
+                    </a><a href="/vcf91-vna-2/VNA%20-%20CPU%20usage.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="VNA - CPU usage"><img src="/vcf91-vna-2/VNA%20-%20CPU%20usage_hu_f5aee3caf129adb6.jpg" alt="VNA - CPU usage" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - CPU usage</div>
                     </a></div>
 <p>The tests were conducted using 128 parallel TCP streams in iPerf3 with a packet size of 1500 byte MTU. Each test VM was equipped with 4 vCPUs and 4 GB of RAM. As you can see in the screenshots, I achieved an impressive throughput of around 21.5 Gb/s with a VNA CPU core utilization of 90%. A small-form-factor VNA can use only one of its two vCPUs for the data path; the other CPU is responsible for the VNA itself.
 For my test results, it made no difference whether the test was unidirectional or bidirectional.
@@ -460,7 +460,7 @@ Spans can contain overlapping clusters; that is to say, a cluster can belong to 
 Here, you select the cluster, save it, and that&rsquo;s it.</p>
 
 
-<div class="image-gallery" id="gallery-a9fc1543"><a href="/vcf91-vna-2/Network%20Spans.jpg" class="gallery-item" data-lightbox-group="gallery-a9fc1543" data-title="Network Spans"><img src="/vcf91-vna-2/Network%20Spans_hu_186bf55d4644a4a9.jpg" alt="Network Spans" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Network Spans</div>
+<div class="image-gallery" id="gallery-a9fc1543"><a href="/vcf91-vna-2/Network%20Spans.jpg" class="gallery-item" data-lightbox-group="gallery-a9fc1543" data-title="Network Spans"><img src="/vcf91-vna-2/Network%20Spans_hu_25236ba8e5e418f9.jpg" alt="Network Spans" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Network Spans</div>
                     </a></div>
 
 
@@ -482,14 +482,14 @@ Here, you select the cluster, save it, and that&rsquo;s it.</p>
 <p>The solution here is to configure the span via the Desired State using the vCenter Client.</p>
 
 
-<div class="image-gallery" id="gallery-14a3ec81"><a href="/vcf91-vna-2/Span%20over%20Desired%20State.jpg" class="gallery-item" data-lightbox-group="gallery-14a3ec81" data-title="Span over Desired State"><img src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_67d75b85ad8c0a7c.jpg" alt="Span over Desired State" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Span over Desired State</div>
+<div class="image-gallery" id="gallery-14a3ec81"><a href="/vcf91-vna-2/Span%20over%20Desired%20State.jpg" class="gallery-item" data-lightbox-group="gallery-14a3ec81" data-title="Span over Desired State"><img src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_80b62733be3c6f5a.jpg" alt="Span over Desired State" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Span over Desired State</div>
                     </a></div>
 <p>To use Spans, simply create a new transit gateway and assign it to an existing Span. Alternatively, you can edit an existing one. However, if, for example, there are already VPCs active in a vSphere cluster that are not within the Span you want to assign, the operation will fail.</p>
 
 
-<div class="image-gallery" id="gallery-734281a7"><a href="/vcf91-vna-2/Transit%20Gateway%20Span.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Transit Gateway Span"><img src="/vcf91-vna-2/Transit%20Gateway%20Span_hu_4564c117407fcb24.jpg" alt="Transit Gateway Span" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway Span</div>
-                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M01.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M01"><img src="/vcf91-vna-2/Networks%20for%20Span%20M01_hu_dc7f6718b0b5308e.jpg" alt="Networks for Span M01" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Networks for Span M01</div>
-                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M02.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M02"><img src="/vcf91-vna-2/Networks%20for%20Span%20M02_hu_860de814ced8f59d.jpg" alt="Networks for Span M02" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Networks for Span M02</div>
+<div class="image-gallery" id="gallery-734281a7"><a href="/vcf91-vna-2/Transit%20Gateway%20Span.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Transit Gateway Span"><img src="/vcf91-vna-2/Transit%20Gateway%20Span_hu_746ebd05a0952ffb.jpg" alt="Transit Gateway Span" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway Span</div>
+                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M01.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M01"><img src="/vcf91-vna-2/Networks%20for%20Span%20M01_hu_272e12bf12e6cce9.jpg" alt="Networks for Span M01" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Networks for Span M01</div>
+                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M02.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M02"><img src="/vcf91-vna-2/Networks%20for%20Span%20M02_hu_344845b0a51c60e0.jpg" alt="Networks for Span M02" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Networks for Span M02</div>
                     </a></div>
 <p>As you can see in the screenshots, only the VPCs in the M02 span are visible on the M02 cluster, and only the VPCs assigned to the M01 span are visible on the M01 cluster.</p>
 
@@ -514,8 +514,8 @@ However, this isn’t a major issue; the initial passwords can be retrieved via 
 It’s important to use the API call (GET /v1/credentials). The easiest way to find the correct credentials is to specify resourceName as a parameter; this is the FQDN of the VNA appliance. With the initial password, you can easily set your desired password via VCF Operations and Password Management.</p>
 
 
-<div class="image-gallery" id="gallery-eb5da8ef"><a href="/vcf91-vna-2/VNA%20-%20Credentials.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="VNA - Credentials"><img src="/vcf91-vna-2/VNA%20-%20Credentials_hu_16c20015e8559bbb.jpg" alt="VNA - Credentials" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Credentials</div>
-                    </a><a href="/vcf91-vna-2/Inventory%20Sync.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="Inventory Sync"><img src="/vcf91-vna-2/Inventory%20Sync_hu_6ab03552f0badb7f.jpg" alt="Inventory Sync" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Inventory Sync</div>
+<div class="image-gallery" id="gallery-eb5da8ef"><a href="/vcf91-vna-2/VNA%20-%20Credentials.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="VNA - Credentials"><img src="/vcf91-vna-2/VNA%20-%20Credentials_hu_e92678ea594a78e7.jpg" alt="VNA - Credentials" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Credentials</div>
+                    </a><a href="/vcf91-vna-2/Inventory%20Sync.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="Inventory Sync"><img src="/vcf91-vna-2/Inventory%20Sync_hu_80188600f952d692.jpg" alt="Inventory Sync" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Inventory Sync</div>
                     </a></div>
 <p>In the future, password management will be removed from SDDC Manager and will be managed exclusively through VCF Operations. The current solution is therefore more of a temporary measure. This is also evident from the fact that the VNA is still listed as an “Edge” in the SDDC Manager UI.</p>
 
@@ -565,6 +565,13 @@ It’s important to use the API call (GET /v1/credentials). The easiest way to f
 
 		</article>
 		<div class="post-nav thin">
+			<a class="next-post" href="https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>VCF 9.1 - Platform Health Check Error</span>
+			</a>
 			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9.1-vna-vpc/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
