@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 <script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
   // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
   window.dataLayer = window.dataLayer || [];
@@ -16,7 +16,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="noindex, nofollow, noarchive"><link rel="author" href="/humans.txt">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -30,9 +30,9 @@
 	<meta itemprop="description" content="In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.">
 	<meta itemprop="datePublished" content="2026-06-04T21:25:25+02:00">
 	<meta itemprop="dateModified" content="2026-06-04T21:25:25+02:00">
-	<meta itemprop="wordCount" content="484">
-	<meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
-	<meta itemprop="keywords" content="Vcf9.1,NSX,Vpc,Vna,Vxlan"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/">
+	<meta itemprop="wordCount" content="486">
+	<meta itemprop="image" content="http://localhost:1313/images/preview.png">
+	<meta itemprop="keywords" content="Vcf9.1,Nsx,Vpc,Vna,Vxlan"><meta property="og:url" content="http://localhost:1313/posts/vcf9.1-dtgw-vxlan/">
 	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
 	<meta property="og:title" content="VCF 9.1 - DTGW & VNA: the route controller within me">
 	<meta property="og:description" content="In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.">
@@ -42,14 +42,14 @@
 		<meta property="article:published_time" content="2026-06-04T21:25:25+02:00">
 		<meta property="article:modified_time" content="2026-06-04T21:25:25+02:00">
 		<meta property="article:tag" content="Vcf9.1">
-		<meta property="article:tag" content="NSX">
+		<meta property="article:tag" content="Nsx">
 		<meta property="article:tag" content="Vpc">
 		<meta property="article:tag" content="Vna">
 		<meta property="article:tag" content="Vxlan">
-		<meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+		<meta property="og:image" content="http://localhost:1313/images/preview.png">
 
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta name="twitter:image" content="http://localhost:1313/images/preview.png">
 	<meta name="twitter:title" content="VCF 9.1 - DTGW & VNA: the route controller within me">
 	<meta name="twitter:description" content="In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.">
 
@@ -61,19 +61,19 @@
     "name": "VCF 9.1 - DTGW \u0026 VNA: the route controller within me",
     "description": "In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.",
     "keywords": ["vcf9.1", "nsx", "vpc", "vna", "vxlan"],
-    "articleBody": "Introduction Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you’ve brought enough coffee, because I’m afraid this might turn into another long journey down the rabbit hole.\nQuote\rThe Distributed VXLAN Connectivity Model integrates NSX with the physical EVPN-VXLAN network fabric, unifying virtual workloads, and physical endpoints into a single routing domain.\rBut what exactly can I do with it? Well, the big advantage is that I don’t need a stretched Layer 2 network in my data center, as is the case with the Distributed VLAN Connectivity Model (read here or here); I can use my BGP EVPN control plane, dynamic Type-5 prefix advertisements, and direct VXLAN connectivity between ESX TEPs and an external BGW. Of course, it must be said that where there is light, there is also shadow—namely, that my physical network is admittedly somewhat more complex than it needs to be for a distributed transit gateway with a Layer 2 connection. However, this isn’t something NSX can be blamed for; it’s simply part of the deal when you want to use VXLAN/EVPN in general. The actual setup in NSX is very simple.\nI won’t be covering the basics of VPC in this post. You can read about the VPC Basics here, here, or here.\nVxLAN Basics VxLAN stands for Virtual Extensible LAN. The basic concept is relatively simple: you take an existing IP network—known as the underlay—and build a logical network on top of it, known as the overlay. This will sound familiar to any NSX administrator—after all, NSX does more or less the same thing. But the differences are subtle. In short, VxLAN enables a Layer 2 network over a Layer 3 network. Each VXLAN segment has an identifier called VNI, which is 24-bit and allows to extend the VxLAN values to around 16 Million segments of VxLAN to work on.\nVxLAN vs Geneve Even though the two protocols are very similar, Geneve has a few advantages over VxLAN. For one thing, all fields in VxLAN have a fixed size; for another, VxLAN does not have a protocol identifier and therefore always assumes an Ethernet payload.\nParameter VXLAN GENEVE Developed by VMware, Arista Networks, and Cisco VMware, Microsoft, Red Hat, and Intel Protocol UDP UDP Port number 4789 6081 Header length 8 bytes 16 bytes Transport security, service chaining, in-band telemetry Not supported Supported RFC VXLAN is documented by the IETF in RFC 7348 RFC 8926 Protocol identifier No Yes Non-client payload indication No Yes Extensibility No. All fields in the VXLAN header have predefined values. Yes Term used for tunnel endpoints VTEP TEP ",
-    "wordCount" : "484",
+    "articleBody": "Introduction Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you’ve brought enough coffee, because I’m afraid this might turn into another long journey down the rabbit hole.\nQuote\rThe Distributed VXLAN Connectivity Model integrates NSX with the physical EVPN-VXLAN network fabric, unifying virtual workloads, and physical endpoints into a single routing domain.\rBut what exactly can I do with it? Well, the big advantage is that I don’t need a stretched Layer 2 network in my data center, as is the case with the Distributed VLAN Connectivity Model (read here or here); I can use my BGP EVPN control plane, dynamic Type-5 prefix advertisements, and direct VXLAN connectivity between ESX TEPs and an external Border Gateway (BGW). Of course, it must be said that where there is light, there is also shadow—namely, that my physical network is admittedly somewhat more complex than it needs to be for a distributed transit gateway with a Layer 2 connection. However, this isn’t something NSX can be blamed for; it’s simply part of the deal when you want to use VXLAN/EVPN in general. The actual setup in NSX is very simple.\nI won’t be covering the basics of VPC in this post. You can read about the VPC Basics here, here, or here.\nVXLAN Basics VXLAN stands for Virtual Extensible LAN. The basic concept is relatively simple: you take an existing IP network—known as the underlay—and build a logical network on top of it, known as the overlay. This will sound familiar to any NSX administrator—after all, NSX does more or less the same thing. But the differences are subtle. In short, VXLAN enables a Layer 2 network over a Layer 3 network. Each VXLAN segment has an identifier called VNI, which is 24-bit and allows to extend the VXLAN values to around 16 Million segments of VXLAN to work on.\nVXLAN vs Geneve Even though the two protocols are very similar, Geneve has a few advantages over VXLAN. For one thing, all fields in VXLAN have a fixed size; for another, VXLAN does not have a protocol identifier and therefore always assumes an Ethernet payload.\nParameter VXLAN GENEVE Developed by VMware, Arista Networks, and Cisco VMware, Microsoft, Red Hat, and Intel Protocol UDP UDP Port number 4789 6081 Header length 8 bytes 16 bytes Transport security, service chaining, in-band telemetry Not supported Supported RFC VXLAN is documented by the IETF in RFC 7348 RFC 8926 Protocol identifier No Yes Non-client payload indication No Yes Extensibility No. All fields in the VXLAN header have predefined values. Yes Term used for tunnel endpoints VTEP TEP ",
+    "wordCount" : "486",
     "inLanguage": "en",
-    "image":"https://sdn-warrior.org/images/net2.JPG","datePublished": "2026-06-04T21:25:25+02:00",
+    "image":"http://localhost:1313/images/net2.JPG","datePublished": "2026-06-04T21:25:25+02:00",
     "dateModified": "2026-06-04T21:25:25+02:00",
     "author":{
         "@type": "Person",
         "name": "SDN-Warrior",
-        "url": "https://sdn-warrior.org/about/"
+        "url": "http://localhost:1313/about/"
         },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/"
+      "@id": "http://localhost:1313/posts/vcf9.1-dtgw-vxlan/"
     },
     "publisher": {
       "@type": "Organization",
@@ -81,21 +81,21 @@
       "description": "",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://sdn-warrior.org/favicon.ico"
+        "url": "http://localhost:1313/favicon.ico"
       }
     }
 }
 </script><title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.0029d817201f3466aeb56b2b509e4d34a3fc2155c7a943bca1d905023e4678c1.css" integrity="sha256-ACnYFyAfNGautWsrUJ5NNKP8IVXHqUO8odkFAj5GeME=" crossorigin="anonymous">
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:1313/css/style.min.0029d817201f3466aeb56b2b509e4d34a3fc2155c7a943bca1d905023e4678c1.css" integrity="sha256-ACnYFyAfNGautWsrUJ5NNKP8IVXHqUO8odkFAj5GeME=" crossorigin="anonymous">
 	<style>.bg-img {background-image: url('/images/net2.JPG');}</style></head>
 <body id="page">
 <header id="site-header">
 	<div class="hdr-wrapper section-inner">
 		<div class="hdr-left">
 			<div class="site-branding">
-				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				<a href="http://localhost:1313/">SDN-Warrior | Daniel Krieger</a>
 			</div>
-			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a></nav>
+			<nav class="site-nav hide-in-mobile"><a href="http://localhost:1313/posts/">Posts</a><a href="http://localhost:1313/lab-bom/">Lab BOM</a><a href="http://localhost:1313/links/">Links</a><a href="http://localhost:1313/about/">About Me</a></nav>
 		</div>
 
 		<div class="hdr-right hdr-icons">
@@ -125,26 +125,26 @@
     
     <ul>
         <li>
-            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-dtgw-vxlan%2f&amp;text=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-dtgw-vxlan%2f&amp;text=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
 </svg></a>
         </li>
         <li>
-            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-dtgw-vxlan%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-dtgw-vxlan%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
 </svg></a>
         </li>
         <li>
-            <a href="mailto:?subject=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-dtgw-vxlan%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="mailto:?subject=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me&amp;body=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-dtgw-vxlan%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
    <polyline points="22,6 12,13 2,6"></polyline>
 </svg></a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-dtgw-vxlan%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me&amp;summary=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me%2c%20by%20SDN-Warrior%0a%0aIn%20this%20article%2c%20I%e2%80%99ll%20take%20another%20look%20at%20VPCs%20and%20the%20VNA.%20This%20time%2c%20the%20VNA%20acts%20as%20the%20route%20controller%2c%20and%20the%20VPC%20is%20connected%20via%20VXLAN%2fEVPN%20using%20Type%205%20routes.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fvcf9.1-dtgw-vxlan%2f&amp;source=http%3a%2f%2flocalhost%3a1313%2f&amp;title=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me&amp;summary=VCF%209.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me%2c%20by%20SDN-Warrior%0a%0aIn%20this%20article%2c%20I%e2%80%99ll%20take%20another%20look%20at%20VPCs%20and%20the%20VNA.%20This%20time%2c%20the%20VNA%20acts%20as%20the%20route%20controller%2c%20and%20the%20VPC%20is%20connected%20via%20VXLAN%2fEVPN%20using%20Type%205%20routes.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
    <rect x="2" y="9" width="4" height="12"></rect>
@@ -152,7 +152,7 @@
 </svg></a>
         </li>
         <li>
-            <a href="#" onclick="linkShare(&#34;VCF 9.1 - DTGW \u0026 VNA: the route controller within me&#34;,&#34;https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/&#34;,&#34;VCF 9.1 - DTGW \u0026 VNA: the route controller within me, by SDN-Warrior\n\nIn this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <a href="#" onclick="linkShare(&#34;VCF 9.1 - DTGW \u0026 VNA: the route controller within me&#34;,&#34;http://localhost:1313/posts/vcf9.1-dtgw-vxlan/&#34;,&#34;VCF 9.1 - DTGW \u0026 VNA: the route controller within me, by SDN-Warrior\n\nIn this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -171,10 +171,10 @@
 
 <div id="mobile-menu" class="animated fast">
 	<ul>
-		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		<li><a href="http://localhost:1313/posts/">Posts</a></li>
+		<li><a href="http://localhost:1313/lab-bom/">Lab BOM</a></li>
+		<li><a href="http://localhost:1313/links/">Links</a></li>
+		<li><a href="http://localhost:1313/about/">About Me</a></li>
 	</ul>
 </div>
 
@@ -212,7 +212,7 @@
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
       <line x1="7" y1="7" x2="7" y2="7"></line>
-   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vpc">vpc</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vna">vna</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vxlan">vxlan</a></span></p>
+   </svg><span class="tag"><a href="http://localhost:1313/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="http://localhost:1313/tags/nsx">nsx</a></span><span class="tag"><a href="http://localhost:1313/tags/vpc">vpc</a></span><span class="tag"><a href="http://localhost:1313/tags/vna">vna</a></span><span class="tag"><a href="http://localhost:1313/tags/vxlan">vxlan</a></span></p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -220,7 +220,7 @@
       <line x1="16" y1="13" x2="8" y2="13"></line>
       <line x1="16" y1="17" x2="8" y2="17"></line>
       <polyline points="10 9 9 9 8 9"></polyline>
-   </svg>484 Words
+   </svg>486 Words
      // ReadTime
     
     
@@ -253,15 +253,15 @@
 <h3 id="but-what-exactly-can-i-do-with-it">But what exactly can I do with it?<a href="#but-what-exactly-can-i-do-with-it" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Well, the big advantage is that I don’t need a stretched Layer 2 network in my data center, as is the case with the Distributed VLAN Connectivity Model (read 
 <a href="https://sdn-warrior.org/posts/vcf9.1-vna-vpc/" target="_blank" rel="noopener">here</a> or 
-<a href="https://sdn-warrior.org/posts/vcf9.1-vna-part2/" target="_blank" rel="noopener">here</a>); I can use my BGP EVPN control plane, dynamic Type-5 prefix advertisements, and direct VXLAN connectivity between ESX TEPs and an external BGW. Of course, it must be said that where there is light, there is also shadow—namely, that my physical network is admittedly somewhat more complex than it needs to be for a distributed transit gateway with a Layer 2 connection. However, this isn’t something NSX can be blamed for; it’s simply part of the deal when you want to use VXLAN/EVPN in general. The actual setup in NSX is very simple.</p>
+<a href="https://sdn-warrior.org/posts/vcf9.1-vna-part2/" target="_blank" rel="noopener">here</a>); I can use my BGP EVPN control plane, dynamic Type-5 prefix advertisements, and direct VXLAN connectivity between ESX TEPs and an external Border Gateway (BGW). Of course, it must be said that where there is light, there is also shadow—namely, that my physical network is admittedly somewhat more complex than it needs to be for a distributed transit gateway with a Layer 2 connection. However, this isn’t something NSX can be blamed for; it’s simply part of the deal when you want to use VXLAN/EVPN in general. The actual setup in NSX is very simple.</p>
 <p>I won&rsquo;t be covering the basics of VPC in this post. You can read about the VPC Basics 
 <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/" target="_blank" rel="noopener">here</a>, 
 <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/" target="_blank" rel="noopener">here</a>, or 
 <a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/" target="_blank" rel="noopener">here</a>.</p>
-<h2 id="vxlan-basics">VxLAN Basics<a href="#vxlan-basics" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-<p>VxLAN stands for Virtual Extensible LAN. The basic concept is relatively simple: you take an existing IP network—known as the underlay—and build a logical network on top of it, known as the overlay. This will sound familiar to any NSX administrator—after all, NSX does more or less the same thing. But the differences are subtle. In short, VxLAN enables a Layer 2 network over a Layer 3 network. Each VXLAN segment has an identifier called VNI, which is 24-bit and allows to extend the VxLAN values to around 16 Million segments of VxLAN to work on.</p>
-<h3 id="vxlan-vs-geneve">VxLAN vs Geneve<a href="#vxlan-vs-geneve" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-<p>Even though the two protocols are very similar, Geneve has a few advantages over VxLAN. For one thing, all fields in VxLAN have a fixed size; for another, VxLAN does not have a protocol identifier and therefore always assumes an Ethernet payload.</p>
+<h2 id="vxlan-basics">VXLAN Basics<a href="#vxlan-basics" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>VXLAN stands for Virtual Extensible LAN. The basic concept is relatively simple: you take an existing IP network—known as the underlay—and build a logical network on top of it, known as the overlay. This will sound familiar to any NSX administrator—after all, NSX does more or less the same thing. But the differences are subtle. In short, VXLAN enables a Layer 2 network over a Layer 3 network. Each VXLAN segment has an identifier called VNI, which is 24-bit and allows to extend the VXLAN values to around 16 Million segments of VXLAN to work on.</p>
+<h3 id="vxlan-vs-geneve">VXLAN vs Geneve<a href="#vxlan-vs-geneve" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Even though the two protocols are very similar, Geneve has a few advantages over VXLAN. For one thing, all fields in VXLAN have a fixed size; for another, VXLAN does not have a protocol identifier and therefore always assumes an Ethernet payload.</p>
 <div class="table-wrapper">
   <table>
     <thead>
@@ -355,7 +355,14 @@
 
 		</article>
 		<div class="post-nav thin">
-			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9.1-vna-part2/">
+			<a class="next-post" href="http://localhost:1313/posts/vcf9.1-platform-health-check-error/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>VCF 9.1 - Platform Health Check Error</span>
+			</a>
+			<a class="prev-post" href="http://localhost:1313/posts/vcf9.1-vna-part2/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -368,9 +375,9 @@
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
-		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&copy; 2026 <a href="http://localhost:1313/">SDN-Warrior</a>
 		&#183; COPYRIGHT Daniel Krieger
-		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		&#183; <a href="http://localhost:1313/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
    <path d="M4 11a9 9 0 0 1 9 9"></path>
    <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -382,7 +389,7 @@
 <script defer src="/klaro/klaro.js"></script>
 <link rel="stylesheet" href="/klaro/klaro.css?v=1">
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="http://localhost:1313/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:1313/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

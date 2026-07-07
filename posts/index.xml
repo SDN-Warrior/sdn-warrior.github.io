@@ -18,7 +18,7 @@
 		
 
 		
-		<lastBuildDate>Thu, 04 Jun 2026 21:25:25 +0200</lastBuildDate>
+		<lastBuildDate>Sun, 14 Jun 2026 12:00:00 +0200</lastBuildDate>
 		
 
 		
@@ -27,106 +27,221 @@
 
 		
 		<item>
-			<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>
-			<pubDate>Thu, 04 Jun 2026 21:25:25 +0200</pubDate>
+			<title>VCF 9.1 - Platform Health Check Error</title>
+			<link>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</link>
+			<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</guid>
+			<guid>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</guid>
 
 			
-			<description><![CDATA[In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.]]></description>
+			<description><![CDATA[During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]]]></description>
 			
 
 			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
-<p>Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you&rsquo;ve brought enough coffee, because I&rsquo;m afraid this might turn into another long journey down the rabbit hole.</p>
+<p>I wanted to deploy another component in my VCF 9.1 cluster and ran into a cryptic error message that I couldn&rsquo;t quite make sense of at first. Some of you might be familiar with this error message; in any case, I&rsquo;ve seen posts on LinkedIn from people who seem to be having the same problem. I&rsquo;m referring to the following error message.</p>
 
 
-<aside class="admonition quote" data-admonition-type="quote">
+<aside class="admonition bug" data-admonition-type="bug">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon">
+      <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
    </svg></div>
-        <b>Quote</b>
+        <b>Error Message</b>
     </div>
-    <div class="admonition-content">The Distributed VXLAN Connectivity Model integrates NSX with the physical EVPN-VXLAN network fabric, unifying virtual workloads, and physical endpoints into a single routing domain.</div>
+    <div class="admonition-content">During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
+[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]</div>
 </aside>
-<h3 id="but-what-exactly-can-i-do-with-it">But what exactly can I do with it?</h3>
-<p>Well, the big advantage is that I don’t need a stretched Layer 2 network in my data center, as is the case with the Distributed VLAN Connectivity Model (read 
-<a href="https://sdn-warrior.org/posts/vcf9.1-vna-vpc/" target="_blank" rel="noopener">here</a> or 
-<a href="https://sdn-warrior.org/posts/vcf9.1-vna-part2/" target="_blank" rel="noopener">here</a>); I can use my BGP EVPN control plane, dynamic Type-5 prefix advertisements, and direct VXLAN connectivity between ESX TEPs and an external BGW. Of course, it must be said that where there is light, there is also shadow—namely, that my physical network is admittedly somewhat more complex than it needs to be for a distributed transit gateway with a Layer 2 connection. However, this isn’t something NSX can be blamed for; it’s simply part of the deal when you want to use VXLAN/EVPN in general. The actual setup in NSX is very simple.</p>
-<p>I won&rsquo;t be covering the basics of VPC in this post. You can read about the VPC Basics 
-<a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc/" target="_blank" rel="noopener">here</a>, 
-<a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/" target="_blank" rel="noopener">here</a>, or 
-<a href="https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/" target="_blank" rel="noopener">here</a>.</p>
-<h2 id="vxlan-basics">VxLAN Basics</h2>
-<p>VxLAN stands for Virtual Extensible LAN. The basic concept is relatively simple: you take an existing IP network—known as the underlay—and build a logical network on top of it, known as the overlay. This will sound familiar to any NSX administrator—after all, NSX does more or less the same thing. But the differences are subtle. In short, VxLAN enables a Layer 2 network over a Layer 3 network. Each VXLAN segment has an identifier called VNI, which is 24-bit and allows to extend the VxLAN values to around 16 Million segments of VxLAN to work on.</p>
-<h3 id="vxlan-vs-geneve">VxLAN vs Geneve</h3>
-<p>Even though the two protocols are very similar, Geneve has a few advantages over VxLAN. For one thing, all fields in VxLAN have a fixed size; for another, VxLAN does not have a protocol identifier and therefore always assumes an Ethernet payload.</p>
-<table>
-	<thead>
-			<tr>
-					<th>Parameter</th>
-					<th>VXLAN</th>
-					<th>GENEVE</th>
-			</tr>
-	</thead>
-	<tbody>
-			<tr>
-					<td>Developed by</td>
-					<td><!-- raw HTML omitted -->VMware, Arista Networks, and Cisco<!-- raw HTML omitted --></td>
-					<td><!-- raw HTML omitted -->VMware, Microsoft, Red Hat, and Intel<!-- raw HTML omitted --></td>
-			</tr>
-			<tr>
-					<td>Protocol</td>
-					<td>UDP</td>
-					<td>UDP</td>
-			</tr>
-			<tr>
-					<td>Port number</td>
-					<td>4789</td>
-					<td>6081</td>
-			</tr>
-			<tr>
-					<td>Header length</td>
-					<td>8 bytes</td>
-					<td>16 bytes</td>
-			</tr>
-			<tr>
-					<td><!-- raw HTML omitted -->Transport security, service chaining, in-band telemetry <!-- raw HTML omitted --></td>
-					<td>Not supported</td>
-					<td>Supported</td>
-			</tr>
-			<tr>
-					<td>RFC</td>
-					<td><!-- raw HTML omitted -->VXLAN is documented by the IETF in RFC 7348<!-- raw HTML omitted --></td>
-					<td>RFC 8926</td>
-			</tr>
-			<tr>
-					<td>Protocol identifier</td>
-					<td>No</td>
-					<td>Yes</td>
-			</tr>
-			<tr>
-					<td>Non-client payload indication</td>
-					<td>No</td>
-					<td>Yes</td>
-			</tr>
-			<tr>
-					<td>Extensibility</td>
-					<td><!-- raw HTML omitted -->No. All fields in the VXLAN header have predefined values.<!-- raw HTML omitted --></td>
-					<td>Yes</td>
-			</tr>
-			<tr>
-					<td>Term used for tunnel endpoints</td>
-					<td>VTEP</td>
-					<td>TEP</td>
-			</tr>
-	</tbody>
-</table>
+<p>So I started looking into it, but I couldn&rsquo;t find any relevant errors in VCF Operations. Everything looked fine at first glance, but no matter how many times I tried, I couldn&rsquo;t deploy any more components. Since the VCF Service Cluster is essentially just a Kubernetes cluster, it was time to take a closer look.
+Let&rsquo;s get started.</p>
+
+
+<aside class="admonition note" data-admonition-type="note">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">Unfortunately, I forgot to take screenshots while troubleshooting, so I have to recreate some of the steps. It wasn&rsquo;t until the end of the troubleshooting process that it occurred to me this might actually make for a really interesting blog post. So please forgive me if there aren&rsquo;t as many screenshots this time around.</div>
+</aside>
+<h2 id="accessing-the-vcf-service-cluster">Accessing the VCF Service Cluster</h2>
+<p>This was my first hurdle: how do I even access the service cluster? Well, that&rsquo;s relatively simple. I connect via SSH to the control node of the service cluster. You can find the IP address of the control plane under <em><strong>Build -&gt; Lifecycle -&gt; VCF Managment -&gt; Components -&gt; VCF Services Runtime</strong></em> in VCF Operations, or you can retrieve the IP from vCenter. Of the service runtime VMs, the control plane VMs are the smallest. In a simple deployment, there is only one control plane VM.</p>
+
+
+<div class="image-gallery" id="gallery-cb1a6c4e"><a href="/vcf91-servicecluster-bug/Control%20Plane%20IP.jpg" class="gallery-item" data-lightbox-group="gallery-cb1a6c4e" data-title="Control Plane IP"><img src="/vcf91-servicecluster-bug/Control%20Plane%20IP_hu_3f28c89a138600a7.jpg" alt="Control Plane IP" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Control Plane IP</div>
+                    </a><a href="/vcf91-servicecluster-bug/SSH%20Session.jpg" class="gallery-item" data-lightbox-group="gallery-cb1a6c4e" data-title="SSH Session"><img src="/vcf91-servicecluster-bug/SSH%20Session_hu_730aaff87ba1d423.jpg" alt="SSH Session" width="350" height="350" loading="lazy"><div class="gallery-item-caption">SSH Session</div>
+                    </a></div>
+<p>You can retrieve the password from the VCF Installer, as it is initially generated randomly. If you haven&rsquo;t saved the passwords, you can still retrieve them via the API as usual. The user is the vmware-system-user, and you can use this account to log in to the control plane node. To work properly, you need the correct kubeconfig, because none is loaded at login, and without the correct kubeconfig, kubeclt will try to connect to localhost:8080 and fail. The correct kubeconfig is located at <em><strong>/etc/kubernetes/admin.conf</strong></em>, and to make things easier for myself, I set an alias.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">alias k=&#39;sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl&#39;
+</span></span></code></pre></div>
+
+<aside class="admonition tip" data-admonition-type="tip">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+   </svg></div>
+        <b>Tip</b>
+    </div>
+    <div class="admonition-content">The alias is only valid for the current session and must be set each time. The first time you run a <code>kubectl</code> command, you will be prompted for the service user&rsquo;s password.</div>
+</aside>
+<p>To test the alias, you can run a simple <code>cluster-info</code> command; the result should look something like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vmware-system-user@vcf09-runtime-g2zpc [ ~ ]$ k cluster-info
+</span></span><span class="line"><span class="cl">[sudo] password for vmware-system-user: 
+</span></span><span class="line"><span class="cl">Kubernetes control plane is running at https://10.28.13.52:6443
+</span></span><span class="line"><span class="cl">CoreDNS is running at https://10.28.13.52:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</span></span></code></pre></div><p>Okay, now that we&rsquo;ve successfully logged in, we can continue investigating the cause.</p>
+<h2 id="wheres-the-poop-robin">Where&rsquo;s the Poop, Robin?</h2>
+<p>I hope you catch the reference to the great show <em>How I Met Your Mother.</em> Anyway. The error message indicated that there seems to be an issue with Fluentd, so let&rsquo;s take a closer look at it. There is a simple health check you can run:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">curl -k https://&lt;PRIMARY_VIP&gt;:30006/status | jq
+</span></span></code></pre></div><p>You get a simple list in JSON format that lists all services and their status. If all services are running, it looks something like this (I have edited this excerpt.):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;checkset-vodap-ccs-http&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ok&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastError&#34;</span><span class="p">:</span> <span class="s2">&#34;failed to execute \&#34;GET\&#34; request: Get \&#34;https://vcf-obs-collector-controller-service.vodap.svc.cluster.local:8443/health/readiness\&#34;: dial tcp 198.18.129.65:8443: connect: connection refused&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-06-14T12:15:24Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;duration&#34;</span><span class="p">:</span> <span class="s2">&#34;14.66674ms&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;contiguousFailures&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastTransitionTime&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-06-14T11:53:24Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;labels&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clustername&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf09-runtime&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;component&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf-obs-data-platform&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;checkset-vodap-ccs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;success&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;http&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;checkset-vodap-dqs-http&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ok&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-06-14T12:15:25Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;duration&#34;</span><span class="p">:</span> <span class="s2">&#34;19.182295ms&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;contiguousFailures&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastTransitionTime&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;labels&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clustername&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf09-runtime&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;component&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf-obs-data-platform&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;checkset-vodap-dqs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;success&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;http&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>There’s some interesting information to be found here. For one thing, you can see the current status, which can be “successful” or “error,” for example, and you can tell whether the service is working properly. The “Last Error” is also interesting. As the name suggests, this shows the last error the service encountered. In my example, the services are working properly.</p>
+<p>And here we have our problem child—and the reason why no further components can be deployed.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span> 
+</span></span><span class="line"><span class="cl"> <span class="nt">&#34;platform-statefulsets-core&#34;</span><span class="p">:</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ok&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastError&#34;</span><span class="p">:</span> <span class="s2">&#34;1 of 10 resources are not ok: logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-05-20T17:25:56Z&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;duration&#34;</span><span class="p">:</span> <span class="s2">&#34;6.461603ms&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;contiguousFailures&#34;</span><span class="p">:</span> <span class="mi">547</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastTransitionTime&#34;</span><span class="p">:</span> <span class="s2">&#34;2026-05-20T12:34:44Z&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;labels&#34;</span><span class="p">:</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clustername&#34;</span><span class="p">:</span> <span class="s2">&#34;vcf09-runtime&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;component&#34;</span><span class="p">:</span> <span class="s2">&#34;vsp&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;platform-statefulsets&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;error&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;core&#34;</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> 
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>  
+</span></span></code></pre></div><p>Next, I&rsquo;ll check to see if all the containers are ready. If the error message is correct, something in Fluentd isn&rsquo;t in the “ready” state.T o do this, I run two commands:</p>
+<pre tabindex="0"><code>k get sts -A | grep logging-operator-fluentd
+k get pods -A -o wide | grep logging-operator-fluentd
+</code></pre><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vmware-system-user@vcf09-runtime-g2zpc $ k get sts -A | grep logging-operator-fluentd 
+</span></span><span class="line"><span class="cl">vmsp-platform logging-operator-fluentd 0/1 7d20h 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vmware-system-user@vcf09-runtime-g2zpc $ k get pods -A -o wide | grep logging-operator-fluentd 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vmsp-platform logging-operator-fluentd-0 1/2 Running 221 (5m15s ago) 6d20h 198.18.2.38 vcf09-runtime-wfcps &lt;none&gt; &lt;none&gt; 
+</span></span><span class="line"><span class="cl">vmsp-platform logging-operator-fluentd-configcheck-97bae691 0/1 Completed 0 6d20h &lt;none&gt; vcf09-runtime-wfcps &lt;none&gt; &lt;none&gt;
+</span></span></code></pre></div><p>As you can see in the output, only 1 of the 2 containers is running. The container named <code>logging-operator-fluentd-0</code> has had over 221 restarts. This means it is stuck in a crash loop. Next, I&rsquo;ll define a variable for the namespace <code>NS=vmsp-platform</code> so I don&rsquo;t have to type it out every time. I&rsquo;ll do the same for the actual pod <code>POD=logging-operator-fluentd-0</code>. I use <code>k -n $NS describe pod $POD</code> to get the description of the actual pod.</p>
+<p>This is where it gets interesting. Fluentd checks two things: first, whether less than 80% of the storage space is used, and second, whether there are fewer than 10,000 files. If either of these two criteria is met, the pod will not start up properly. Excerpt from the issue of describe:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">FREESPACE_THRESHOLD=80
+</span></span><span class="line"><span class="cl">FREESPACE_CURRENT=$(df -h $BUFFER_PATH | grep / | awk &#39;{ print $5}&#39; | sed &#39;s/%//g&#39;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">MAX_FILE_NUMBER=10000
+</span></span><span class="line"><span class="cl">FILE_NUMBER_CURRENT=$(find $BUFFER_PATH -type f -name *.buffer | wc -l)
+</span></span></code></pre></div><p>Next, I used a small script to identify exactly these two potential issues.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">NS=vmsp-platform
+</span></span><span class="line"><span class="cl">POD=logging-operator-fluentd-0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">k -n $NS exec -it $POD -c fluentd -- bash -lc &#39;
+</span></span><span class="line"><span class="cl">echo &#34;=== /buffers filesystem ===&#34;
+</span></span><span class="line"><span class="cl">df -h /buffers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">echo
+</span></span><span class="line"><span class="cl">echo &#34;=== buffer file count ===&#34;
+</span></span><span class="line"><span class="cl">find /buffers -type f -name &#34;*.buffer&#34; | wc -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">echo
+</span></span><span class="line"><span class="cl">echo &#34;=== buffer directory size ===&#34;
+</span></span><span class="line"><span class="cl">du -sh /buffers&#39;
+</span></span></code></pre></div><p>This output clearly shows that the problem for me wasn&rsquo;t the number of files, but simply the amount of memory being used. There are simply over 8 GB of files in the /buffers directory.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">=== /buffers filesystem ===
+</span></span><span class="line"><span class="cl">Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span class="line"><span class="cl">/dev/sde         10G  8.3G  1.7G  84% /buffers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">=== buffer file count ===
+</span></span><span class="line"><span class="cl">18
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">=== buffer directory size ===
+</span></span><span class="line"><span class="cl">8.2G	/buffers
+</span></span></code></pre></div><p>With this simple Bash command, I can see which directory contains the files that are taking up my disk space.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">k -n <span class="nv">$NS</span> <span class="nb">exec</span> -it <span class="nv">$POD</span> -c fluentd -- bash -lc <span class="s1">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">echo &#34;=== top level usage ===&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">du -h --max-depth=2 /buffers 2&gt;/dev/null&#39;</span> 
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">=== top level usage ===
+</span></span><span class="line"><span class="cl">8.36G	/buffers/backup/worker0
+</span></span><span class="line"><span class="cl">8.36G	/buffers/backup
+</span></span><span class="line"><span class="cl">8.36G	/buffers
+</span></span></code></pre></div><p>We&rsquo;ve identified the problem, but not the cause. So I&rsquo;m checking the logs to see if I can find anything out of the ordinary.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">k -n vmsp-platform logs logging-operator-fluentd-0 -c fluentd --tail=300
+</span></span></code></pre></div><p>And while going through the logs, I noticed that the URL for my Operations for Logs kept popping up: <code>vcf09-li.lab.vcf:9543/api/v2/events</code>, which made me suspicious. It turns out that my Operations for Logs is currently unavailable because I had stopped it via the Operations UI before the last VCF shutdown and simply forgot to restart it. Since the service was properly stopped via Operations, it naturally doesn’t appear in the list of services with issues. That was a classic Layer 8 problem. Since Fluentd couldn&rsquo;t get rid of its logs, they were moved to the backup directory, and so, slowly but surely, the storage space filled up.</p>
+<h2 id="lab-fix">Lab fix</h2>
+<p>So my straightforward solution was to launch Operations for Logs and simply delete the Fluentd logs from the backup directory. I don&rsquo;t know if Fluentd would have recovered on its own, but I just didn&rsquo;t want to wait.</p>
+
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Please note: I&rsquo;m currently in a lab environment, so I&rsquo;ve opted for a simple and practical solution. Don&rsquo;t do this in production!</div>
+</aside>
+<p>You can easily delete the logs using this bash command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">k -n <span class="nv">$NS</span> <span class="nb">exec</span> -it <span class="nv">$POD</span> -c fluentd -- bash -lc <span class="s1">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">find /buffers/backup -type f -delete
+</span></span></span><span class="line"><span class="cl"><span class="s1">df -h /buffers
+</span></span></span><span class="line"><span class="cl"><span class="s1">du -sh /buffers/backup
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;</span>
+</span></span></code></pre></div><p>After deleting the logs, I simply deleted the pod and redeployed it. After that, the pod started up without any issues, and I was able to deploy my VCF component without any errors.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">k delete pod -n $NS $POD
+</span></span><span class="line"><span class="cl">k -n $NS rollout status sts/logging-operator-fluentd --timeout=10m
+</span></span></code></pre></div><h2 id="summary">Summary</h2>
+<p>The whole troubleshooting process dragged on for several hours, and of course I went down the wrong path a few times. I’m no Kubernetes expert either, and if this were a production system, I would definitely have brought in Broadcom support. So take this solution with a grain of salt and think before you delete anything. It worked perfectly for me. I hope this helps someone out there.</p>
 ]]></content:encoded>
 		</item>
 		
@@ -7999,7 +8114,7 @@ To avoid writing a lengthy explanation, I will present the results in table form
 					<td>blue-transit</td>
 					<td>red-public</td>
 					<td>Yes</td>
-					<td>Yes</td>
+					<td>No</td>
 					<td>No</td>
 			</tr>
 			<tr>
@@ -8030,7 +8145,7 @@ To avoid writing a lengthy explanation, I will present the results in table form
 					<td>blue-public</td>
 					<td>Internet</td>
 					<td>Yes</td>
-					<td>Yes</td>
+					<td>No</td>
 					<td>No</td>
 			</tr>
 			<tr>
@@ -8061,9 +8176,9 @@ To avoid writing a lengthy explanation, I will present the results in table form
 					<td>5</td>
 					<td>blue-public</td>
 					<td>red-transit</td>
+					<td>Yes</td>
 					<td>No</td>
-					<td>-</td>
-					<td>-</td>
+					<td>No</td>
 			</tr>
 			<tr>
 					<td>6</td>

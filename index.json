@@ -1,9 +1,9 @@
 [{
-    "title": "VCF 9.1 - DTGW \u0026 VNA: the route controller within me",
-    "url": "/posts/vcf9.1-dtgw-vxlan/",
-    "date": "2026-06-04",
-    "description": "In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.",
-    "tags": ["vcf9.1","nsx","vpc","vna","vxlan"]
+    "title": "VCF 9.1 - Platform Health Check Error",
+    "url": "/posts/vcf9.1-platform-health-check-error/",
+    "date": "2026-06-14",
+    "description": "During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error\n[platform-statefulsets-core : 1 of 10 resources are not ok:logging-operator-fluentd: wrong resource state: InProgress - Ready: 0/1;][VCFMS-HEALTH-002]",
+    "tags": ["vcf9.1","servicecluster","kubernetes"]
   },{
     "title": "VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture",
     "url": "/posts/vcf9.1-vna-part2/",
