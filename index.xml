@@ -12,16 +12,9 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Mon, 06 Jul 2026 21:25:25 +0200</lastBuildDate>
+			<lastBuildDate>Sun, 14 Jun 2026 12:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
-			<item>
-				<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
-				<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>
-				<pubDate>Mon, 06 Jul 2026 21:25:25 +0200</pubDate>
-				<guid>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</guid>
-				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you&amp;rsquo;ve brought enough coffee, because I&amp;rsquo;m afraid this might turn into another long journey down the rabbit hole.&lt;/p&gt;</description>
-			</item>
 			<item>
 				<title>VCF 9.1 - Platform Health Check Error</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</link>
@@ -86,20 +79,6 @@
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;IPv6 has been around as a standard since 1998—so it feels like forever. I was 16 years old at the time. Since then, we&amp;rsquo;ve been hearing that IPv4 addresses are running out and IPv6 is the solution. And although IPv6 is now 25 years old (do you feel as old as I do now?), it is still far from being standard. To be honest, in the last 25 years, I&amp;rsquo;ve had exactly one customer who uses IPv6 in their data center, and that&amp;rsquo;s only as a dual stack.&lt;/p&gt;</description>
 			</item>
 			<item>
-				<title>2026</title>
-				<link>https://sdn-warrior.org/years/2026/</link>
-				<pubDate>Mon, 16 Feb 2026 01:17:20 +0100</pubDate>
-				<guid>https://sdn-warrior.org/years/2026/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>2025</title>
-				<link>https://sdn-warrior.org/years/2025/</link>
-				<pubDate>Mon, 16 Feb 2026 01:17:17 +0100</pubDate>
-				<guid>https://sdn-warrior.org/years/2025/</guid>
-				<description></description>
-			</item>
-			<item>
 				<title>Nutanix - Get started with the CE Edition</title>
 				<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
 				<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
@@ -154,6 +133,27 @@
 				<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Tales from the Lab – Lab setup</title>
+				<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
+				<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have written a lot about the actual lab setup in the past, but it was always about the hardware and not how I manage my labs or, more recently, how I have built up my vcf fleet.&#xA;I want to change that here now, as I have received an increasing number of requests for more information.&lt;/p&gt;&#xA;&lt;p&gt;So let&amp;rsquo;s jump right in. First things first, let&amp;rsquo;s take a look at the physical lab infrastructure. That&amp;rsquo;s my basis for everything else.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
+				<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+				<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VMware Explore 2025</title>
+				<link>https://sdn-warrior.org/posts/explore-2025/</link>
+				<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
+				<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+				<description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &#xA;&lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>
