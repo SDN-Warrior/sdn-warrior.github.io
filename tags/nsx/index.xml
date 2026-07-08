@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>NSX on SDN-Warrior | Daniel Krieger</title>
+		<title>Nsx on SDN-Warrior | Daniel Krieger</title>
 		<link>https://sdn-warrior.org/tags/nsx/</link>
-		<description>Recent content in NSX on SDN-Warrior | Daniel Krieger</description>
+		<description>Recent content in Nsx on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo</generator>
 		<language>en-US</language>
 		
@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Thu, 21 May 2026 22:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Mon, 06 Jul 2026 21:25:25 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>
+				<pubDate>Mon, 06 Jul 2026 21:25:25 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you&amp;rsquo;ve brought enough coffee, because I&amp;rsquo;m afraid this might turn into another long journey down the rabbit hole.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</link>
@@ -147,13 +154,6 @@
 				<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
 				<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>How to use QoS in NSX</title>
-				<link>https://sdn-warrior.org/posts/nsx-qos/</link>
-				<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
-				<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
-				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Quality of Service (QoS) is a critical aspect of network performance management, especially in complex environments where NSX is deployed. NSX provides powerful QoS capabilities at both the gateway and segment levels, enabling fine-grained control over traffic prioritization and bandwidth allocation. However, understanding the differences between these two levels of QoS implementation is essential for optimizing network performance.&lt;/p&gt;&#xA;&lt;p&gt;In this article, we’ll delve into how QoS functions on the gateway versus the segment in NSX, explore their respective use cases, and provide insights into selecting the right approach for your network needs. Whether you&amp;rsquo;re managing inter-tenant traffic or fine-tuning internal traffic flows, mastering these distinctions will empower you to make informed decisions and maximize the efficiency of your NSX deployment.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>
