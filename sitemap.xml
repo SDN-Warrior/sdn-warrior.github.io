@@ -2,37 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://sdn-warrior.org/tags/kubernetes/</loc>
-    <lastmod>2026-06-14T12:00:00+02:00</lastmod>
+    <loc>https://sdn-warrior.org/tags/nsx/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-06-14T12:00:00+02:00</lastmod>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vna/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vpc/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vxlan/</loc>
+    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/kubernetes/</loc>
     <lastmod>2026-06-14T12:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/servicecluster/</loc>
     <lastmod>2026-06-14T12:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2026-06-14T12:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</loc>
     <lastmod>2026-06-14T12:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
-    <lastmod>2026-06-14T12:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2026-05-21T22:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</loc>
-    <lastmod>2026-05-21T22:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vna/</loc>
-    <lastmod>2026-05-21T22:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vpc/</loc>
     <lastmod>2026-05-21T22:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</loc>

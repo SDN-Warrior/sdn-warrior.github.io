@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Sun, 14 Jun 2026 12:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Sat, 11 Jul 2026 13:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>
+				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you&amp;rsquo;ve brought enough coffee, because I&amp;rsquo;m afraid this might turn into another long journey down the rabbit hole.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - Platform Health Check Error</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</link>
@@ -147,13 +154,6 @@
 				<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
 				<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I have been asked several times on LinkedIn for an article on the topic of brownfield upgrades from VCF 5 to VCF 9.&#xA;Well, here we are. I thought it would be relatively easy and that you could just click your way through, but I was wrong.&#xA;But let&amp;rsquo;s start at the beginning.&lt;/p&gt;&#xA;&lt;p&gt;As things stand at the moment, if you have NSX version newer then 4.2.1.3 in your VCF environment, here&amp;rsquo;s the bad news—it&amp;rsquo;s not possible as of today.&#xA;NSX 4.2.1.4 and newer has a newer code base than NSX 9.0.0.0 and is therefore not compatible. The problem should be fixed with VCF 9.0.1.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>VMware Explore 2025</title>
-				<link>https://sdn-warrior.org/posts/explore-2025/</link>
-				<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
-				<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
-				<description>&lt;h2 id=&#34;viva-las-vegas---a-kind-of-travelogue&#34;&gt;Viva Las Vegas - A kind of travelogue.&lt;/h2&gt;&#xA;&lt;p&gt;At the beginning of the year, I had the pleasure of flying to the &#xA;&lt;a href=&#34;https://sdn-warrior.org/posts/vmug-connect-stl-2025/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;USA&lt;/a&gt;, and now I&amp;rsquo;m on my way to Las Vegas.&#xA;After a slightly delayed departure, I arrived in Vegas after an 11.5-hour flight in a &amp;ldquo;comfortable&amp;rdquo; 40 degrees Celsius or 104 degrees Fahrenheit, for those who do not use the metric system.&#xA;Perhaps one more small note. I won&amp;rsquo;t write much about the sessions; anyone who wants to can look them up in &#xA;&lt;a href=&#34;https://github.com/lamw/vmware-explore-2025-session-urls&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;William Lam&amp;rsquo;s repository&lt;/a&gt;. I want to focus more on the vibe of the event here—that is, I&amp;rsquo;ll try to. I&amp;rsquo;m not really a travel blogger.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

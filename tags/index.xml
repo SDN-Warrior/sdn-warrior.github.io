@@ -12,9 +12,44 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Sun, 14 Jun 2026 12:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Sat, 11 Jul 2026 13:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>NSX</title>
+				<link>https://sdn-warrior.org/tags/nsx/</link>
+				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/nsx/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vcf9.1</title>
+				<link>https://sdn-warrior.org/tags/vcf9.1/</link>
+				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vna</title>
+				<link>https://sdn-warrior.org/tags/vna/</link>
+				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/vna/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vpc</title>
+				<link>https://sdn-warrior.org/tags/vpc/</link>
+				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/vpc/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vxlan</title>
+				<link>https://sdn-warrior.org/tags/vxlan/</link>
+				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/vxlan/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>Kubernetes</title>
 				<link>https://sdn-warrior.org/tags/kubernetes/</link>
@@ -27,34 +62,6 @@
 				<link>https://sdn-warrior.org/tags/servicecluster/</link>
 				<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/servicecluster/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Vcf9.1</title>
-				<link>https://sdn-warrior.org/tags/vcf9.1/</link>
-				<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>NSX</title>
-				<link>https://sdn-warrior.org/tags/nsx/</link>
-				<pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/nsx/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Vna</title>
-				<link>https://sdn-warrior.org/tags/vna/</link>
-				<pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/vna/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Vpc</title>
-				<link>https://sdn-warrior.org/tags/vpc/</link>
-				<pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/vpc/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -100,7 +107,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>VMware</title>
+				<title>Vmware</title>
 				<link>https://sdn-warrior.org/tags/vmware/</link>
 				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/vmware/</guid>
@@ -146,13 +153,6 @@
 				<link>https://sdn-warrior.org/tags/vmug/</link>
 				<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
 				<guid>https://sdn-warrior.org/tags/vmug/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Ipv6</title>
-				<link>https://sdn-warrior.org/tags/ipv6/</link>
-				<pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
-				<guid>https://sdn-warrior.org/tags/ipv6/</guid>
 				<description></description>
 			</item>
 	</channel>

@@ -1,4 +1,10 @@
 [{
+    "title": "VCF 9.1 - DTGW \u0026 VNA: the route controller within me",
+    "url": "/posts/vcf9.1-dtgw-vxlan/",
+    "date": "2026-07-11",
+    "description": "In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.",
+    "tags": ["vcf9.1","nsx","vpc","vna","vxlan"]
+  },{
     "title": "VCF 9.1 - Platform Health Check Error",
     "url": "/posts/vcf9.1-platform-health-check-error/",
     "date": "2026-06-14",
