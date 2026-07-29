@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Tags on SDN-Warrior | Daniel Krieger</title>
-		<link>http://localhost:62636/tags/</link>
+		<link>http://localhost:62658/tags/</link>
 		<description>Recent content in Tags on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo</generator>
 		<language>en-US</language>
@@ -14,145 +14,145 @@
 		
 			<lastBuildDate>Wed, 29 Jul 2026 01:00:00 +0200</lastBuildDate>
 		
-			<atom:link href="http://localhost:62636/tags/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:62658/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Homelab</title>
-				<link>http://localhost:62636/tags/homelab/</link>
+				<link>http://localhost:62658/tags/homelab/</link>
 				<pubDate>Wed, 29 Jul 2026 01:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/homelab/</guid>
+				<guid>http://localhost:62658/tags/homelab/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Nutanix</title>
-				<link>http://localhost:62636/tags/nutanix/</link>
+				<link>http://localhost:62658/tags/nutanix/</link>
 				<pubDate>Wed, 29 Jul 2026 01:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/nutanix/</guid>
+				<guid>http://localhost:62658/tags/nutanix/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Optane</title>
-				<link>http://localhost:62636/tags/optane/</link>
+				<link>http://localhost:62658/tags/optane/</link>
 				<pubDate>Wed, 29 Jul 2026 01:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/optane/</guid>
+				<guid>http://localhost:62658/tags/optane/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Nsx</title>
-				<link>http://localhost:62636/tags/nsx/</link>
+				<link>http://localhost:62658/tags/nsx/</link>
 				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/nsx/</guid>
+				<guid>http://localhost:62658/tags/nsx/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Vcf9.1</title>
-				<link>http://localhost:62636/tags/vcf9.1/</link>
+				<link>http://localhost:62658/tags/vcf9.1/</link>
 				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/vcf9.1/</guid>
+				<guid>http://localhost:62658/tags/vcf9.1/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Vna</title>
-				<link>http://localhost:62636/tags/vna/</link>
+				<link>http://localhost:62658/tags/vna/</link>
 				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/vna/</guid>
+				<guid>http://localhost:62658/tags/vna/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Vpc</title>
-				<link>http://localhost:62636/tags/vpc/</link>
+				<link>http://localhost:62658/tags/vpc/</link>
 				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/vpc/</guid>
+				<guid>http://localhost:62658/tags/vpc/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Vxlan</title>
-				<link>http://localhost:62636/tags/vxlan/</link>
+				<link>http://localhost:62658/tags/vxlan/</link>
 				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/vxlan/</guid>
+				<guid>http://localhost:62658/tags/vxlan/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Kubernetes</title>
-				<link>http://localhost:62636/tags/kubernetes/</link>
+				<link>http://localhost:62658/tags/kubernetes/</link>
 				<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/kubernetes/</guid>
+				<guid>http://localhost:62658/tags/kubernetes/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Servicecluster</title>
-				<link>http://localhost:62636/tags/servicecluster/</link>
+				<link>http://localhost:62658/tags/servicecluster/</link>
 				<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/servicecluster/</guid>
+				<guid>http://localhost:62658/tags/servicecluster/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Security</title>
-				<link>http://localhost:62636/tags/security/</link>
+				<link>http://localhost:62658/tags/security/</link>
 				<pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/security/</guid>
+				<guid>http://localhost:62658/tags/security/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Esx</title>
-				<link>http://localhost:62636/tags/esx/</link>
+				<link>http://localhost:62658/tags/esx/</link>
 				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/esx/</guid>
+				<guid>http://localhost:62658/tags/esx/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Proxmox</title>
-				<link>http://localhost:62636/tags/proxmox/</link>
+				<link>http://localhost:62658/tags/proxmox/</link>
 				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/proxmox/</guid>
+				<guid>http://localhost:62658/tags/proxmox/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Unraid</title>
-				<link>http://localhost:62636/tags/unraid/</link>
+				<link>http://localhost:62658/tags/unraid/</link>
 				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/unraid/</guid>
+				<guid>http://localhost:62658/tags/unraid/</guid>
 				<description></description>
 			</item>
 			<item>
-				<title>VMware</title>
-				<link>http://localhost:62636/tags/vmware/</link>
+				<title>Vmware</title>
+				<link>http://localhost:62658/tags/vmware/</link>
 				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/vmware/</guid>
+				<guid>http://localhost:62658/tags/vmware/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Flow</title>
-				<link>http://localhost:62636/tags/flow/</link>
+				<link>http://localhost:62658/tags/flow/</link>
 				<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/flow/</guid>
+				<guid>http://localhost:62658/tags/flow/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Esx9</title>
-				<link>http://localhost:62636/tags/esx9/</link>
+				<link>http://localhost:62658/tags/esx9/</link>
 				<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/esx9/</guid>
+				<guid>http://localhost:62658/tags/esx9/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Vcf9</title>
-				<link>http://localhost:62636/tags/vcf9/</link>
+				<link>http://localhost:62658/tags/vcf9/</link>
 				<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
-				<guid>http://localhost:62636/tags/vcf9/</guid>
+				<guid>http://localhost:62658/tags/vcf9/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Community</title>
-				<link>http://localhost:62636/tags/community/</link>
+				<link>http://localhost:62658/tags/community/</link>
 				<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
-				<guid>http://localhost:62636/tags/community/</guid>
+				<guid>http://localhost:62658/tags/community/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Operations</title>
-				<link>http://localhost:62636/tags/operations/</link>
+				<link>http://localhost:62658/tags/operations/</link>
 				<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
-				<guid>http://localhost:62636/tags/operations/</guid>
+				<guid>http://localhost:62658/tags/operations/</guid>
 				<description></description>
 			</item>
 	</channel>
