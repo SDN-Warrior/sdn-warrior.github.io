@@ -3,7 +3,7 @@ var klaroConfig = {
   elementID: 'klaro',
   cookieName: 'klaro-consent',
   cookieExpiresAfterDays: 365,
-  privacyPolicy: '/about/#privacy-policy', // Link zu deiner Datenschutzerklärung
+  privacyPolicy: '/imprint/#privacy-policy', // Link zu deiner Datenschutzerklärung
   default: true,
   mustConsent: false, // Nutzer kann Banner ignorieren
   acceptAll: true,

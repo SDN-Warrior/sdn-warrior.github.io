@@ -1,0 +1,1234 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=62636&amp;path=livereload" data-no-instant defer></script>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="This short blog post is meant to show that things don&#39;t always work out and that sometimes, in the world of home labs, you&#39;re just throwing money down the drain.">
+
+	<meta itemprop="name" content="Intel Optane on Nutanix CE - Or I should have read the manual">
+	<meta itemprop="description" content="This short blog post is meant to show that things don&#39;t always work out and that sometimes, in the world of home labs, you&#39;re just throwing money down the drain.">
+	<meta itemprop="datePublished" content="2026-07-29T01:00:00+02:00">
+	<meta itemprop="dateModified" content="2026-07-29T01:00:00+02:00">
+	<meta itemprop="wordCount" content="4188">
+	<meta itemprop="image" content="http://localhost:62636/images/preview.png">
+	<meta itemprop="keywords" content="Nutanix,Homelab,Optane"><meta property="og:url" content="http://localhost:62636/posts/intel-optane-on-nutanix-ce/">
+	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+	<meta property="og:title" content="Intel Optane on Nutanix CE - Or I should have read the manual">
+	<meta property="og:description" content="This short blog post is meant to show that things don&#39;t always work out and that sometimes, in the world of home labs, you&#39;re just throwing money down the drain.">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-07-29T01:00:00+02:00">
+		<meta property="article:modified_time" content="2026-07-29T01:00:00+02:00">
+		<meta property="article:tag" content="Nutanix">
+		<meta property="article:tag" content="Homelab">
+		<meta property="article:tag" content="Optane">
+		<meta property="og:image" content="http://localhost:62636/images/preview.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="http://localhost:62636/images/preview.png">
+	<meta name="twitter:title" content="Intel Optane on Nutanix CE - Or I should have read the manual">
+	<meta name="twitter:description" content="This short blog post is meant to show that things don&#39;t always work out and that sometimes, in the world of home labs, you&#39;re just throwing money down the drain.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Intel Optane on Nutanix CE - Or I should have read the manual",
+    "name": "Intel Optane on Nutanix CE - Or I should have read the manual",
+    "description": "This short blog post is meant to show that things don't always work out and that sometimes, in the world of home labs, you're just throwing money down the drain.",
+    "keywords": ["nutanix", "homelab", "optane"],
+    "articleBody": "Introduction I’m not quite sure how to start—maybe with a brief statement and a little foreshadowing. It doesn’t always work out when you set your mind on something, and it’s not always the software’s fault. So this post isn’t meant to bash Nutanix, but it’s intended to prevent people from making the same mistakes I did.\nBut let’s take it slow and start from the beginning. What was I actually planning to do? A few weeks ago, I bought some Intel Optane drives on eBay for my VCF setup to use them as memory tiering devices. The drive just needs to be fast, have low latency, and deliver solid random IOPS. You can currently find 280 GB Intel Optane 900P cards on eBay at a pretty good price. The cards cost around 160 euros, give or take a few euros, plus shipping—and since they come from China, there’s also a bit of customs duty. Long story short, the drives have proven themselves in memory tiering, which is why I thought, “Why not use them for Nutanix?” Since they work very well with VMware Memory Tiering and vSAN OSA — what could possibly go wrong?\nIntel Optane Intel Optane SSDs such as the 900P are PCIe/NVMe drives built around 3D XPoint storage technology developed by Intel and Micron. 3D XPoint stores bits by changing the resistance state of the memory cell in a transistor-less cross-point array. Don’t ask me exactly how it works - maybe black magic.\nBut what I do know is that Optane drives are characterized by tremendous durability, low latency, and, above all, consistent read/write performance. Unlike many consumer NAND SSDs, they do not depend on a small SLC write cache, so there is no dramatic performance cliff once that cache is exhausted. In my tests, I was able to fill the entire drive to its maximum capacity without any loss of performance. This is also consistent with Intel’s tests, which can still be found online. Unfortunately, Optane was discontinued in 2022.\nOptane 900P It’s also important to distinguish between consumer and enterprise Optane drives. The 900P was positioned as a client and enthusiast SSD, while enterprise models offered additional features such as enhanced power-loss protection and end-to-end data protection. Although the 900P falls into the consumer category, in terms of IOPS for random read and write operations, latency, and lifespan, it outperforms every other consumer NVMe drive I’ve ever used.\nThe Idea My idea was simple, more or less. Using Intel Optane as a dedicated CVM and performance-tier device in a Nutanix CE node was intended to reduce storage latency, improve performance for random and mixed I/O operations, and ensure more consistent write behavior under sustained load. That’s how simple and straightforward my thinking was.\nStargate I/O Logic This is where my first mistake comes in, because Nutanix AOS storage architecture simply works differently than vSAN OSA. With OSA, all writes are first written to the caching device and then destaged to the other tier. An Optane drive can be very helpful here.\nWith Nutanix, it depends heavily on the type of writes. Sequential writes typically bypass OpLog and are written directly to the data disks (Extent Store). Random write operations in bursts typically end up in the OpLog. Sustained random writes, like sequential writes, can go directly to the Extent Store or the OpLog. Reads are served either from Unified Cache (RAM), the OpLog or the Extent Store, depending on where the data is currently located. Yes, I realize that this is a very simplified explanation, but storage isn’t my main focus anyway. Otherwise, this article probably would never have been written.\nBut how did we get to this point? Well, the easiest way to start is with the setup.\nThe setup I’m using my 3-node cluster with Minisforum MS-01 nodes, configured with 2x10 Gb/s networks in an LACP bond with jumbo frames, 96 GB of RAM, and a total of 3 NVMe drives per node + Intel 900P. My CVMs each had 24 GB of RAM, which means that approximately 5.4 GB of Unified Cache is available ((CVM Memory - 12 GB) * 0.45). In addition, the cluster was deployed with the default redundancy factor of 2.\nNVMe Model Capacity Usage Intel Optane SSD 900P 280 GB CVM and performance tier in the Optane configuration; raw-device target for the native FIO benchmark; not used in the baseline setup Samsung SSD 990 PRO 2 TB Nutanix data tier Lexar SSD EQ790 2 TB used for CVM-related and storage partitions Lexar SSD EQ790 1 TB AHV boot device; Ubuntu system disk during the native Optane benchmark My cluster is based on the CE version of Nutanix, but I have updated it to the current latest versions of AHV 11.2, AOS 7.6, Prism Central 7.6, and so on. To run the performance test, I created an Ubuntu server VM and placed it to an empty AHV host. I also shut down all workload VMs except for the Prism Central VM so as not to influence the results.\nTest VM Configuration Component Configuration Operating System Ubuntu 26.04 LTS Kernel Linux 7.0.0-28-generic Architecture x86_64 FIO Version fio 3.41 System Disk 32 GiB virtual disk Test Disks 2 × 100 GiB virtual disks Guest RAID Layout Linux software RAID1 RAID Device /dev/md0 Usable Test Capacity Approximately 99.9 GiB Filesystem XFS Mount Point /mnt/fio Test File /mnt/fio/testfile-64g Test File Size 64 GiB I/O Engine libaio Direct I/O Enabled with direct=1 Number of Jobs 1 Virtualization Platform Nutanix AHV Storage Path Guest XFS → Linux md RAID1 → 2 virtual disks → AHV → CVM/AOS → Nutanix storage vCPU Allocation 4 Memory Allocation 8 GB RAID1 was used to generate higher backend I/O load from a single test VM. By mirroring each write operation to two virtual disks, multiple virtual hard disk queues are utilized, increasing the load on AHV, CVM, AOS, replication, and the physical storage paths without requiring multiple benchmark VMs to run simultaneously. This configuration does not fully replicate a multi-VM workload, as all I/O originates from a single guest and a coordinated FIO workload. However, the tests were conducted under similar conditions as much as possible and are internally consistent. Of course, the overall storage layout is different with an Optane disk than without one, and the cluster also had to be redeployed; however, I brought it up to the same patch level and configured it with the same settings. The reader should be aware that RAID 1 also affects the overall figures. Although it was kept constant across both tests, it amplifies the write path and may also amplify differences in data placement and replication behavior.\nFIO Test Methodology My FIO profile includes sequential throughput, random I/O operations with high queue depth, a 70:30 mixed synthetic workload, and latency at low queue depth. It is designed to measure both peak performance and latency behavior across the entire path. All tests accessed the same pre-created 64-GiB test file. The file was created before the benchmark began, and its expected size was verified. Nutanix compression and deduplication were disabled for all test runs. The same applies to erasure coding. In addition, the system had several hours to settle down before I ran the first tests. I’ve always run all tests on the same physical host.\nInfo\rAs part of the preparation, the entire test file was allocated from the perspective of the host operating system and populated with data. However, caching mechanisms within the Nutanix storage stack were neither flushed nor bypassed during this process. The subsequent read tests may therefore still have been influenced by data that was loaded into the Nutanix Unified Cache during file preparation.\rThe profile uses Linux’s native asynchronous I/O engine via libaio. Direct I/O is enabled with direct=1, which typically bypasses the Linux page cache within the guest operating system. Caches at other points in the memory path, such as the Nutanix Unified Cache, are not bypassed. Before starting each workload, invalidate=1 instructs FIO to invalidate the guest operating system’s cached pages for the test file, if supported. This helps reduce the influence of the guest page cache.\nThe remaining global settings have the following purposes:\nnumjobs=1 runs one FIO worker. Consequently, the configured I/O depth represents the total queue depth generated by the benchmark. group_reporting=1 produces combined reporting for all jobs in a reporting group. Since only one worker is used, this has little practical effect but keeps the output format consistent. refill_buffers=1 regenerates the I/O buffer contents for every submission instead of continually reusing the same memory buffer. This helps avoid repeatedly writing identical data patterns. randrepeat=1 initializes the random-number generators predictably, causing repeated test runs to use the same pseudo-random access pattern. This improves comparability but means that every run addresses blocks in the same sequence. percentile_list=50:95:99:99.9:99.99 records median and tail-latency percentiles in addition to average latency. Sequential Throughput Tests The sequential tests use 1 MiB blocks and an I/O depth of 16. Each test transfers exactly 64 GiB, covering the complete test file once. The result is relevant to workloads such as large-file reads, backup, restore, streaming, and sequential data processing.\nHigh-Queue-Depth Random Tests The random read and write tests use 4-KiB blocks, an I/O depth of 32, and an address range of 32 GiB. Both tests are time-based and run for 120 seconds following a 10-second warm-up phase. During the warm-up phase, FIO already generates the requested workload, but the resulting performance metrics are excluded from the reported statistics. Once the 32 GiB address range has been covered, FIO continues to perform I/O operations within the same range until the configured runtime has elapsed. The LFSR random number generator produces a deterministic pseudo-random access sequence that remains consistent across multiple runs.\nMixed 70/30 Workload The mixed workload uses 8-KiB blocks with a target distribution of 70% read operations and 30% write operations. It runs for 180 seconds following a 10-second warm-up phase and takes place within an address range of 32 GiB. This synthetic workload is designed to illustrate how read and write operations compete for resources when executed simultaneously. It tests read caching, write persistence, replication, queue management, and the interaction between read and write traffic.\nLow-Queue-Depth Latency Tests The last two workloads use 4-KiB blocks and an I/O depth of one. They are designed to measure end-to-end storage latency with minimal queuing. After a five-second warm-up phase, each test runs for 60 seconds and accesses a 16 GiB address range.\nTest Execution The full FIO profile was run twice for each Nutanix storage configuration. There was a pause of at least 60 seconds between each run. The better result from the two runs is shown in the comparison tables. I determined which run was better based on the IOPS from each test. If a run had better IOPS in 4 out of 6 tests, that run was selected. The guest configuration, FIO profile, test file size, compression setting and deduplication setting remained unchanged between the baseline and Optane tests. However, the underlying Nutanix cluster had to be redeployed with a different physical disk layout for the Optane configuration. Therefore, the results represent a comparison of the two complete storage configurations.\nWhy I Chose These Measurement Methods\rSelecting the better of the two runs leads to an optimistic bias. The values should therefore be interpreted as the best repeatable performance observed in my environment rather than as statistically representative averages. An average value based on multiple runs would have been the better choice; however, the time required to conduct the tests was already substantial, and since the differences between the first and second runs did not show any significant outliers, I opted for this method. With consumer hardware, a certain degree of variation is generally to be expected.\rCreate a FIO test file sudo fio \\ --name=prepare-64g \\ --filename=/mnt/fio/testfile-64g \\ --size=64G \\ --io_size=64G \\ --rw=write \\ --bs=1M \\ --ioengine=libaio \\ --direct=1 \\ --iodepth=32 \\ --numjobs=1 \\ --refill_buffers=1 \\ --end_fsync=1 \\ --group_reporting FIO Test Profile [global] filename=/mnt/fio/testfile-64g ioengine=libaio direct=1 invalidate=1 refill_buffers=1 group_reporting=1 numjobs=1 randrepeat=1 percentile_list=50:95:99:99.9:99.99 [seq-read-1m] rw=read bs=1M iodepth=16 size=64G io_size=64G [seq-write-1m] stonewall rw=write bs=1M iodepth=16 size=64G io_size=64G end_fsync=1 [rand-read-4k] stonewall rw=randread bs=4k iodepth=32 size=32G time_based=1 runtime=120 ramp_time=10 random_generator=lfsr [rand-write-4k] stonewall rw=randwrite bs=4k iodepth=32 size=32G time_based=1 runtime=120 ramp_time=10 random_generator=lfsr end_fsync=1 [mixed-70read-30write-8k] stonewall rw=randrw rwmixread=70 bs=8k iodepth=32 size=32G time_based=1 runtime=180 ramp_time=10 random_generator=lfsr end_fsync=1 [latency-read-4k-qd1] stonewall rw=randread bs=4k iodepth=1 size=16G time_based=1 runtime=60 ramp_time=5 random_generator=lfsr [latency-write-4k-qd1] stonewall rw=randwrite bs=4k iodepth=1 size=16G time_based=1 runtime=60 ramp_time=5 random_generator=lfsr end_fsync=1 Results without Optane drives FIO Test Result Average Latency p99 Latency Sequential Read 1 MiB 2,587 MiB/s 6.14 ms 11.08 ms Sequential Write 1 MiB 1,704 MiB/s 9.16 ms 22.68 ms Random Read 4K QD32 79,985 IOPS 0.396 ms 0.758 ms Random Write 4K QD32 32,403 IOPS 0.983 ms 2.61 ms Mixed 70/30 Read 28,465 IOPS 0.637 ms 2.02 ms Mixed 70/30 Write 12,198 IOPS 1.121 ms 5.41 ms Random Read 4K QD1 4,361 IOPS 0.221 ms 0.864 ms Random Write 4K QD1 2,464 IOPS 0.393 ms 1.204 ms While the average latency simply represents the mean of all measured I/Os, the P99 latency indicates the time within which 99 percent of all I/Os were completed. When it comes to latency, the lower the better. A P99 latency that is close to the average latency indicates a storage system that operates consistently. The sequential write result is clearly below the read throughput, while the comparatively high P99 latency indicates less consistent completion times during the write workload.\nNext up is the test with the Optane disks. However, I had to completely redeploy the cluster for this, because the Optane disks are too small to simply swap out. And honestly, I should have been suspicious at that point. But let’s dive in.\nRe-provisioning the cluster for the Optane test Let’s start with the first attempt: I wanted to use my 1 TB NVMe as the boot drive again, so I selected the Optane drive as the CVM drive and a 2 TB drive as the data drive. Unfortunately, this isn’t supported, and the installer keeps crashing unless the smallest drive in the system is used as the boot device. This issue has also been reported within the Nutanix community and appears to be a well-known problem with the CE Edition. I haven’t really found a solution to this yet, but I figured, “Oh well, let’s just run AHV from the USB drive.” These drives are 64 GB, so they’re technically the smaller drives. I was actually able to install Nutanix this way, but I couldn’t update it because the cluster check kept failing. But what exactly is wrong with my new deployment? After spending hours digging through the logs, I finally found the problem.\nThe cluster was unable to initialize “Curator” because the 280-GB Intel Optane drive was being used as the sole CVM drive. After the CVM system partitions were created, only about 139 GiB remained available for AOS. Curator required approximately 157 GiB for its MRFS reservation, so the drive was rejected as unusable and no Curator primary disk could be selected. Recreating the cluster did not help, as the underlying drive configuration remained unchanged.\nLog entry\rW20260726 22:47:58.110591Z 853447 zeus_zoo_interface_ops.cc:883] Read node finished with error kNoNode for Zeus op ReadZkNodesIfcOp(65)[client_zoo_api] for path:/appliance/logical/curator/mrfs\nW20260726 22:47:58.110644Z 853452 curator_disk_manager_ops.cc:1133] Unable to (re)prepare disk 44 as the new reservation cannot be allocated; Disk size: 149145232957, Free estore space: 149138609725, Reservation factor: 2, Already reserved: 0, Requested reservation: 84192859258\nF20260726 22:47:58.110816Z 853452 curator_disk_manager.cc:1181] QFATAL No usable Curator disks found; unsetting primary disk id -1\nSo in the end, I had no choice but to use a second disk for the CVM and boot from the 1 TB disk. The layout now looks like this:\nDrive Capacity Nutanix Role Lexar EQ790 NVMe 1 TB AHV boot and system disk Intel Optane SSD 900P 280 GB First CVM disk Lexar EQ790 NVMe 2 TB Second CVM disk Samsung SSD 990 PRO 2 TB Nutanix data disk With this storage layout, I was finally able to deploy my cluster and bring it back up to the same state, but that also means my original goal—to use an Optane disk exclusively for the CVM—has officially failed. But by that point, I was already so far along that I wanted to run the tests anyway. It probably would have worked with a larger Optane disk. But I wasn’t willing to spend any more money. Since two flash disks are now assigned to the CVM, there is no guarantee that the OpLog will be stored only on the Optane drive. At least that’s what I thought, but more on that later. There has to be a little suspense, after all. The testing will once again be conducted using the same setup as before (more or less).\nTest Results with Optane To be honest, I was a little surprised and could hardly believe the results, but see for yourself.\nPerformance Test Without Optane With Optane Change Sequential Read 1 MiB 2,587.0 MiB/s 3,215.5 MiB/s +24.3% Sequential Write 1 MiB 1,704.0 MiB/s 954.7 MiB/s -44.0% Random Read 4K QD32 79,985 IOPS 87,227 IOPS +9.1% Random Write 4K QD32 32,403 IOPS 22,381 IOPS -30.9% Mixed 70/30 Read 28,465 IOPS 19,754 IOPS -30.6% Mixed 70/30 Write 12,198 IOPS 8,461 IOPS -30.6% Random Read 4K QD1 4,361 IOPS 5,210 IOPS +19.5% Random Write 4K QD1 2,464 IOPS 2,340 IOPS -5.0% Average Latency - Lower latency is better. Test Without Optane With Optane Change Sequential Read 1 MiB 6.140 ms 4.935 ms -19.6% Sequential Write 1 MiB 9.160 ms 16.473 ms +79.8% Random Read 4K QD32 0.396 ms 0.363 ms -8.3% Random Write 4K QD32 0.983 ms 1.423 ms +44.8% Mixed 70/30 Read 0.637 ms 0.742 ms +16.6% Mixed 70/30 Write 1.121 ms 2.030 ms +81.1% Random Read 4K QD1 0.221 ms 0.186 ms -16.0% Random Write 4K QD1 0.393 ms 0.415 ms +5.5% p99 Latency - Lower latency is better. Test Without Optane With Optane Change Sequential Read 1 MiB 11.080 ms 11.862 ms +7.1% Sequential Write 1 MiB 22.680 ms 38.011 ms +67.6% Random Read 4K QD32 0.758 ms 0.651 ms -14.1% Random Write 4K QD32 2.610 ms 5.603 ms +114.7% Mixed 70/30 Read 2.020 ms 1.843 ms -8.8% Mixed 70/30 Write 5.410 ms 5.931 ms +9.6% Random Read 4K QD1 0.864 ms 0.578 ms -33.2% Random Write 4K QD1 1.204 ms 0.946 ms -21.4% Diagrams Nutanix FIO - Bandwidth Nutanix FIO - IOPS Comparison Nutanix FIO - Average Latency Nutanix FIO - p99 Latency Diagrams\rUnfortunately, I didn’t record any IOPS values for sequential read and write operations. That’s why they’re missing from Charts 2–4.\rSince I wanted to rule out a defective Optane drive, I ran the same test again using an Optane drive and a bare-metal installation of Ubuntu.\nOptane Native Performance Test Workload Result Average Latency p99 Latency p99.9 Latency Sequential Read 1 MiB 2,608.8 MiB/s 5.969 ms 6.128 ms 9.372 ms Sequential Write 1 MiB 2,455.0 MiB/s 6.324 ms 9.896 ms 10.027 ms Random Read 4K QD32 399,728 IOPS 0.0781 ms 0.0876 ms 0.0978 ms Random Write 4K QD32 300,532 IOPS 0.103 ms 0.159 ms 0.165 ms Mixed 70/30 Read 8K QD32 131,297 IOPS 0.169 ms 0.261 ms 0.297 ms Mixed 70/30 Write 8K QD32 56,291 IOPS 0.166 ms 0.255 ms 0.293 ms Random Read 4K QD1 88,190 IOPS 0.0096 ms 0.0147 ms 0.0356 ms Random Write 4K QD1 76,993 IOPS 0.0102 ms 0.0143 ms 0.0361 ms Performance Comparison Workload Without Optane With Optane Native Optane Sequential Read 1 MiB 2,587.0 MiB/s 3,215.5 MiB/s 2,608.8 MiB/s Sequential Write 1 MiB 1,704.0 MiB/s 954.7 MiB/s 2,455.0 MiB/s Random Read 4K QD32 79,985 IOPS 87,227 IOPS 399,728 IOPS Random Write 4K QD32 32,403 IOPS 22,381 IOPS 300,532 IOPS Mixed 70/30 Read 8K QD32 28,465 IOPS 19,754 IOPS 131,297 IOPS Mixed 70/30 Write 8K QD32 12,198 IOPS 8,461 IOPS 56,291 IOPS Random Read 4K QD1 4,361 IOPS 5,210 IOPS 88,190 IOPS Random Write 4K QD1 2,464 IOPS 2,340 IOPS 76,993 IOPS Average Latency - Lower values are better. Workload Without Optane With Optane Native Optane Sequential Read 1 MiB 6.140 ms 4.935 ms 5.969 ms Sequential Write 1 MiB 9.160 ms 16.473 ms 6.324 ms Random Read 4K QD32 0.396 ms 0.363 ms 0.0781 ms Random Write 4K QD32 0.983 ms 1.423 ms 0.103 ms Mixed 70/30 Read 8K QD32 0.637 ms 0.742 ms 0.169 ms Mixed 70/30 Write 8K QD32 1.121 ms 2.030 ms 0.166 ms Random Read 4K QD1 0.221 ms 0.186 ms 0.0096 ms Random Write 4K QD1 0.393 ms 0.415 ms 0.0102 ms p99 Latency - Lower values are better. Workload Without Optane With Optane Native Optane Sequential Read 1 MiB 11.080 ms 11.862 ms 6.128 ms Sequential Write 1 MiB 22.680 ms 38.011 ms 9.896 ms Random Read 4K QD32 0.758 ms 0.651 ms 0.0876 ms Random Write 4K QD32 2.610 ms 5.603 ms 0.159 ms Mixed 70/30 Read 8K QD32 2.020 ms 1.843 ms 0.261 ms Mixed 70/30 Write 8K QD32 5.410 ms 5.931 ms 0.255 ms Random Read 4K QD1 0.864 ms 0.578 ms 0.0147 ms Random Write 4K QD1 1.204 ms 0.946 ms 0.0143 ms Diagrams Native - Sequential Throughput Native - Random and Mixed IOPS Native - Average Latency Native - p99 Latency Interpretation — An Attempt Mission failed — at least that was my first thought — and man, that was an expensive little adventure. But it’s no use — failure is part of the process — but what’s actually going on with my system right now?\nIf you take a closer look at the Stargate logs, you’ll also see that, out of my Optane’s approximately 260 GB of usable capacity, only about 15.3 GB is available for the OpLog. Since all disks belong to the same storage tier, all my NVMe drives receive an OpLog reservation. In the case of a 2 TB NVMe drive, that amounts to about 185 GB for the OpLog. This confirms once again that my assumption about how Nutanix storage works was completely wrong.\ngrep -aEh \\ 'OpLog_disk_size.*(PHMB7470005W280CGN|S6Z2NU0XB04165Y)|disk_serial_id: \"(PHMB7470005W280CGN|S6Z2NU0XB04165Y)\"' \\ ~/data/logs/stargate* 2\u003e/dev/null | tail -20 Here’s the log excerpt; it’s not exactly easy to read, but one of the most important pieces of information is: OpLog_disk_size: 16481369332\nW20260728 20:34:21.916383Z 90697 stargate_cluster_state.cc:2167] Disk Usage stat for disk 13 not found , proto=disk_id: 13 service_vm_id: 2 mount_path: \"/home/nutanix/data/stargate-storage/disks/PHMB7470005W280CGN\" disk_size: 149803025165 statfs_disk_size: 208943841280 storage_tier: \"SSD-PCIe\" data_dir_sublevels: 2 data_dir_sublevel_dirs: 20 data_migration_status: 0 disk_location: 4 contains_metadata: true OpLog_disk_size: 16481369332 disk_serial_id: \"PHMB7470005W280CGN\" disk_uuid: \"6143c190-14ad-4651-8522-3582c84e5e71\" node_uuid: \"f3b7a7f2-b9b5-4a09-a58f-066de1eadf9a\" chosen_for_metadata: false metadata_disk_reservation_bytes: 32212254720 self_managed_nvme: false trim_enabled: true On one of my 2 TB hard drives, the log entry looks like this:\nDisk Usage stat for disk 12 not found , proto=disk_id: 12 service_vm_id: 2 mount_path: \"/home/nutanix/data/ stargate-storage/disks/S6Z2NU0XB04165Y\" disk_size: 1702077037813 statfs_disk_size: 2000362143744 storage_tier: \"SSD-PCIe\" data_dir_sublevels: 2 data_dir_sublevel_dirs: 20 disk_location: 1 oplog_disk_size: 198266995467 disk_serial_id: \"S6Z2NU0XB04165Y\" disk_uuid: \"f03121e0-e726-4aea-af6c-fe2faba8ea4b\" node_uuid: \"f3b7a7f2-b9b5-4a09-a58f-066de1eadf9a\" block_store_device_info { format_needed: false start_offset_bytes: 35651584 end_offset_bytes: 2000397795327 } self_managed_nvme: false trim_enabled: true In an Optane-plus-NVMe configuration, Nutanix does not use Optane as the exclusive location for the OpLog. The OpLog is distributed across both Optane and NVMe devices, which means that the slower NVMes remains part of the write path for the OpLog and can undermine the latency advantage of Optane. As a result, burst writes may be distributed across different disks, and the varying latencies of those disks could have a negative impact.\nHowever, in my opinion, the OpLog alone does not explain all the results. Persistent and sequential write operations can bypass the OpLog and go directly to the Extent Store. However, the lower performance during sequential write operations cannot be attributed to a single component. The different physical hard drive layout, data placement, replication path, cache status, thermal conditions, and the characteristics of the other consumer-class NVMe devices could all have contributed to this.\nThe native benchmark clearly shows that my Optane drives were not defective or inherently slow, and confirms that the devices can deliver the expected performance with low latency. The real problem was my assumption that adding an “extremely fast” device would automatically speed up the entire storage stack.\nInfo\rPlease take everything I say with a grain of salt. Storage isn’t my area of expertise, and certainly not when it comes to Nutanix. At the end of the day, I’m more of a networking and vSphere guy. I am aware that the tests were not conducted under ideal conditions, but I tried to test everything as consistently as possible.\rAnd now… Well, what can I say? Sometimes you make smart investments in your home lab, and sometimes you don’t. To put it bluntly, you could just say “RTFM” before buying hardware for over 500 euros. But that’s not the point—I’ve learned a lot about the Nutanix storage system over the last few days, and I can help you avoid making the same mistake. I’m not sure yet what I’ll do with the Optane disks—maybe I’ll add them to my Proxmox cluster. In my VCF cluster, they’re doing an outstanding job as memory tiering devices. I’m sure I’ll find a use for them. I hope you had fun watching me fail. And as I said at the beginning, Nutanix can’t be blamed for this.\n",
+    "wordCount" : "4188",
+    "inLanguage": "en",
+    "image":"http://localhost:62636/images/disc.jpg","datePublished": "2026-07-29T01:00:00+02:00",
+    "dateModified": "2026-07-29T01:00:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "http://localhost:62636/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http://localhost:62636/posts/intel-optane-on-nutanix-ce/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:62636/favicon.ico"
+      }
+    }
+}
+</script><title>Intel Optane on Nutanix CE - Or I should have read the manual</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="http://localhost:62636/css/style.min.ce2019bb7f60c463a43d6892a238576a253dba960044a27f2541e6e9c6e13a08.css" integrity="sha256-ziAZu39gxGOkPWiSojhXaiU9upYARKJ/JUHm6cbhOgg=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/disc.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="http://localhost:62636/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="http://localhost:62636/posts/">Posts</a><a href="http://localhost:62636/lab-bom/">Lab BOM</a><a href="http://localhost:62636/links/">Links</a><a href="http://localhost:62636/about/">About Me</a><a href="http://localhost:62636/imprint/">Imprint</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=http%3a%2f%2flocalhost%3a62636%2fposts%2fintel-optane-on-nutanix-ce%2f&amp;text=Intel%20Optane%20on%20Nutanix%20CE%20-%20Or%20I%20should%20have%20read%20the%20manual" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a62636%2fposts%2fintel-optane-on-nutanix-ce%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=Intel%20Optane%20on%20Nutanix%20CE%20-%20Or%20I%20should%20have%20read%20the%20manual&amp;body=http%3a%2f%2flocalhost%3a62636%2fposts%2fintel-optane-on-nutanix-ce%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a62636%2fposts%2fintel-optane-on-nutanix-ce%2f&amp;source=http%3a%2f%2flocalhost%3a62636%2f&amp;title=Intel%20Optane%20on%20Nutanix%20CE%20-%20Or%20I%20should%20have%20read%20the%20manual&amp;summary=Intel%20Optane%20on%20Nutanix%20CE%20-%20Or%20I%20should%20have%20read%20the%20manual%2c%20by%20SDN-Warrior%0a%0aThis%20short%20blog%20post%20is%20meant%20to%20show%20that%20things%20don%27t%20always%20work%20out%20and%20that%20sometimes%2c%20in%20the%20world%20of%20home%20labs%2c%20you%27re%20just%20throwing%20money%20down%20the%20drain.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;Intel Optane on Nutanix CE - Or I should have read the manual&#34;,&#34;http://localhost:62636/posts/intel-optane-on-nutanix-ce/&#34;,&#34;Intel Optane on Nutanix CE - Or I should have read the manual, by SDN-Warrior\n\nThis short blog post is meant to show that things don&#39;t always work out and that sometimes, in the world of home labs, you&#39;re just throwing money down the drain.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="http://localhost:62636/posts/">Posts</a></li>
+		<li><a href="http://localhost:62636/lab-bom/">Lab BOM</a></li>
+		<li><a href="http://localhost:62636/links/">Links</a></li>
+		<li><a href="http://localhost:62636/about/">About Me</a></li>
+		<li><a href="http://localhost:62636/imprint/">Imprint</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster">
+
+<div class="thin">
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+                <a href="/">SDN-Warrior | Daniel Krieger</a>
+            </li>
+            <li class="breadcrumbs__item">
+                <a href="/posts/">Posts</a>
+            </li>
+
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">
+            Intel Optane on Nutanix CE - Or I should have read the manual
+        </li>
+    </ol>
+</nav>
+</div><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jul 29, 2026</span></div>
+				<h1>Intel Optane on Nutanix CE - Or I should have read the manual</h1>
+			</header>
+			<div class="post-info"><p>This short blog post is meant to show that things don&#39;t always work out and that sometimes, in the world of home labs, you&#39;re just throwing money down the drain.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="http://localhost:62636/tags/nutanix">nutanix</a></span><span class="tag"><a href="http://localhost:62636/tags/homelab">homelab</a></span><span class="tag"><a href="http://localhost:62636/tags/optane">optane</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>4188 Words
+     // ReadTime
+    
+    
+    
+    19 Minutes, 2 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-07-29 01:00 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I&rsquo;m not quite sure how to start—maybe with a brief statement and a little foreshadowing. It doesn&rsquo;t always work out when you set your mind on something, and it&rsquo;s not always the software&rsquo;s fault. So this post isn&rsquo;t meant to bash Nutanix, but it&rsquo;s intended to prevent people from making the same mistakes I did.</p>
+<p>But let’s take it slow and start from the beginning. What was I actually planning to do? A few weeks ago, I bought some Intel Optane drives on eBay for my VCF setup to use them as memory tiering devices. The drive just needs to be fast, have low latency, and deliver solid random IOPS. You can currently find 280 GB Intel Optane 900P cards on eBay at a pretty good price. The cards cost around 160 euros, give or take a few euros, plus shipping—and since they come from China, there’s also a bit of customs duty.
+Long story short, the drives have proven themselves in memory tiering, which is why I thought, “Why not use them for Nutanix?” Since they work very well with VMware Memory Tiering and vSAN OSA — what could possibly go wrong?</p>
+<h2 id="intel-optane">Intel Optane<a href="#intel-optane" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Intel Optane SSDs such as the 900P are PCIe/NVMe drives built around 3D XPoint storage technology developed by Intel and Micron. 3D XPoint stores bits by changing the resistance state of the memory cell in a transistor-less cross-point array. Don’t ask me exactly how it works - maybe black magic.</p>
+<p>But what I do know is that Optane drives are characterized by tremendous durability, low latency, and, above all, consistent read/write performance. Unlike many consumer NAND SSDs, they do not depend on a small SLC write cache, so there is no dramatic performance cliff once that cache is exhausted. In my tests, I was able to fill the entire drive to its maximum capacity without any loss of performance. This is also consistent with Intel&rsquo;s tests, which can still be found online. Unfortunately, Optane was discontinued in 2022.</p>
+
+
+<div class="image-gallery" id="gallery-231dde72"><a href="/intel-optane-nutanix/Optane%20900P.jpg" class="gallery-item" data-lightbox-group="gallery-231dde72" data-title="Optane 900P"><img src="/intel-optane-nutanix/Optane%20900P_hu_c5b9913f098036d4.jpg" alt="Optane 900P" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Optane 900P</div>
+                    </a></div>
+<p>It’s also important to distinguish between consumer and enterprise Optane drives. The 900P was positioned as a client and enthusiast SSD, while enterprise models offered additional features such as enhanced power-loss protection and end-to-end data protection. Although the 900P falls into the consumer category, in terms of IOPS for random read and write operations, latency, and lifespan, it outperforms every other consumer NVMe drive I&rsquo;ve ever used.</p>
+<h2 id="the-idea">The Idea<a href="#the-idea" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>My idea was simple, more or less. Using Intel Optane as a dedicated CVM and performance-tier device in a Nutanix CE node was intended to reduce storage latency, improve performance for random and mixed I/O operations, and ensure more consistent write behavior under sustained load. That’s how simple and straightforward my thinking was.</p>
+<h2 id="stargate-io-logic">Stargate I/O Logic<a href="#stargate-io-logic" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>This is where my first mistake comes in, because Nutanix AOS storage architecture simply works differently than vSAN OSA. With OSA, all writes are first written to the caching device and then destaged to the other tier. An Optane drive can be very helpful here.</p>
+<p>With Nutanix, it depends heavily on the type of writes. Sequential writes typically bypass OpLog and are written directly to the data disks (Extent Store). Random write operations in bursts typically end up in the OpLog. Sustained random writes, like sequential writes, can go directly to the Extent Store or the OpLog. Reads are served either from Unified Cache (RAM), the OpLog or the Extent Store, depending on where the data is currently located. Yes, I realize that this is a very simplified explanation, but storage isn&rsquo;t my main focus anyway. Otherwise, this article probably would never have been written.</p>
+<p>But how did we get to this point? Well, the easiest way to start is with the setup.</p>
+<h2 id="the-setup">The setup<a href="#the-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I&rsquo;m using my 3-node cluster with Minisforum MS-01 nodes, configured with 2x10 Gb/s networks in an LACP bond with jumbo frames, 96 GB of RAM, and a total of 3 NVMe drives per node + Intel 900P. My CVMs each had 24 GB of RAM, which means that approximately 5.4 GB of Unified Cache is available ((CVM Memory - 12 GB) * 0.45). In addition, the cluster was deployed with the default redundancy factor of 2.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>NVMe Model</th>
+            <th style="text-align: right">Capacity</th>
+            <th>Usage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Intel Optane SSD 900P</strong></td>
+            <td style="text-align: right">280 GB</td>
+            <td>CVM and performance tier in the Optane configuration; raw-device target for the native FIO benchmark; not used in the baseline setup</td>
+        </tr>
+        <tr>
+            <td><strong>Samsung SSD 990 PRO</strong></td>
+            <td style="text-align: right">2 TB</td>
+            <td>Nutanix data tier</td>
+        </tr>
+        <tr>
+            <td><strong>Lexar SSD EQ790</strong></td>
+            <td style="text-align: right">2 TB</td>
+            <td>used for CVM-related and storage partitions</td>
+        </tr>
+        <tr>
+            <td><strong>Lexar SSD EQ790</strong></td>
+            <td style="text-align: right">1 TB</td>
+            <td>AHV boot device; Ubuntu system disk during the native Optane benchmark</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>My cluster is based on the CE version of Nutanix, but I have updated it to the current latest versions of AHV 11.2, AOS 7.6, Prism Central 7.6, and so on. To run the performance test, I created an Ubuntu server VM and placed it to an empty AHV host. I also shut down all workload VMs except for the Prism Central VM so as not to influence the results.</p>
+<h2 id="test-vm-configuration">Test VM Configuration<a href="#test-vm-configuration" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Component</th>
+            <th>Configuration</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Operating System</strong></td>
+            <td>Ubuntu 26.04 LTS</td>
+        </tr>
+        <tr>
+            <td><strong>Kernel</strong></td>
+            <td>Linux 7.0.0-28-generic</td>
+        </tr>
+        <tr>
+            <td><strong>Architecture</strong></td>
+            <td>x86_64</td>
+        </tr>
+        <tr>
+            <td><strong>FIO Version</strong></td>
+            <td>fio 3.41</td>
+        </tr>
+        <tr>
+            <td><strong>System Disk</strong></td>
+            <td>32 GiB virtual disk</td>
+        </tr>
+        <tr>
+            <td><strong>Test Disks</strong></td>
+            <td>2 × 100 GiB virtual disks</td>
+        </tr>
+        <tr>
+            <td><strong>Guest RAID Layout</strong></td>
+            <td>Linux software RAID1</td>
+        </tr>
+        <tr>
+            <td><strong>RAID Device</strong></td>
+            <td><code>/dev/md0</code></td>
+        </tr>
+        <tr>
+            <td><strong>Usable Test Capacity</strong></td>
+            <td>Approximately 99.9 GiB</td>
+        </tr>
+        <tr>
+            <td><strong>Filesystem</strong></td>
+            <td>XFS</td>
+        </tr>
+        <tr>
+            <td><strong>Mount Point</strong></td>
+            <td><code>/mnt/fio</code></td>
+        </tr>
+        <tr>
+            <td><strong>Test File</strong></td>
+            <td><code>/mnt/fio/testfile-64g</code></td>
+        </tr>
+        <tr>
+            <td><strong>Test File Size</strong></td>
+            <td>64 GiB</td>
+        </tr>
+        <tr>
+            <td><strong>I/O Engine</strong></td>
+            <td><code>libaio</code></td>
+        </tr>
+        <tr>
+            <td><strong>Direct I/O</strong></td>
+            <td>Enabled with <code>direct=1</code></td>
+        </tr>
+        <tr>
+            <td><strong>Number of Jobs</strong></td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td><strong>Virtualization Platform</strong></td>
+            <td>Nutanix AHV</td>
+        </tr>
+        <tr>
+            <td><strong>Storage Path</strong></td>
+            <td>Guest XFS → Linux md RAID1 → 2 virtual disks → AHV → CVM/AOS → Nutanix storage</td>
+        </tr>
+        <tr>
+            <td><strong>vCPU Allocation</strong></td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td><strong>Memory Allocation</strong></td>
+            <td>8 GB</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>RAID1 was used to generate higher backend I/O load from a single test VM. By mirroring each write operation to two virtual disks, multiple virtual hard disk queues are utilized, increasing the load on AHV, CVM, AOS, replication, and the physical storage paths without requiring multiple benchmark VMs to run simultaneously. This configuration does not fully replicate a multi-VM workload, as all I/O originates from a single guest and a coordinated FIO workload. However, the tests were conducted under similar conditions as much as possible and are internally consistent. Of course, the overall storage layout is different with an Optane disk than without one, and the cluster also had to be redeployed; however, I brought it up to the same patch level and configured it with the same settings. The reader should be aware that RAID 1 also affects the overall figures. Although it was kept constant across both tests, it amplifies the write path and may also amplify differences in data placement and replication behavior.</p>
+<h3 id="fio-test-methodology">FIO Test Methodology<a href="#fio-test-methodology" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>My FIO profile includes sequential throughput, random I/O operations with high queue depth, a 70:30 mixed synthetic workload, and latency at low queue depth. It is designed to measure both peak performance and latency behavior across the entire path. All tests accessed the same pre-created 64-GiB test file. The file was created before the benchmark began, and its expected size was verified. Nutanix compression and deduplication were disabled for all test runs. The same applies to erasure coding. In addition, the system had several hours to settle down before I ran the first tests. I&rsquo;ve always run all tests on the same physical host.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">As part of the preparation, the entire test file was allocated from the perspective of the host operating system and populated with data. However, caching mechanisms within the Nutanix storage stack were neither flushed nor bypassed during this process. The subsequent read tests may therefore still have been influenced by data that was loaded into the Nutanix Unified Cache during file preparation.</div>
+</aside>
+<p>The profile uses Linux&rsquo;s native asynchronous I/O engine via libaio. Direct I/O is enabled with <code>direct=1</code>, which typically bypasses the Linux page cache within the guest operating system. Caches at other points in the memory path, such as the Nutanix Unified Cache, are not bypassed.
+Before starting each workload, <code>invalidate=1</code> instructs FIO to invalidate the guest operating system’s cached pages for the test file, if supported. This helps reduce the influence of the guest page cache.</p>
+<p>The remaining global settings have the following purposes:</p>
+<ul>
+<li>numjobs=1 runs one FIO worker. Consequently, the configured I/O depth represents the total queue depth generated by the benchmark.</li>
+<li>group_reporting=1 produces combined reporting for all jobs in a reporting group. Since only one worker is used, this has little practical effect but keeps the output format consistent.</li>
+<li>refill_buffers=1 regenerates the I/O buffer contents for every submission instead of continually reusing the same memory buffer. This helps avoid repeatedly writing identical data patterns.</li>
+<li>randrepeat=1 initializes the random-number generators predictably, causing repeated test runs to use the same pseudo-random access pattern. This improves comparability but means that every run addresses blocks in the same sequence.</li>
+<li>percentile_list=50:95:99:99.9:99.99 records median and tail-latency percentiles in addition to average latency.</li>
+</ul>
+<h3 id="sequential-throughput-tests">Sequential Throughput Tests<a href="#sequential-throughput-tests" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The sequential tests use 1 MiB blocks and an I/O depth of 16. Each test transfers exactly 64 GiB, covering the complete test file once. The result is relevant to workloads such as large-file reads, backup, restore, streaming, and sequential data processing.</p>
+<h3 id="high-queue-depth-random-tests">High-Queue-Depth Random Tests<a href="#high-queue-depth-random-tests" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The random read and write tests use 4-KiB blocks, an I/O depth of 32, and an address range of 32 GiB.
+Both tests are time-based and run for 120 seconds following a 10-second warm-up phase. During the warm-up phase, FIO already generates the requested workload, but the resulting performance metrics are excluded from the reported statistics. Once the 32 GiB address range has been covered, FIO continues to perform I/O operations within the same range until the configured runtime has elapsed. The LFSR random number generator produces a deterministic pseudo-random access sequence that remains consistent across multiple runs.</p>
+<h3 id="mixed-7030-workload">Mixed 70/30 Workload<a href="#mixed-7030-workload" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The mixed workload uses 8-KiB blocks with a target distribution of 70% read operations and 30% write operations. It runs for 180 seconds following a 10-second warm-up phase and takes place within an address range of 32 GiB.
+This synthetic workload is designed to illustrate how read and write operations compete for resources when executed simultaneously. It tests read caching, write persistence, replication, queue management, and the interaction between read and write traffic.</p>
+<h3 id="low-queue-depth-latency-tests">Low-Queue-Depth Latency Tests<a href="#low-queue-depth-latency-tests" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The last two workloads use 4-KiB blocks and an I/O depth of one. They are designed to measure end-to-end storage latency with minimal queuing. After a five-second warm-up phase, each test runs for 60 seconds and accesses a 16 GiB address range.</p>
+<h3 id="test-execution">Test Execution<a href="#test-execution" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The full FIO profile was run twice for each Nutanix storage configuration. There was a pause of at least 60 seconds between each run. The better result from the two runs is shown in the comparison tables. I determined which run was better based on the IOPS from each test. If a run had better IOPS in 4 out of 6 tests, that run was selected. The guest configuration, FIO profile, test file size, compression setting and deduplication setting remained unchanged between the baseline and Optane tests. However, the underlying Nutanix cluster had to be redeployed with a different physical disk layout for the Optane configuration. Therefore, the results represent a comparison of the two complete storage configurations.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Why I Chose These Measurement Methods</b>
+    </div>
+    <div class="admonition-content">Selecting the better of the two runs leads to an optimistic bias. The values should therefore be interpreted as the best repeatable performance observed in my environment rather than as statistically representative averages. An average value based on multiple runs would have been the better choice; however, the time required to conduct the tests was already substantial, and since the differences between the first and second runs did not show any significant outliers, I opted for this method. With consumer hardware, a certain degree of variation is generally to be expected.</div>
+</aside>
+<h3 id="create-a-fio-test-file">Create a FIO test file<a href="#create-a-fio-test-file" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo fio \
+</span></span><span class="line"><span class="cl">  --name=prepare-64g \
+</span></span><span class="line"><span class="cl">  --filename=/mnt/fio/testfile-64g \
+</span></span><span class="line"><span class="cl">  --size=64G \
+</span></span><span class="line"><span class="cl">  --io_size=64G \
+</span></span><span class="line"><span class="cl">  --rw=write \
+</span></span><span class="line"><span class="cl">  --bs=1M \
+</span></span><span class="line"><span class="cl">  --ioengine=libaio \
+</span></span><span class="line"><span class="cl">  --direct=1 \
+</span></span><span class="line"><span class="cl">  --iodepth=32 \
+</span></span><span class="line"><span class="cl">  --numjobs=1 \
+</span></span><span class="line"><span class="cl">  --refill_buffers=1 \
+</span></span><span class="line"><span class="cl">  --end_fsync=1 \
+</span></span><span class="line"><span class="cl">  --group_reporting
+</span></span></code></pre></div><h3 id="fio-test-profile">FIO Test Profile<a href="#fio-test-profile" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[global]
+</span></span><span class="line"><span class="cl">filename=/mnt/fio/testfile-64g
+</span></span><span class="line"><span class="cl">ioengine=libaio
+</span></span><span class="line"><span class="cl">direct=1
+</span></span><span class="line"><span class="cl">invalidate=1
+</span></span><span class="line"><span class="cl">refill_buffers=1
+</span></span><span class="line"><span class="cl">group_reporting=1
+</span></span><span class="line"><span class="cl">numjobs=1
+</span></span><span class="line"><span class="cl">randrepeat=1
+</span></span><span class="line"><span class="cl">percentile_list=50:95:99:99.9:99.99
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[seq-read-1m]
+</span></span><span class="line"><span class="cl">rw=read
+</span></span><span class="line"><span class="cl">bs=1M
+</span></span><span class="line"><span class="cl">iodepth=16
+</span></span><span class="line"><span class="cl">size=64G
+</span></span><span class="line"><span class="cl">io_size=64G
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[seq-write-1m]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=write
+</span></span><span class="line"><span class="cl">bs=1M
+</span></span><span class="line"><span class="cl">iodepth=16
+</span></span><span class="line"><span class="cl">size=64G
+</span></span><span class="line"><span class="cl">io_size=64G
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[rand-read-4k]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randread
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=32
+</span></span><span class="line"><span class="cl">size=32G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=120
+</span></span><span class="line"><span class="cl">ramp_time=10
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[rand-write-4k]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randwrite
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=32
+</span></span><span class="line"><span class="cl">size=32G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=120
+</span></span><span class="line"><span class="cl">ramp_time=10
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[mixed-70read-30write-8k]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randrw
+</span></span><span class="line"><span class="cl">rwmixread=70
+</span></span><span class="line"><span class="cl">bs=8k
+</span></span><span class="line"><span class="cl">iodepth=32
+</span></span><span class="line"><span class="cl">size=32G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=180
+</span></span><span class="line"><span class="cl">ramp_time=10
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[latency-read-4k-qd1]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randread
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=1
+</span></span><span class="line"><span class="cl">size=16G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=60
+</span></span><span class="line"><span class="cl">ramp_time=5
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[latency-write-4k-qd1]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randwrite
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=1
+</span></span><span class="line"><span class="cl">size=16G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=60
+</span></span><span class="line"><span class="cl">ramp_time=5
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span></code></pre></div><h3 id="results-without-optane-drives">Results without Optane drives<a href="#results-without-optane-drives" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">FIO Test</th>
+            <th style="text-align: left">Result</th>
+            <th style="text-align: right">Average Latency</th>
+            <th style="text-align: right">p99 Latency</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left">Sequential Read 1 MiB</td>
+            <td style="text-align: left">2,587 MiB/s</td>
+            <td style="text-align: right">6.14 ms</td>
+            <td style="text-align: right">11.08 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Sequential Write 1 MiB</td>
+            <td style="text-align: left">1,704 MiB/s</td>
+            <td style="text-align: right">9.16 ms</td>
+            <td style="text-align: right">22.68 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Random Read 4K QD32</td>
+            <td style="text-align: left">79,985 IOPS</td>
+            <td style="text-align: right">0.396 ms</td>
+            <td style="text-align: right">0.758 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Random Write 4K QD32</td>
+            <td style="text-align: left">32,403 IOPS</td>
+            <td style="text-align: right">0.983 ms</td>
+            <td style="text-align: right">2.61 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Mixed 70/30 Read</td>
+            <td style="text-align: left">28,465 IOPS</td>
+            <td style="text-align: right">0.637 ms</td>
+            <td style="text-align: right">2.02 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Mixed 70/30 Write</td>
+            <td style="text-align: left">12,198 IOPS</td>
+            <td style="text-align: right">1.121 ms</td>
+            <td style="text-align: right">5.41 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Random Read 4K QD1</td>
+            <td style="text-align: left">4,361 IOPS</td>
+            <td style="text-align: right">0.221 ms</td>
+            <td style="text-align: right">0.864 ms</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">Random Write 4K QD1</td>
+            <td style="text-align: left">2,464 IOPS</td>
+            <td style="text-align: right">0.393 ms</td>
+            <td style="text-align: right">1.204 ms</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>While the average latency simply represents the mean of all measured I/Os, the P99 latency indicates the time within which 99 percent of all I/Os were completed. When it comes to latency, the lower the better.
+A P99 latency that is close to the average latency indicates a storage system that operates consistently. The sequential write result is clearly below the read throughput, while the comparatively high P99 latency indicates less consistent completion times during the write workload.</p>
+<p>Next up is the test with the Optane disks. However, I had to completely redeploy the cluster for this, because the Optane disks are too small to simply swap out. And honestly, I should have been suspicious at that point. But let&rsquo;s dive in.</p>
+<h2 id="re-provisioning-the-cluster-for-the-optane-test">Re-provisioning the cluster for the Optane test<a href="#re-provisioning-the-cluster-for-the-optane-test" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Let&rsquo;s start with the first attempt: I wanted to use my 1 TB NVMe as the boot drive again, so I selected the Optane drive as the CVM drive and a 2 TB drive as the data drive. Unfortunately, this isn&rsquo;t supported, and the installer keeps crashing unless the smallest drive in the system is used as the boot device. This issue has also been reported within the Nutanix community and appears to be a well-known problem with the CE Edition. I haven’t really found a solution to this yet, but I figured, “Oh well, let’s just run AHV from the USB drive.” These drives are 64 GB, so they’re technically the smaller drives. I was actually able to install Nutanix this way, but I couldn’t update it because the cluster check kept failing. But what exactly is wrong with my new deployment? After spending hours digging through the logs, I finally found the problem.</p>
+<p>The cluster was unable to initialize “Curator” because the 280-GB Intel Optane drive was being used as the sole CVM drive. After the CVM system partitions were created, only about 139 GiB remained available for AOS. Curator required approximately 157 GiB for its MRFS reservation, so the drive was rejected as unusable and no Curator primary disk could be selected. Recreating the cluster did not help, as the underlying drive configuration remained unchanged.</p>
+
+
+<aside class="admonition failure" data-admonition-type="failure">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+   </svg></div>
+        <b>Log entry</b>
+    </div>
+    <div class="admonition-content"><p>W20260726 22:47:58.110591Z 853447 zeus_zoo_interface_ops.cc:883] Read node finished with error kNoNode for Zeus op ReadZkNodesIfcOp(65)[client_zoo_api] for path:/appliance/logical/curator/mrfs</p>
+<p>W20260726 22:47:58.110644Z 853452 curator_disk_manager_ops.cc:1133] Unable to (re)prepare disk 44 as the new reservation cannot be allocated; Disk size: 149145232957, Free estore space: 149138609725, Reservation factor: 2, Already reserved: 0, Requested reservation: 84192859258</p>
+<p>F20260726 22:47:58.110816Z 853452 curator_disk_manager.cc:1181] QFATAL No usable Curator disks found; unsetting primary disk id -1</p>
+</div>
+</aside>
+<p>So in the end, I had no choice but to use a second disk for the CVM and boot from the 1 TB disk. The layout now looks like this:</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Drive</th>
+            <th style="text-align: right">Capacity</th>
+            <th>Nutanix Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Lexar EQ790 NVMe</strong></td>
+            <td style="text-align: right">1 TB</td>
+            <td>AHV boot and system disk</td>
+        </tr>
+        <tr>
+            <td><strong>Intel Optane SSD 900P</strong></td>
+            <td style="text-align: right">280 GB</td>
+            <td>First CVM disk</td>
+        </tr>
+        <tr>
+            <td><strong>Lexar EQ790 NVMe</strong></td>
+            <td style="text-align: right">2 TB</td>
+            <td>Second CVM disk</td>
+        </tr>
+        <tr>
+            <td><strong>Samsung SSD 990 PRO</strong></td>
+            <td style="text-align: right">2 TB</td>
+            <td>Nutanix data disk</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>With this storage layout, I was finally able to deploy my cluster and bring it back up to the same state, but that also means my original goal—to use an Optane disk exclusively for the CVM—has officially failed. But by that point, I was already so far along that I wanted to run the tests anyway. It probably would have worked with a larger Optane disk. But I wasn&rsquo;t willing to spend any more money. Since two flash disks are now assigned to the CVM, there is no guarantee that the OpLog will be stored only on the Optane drive. At least that&rsquo;s what I thought, but more on that later. There has to be a little suspense, after all. The testing will once again be conducted using the same setup as before (more or less).</p>
+<h2 id="test-results-with-optane">Test Results with Optane<a href="#test-results-with-optane" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To be honest, I was a little surprised and could hardly believe the results, but see for yourself.</p>
+<h3 id="performance">Performance<a href="#performance" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Test</th>
+            <th style="text-align: right">Without Optane</th>
+            <th style="text-align: right">With Optane</th>
+            <th style="text-align: right">Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">2,587.0 MiB/s</td>
+            <td style="text-align: right">3,215.5 MiB/s</td>
+            <td style="text-align: right">+24.3%</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">1,704.0 MiB/s</td>
+            <td style="text-align: right">954.7 MiB/s</td>
+            <td style="text-align: right">-44.0%</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">79,985 IOPS</td>
+            <td style="text-align: right">87,227 IOPS</td>
+            <td style="text-align: right">+9.1%</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">32,403 IOPS</td>
+            <td style="text-align: right">22,381 IOPS</td>
+            <td style="text-align: right">-30.9%</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read</td>
+            <td style="text-align: right">28,465 IOPS</td>
+            <td style="text-align: right">19,754 IOPS</td>
+            <td style="text-align: right">-30.6%</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write</td>
+            <td style="text-align: right">12,198 IOPS</td>
+            <td style="text-align: right">8,461 IOPS</td>
+            <td style="text-align: right">-30.6%</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">4,361 IOPS</td>
+            <td style="text-align: right">5,210 IOPS</td>
+            <td style="text-align: right">+19.5%</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">2,464 IOPS</td>
+            <td style="text-align: right">2,340 IOPS</td>
+            <td style="text-align: right">-5.0%</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="average-latency---lower-latency-is-better">Average Latency - Lower latency is better.<a href="#average-latency---lower-latency-is-better" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Test</th>
+            <th style="text-align: right">Without Optane</th>
+            <th style="text-align: right">With Optane</th>
+            <th style="text-align: right">Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">6.140 ms</td>
+            <td style="text-align: right">4.935 ms</td>
+            <td style="text-align: right">-19.6%</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">9.160 ms</td>
+            <td style="text-align: right">16.473 ms</td>
+            <td style="text-align: right">+79.8%</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">0.396 ms</td>
+            <td style="text-align: right">0.363 ms</td>
+            <td style="text-align: right">-8.3%</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">0.983 ms</td>
+            <td style="text-align: right">1.423 ms</td>
+            <td style="text-align: right">+44.8%</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read</td>
+            <td style="text-align: right">0.637 ms</td>
+            <td style="text-align: right">0.742 ms</td>
+            <td style="text-align: right">+16.6%</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write</td>
+            <td style="text-align: right">1.121 ms</td>
+            <td style="text-align: right">2.030 ms</td>
+            <td style="text-align: right">+81.1%</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">0.221 ms</td>
+            <td style="text-align: right">0.186 ms</td>
+            <td style="text-align: right">-16.0%</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">0.393 ms</td>
+            <td style="text-align: right">0.415 ms</td>
+            <td style="text-align: right">+5.5%</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="p99-latency---lower-latency-is-better">p99 Latency - Lower latency is better.<a href="#p99-latency---lower-latency-is-better" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Test</th>
+            <th style="text-align: right">Without Optane</th>
+            <th style="text-align: right">With Optane</th>
+            <th style="text-align: right">Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">11.080 ms</td>
+            <td style="text-align: right">11.862 ms</td>
+            <td style="text-align: right">+7.1%</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">22.680 ms</td>
+            <td style="text-align: right">38.011 ms</td>
+            <td style="text-align: right">+67.6%</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">0.758 ms</td>
+            <td style="text-align: right">0.651 ms</td>
+            <td style="text-align: right">-14.1%</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">2.610 ms</td>
+            <td style="text-align: right">5.603 ms</td>
+            <td style="text-align: right">+114.7%</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read</td>
+            <td style="text-align: right">2.020 ms</td>
+            <td style="text-align: right">1.843 ms</td>
+            <td style="text-align: right">-8.8%</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write</td>
+            <td style="text-align: right">5.410 ms</td>
+            <td style="text-align: right">5.931 ms</td>
+            <td style="text-align: right">+9.6%</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">0.864 ms</td>
+            <td style="text-align: right">0.578 ms</td>
+            <td style="text-align: right">-33.2%</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">1.204 ms</td>
+            <td style="text-align: right">0.946 ms</td>
+            <td style="text-align: right">-21.4%</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="diagrams">Diagrams<a href="#diagrams" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+
+
+<div class="image-gallery" id="gallery-818d50aa"><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20Bandwidth.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - Bandwidth"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20Bandwidth_hu_26a55a41316ea4b8.png" alt="Nutanix FIO - Bandwidth" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - Bandwidth</div>
+                    </a><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20IOPS%20Comparison.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - IOPS Comparison"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20IOPS%20Comparison_hu_94d3870cbebd73cf.png" alt="Nutanix FIO - IOPS Comparison" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - IOPS Comparison</div>
+                    </a><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20Average%20Latency.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - Average Latency"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20Average%20Latency_hu_c8482ee74c535e43.png" alt="Nutanix FIO - Average Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - Average Latency</div>
+                    </a><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20p99%20Latency.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - p99 Latency"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20p99%20Latency_hu_6abab45fc4167101.png" alt="Nutanix FIO - p99 Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - p99 Latency</div>
+                    </a></div>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Diagrams</b>
+    </div>
+    <div class="admonition-content">Unfortunately, I didn&rsquo;t record any IOPS values for sequential read and write operations. That&rsquo;s why they&rsquo;re missing from Charts 2–4.</div>
+</aside>
+<p>Since I wanted to rule out a defective Optane drive, I ran the same test again using an Optane drive and a bare-metal installation of Ubuntu.</p>
+<h2 id="optane-native-performance-test">Optane Native Performance Test<a href="#optane-native-performance-test" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Workload</th>
+            <th style="text-align: right">Result</th>
+            <th style="text-align: right">Average Latency</th>
+            <th style="text-align: right">p99 Latency</th>
+            <th style="text-align: right">p99.9 Latency</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">2,608.8 MiB/s</td>
+            <td style="text-align: right">5.969 ms</td>
+            <td style="text-align: right">6.128 ms</td>
+            <td style="text-align: right">9.372 ms</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">2,455.0 MiB/s</td>
+            <td style="text-align: right">6.324 ms</td>
+            <td style="text-align: right">9.896 ms</td>
+            <td style="text-align: right">10.027 ms</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">399,728 IOPS</td>
+            <td style="text-align: right">0.0781 ms</td>
+            <td style="text-align: right">0.0876 ms</td>
+            <td style="text-align: right">0.0978 ms</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">300,532 IOPS</td>
+            <td style="text-align: right">0.103 ms</td>
+            <td style="text-align: right">0.159 ms</td>
+            <td style="text-align: right">0.165 ms</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read 8K QD32</td>
+            <td style="text-align: right">131,297 IOPS</td>
+            <td style="text-align: right">0.169 ms</td>
+            <td style="text-align: right">0.261 ms</td>
+            <td style="text-align: right">0.297 ms</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write 8K QD32</td>
+            <td style="text-align: right">56,291 IOPS</td>
+            <td style="text-align: right">0.166 ms</td>
+            <td style="text-align: right">0.255 ms</td>
+            <td style="text-align: right">0.293 ms</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">88,190 IOPS</td>
+            <td style="text-align: right">0.0096 ms</td>
+            <td style="text-align: right">0.0147 ms</td>
+            <td style="text-align: right">0.0356 ms</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">76,993 IOPS</td>
+            <td style="text-align: right">0.0102 ms</td>
+            <td style="text-align: right">0.0143 ms</td>
+            <td style="text-align: right">0.0361 ms</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="performance-comparison">Performance Comparison<a href="#performance-comparison" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Workload</th>
+            <th style="text-align: right">Without Optane</th>
+            <th style="text-align: right">With Optane</th>
+            <th style="text-align: right">Native Optane</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">2,587.0 MiB/s</td>
+            <td style="text-align: right">3,215.5 MiB/s</td>
+            <td style="text-align: right">2,608.8 MiB/s</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">1,704.0 MiB/s</td>
+            <td style="text-align: right">954.7 MiB/s</td>
+            <td style="text-align: right">2,455.0 MiB/s</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">79,985 IOPS</td>
+            <td style="text-align: right">87,227 IOPS</td>
+            <td style="text-align: right">399,728 IOPS</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">32,403 IOPS</td>
+            <td style="text-align: right">22,381 IOPS</td>
+            <td style="text-align: right">300,532 IOPS</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read 8K QD32</td>
+            <td style="text-align: right">28,465 IOPS</td>
+            <td style="text-align: right">19,754 IOPS</td>
+            <td style="text-align: right">131,297 IOPS</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write 8K QD32</td>
+            <td style="text-align: right">12,198 IOPS</td>
+            <td style="text-align: right">8,461 IOPS</td>
+            <td style="text-align: right">56,291 IOPS</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">4,361 IOPS</td>
+            <td style="text-align: right">5,210 IOPS</td>
+            <td style="text-align: right">88,190 IOPS</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">2,464 IOPS</td>
+            <td style="text-align: right">2,340 IOPS</td>
+            <td style="text-align: right">76,993 IOPS</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="average-latency---lower-values-are-better">Average Latency - Lower values are better.<a href="#average-latency---lower-values-are-better" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Workload</th>
+            <th style="text-align: right">Without Optane</th>
+            <th style="text-align: right">With Optane</th>
+            <th style="text-align: right">Native Optane</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">6.140 ms</td>
+            <td style="text-align: right">4.935 ms</td>
+            <td style="text-align: right">5.969 ms</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">9.160 ms</td>
+            <td style="text-align: right">16.473 ms</td>
+            <td style="text-align: right">6.324 ms</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">0.396 ms</td>
+            <td style="text-align: right">0.363 ms</td>
+            <td style="text-align: right">0.0781 ms</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">0.983 ms</td>
+            <td style="text-align: right">1.423 ms</td>
+            <td style="text-align: right">0.103 ms</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read 8K QD32</td>
+            <td style="text-align: right">0.637 ms</td>
+            <td style="text-align: right">0.742 ms</td>
+            <td style="text-align: right">0.169 ms</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write 8K QD32</td>
+            <td style="text-align: right">1.121 ms</td>
+            <td style="text-align: right">2.030 ms</td>
+            <td style="text-align: right">0.166 ms</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">0.221 ms</td>
+            <td style="text-align: right">0.186 ms</td>
+            <td style="text-align: right">0.0096 ms</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">0.393 ms</td>
+            <td style="text-align: right">0.415 ms</td>
+            <td style="text-align: right">0.0102 ms</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="p99-latency---lower-values-are-better">p99 Latency - Lower values are better.<a href="#p99-latency---lower-values-are-better" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Workload</th>
+            <th style="text-align: right">Without Optane</th>
+            <th style="text-align: right">With Optane</th>
+            <th style="text-align: right">Native Optane</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sequential Read 1 MiB</td>
+            <td style="text-align: right">11.080 ms</td>
+            <td style="text-align: right">11.862 ms</td>
+            <td style="text-align: right">6.128 ms</td>
+        </tr>
+        <tr>
+            <td>Sequential Write 1 MiB</td>
+            <td style="text-align: right">22.680 ms</td>
+            <td style="text-align: right">38.011 ms</td>
+            <td style="text-align: right">9.896 ms</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD32</td>
+            <td style="text-align: right">0.758 ms</td>
+            <td style="text-align: right">0.651 ms</td>
+            <td style="text-align: right">0.0876 ms</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD32</td>
+            <td style="text-align: right">2.610 ms</td>
+            <td style="text-align: right">5.603 ms</td>
+            <td style="text-align: right">0.159 ms</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Read 8K QD32</td>
+            <td style="text-align: right">2.020 ms</td>
+            <td style="text-align: right">1.843 ms</td>
+            <td style="text-align: right">0.261 ms</td>
+        </tr>
+        <tr>
+            <td>Mixed 70/30 Write 8K QD32</td>
+            <td style="text-align: right">5.410 ms</td>
+            <td style="text-align: right">5.931 ms</td>
+            <td style="text-align: right">0.255 ms</td>
+        </tr>
+        <tr>
+            <td>Random Read 4K QD1</td>
+            <td style="text-align: right">0.864 ms</td>
+            <td style="text-align: right">0.578 ms</td>
+            <td style="text-align: right">0.0147 ms</td>
+        </tr>
+        <tr>
+            <td>Random Write 4K QD1</td>
+            <td style="text-align: right">1.204 ms</td>
+            <td style="text-align: right">0.946 ms</td>
+            <td style="text-align: right">0.0143 ms</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="diagrams-1">Diagrams<a href="#diagrams-1" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+
+
+<div class="image-gallery" id="gallery-70c6bf42"><a href="/intel-optane-nutanix/Native%20-%20Sequential%20Throughput.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - Sequential Throughput"><img src="/intel-optane-nutanix/Native%20-%20Sequential%20Throughput_hu_6ad1e9f93576a950.png" alt="Native - Sequential Throughput" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - Sequential Throughput</div>
+                    </a><a href="/intel-optane-nutanix/Native%20-%20Random%20and%20Mixed%20IOPS.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - Random and Mixed IOPS"><img src="/intel-optane-nutanix/Native%20-%20Random%20and%20Mixed%20IOPS_hu_c6d82a263f3bd125.png" alt="Native - Random and Mixed IOPS" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - Random and Mixed IOPS</div>
+                    </a><a href="/intel-optane-nutanix/Native%20-%20Average%20Latency.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - Average Latency"><img src="/intel-optane-nutanix/Native%20-%20Average%20Latency_hu_71a12bf399ef31ed.png" alt="Native - Average Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - Average Latency</div>
+                    </a><a href="/intel-optane-nutanix/Native%20-%20p99%20Latency.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - p99 Latency"><img src="/intel-optane-nutanix/Native%20-%20p99%20Latency_hu_492c98cb9fbe4952.png" alt="Native - p99 Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - p99 Latency</div>
+                    </a></div>
+<h2 id="interpretation--an-attempt">Interpretation — An Attempt<a href="#interpretation--an-attempt" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Mission failed — at least that was my first thought — and man, that was an expensive little adventure.
+But it&rsquo;s no use — failure is part of the process — but what&rsquo;s actually going on with my system right now?</p>
+<p>If you take a closer look at the Stargate logs, you&rsquo;ll also see that, out of my Optane&rsquo;s approximately 260 GB of usable capacity, only about 15.3 GB is available for the OpLog. Since all disks belong to the same storage tier, all my NVMe drives receive an OpLog reservation. In the case of a 2 TB NVMe drive, that amounts to about 185 GB for the OpLog. This confirms once again that my assumption about how Nutanix storage works was completely wrong.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">grep -aEh <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;OpLog_disk_size.*(PHMB7470005W280CGN|S6Z2NU0XB04165Y)|disk_serial_id: &#34;(PHMB7470005W280CGN|S6Z2NU0XB04165Y)&#34;&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">~/data/logs/stargate* 2&gt;/dev/null <span class="p">|</span> tail -20
+</span></span></code></pre></div><p>Here&rsquo;s the log excerpt; it&rsquo;s not exactly easy to read, but one of the most important pieces of information is:
+<code>OpLog_disk_size: 16481369332</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">W20260728 20:34:21.916383Z 90697 stargate_cluster_state.cc:2167] Disk Usage stat for disk 13 not found , proto=disk_id:
+</span></span><span class="line"><span class="cl">13 service_vm_id: 2 mount_path: &#34;/home/nutanix/data/stargate-storage/disks/PHMB7470005W280CGN&#34; disk_size: 149803025165 
+</span></span><span class="line"><span class="cl">statfs_disk_size: 208943841280 storage_tier: &#34;SSD-PCIe&#34; data_dir_sublevels: 2 data_dir_sublevel_dirs: 20 
+</span></span><span class="line"><span class="cl">data_migration_status: 0 disk_location: 4 contains_metadata: true OpLog_disk_size: 16481369332 disk_serial_id: 
+</span></span><span class="line"><span class="cl">&#34;PHMB7470005W280CGN&#34; disk_uuid: &#34;6143c190-14ad-4651-8522-3582c84e5e71&#34; node_uuid: 
+</span></span><span class="line"><span class="cl">&#34;f3b7a7f2-b9b5-4a09-a58f-066de1eadf9a&#34; chosen_for_metadata: false metadata_disk_reservation_bytes: 32212254720 self_managed_nvme: false trim_enabled: true
+</span></span></code></pre></div><p>On one of my 2 TB hard drives, the log entry looks like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Disk Usage stat for disk 12 not found , proto=disk_id: 12 service_vm_id: 2 mount_path: &#34;/home/nutanix/data/
+</span></span><span class="line"><span class="cl">stargate-storage/disks/S6Z2NU0XB04165Y&#34; disk_size: 1702077037813 statfs_disk_size: 2000362143744 storage_tier: 
+</span></span><span class="line"><span class="cl">&#34;SSD-PCIe&#34; data_dir_sublevels: 2 data_dir_sublevel_dirs: 20 disk_location: 1 oplog_disk_size: 198266995467 
+</span></span><span class="line"><span class="cl">disk_serial_id: &#34;S6Z2NU0XB04165Y&#34; disk_uuid: &#34;f03121e0-e726-4aea-af6c-fe2faba8ea4b&#34; node_uuid: 
+</span></span><span class="line"><span class="cl">&#34;f3b7a7f2-b9b5-4a09-a58f-066de1eadf9a&#34; block_store_device_info { format_needed: false start_offset_bytes: 35651584 
+</span></span><span class="line"><span class="cl">end_offset_bytes: 2000397795327 } self_managed_nvme: false trim_enabled: true
+</span></span></code></pre></div><p>In an Optane-plus-NVMe configuration, Nutanix does not use Optane as the exclusive location for the OpLog. The OpLog is distributed across both Optane and NVMe devices, which means that the slower NVMes remains part of the write path for the OpLog and can undermine the latency advantage of Optane. As a result, burst writes may be distributed across different disks, and the varying latencies of those disks could have a negative impact.</p>
+<p>However, in my opinion, the OpLog alone does not explain all the results. Persistent and sequential write operations can bypass the OpLog and go directly to the Extent Store. However, the lower performance during sequential write operations cannot be attributed to a single component. The different physical hard drive layout, data placement, replication path, cache status, thermal conditions, and the characteristics of the other consumer-class NVMe devices could all have contributed to this.</p>
+<p>The native benchmark clearly shows that my Optane drives were not defective or inherently slow, and confirms that the devices can deliver the expected performance with low latency. The real problem was my assumption that adding an &ldquo;extremely fast&rdquo; device would automatically speed up the entire storage stack.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Please take everything I say with a grain of salt. Storage isn&rsquo;t my area of expertise, and certainly not when it comes to Nutanix. At the end of the day, I&rsquo;m more of a networking and vSphere guy. I am aware that the tests were not conducted under ideal conditions, but I tried to test everything as consistently as possible.</div>
+</aside>
+<h2 id="and-now">And now&hellip;<a href="#and-now" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Well, what can I say? Sometimes you make smart investments in your home lab, and sometimes you don’t. To put it bluntly, you could just say “RTFM” before buying hardware for over 500 euros. But that’s not the point—I’ve learned a lot about the Nutanix storage system over the last few days, and I can help you avoid making the same mistake.
+I’m not sure yet what I’ll do with the Optane disks—maybe I’ll add them to my Proxmox cluster. In my VCF cluster, they’re doing an outstanding job as memory tiering devices. I’m sure I’ll find a use for them. I hope you had fun watching me fail. And as I said at the beginning, Nutanix can&rsquo;t be blamed for this.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/homelab-update-2026/">Homelab Update 2026</a></li>
+	
+	<li><a href="/posts/nutanix-flow/">Nutanix - Flow 7: virtual networking</a></li>
+	
+	<li><a href="/posts/nutanix-install-ce/">Nutanix - Get started with the CE Edition</a></li>
+	
+	<li><a href="/posts/vcf9-extende-mgmt-domain/">VCF9 - Extend Managment Domain Cluster</a></li>
+	
+	<li><a href="/posts/ipv6-nsx/">IPv6 with NSX</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="http://localhost:62636/posts/vcf9.1-dtgw-vxlan/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF 9.1 - DTGW &amp; VNA: the route controller within me</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="http://localhost:62636/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="http://localhost:62636/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+<link rel="stylesheet" href="/klaro/klaro.css?v=1">
+</footer>
+<script async src="http://localhost:62636/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="http://localhost:62636/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

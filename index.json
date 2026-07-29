@@ -1,4 +1,10 @@
 [{
+    "title": "Intel Optane on Nutanix CE - Or I should have read the manual",
+    "url": "/posts/intel-optane-on-nutanix-ce/",
+    "date": "2026-07-29",
+    "description": "This short blog post is meant to show that things don't always work out and that sometimes, in the world of home labs, you're just throwing money down the drain.",
+    "tags": ["nutanix","homelab","optane"]
+  },{
     "title": "VCF 9.1 - DTGW \u0026 VNA: the route controller within me",
     "url": "/posts/vcf9.1-dtgw-vxlan/",
     "date": "2026-07-11",

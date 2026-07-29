@@ -1,7 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel>
 		<title>Posts on SDN-Warrior | Daniel Krieger</title>
-		<link>https://sdn-warrior.org/posts/</link>
+		<link>http://localhost:62636/posts/</link>
 		<description>Recent content in Posts on SDN-Warrior | Daniel Krieger</description>
 		<generator>Hugo -- gohugo.io</generator>
 
@@ -18,22 +18,963 @@
 		
 
 		
-		<lastBuildDate>Sat, 11 Jul 2026 13:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Wed, 29 Jul 2026 01:00:00 +0200</lastBuildDate>
 		
 
 		
-		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="http://localhost:62636/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 
 		
 		<item>
+			<title>Intel Optane on Nutanix CE - Or I should have read the manual</title>
+			<link>http://localhost:62636/posts/intel-optane-on-nutanix-ce/</link>
+			<pubDate>Wed, 29 Jul 2026 01:00:00 +0200</pubDate>
+
+			
+
+			<guid>http://localhost:62636/posts/intel-optane-on-nutanix-ce/</guid>
+
+			
+			<description><![CDATA[This short blog post is meant to show that things don't always work out and that sometimes, in the world of home labs, you're just throwing money down the drain.]]></description>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>I&rsquo;m not quite sure how to start—maybe with a brief statement and a little foreshadowing. It doesn&rsquo;t always work out when you set your mind on something, and it&rsquo;s not always the software&rsquo;s fault. So this post isn&rsquo;t meant to bash Nutanix, but it&rsquo;s intended to prevent people from making the same mistakes I did.</p>
+<p>But let’s take it slow and start from the beginning. What was I actually planning to do? A few weeks ago, I bought some Intel Optane drives on eBay for my VCF setup to use them as memory tiering devices. The drive just needs to be fast, have low latency, and deliver solid random IOPS. You can currently find 280 GB Intel Optane 900P cards on eBay at a pretty good price. The cards cost around 160 euros, give or take a few euros, plus shipping—and since they come from China, there’s also a bit of customs duty.
+Long story short, the drives have proven themselves in memory tiering, which is why I thought, “Why not use them for Nutanix?” Since they work very well with VMware Memory Tiering and vSAN OSA — what could possibly go wrong?</p>
+<h2 id="intel-optane">Intel Optane</h2>
+<p>Intel Optane SSDs such as the 900P are PCIe/NVMe drives built around 3D XPoint storage technology developed by Intel and Micron. 3D XPoint stores bits by changing the resistance state of the memory cell in a transistor-less cross-point array. Don’t ask me exactly how it works - maybe black magic.</p>
+<p>But what I do know is that Optane drives are characterized by tremendous durability, low latency, and, above all, consistent read/write performance. Unlike many consumer NAND SSDs, they do not depend on a small SLC write cache, so there is no dramatic performance cliff once that cache is exhausted. In my tests, I was able to fill the entire drive to its maximum capacity without any loss of performance. This is also consistent with Intel&rsquo;s tests, which can still be found online. Unfortunately, Optane was discontinued in 2022.</p>
+
+
+<div class="image-gallery" id="gallery-231dde72"><a href="/intel-optane-nutanix/Optane%20900P.jpg" class="gallery-item" data-lightbox-group="gallery-231dde72" data-title="Optane 900P"><img src="/intel-optane-nutanix/Optane%20900P_hu_c5b9913f098036d4.jpg" alt="Optane 900P" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Optane 900P</div>
+                    </a></div>
+<p>It’s also important to distinguish between consumer and enterprise Optane drives. The 900P was positioned as a client and enthusiast SSD, while enterprise models offered additional features such as enhanced power-loss protection and end-to-end data protection. Although the 900P falls into the consumer category, in terms of IOPS for random read and write operations, latency, and lifespan, it outperforms every other consumer NVMe drive I&rsquo;ve ever used.</p>
+<h2 id="the-idea">The Idea</h2>
+<p>My idea was simple, more or less. Using Intel Optane as a dedicated CVM and performance-tier device in a Nutanix CE node was intended to reduce storage latency, improve performance for random and mixed I/O operations, and ensure more consistent write behavior under sustained load. That’s how simple and straightforward my thinking was.</p>
+<h2 id="stargate-io-logic">Stargate I/O Logic</h2>
+<p>This is where my first mistake comes in, because Nutanix AOS storage architecture simply works differently than vSAN OSA. With OSA, all writes are first written to the caching device and then destaged to the other tier. An Optane drive can be very helpful here.</p>
+<p>With Nutanix, it depends heavily on the type of writes. Sequential writes typically bypass OpLog and are written directly to the data disks (Extent Store). Random write operations in bursts typically end up in the OpLog. Sustained random writes, like sequential writes, can go directly to the Extent Store or the OpLog. Reads are served either from Unified Cache (RAM), the OpLog or the Extent Store, depending on where the data is currently located. Yes, I realize that this is a very simplified explanation, but storage isn&rsquo;t my main focus anyway. Otherwise, this article probably would never have been written.</p>
+<p>But how did we get to this point? Well, the easiest way to start is with the setup.</p>
+<h2 id="the-setup">The setup</h2>
+<p>I&rsquo;m using my 3-node cluster with Minisforum MS-01 nodes, configured with 2x10 Gb/s networks in an LACP bond with jumbo frames, 96 GB of RAM, and a total of 3 NVMe drives per node + Intel 900P. My CVMs each had 24 GB of RAM, which means that approximately 5.4 GB of Unified Cache is available ((CVM Memory - 12 GB) * 0.45). In addition, the cluster was deployed with the default redundancy factor of 2.</p>
+<table>
+	<thead>
+			<tr>
+					<th>NVMe Model</th>
+					<th style="text-align: right">Capacity</th>
+					<th>Usage</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Intel Optane SSD 900P</strong></td>
+					<td style="text-align: right">280 GB</td>
+					<td>CVM and performance tier in the Optane configuration; raw-device target for the native FIO benchmark; not used in the baseline setup</td>
+			</tr>
+			<tr>
+					<td><strong>Samsung SSD 990 PRO</strong></td>
+					<td style="text-align: right">2 TB</td>
+					<td>Nutanix data tier</td>
+			</tr>
+			<tr>
+					<td><strong>Lexar SSD EQ790</strong></td>
+					<td style="text-align: right">2 TB</td>
+					<td>used for CVM-related and storage partitions</td>
+			</tr>
+			<tr>
+					<td><strong>Lexar SSD EQ790</strong></td>
+					<td style="text-align: right">1 TB</td>
+					<td>AHV boot device; Ubuntu system disk during the native Optane benchmark</td>
+			</tr>
+	</tbody>
+</table>
+<p>My cluster is based on the CE version of Nutanix, but I have updated it to the current latest versions of AHV 11.2, AOS 7.6, Prism Central 7.6, and so on. To run the performance test, I created an Ubuntu server VM and placed it to an empty AHV host. I also shut down all workload VMs except for the Prism Central VM so as not to influence the results.</p>
+<h2 id="test-vm-configuration">Test VM Configuration</h2>
+<table>
+	<thead>
+			<tr>
+					<th>Component</th>
+					<th>Configuration</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Operating System</strong></td>
+					<td>Ubuntu 26.04 LTS</td>
+			</tr>
+			<tr>
+					<td><strong>Kernel</strong></td>
+					<td>Linux 7.0.0-28-generic</td>
+			</tr>
+			<tr>
+					<td><strong>Architecture</strong></td>
+					<td>x86_64</td>
+			</tr>
+			<tr>
+					<td><strong>FIO Version</strong></td>
+					<td>fio 3.41</td>
+			</tr>
+			<tr>
+					<td><strong>System Disk</strong></td>
+					<td>32 GiB virtual disk</td>
+			</tr>
+			<tr>
+					<td><strong>Test Disks</strong></td>
+					<td>2 × 100 GiB virtual disks</td>
+			</tr>
+			<tr>
+					<td><strong>Guest RAID Layout</strong></td>
+					<td>Linux software RAID1</td>
+			</tr>
+			<tr>
+					<td><strong>RAID Device</strong></td>
+					<td><code>/dev/md0</code></td>
+			</tr>
+			<tr>
+					<td><strong>Usable Test Capacity</strong></td>
+					<td>Approximately 99.9 GiB</td>
+			</tr>
+			<tr>
+					<td><strong>Filesystem</strong></td>
+					<td>XFS</td>
+			</tr>
+			<tr>
+					<td><strong>Mount Point</strong></td>
+					<td><code>/mnt/fio</code></td>
+			</tr>
+			<tr>
+					<td><strong>Test File</strong></td>
+					<td><code>/mnt/fio/testfile-64g</code></td>
+			</tr>
+			<tr>
+					<td><strong>Test File Size</strong></td>
+					<td>64 GiB</td>
+			</tr>
+			<tr>
+					<td><strong>I/O Engine</strong></td>
+					<td><code>libaio</code></td>
+			</tr>
+			<tr>
+					<td><strong>Direct I/O</strong></td>
+					<td>Enabled with <code>direct=1</code></td>
+			</tr>
+			<tr>
+					<td><strong>Number of Jobs</strong></td>
+					<td>1</td>
+			</tr>
+			<tr>
+					<td><strong>Virtualization Platform</strong></td>
+					<td>Nutanix AHV</td>
+			</tr>
+			<tr>
+					<td><strong>Storage Path</strong></td>
+					<td>Guest XFS → Linux md RAID1 → 2 virtual disks → AHV → CVM/AOS → Nutanix storage</td>
+			</tr>
+			<tr>
+					<td><strong>vCPU Allocation</strong></td>
+					<td>4</td>
+			</tr>
+			<tr>
+					<td><strong>Memory Allocation</strong></td>
+					<td>8 GB</td>
+			</tr>
+	</tbody>
+</table>
+<p>RAID1 was used to generate higher backend I/O load from a single test VM. By mirroring each write operation to two virtual disks, multiple virtual hard disk queues are utilized, increasing the load on AHV, CVM, AOS, replication, and the physical storage paths without requiring multiple benchmark VMs to run simultaneously. This configuration does not fully replicate a multi-VM workload, as all I/O originates from a single guest and a coordinated FIO workload. However, the tests were conducted under similar conditions as much as possible and are internally consistent. Of course, the overall storage layout is different with an Optane disk than without one, and the cluster also had to be redeployed; however, I brought it up to the same patch level and configured it with the same settings. The reader should be aware that RAID 1 also affects the overall figures. Although it was kept constant across both tests, it amplifies the write path and may also amplify differences in data placement and replication behavior.</p>
+<h3 id="fio-test-methodology">FIO Test Methodology</h3>
+<p>My FIO profile includes sequential throughput, random I/O operations with high queue depth, a 70:30 mixed synthetic workload, and latency at low queue depth. It is designed to measure both peak performance and latency behavior across the entire path. All tests accessed the same pre-created 64-GiB test file. The file was created before the benchmark began, and its expected size was verified. Nutanix compression and deduplication were disabled for all test runs. The same applies to erasure coding. In addition, the system had several hours to settle down before I ran the first tests. I&rsquo;ve always run all tests on the same physical host.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">As part of the preparation, the entire test file was allocated from the perspective of the host operating system and populated with data. However, caching mechanisms within the Nutanix storage stack were neither flushed nor bypassed during this process. The subsequent read tests may therefore still have been influenced by data that was loaded into the Nutanix Unified Cache during file preparation.</div>
+</aside>
+<p>The profile uses Linux&rsquo;s native asynchronous I/O engine via libaio. Direct I/O is enabled with <code>direct=1</code>, which typically bypasses the Linux page cache within the guest operating system. Caches at other points in the memory path, such as the Nutanix Unified Cache, are not bypassed.
+Before starting each workload, <code>invalidate=1</code> instructs FIO to invalidate the guest operating system’s cached pages for the test file, if supported. This helps reduce the influence of the guest page cache.</p>
+<p>The remaining global settings have the following purposes:</p>
+<ul>
+<li>numjobs=1 runs one FIO worker. Consequently, the configured I/O depth represents the total queue depth generated by the benchmark.</li>
+<li>group_reporting=1 produces combined reporting for all jobs in a reporting group. Since only one worker is used, this has little practical effect but keeps the output format consistent.</li>
+<li>refill_buffers=1 regenerates the I/O buffer contents for every submission instead of continually reusing the same memory buffer. This helps avoid repeatedly writing identical data patterns.</li>
+<li>randrepeat=1 initializes the random-number generators predictably, causing repeated test runs to use the same pseudo-random access pattern. This improves comparability but means that every run addresses blocks in the same sequence.</li>
+<li>percentile_list=50:95:99:99.9:99.99 records median and tail-latency percentiles in addition to average latency.</li>
+</ul>
+<h3 id="sequential-throughput-tests">Sequential Throughput Tests</h3>
+<p>The sequential tests use 1 MiB blocks and an I/O depth of 16. Each test transfers exactly 64 GiB, covering the complete test file once. The result is relevant to workloads such as large-file reads, backup, restore, streaming, and sequential data processing.</p>
+<h3 id="high-queue-depth-random-tests">High-Queue-Depth Random Tests</h3>
+<p>The random read and write tests use 4-KiB blocks, an I/O depth of 32, and an address range of 32 GiB.
+Both tests are time-based and run for 120 seconds following a 10-second warm-up phase. During the warm-up phase, FIO already generates the requested workload, but the resulting performance metrics are excluded from the reported statistics. Once the 32 GiB address range has been covered, FIO continues to perform I/O operations within the same range until the configured runtime has elapsed. The LFSR random number generator produces a deterministic pseudo-random access sequence that remains consistent across multiple runs.</p>
+<h3 id="mixed-7030-workload">Mixed 70/30 Workload</h3>
+<p>The mixed workload uses 8-KiB blocks with a target distribution of 70% read operations and 30% write operations. It runs for 180 seconds following a 10-second warm-up phase and takes place within an address range of 32 GiB.
+This synthetic workload is designed to illustrate how read and write operations compete for resources when executed simultaneously. It tests read caching, write persistence, replication, queue management, and the interaction between read and write traffic.</p>
+<h3 id="low-queue-depth-latency-tests">Low-Queue-Depth Latency Tests</h3>
+<p>The last two workloads use 4-KiB blocks and an I/O depth of one. They are designed to measure end-to-end storage latency with minimal queuing. After a five-second warm-up phase, each test runs for 60 seconds and accesses a 16 GiB address range.</p>
+<h3 id="test-execution">Test Execution</h3>
+<p>The full FIO profile was run twice for each Nutanix storage configuration. There was a pause of at least 60 seconds between each run. The better result from the two runs is shown in the comparison tables. I determined which run was better based on the IOPS from each test. If a run had better IOPS in 4 out of 6 tests, that run was selected. The guest configuration, FIO profile, test file size, compression setting and deduplication setting remained unchanged between the baseline and Optane tests. However, the underlying Nutanix cluster had to be redeployed with a different physical disk layout for the Optane configuration. Therefore, the results represent a comparison of the two complete storage configurations.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Why I Chose These Measurement Methods</b>
+    </div>
+    <div class="admonition-content">Selecting the better of the two runs leads to an optimistic bias. The values should therefore be interpreted as the best repeatable performance observed in my environment rather than as statistically representative averages. An average value based on multiple runs would have been the better choice; however, the time required to conduct the tests was already substantial, and since the differences between the first and second runs did not show any significant outliers, I opted for this method. With consumer hardware, a certain degree of variation is generally to be expected.</div>
+</aside>
+<h3 id="create-a-fio-test-file">Create a FIO test file</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo fio \
+</span></span><span class="line"><span class="cl">  --name=prepare-64g \
+</span></span><span class="line"><span class="cl">  --filename=/mnt/fio/testfile-64g \
+</span></span><span class="line"><span class="cl">  --size=64G \
+</span></span><span class="line"><span class="cl">  --io_size=64G \
+</span></span><span class="line"><span class="cl">  --rw=write \
+</span></span><span class="line"><span class="cl">  --bs=1M \
+</span></span><span class="line"><span class="cl">  --ioengine=libaio \
+</span></span><span class="line"><span class="cl">  --direct=1 \
+</span></span><span class="line"><span class="cl">  --iodepth=32 \
+</span></span><span class="line"><span class="cl">  --numjobs=1 \
+</span></span><span class="line"><span class="cl">  --refill_buffers=1 \
+</span></span><span class="line"><span class="cl">  --end_fsync=1 \
+</span></span><span class="line"><span class="cl">  --group_reporting
+</span></span></code></pre></div><h3 id="fio-test-profile">FIO Test Profile</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[global]
+</span></span><span class="line"><span class="cl">filename=/mnt/fio/testfile-64g
+</span></span><span class="line"><span class="cl">ioengine=libaio
+</span></span><span class="line"><span class="cl">direct=1
+</span></span><span class="line"><span class="cl">invalidate=1
+</span></span><span class="line"><span class="cl">refill_buffers=1
+</span></span><span class="line"><span class="cl">group_reporting=1
+</span></span><span class="line"><span class="cl">numjobs=1
+</span></span><span class="line"><span class="cl">randrepeat=1
+</span></span><span class="line"><span class="cl">percentile_list=50:95:99:99.9:99.99
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[seq-read-1m]
+</span></span><span class="line"><span class="cl">rw=read
+</span></span><span class="line"><span class="cl">bs=1M
+</span></span><span class="line"><span class="cl">iodepth=16
+</span></span><span class="line"><span class="cl">size=64G
+</span></span><span class="line"><span class="cl">io_size=64G
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[seq-write-1m]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=write
+</span></span><span class="line"><span class="cl">bs=1M
+</span></span><span class="line"><span class="cl">iodepth=16
+</span></span><span class="line"><span class="cl">size=64G
+</span></span><span class="line"><span class="cl">io_size=64G
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[rand-read-4k]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randread
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=32
+</span></span><span class="line"><span class="cl">size=32G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=120
+</span></span><span class="line"><span class="cl">ramp_time=10
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[rand-write-4k]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randwrite
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=32
+</span></span><span class="line"><span class="cl">size=32G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=120
+</span></span><span class="line"><span class="cl">ramp_time=10
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[mixed-70read-30write-8k]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randrw
+</span></span><span class="line"><span class="cl">rwmixread=70
+</span></span><span class="line"><span class="cl">bs=8k
+</span></span><span class="line"><span class="cl">iodepth=32
+</span></span><span class="line"><span class="cl">size=32G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=180
+</span></span><span class="line"><span class="cl">ramp_time=10
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[latency-read-4k-qd1]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randread
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=1
+</span></span><span class="line"><span class="cl">size=16G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=60
+</span></span><span class="line"><span class="cl">ramp_time=5
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[latency-write-4k-qd1]
+</span></span><span class="line"><span class="cl">stonewall
+</span></span><span class="line"><span class="cl">rw=randwrite
+</span></span><span class="line"><span class="cl">bs=4k
+</span></span><span class="line"><span class="cl">iodepth=1
+</span></span><span class="line"><span class="cl">size=16G
+</span></span><span class="line"><span class="cl">time_based=1
+</span></span><span class="line"><span class="cl">runtime=60
+</span></span><span class="line"><span class="cl">ramp_time=5
+</span></span><span class="line"><span class="cl">random_generator=lfsr
+</span></span><span class="line"><span class="cl">end_fsync=1
+</span></span></code></pre></div><h3 id="results-without-optane-drives">Results without Optane drives</h3>
+<table>
+	<thead>
+			<tr>
+					<th style="text-align: left">FIO Test</th>
+					<th style="text-align: left">Result</th>
+					<th style="text-align: right">Average Latency</th>
+					<th style="text-align: right">p99 Latency</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left">Sequential Read 1 MiB</td>
+					<td style="text-align: left">2,587 MiB/s</td>
+					<td style="text-align: right">6.14 ms</td>
+					<td style="text-align: right">11.08 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Sequential Write 1 MiB</td>
+					<td style="text-align: left">1,704 MiB/s</td>
+					<td style="text-align: right">9.16 ms</td>
+					<td style="text-align: right">22.68 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Random Read 4K QD32</td>
+					<td style="text-align: left">79,985 IOPS</td>
+					<td style="text-align: right">0.396 ms</td>
+					<td style="text-align: right">0.758 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Random Write 4K QD32</td>
+					<td style="text-align: left">32,403 IOPS</td>
+					<td style="text-align: right">0.983 ms</td>
+					<td style="text-align: right">2.61 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Mixed 70/30 Read</td>
+					<td style="text-align: left">28,465 IOPS</td>
+					<td style="text-align: right">0.637 ms</td>
+					<td style="text-align: right">2.02 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Mixed 70/30 Write</td>
+					<td style="text-align: left">12,198 IOPS</td>
+					<td style="text-align: right">1.121 ms</td>
+					<td style="text-align: right">5.41 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Random Read 4K QD1</td>
+					<td style="text-align: left">4,361 IOPS</td>
+					<td style="text-align: right">0.221 ms</td>
+					<td style="text-align: right">0.864 ms</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Random Write 4K QD1</td>
+					<td style="text-align: left">2,464 IOPS</td>
+					<td style="text-align: right">0.393 ms</td>
+					<td style="text-align: right">1.204 ms</td>
+			</tr>
+	</tbody>
+</table>
+<p>While the average latency simply represents the mean of all measured I/Os, the P99 latency indicates the time within which 99 percent of all I/Os were completed. When it comes to latency, the lower the better.
+A P99 latency that is close to the average latency indicates a storage system that operates consistently. The sequential write result is clearly below the read throughput, while the comparatively high P99 latency indicates less consistent completion times during the write workload.</p>
+<p>Next up is the test with the Optane disks. However, I had to completely redeploy the cluster for this, because the Optane disks are too small to simply swap out. And honestly, I should have been suspicious at that point. But let&rsquo;s dive in.</p>
+<h2 id="re-provisioning-the-cluster-for-the-optane-test">Re-provisioning the cluster for the Optane test</h2>
+<p>Let&rsquo;s start with the first attempt: I wanted to use my 1 TB NVMe as the boot drive again, so I selected the Optane drive as the CVM drive and a 2 TB drive as the data drive. Unfortunately, this isn&rsquo;t supported, and the installer keeps crashing unless the smallest drive in the system is used as the boot device. This issue has also been reported within the Nutanix community and appears to be a well-known problem with the CE Edition. I haven’t really found a solution to this yet, but I figured, “Oh well, let’s just run AHV from the USB drive.” These drives are 64 GB, so they’re technically the smaller drives. I was actually able to install Nutanix this way, but I couldn’t update it because the cluster check kept failing. But what exactly is wrong with my new deployment? After spending hours digging through the logs, I finally found the problem.</p>
+<p>The cluster was unable to initialize “Curator” because the 280-GB Intel Optane drive was being used as the sole CVM drive. After the CVM system partitions were created, only about 139 GiB remained available for AOS. Curator required approximately 157 GiB for its MRFS reservation, so the drive was rejected as unusable and no Curator primary disk could be selected. Recreating the cluster did not help, as the underlying drive configuration remained unchanged.</p>
+
+
+<aside class="admonition failure" data-admonition-type="failure">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+   </svg></div>
+        <b>Log entry</b>
+    </div>
+    <div class="admonition-content"><p>W20260726 22:47:58.110591Z 853447 zeus_zoo_interface_ops.cc:883] Read node finished with error kNoNode for Zeus op ReadZkNodesIfcOp(65)[client_zoo_api] for path:/appliance/logical/curator/mrfs</p>
+<p>W20260726 22:47:58.110644Z 853452 curator_disk_manager_ops.cc:1133] Unable to (re)prepare disk 44 as the new reservation cannot be allocated; Disk size: 149145232957, Free estore space: 149138609725, Reservation factor: 2, Already reserved: 0, Requested reservation: 84192859258</p>
+<p>F20260726 22:47:58.110816Z 853452 curator_disk_manager.cc:1181] QFATAL No usable Curator disks found; unsetting primary disk id -1</p>
+</div>
+</aside>
+<p>So in the end, I had no choice but to use a second disk for the CVM and boot from the 1 TB disk. The layout now looks like this:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Drive</th>
+					<th style="text-align: right">Capacity</th>
+					<th>Nutanix Role</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Lexar EQ790 NVMe</strong></td>
+					<td style="text-align: right">1 TB</td>
+					<td>AHV boot and system disk</td>
+			</tr>
+			<tr>
+					<td><strong>Intel Optane SSD 900P</strong></td>
+					<td style="text-align: right">280 GB</td>
+					<td>First CVM disk</td>
+			</tr>
+			<tr>
+					<td><strong>Lexar EQ790 NVMe</strong></td>
+					<td style="text-align: right">2 TB</td>
+					<td>Second CVM disk</td>
+			</tr>
+			<tr>
+					<td><strong>Samsung SSD 990 PRO</strong></td>
+					<td style="text-align: right">2 TB</td>
+					<td>Nutanix data disk</td>
+			</tr>
+	</tbody>
+</table>
+<p>With this storage layout, I was finally able to deploy my cluster and bring it back up to the same state, but that also means my original goal—to use an Optane disk exclusively for the CVM—has officially failed. But by that point, I was already so far along that I wanted to run the tests anyway. It probably would have worked with a larger Optane disk. But I wasn&rsquo;t willing to spend any more money. Since two flash disks are now assigned to the CVM, there is no guarantee that the OpLog will be stored only on the Optane drive. At least that&rsquo;s what I thought, but more on that later. There has to be a little suspense, after all. The testing will once again be conducted using the same setup as before (more or less).</p>
+<h2 id="test-results-with-optane">Test Results with Optane</h2>
+<p>To be honest, I was a little surprised and could hardly believe the results, but see for yourself.</p>
+<h3 id="performance">Performance</h3>
+<table>
+	<thead>
+			<tr>
+					<th>Test</th>
+					<th style="text-align: right">Without Optane</th>
+					<th style="text-align: right">With Optane</th>
+					<th style="text-align: right">Change</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">2,587.0 MiB/s</td>
+					<td style="text-align: right">3,215.5 MiB/s</td>
+					<td style="text-align: right">+24.3%</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">1,704.0 MiB/s</td>
+					<td style="text-align: right">954.7 MiB/s</td>
+					<td style="text-align: right">-44.0%</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">79,985 IOPS</td>
+					<td style="text-align: right">87,227 IOPS</td>
+					<td style="text-align: right">+9.1%</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">32,403 IOPS</td>
+					<td style="text-align: right">22,381 IOPS</td>
+					<td style="text-align: right">-30.9%</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read</td>
+					<td style="text-align: right">28,465 IOPS</td>
+					<td style="text-align: right">19,754 IOPS</td>
+					<td style="text-align: right">-30.6%</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write</td>
+					<td style="text-align: right">12,198 IOPS</td>
+					<td style="text-align: right">8,461 IOPS</td>
+					<td style="text-align: right">-30.6%</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">4,361 IOPS</td>
+					<td style="text-align: right">5,210 IOPS</td>
+					<td style="text-align: right">+19.5%</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">2,464 IOPS</td>
+					<td style="text-align: right">2,340 IOPS</td>
+					<td style="text-align: right">-5.0%</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="average-latency---lower-latency-is-better">Average Latency - Lower latency is better.</h3>
+<table>
+	<thead>
+			<tr>
+					<th>Test</th>
+					<th style="text-align: right">Without Optane</th>
+					<th style="text-align: right">With Optane</th>
+					<th style="text-align: right">Change</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">6.140 ms</td>
+					<td style="text-align: right">4.935 ms</td>
+					<td style="text-align: right">-19.6%</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">9.160 ms</td>
+					<td style="text-align: right">16.473 ms</td>
+					<td style="text-align: right">+79.8%</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">0.396 ms</td>
+					<td style="text-align: right">0.363 ms</td>
+					<td style="text-align: right">-8.3%</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">0.983 ms</td>
+					<td style="text-align: right">1.423 ms</td>
+					<td style="text-align: right">+44.8%</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read</td>
+					<td style="text-align: right">0.637 ms</td>
+					<td style="text-align: right">0.742 ms</td>
+					<td style="text-align: right">+16.6%</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write</td>
+					<td style="text-align: right">1.121 ms</td>
+					<td style="text-align: right">2.030 ms</td>
+					<td style="text-align: right">+81.1%</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">0.221 ms</td>
+					<td style="text-align: right">0.186 ms</td>
+					<td style="text-align: right">-16.0%</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">0.393 ms</td>
+					<td style="text-align: right">0.415 ms</td>
+					<td style="text-align: right">+5.5%</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="p99-latency---lower-latency-is-better">p99 Latency - Lower latency is better.</h3>
+<table>
+	<thead>
+			<tr>
+					<th>Test</th>
+					<th style="text-align: right">Without Optane</th>
+					<th style="text-align: right">With Optane</th>
+					<th style="text-align: right">Change</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">11.080 ms</td>
+					<td style="text-align: right">11.862 ms</td>
+					<td style="text-align: right">+7.1%</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">22.680 ms</td>
+					<td style="text-align: right">38.011 ms</td>
+					<td style="text-align: right">+67.6%</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">0.758 ms</td>
+					<td style="text-align: right">0.651 ms</td>
+					<td style="text-align: right">-14.1%</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">2.610 ms</td>
+					<td style="text-align: right">5.603 ms</td>
+					<td style="text-align: right">+114.7%</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read</td>
+					<td style="text-align: right">2.020 ms</td>
+					<td style="text-align: right">1.843 ms</td>
+					<td style="text-align: right">-8.8%</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write</td>
+					<td style="text-align: right">5.410 ms</td>
+					<td style="text-align: right">5.931 ms</td>
+					<td style="text-align: right">+9.6%</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">0.864 ms</td>
+					<td style="text-align: right">0.578 ms</td>
+					<td style="text-align: right">-33.2%</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">1.204 ms</td>
+					<td style="text-align: right">0.946 ms</td>
+					<td style="text-align: right">-21.4%</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="diagrams">Diagrams</h3>
+
+
+<div class="image-gallery" id="gallery-818d50aa"><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20Bandwidth.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - Bandwidth"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20Bandwidth_hu_26a55a41316ea4b8.png" alt="Nutanix FIO - Bandwidth" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - Bandwidth</div>
+                    </a><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20IOPS%20Comparison.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - IOPS Comparison"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20IOPS%20Comparison_hu_94d3870cbebd73cf.png" alt="Nutanix FIO - IOPS Comparison" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - IOPS Comparison</div>
+                    </a><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20Average%20Latency.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - Average Latency"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20Average%20Latency_hu_c8482ee74c535e43.png" alt="Nutanix FIO - Average Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - Average Latency</div>
+                    </a><a href="/intel-optane-nutanix/Nutanix%20FIO%20-%20p99%20Latency.png" class="gallery-item" data-lightbox-group="gallery-818d50aa" data-title="Nutanix FIO - p99 Latency"><img src="/intel-optane-nutanix/Nutanix%20FIO%20-%20p99%20Latency_hu_6abab45fc4167101.png" alt="Nutanix FIO - p99 Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Nutanix FIO - p99 Latency</div>
+                    </a></div>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Diagrams</b>
+    </div>
+    <div class="admonition-content">Unfortunately, I didn&rsquo;t record any IOPS values for sequential read and write operations. That&rsquo;s why they&rsquo;re missing from Charts 2–4.</div>
+</aside>
+<p>Since I wanted to rule out a defective Optane drive, I ran the same test again using an Optane drive and a bare-metal installation of Ubuntu.</p>
+<h2 id="optane-native-performance-test">Optane Native Performance Test</h2>
+<table>
+	<thead>
+			<tr>
+					<th>Workload</th>
+					<th style="text-align: right">Result</th>
+					<th style="text-align: right">Average Latency</th>
+					<th style="text-align: right">p99 Latency</th>
+					<th style="text-align: right">p99.9 Latency</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">2,608.8 MiB/s</td>
+					<td style="text-align: right">5.969 ms</td>
+					<td style="text-align: right">6.128 ms</td>
+					<td style="text-align: right">9.372 ms</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">2,455.0 MiB/s</td>
+					<td style="text-align: right">6.324 ms</td>
+					<td style="text-align: right">9.896 ms</td>
+					<td style="text-align: right">10.027 ms</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">399,728 IOPS</td>
+					<td style="text-align: right">0.0781 ms</td>
+					<td style="text-align: right">0.0876 ms</td>
+					<td style="text-align: right">0.0978 ms</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">300,532 IOPS</td>
+					<td style="text-align: right">0.103 ms</td>
+					<td style="text-align: right">0.159 ms</td>
+					<td style="text-align: right">0.165 ms</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read 8K QD32</td>
+					<td style="text-align: right">131,297 IOPS</td>
+					<td style="text-align: right">0.169 ms</td>
+					<td style="text-align: right">0.261 ms</td>
+					<td style="text-align: right">0.297 ms</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write 8K QD32</td>
+					<td style="text-align: right">56,291 IOPS</td>
+					<td style="text-align: right">0.166 ms</td>
+					<td style="text-align: right">0.255 ms</td>
+					<td style="text-align: right">0.293 ms</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">88,190 IOPS</td>
+					<td style="text-align: right">0.0096 ms</td>
+					<td style="text-align: right">0.0147 ms</td>
+					<td style="text-align: right">0.0356 ms</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">76,993 IOPS</td>
+					<td style="text-align: right">0.0102 ms</td>
+					<td style="text-align: right">0.0143 ms</td>
+					<td style="text-align: right">0.0361 ms</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="performance-comparison">Performance Comparison</h3>
+<table>
+	<thead>
+			<tr>
+					<th>Workload</th>
+					<th style="text-align: right">Without Optane</th>
+					<th style="text-align: right">With Optane</th>
+					<th style="text-align: right">Native Optane</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">2,587.0 MiB/s</td>
+					<td style="text-align: right">3,215.5 MiB/s</td>
+					<td style="text-align: right">2,608.8 MiB/s</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">1,704.0 MiB/s</td>
+					<td style="text-align: right">954.7 MiB/s</td>
+					<td style="text-align: right">2,455.0 MiB/s</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">79,985 IOPS</td>
+					<td style="text-align: right">87,227 IOPS</td>
+					<td style="text-align: right">399,728 IOPS</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">32,403 IOPS</td>
+					<td style="text-align: right">22,381 IOPS</td>
+					<td style="text-align: right">300,532 IOPS</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read 8K QD32</td>
+					<td style="text-align: right">28,465 IOPS</td>
+					<td style="text-align: right">19,754 IOPS</td>
+					<td style="text-align: right">131,297 IOPS</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write 8K QD32</td>
+					<td style="text-align: right">12,198 IOPS</td>
+					<td style="text-align: right">8,461 IOPS</td>
+					<td style="text-align: right">56,291 IOPS</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">4,361 IOPS</td>
+					<td style="text-align: right">5,210 IOPS</td>
+					<td style="text-align: right">88,190 IOPS</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">2,464 IOPS</td>
+					<td style="text-align: right">2,340 IOPS</td>
+					<td style="text-align: right">76,993 IOPS</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="average-latency---lower-values-are-better">Average Latency - Lower values are better.</h3>
+<table>
+	<thead>
+			<tr>
+					<th>Workload</th>
+					<th style="text-align: right">Without Optane</th>
+					<th style="text-align: right">With Optane</th>
+					<th style="text-align: right">Native Optane</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">6.140 ms</td>
+					<td style="text-align: right">4.935 ms</td>
+					<td style="text-align: right">5.969 ms</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">9.160 ms</td>
+					<td style="text-align: right">16.473 ms</td>
+					<td style="text-align: right">6.324 ms</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">0.396 ms</td>
+					<td style="text-align: right">0.363 ms</td>
+					<td style="text-align: right">0.0781 ms</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">0.983 ms</td>
+					<td style="text-align: right">1.423 ms</td>
+					<td style="text-align: right">0.103 ms</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read 8K QD32</td>
+					<td style="text-align: right">0.637 ms</td>
+					<td style="text-align: right">0.742 ms</td>
+					<td style="text-align: right">0.169 ms</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write 8K QD32</td>
+					<td style="text-align: right">1.121 ms</td>
+					<td style="text-align: right">2.030 ms</td>
+					<td style="text-align: right">0.166 ms</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">0.221 ms</td>
+					<td style="text-align: right">0.186 ms</td>
+					<td style="text-align: right">0.0096 ms</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">0.393 ms</td>
+					<td style="text-align: right">0.415 ms</td>
+					<td style="text-align: right">0.0102 ms</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="p99-latency---lower-values-are-better">p99 Latency - Lower values are better.</h3>
+<table>
+	<thead>
+			<tr>
+					<th>Workload</th>
+					<th style="text-align: right">Without Optane</th>
+					<th style="text-align: right">With Optane</th>
+					<th style="text-align: right">Native Optane</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Sequential Read 1 MiB</td>
+					<td style="text-align: right">11.080 ms</td>
+					<td style="text-align: right">11.862 ms</td>
+					<td style="text-align: right">6.128 ms</td>
+			</tr>
+			<tr>
+					<td>Sequential Write 1 MiB</td>
+					<td style="text-align: right">22.680 ms</td>
+					<td style="text-align: right">38.011 ms</td>
+					<td style="text-align: right">9.896 ms</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD32</td>
+					<td style="text-align: right">0.758 ms</td>
+					<td style="text-align: right">0.651 ms</td>
+					<td style="text-align: right">0.0876 ms</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD32</td>
+					<td style="text-align: right">2.610 ms</td>
+					<td style="text-align: right">5.603 ms</td>
+					<td style="text-align: right">0.159 ms</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Read 8K QD32</td>
+					<td style="text-align: right">2.020 ms</td>
+					<td style="text-align: right">1.843 ms</td>
+					<td style="text-align: right">0.261 ms</td>
+			</tr>
+			<tr>
+					<td>Mixed 70/30 Write 8K QD32</td>
+					<td style="text-align: right">5.410 ms</td>
+					<td style="text-align: right">5.931 ms</td>
+					<td style="text-align: right">0.255 ms</td>
+			</tr>
+			<tr>
+					<td>Random Read 4K QD1</td>
+					<td style="text-align: right">0.864 ms</td>
+					<td style="text-align: right">0.578 ms</td>
+					<td style="text-align: right">0.0147 ms</td>
+			</tr>
+			<tr>
+					<td>Random Write 4K QD1</td>
+					<td style="text-align: right">1.204 ms</td>
+					<td style="text-align: right">0.946 ms</td>
+					<td style="text-align: right">0.0143 ms</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="diagrams-1">Diagrams</h3>
+
+
+<div class="image-gallery" id="gallery-70c6bf42"><a href="/intel-optane-nutanix/Native%20-%20Sequential%20Throughput.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - Sequential Throughput"><img src="/intel-optane-nutanix/Native%20-%20Sequential%20Throughput_hu_6ad1e9f93576a950.png" alt="Native - Sequential Throughput" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - Sequential Throughput</div>
+                    </a><a href="/intel-optane-nutanix/Native%20-%20Random%20and%20Mixed%20IOPS.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - Random and Mixed IOPS"><img src="/intel-optane-nutanix/Native%20-%20Random%20and%20Mixed%20IOPS_hu_c6d82a263f3bd125.png" alt="Native - Random and Mixed IOPS" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - Random and Mixed IOPS</div>
+                    </a><a href="/intel-optane-nutanix/Native%20-%20Average%20Latency.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - Average Latency"><img src="/intel-optane-nutanix/Native%20-%20Average%20Latency_hu_71a12bf399ef31ed.png" alt="Native - Average Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - Average Latency</div>
+                    </a><a href="/intel-optane-nutanix/Native%20-%20p99%20Latency.png" class="gallery-item" data-lightbox-group="gallery-70c6bf42" data-title="Native - p99 Latency"><img src="/intel-optane-nutanix/Native%20-%20p99%20Latency_hu_492c98cb9fbe4952.png" alt="Native - p99 Latency" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Native - p99 Latency</div>
+                    </a></div>
+<h2 id="interpretation--an-attempt">Interpretation — An Attempt</h2>
+<p>Mission failed — at least that was my first thought — and man, that was an expensive little adventure.
+But it&rsquo;s no use — failure is part of the process — but what&rsquo;s actually going on with my system right now?</p>
+<p>If you take a closer look at the Stargate logs, you&rsquo;ll also see that, out of my Optane&rsquo;s approximately 260 GB of usable capacity, only about 15.3 GB is available for the OpLog. Since all disks belong to the same storage tier, all my NVMe drives receive an OpLog reservation. In the case of a 2 TB NVMe drive, that amounts to about 185 GB for the OpLog. This confirms once again that my assumption about how Nutanix storage works was completely wrong.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">grep -aEh <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;OpLog_disk_size.*(PHMB7470005W280CGN|S6Z2NU0XB04165Y)|disk_serial_id: &#34;(PHMB7470005W280CGN|S6Z2NU0XB04165Y)&#34;&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">~/data/logs/stargate* 2&gt;/dev/null <span class="p">|</span> tail -20
+</span></span></code></pre></div><p>Here&rsquo;s the log excerpt; it&rsquo;s not exactly easy to read, but one of the most important pieces of information is:
+<code>OpLog_disk_size: 16481369332</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">W20260728 20:34:21.916383Z 90697 stargate_cluster_state.cc:2167] Disk Usage stat for disk 13 not found , proto=disk_id:
+</span></span><span class="line"><span class="cl">13 service_vm_id: 2 mount_path: &#34;/home/nutanix/data/stargate-storage/disks/PHMB7470005W280CGN&#34; disk_size: 149803025165 
+</span></span><span class="line"><span class="cl">statfs_disk_size: 208943841280 storage_tier: &#34;SSD-PCIe&#34; data_dir_sublevels: 2 data_dir_sublevel_dirs: 20 
+</span></span><span class="line"><span class="cl">data_migration_status: 0 disk_location: 4 contains_metadata: true OpLog_disk_size: 16481369332 disk_serial_id: 
+</span></span><span class="line"><span class="cl">&#34;PHMB7470005W280CGN&#34; disk_uuid: &#34;6143c190-14ad-4651-8522-3582c84e5e71&#34; node_uuid: 
+</span></span><span class="line"><span class="cl">&#34;f3b7a7f2-b9b5-4a09-a58f-066de1eadf9a&#34; chosen_for_metadata: false metadata_disk_reservation_bytes: 32212254720 self_managed_nvme: false trim_enabled: true
+</span></span></code></pre></div><p>On one of my 2 TB hard drives, the log entry looks like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Disk Usage stat for disk 12 not found , proto=disk_id: 12 service_vm_id: 2 mount_path: &#34;/home/nutanix/data/
+</span></span><span class="line"><span class="cl">stargate-storage/disks/S6Z2NU0XB04165Y&#34; disk_size: 1702077037813 statfs_disk_size: 2000362143744 storage_tier: 
+</span></span><span class="line"><span class="cl">&#34;SSD-PCIe&#34; data_dir_sublevels: 2 data_dir_sublevel_dirs: 20 disk_location: 1 oplog_disk_size: 198266995467 
+</span></span><span class="line"><span class="cl">disk_serial_id: &#34;S6Z2NU0XB04165Y&#34; disk_uuid: &#34;f03121e0-e726-4aea-af6c-fe2faba8ea4b&#34; node_uuid: 
+</span></span><span class="line"><span class="cl">&#34;f3b7a7f2-b9b5-4a09-a58f-066de1eadf9a&#34; block_store_device_info { format_needed: false start_offset_bytes: 35651584 
+</span></span><span class="line"><span class="cl">end_offset_bytes: 2000397795327 } self_managed_nvme: false trim_enabled: true
+</span></span></code></pre></div><p>In an Optane-plus-NVMe configuration, Nutanix does not use Optane as the exclusive location for the OpLog. The OpLog is distributed across both Optane and NVMe devices, which means that the slower NVMes remains part of the write path for the OpLog and can undermine the latency advantage of Optane. As a result, burst writes may be distributed across different disks, and the varying latencies of those disks could have a negative impact.</p>
+<p>However, in my opinion, the OpLog alone does not explain all the results. Persistent and sequential write operations can bypass the OpLog and go directly to the Extent Store. However, the lower performance during sequential write operations cannot be attributed to a single component. The different physical hard drive layout, data placement, replication path, cache status, thermal conditions, and the characteristics of the other consumer-class NVMe devices could all have contributed to this.</p>
+<p>The native benchmark clearly shows that my Optane drives were not defective or inherently slow, and confirms that the devices can deliver the expected performance with low latency. The real problem was my assumption that adding an &ldquo;extremely fast&rdquo; device would automatically speed up the entire storage stack.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Please take everything I say with a grain of salt. Storage isn&rsquo;t my area of expertise, and certainly not when it comes to Nutanix. At the end of the day, I&rsquo;m more of a networking and vSphere guy. I am aware that the tests were not conducted under ideal conditions, but I tried to test everything as consistently as possible.</div>
+</aside>
+<h2 id="and-now">And now&hellip;</h2>
+<p>Well, what can I say? Sometimes you make smart investments in your home lab, and sometimes you don’t. To put it bluntly, you could just say “RTFM” before buying hardware for over 500 euros. But that’s not the point—I’ve learned a lot about the Nutanix storage system over the last few days, and I can help you avoid making the same mistake.
+I’m not sure yet what I’ll do with the Optane disks—maybe I’ll add them to my Proxmox cluster. In my VCF cluster, they’re doing an outstanding job as memory tiering devices. I’m sure I’ll find a use for them. I hope you had fun watching me fail. And as I said at the beginning, Nutanix can&rsquo;t be blamed for this.</p>
+]]></content:encoded>
+		</item>
+		
+		<item>
 			<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>
+			<link>http://localhost:62636/posts/vcf9.1-dtgw-vxlan/</link>
 			<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</guid>
+			<guid>http://localhost:62636/posts/vcf9.1-dtgw-vxlan/</guid>
 
 			
 			<description><![CDATA[In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.]]></description>
@@ -778,12 +1719,12 @@ Since VyOS is not officially supported, I unfortunately cannot say how it would 
 		
 		<item>
 			<title>VCF 9.1 - Platform Health Check Error</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</link>
+			<link>http://localhost:62636/posts/vcf9.1-platform-health-check-error/</link>
 			<pubDate>Sun, 14 Jun 2026 12:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-platform-health-check-error/</guid>
+			<guid>http://localhost:62636/posts/vcf9.1-platform-health-check-error/</guid>
 
 			
 			<description><![CDATA[During the deployment of an additional VCF 9.1 component, the precheck failed with the following platform health error: Platform Health Check Error
@@ -997,12 +1938,12 @@ k get pods -A -o wide | grep logging-operator-fluentd
 		
 		<item>
 			<title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</link>
+			<link>http://localhost:62636/posts/vcf9.1-vna-part2/</link>
 			<pubDate>Thu, 21 May 2026 22:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-vna-part2/</guid>
+			<guid>http://localhost:62636/posts/vcf9.1-vna-part2/</guid>
 
 			
 			<description><![CDATA[In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.]]></description>
@@ -1313,12 +2254,12 @@ It’s important to use the API call (GET /v1/credentials). The easiest way to f
 		
 		<item>
 			<title>VCF 9.1 - VNA and VPCs</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</link>
+			<link>http://localhost:62636/posts/vcf9.1-vna-vpc/</link>
 			<pubDate>Mon, 11 May 2026 00:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-vna-vpc/</guid>
+			<guid>http://localhost:62636/posts/vcf9.1-vna-vpc/</guid>
 
 			
 			<description><![CDATA[In this new blog post, I will describe the benefits of virtual network appliances and how to use them.]]></description>
@@ -1778,12 +2719,12 @@ But here’s what I consider the biggest advantage: I can use VKS with VPCs, whi
 		
 		<item>
 			<title>VCF 9.1 - VPCs Connectivity Policies</title>
-			<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
+			<link>http://localhost:62636/posts/vcf9.1-vpcs-connectivity-policy/</link>
 			<pubDate>Tue, 05 May 2026 16:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</guid>
+			<guid>http://localhost:62636/posts/vcf9.1-vpcs-connectivity-policy/</guid>
 
 			
 			<description><![CDATA[In this blog post, I’ll discuss the new VPC connectivity Policies and how they can be used to enhance security.]]></description>
@@ -2018,12 +2959,12 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 		
 		<item>
 			<title>Homelab Update 2026</title>
-			<link>https://sdn-warrior.org/posts/homelab-update-2026/</link>
+			<link>http://localhost:62636/posts/homelab-update-2026/</link>
 			<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/homelab-update-2026/</guid>
+			<guid>http://localhost:62636/posts/homelab-update-2026/</guid>
 
 			
 			<description><![CDATA[Homelab Update 2026]]></description>
@@ -2129,12 +3070,12 @@ For many years, it has provided me with SMB shares, NFS, iSCSI, and all my Docke
 		
 		<item>
 			<title>Nutanix - Flow 7: virtual networking</title>
-			<link>https://sdn-warrior.org/posts/nutanix-flow/</link>
+			<link>http://localhost:62636/posts/nutanix-flow/</link>
 			<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nutanix-flow/</guid>
+			<guid>http://localhost:62636/posts/nutanix-flow/</guid>
 
 			
 			<description><![CDATA[In this blog post, I’ll explain how Nutanix Flow 7 works, how to set up and use virtual networking, take a look at VPCs, and highlight the differences from NSX.]]></description>
@@ -2384,12 +3325,12 @@ I’m particularly interested in the setup with a transit VPC and a BGP gateway.
 		
 		<item>
 			<title>VCF9 - Extend Managment Domain Cluster</title>
-			<link>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</link>
+			<link>http://localhost:62636/posts/vcf9-extende-mgmt-domain/</link>
 			<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/</guid>
+			<guid>http://localhost:62636/posts/vcf9-extende-mgmt-domain/</guid>
 
 			
 			<description><![CDATA[How do you actually expand a management domain in VCF9, and what do I need to keep in mind? A quick guide.]]></description>
@@ -2518,12 +3459,12 @@ After about 10 minutes, the whole thing was done and dusted, and my management d
 		
 		<item>
 			<title>2026 VMUG Connect - Amsterdam</title>
-			<link>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</link>
+			<link>http://localhost:62636/posts/2026-vmug-amsterdam/</link>
 			<pubDate>Tue, 24 Mar 2026 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/2026-vmug-amsterdam/</guid>
+			<guid>http://localhost:62636/posts/2026-vmug-amsterdam/</guid>
 
 			
 			<description><![CDATA[A personal summary of the first VMUG Connect in Europe.]]></description>
@@ -2620,12 +3561,12 @@ These PreConnect sessions were something new for me, and I found them really ent
 		
 		<item>
 			<title>IPv6 with NSX</title>
-			<link>https://sdn-warrior.org/posts/ipv6-nsx/</link>
+			<link>http://localhost:62636/posts/ipv6-nsx/</link>
 			<pubDate>Sun, 01 Mar 2026 12:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/ipv6-nsx/</guid>
+			<guid>http://localhost:62636/posts/ipv6-nsx/</guid>
 
 			
 			<description><![CDATA[A look at IPv6 and the situation with NSX. In this blog, I navigate the valley of tears known as IPv6, demonstrate how it can be utilized with NSX, and explain some of the fundamentals.]]></description>
@@ -2995,12 +3936,12 @@ In the official documentation for VCF9, there are exactly 143 search hits for IP
 		
 		<item>
 			<title>Nutanix - Get started with the CE Edition</title>
-			<link>https://sdn-warrior.org/posts/nutanix-install-ce/</link>
+			<link>http://localhost:62636/posts/nutanix-install-ce/</link>
 			<pubDate>Sun, 08 Feb 2026 19:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nutanix-install-ce/</guid>
+			<guid>http://localhost:62636/posts/nutanix-install-ce/</guid>
 
 			
 			<description><![CDATA[Short blog about my experiences with Nutanix CE and which workarounds I needed.]]></description>
@@ -3236,12 +4177,12 @@ I hope that anyone who was hoping I would write a scathing review isn&rsquo;t to
 		
 		<item>
 			<title>AVI - Connect Keycloak to AVI Loadbalancer</title>
-			<link>https://sdn-warrior.org/posts/avi-keycloak/</link>
+			<link>http://localhost:62636/posts/avi-keycloak/</link>
 			<pubDate>Tue, 27 Jan 2026 21:30:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/avi-keycloak/</guid>
+			<guid>http://localhost:62636/posts/avi-keycloak/</guid>
 
 			
 			<description><![CDATA[A short blog post on how to connect Keycloak to the AVI load balancer.]]></description>
@@ -3657,12 +4598,12 @@ In short, a flow is a chain of steps, conditions, and sub-flows with rules that 
 		
 		<item>
 			<title>VCF9 - Automation in All Apps mode</title>
-			<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
+			<link>http://localhost:62636/posts/vcf9-automation-all-apps/</link>
 			<pubDate>Mon, 12 Jan 2026 02:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</guid>
+			<guid>http://localhost:62636/posts/vcf9-automation-all-apps/</guid>
 
 			
 			<description><![CDATA[A quick introduction to VCF 9 Automation in All Apps mode]]></description>
@@ -4298,12 +5239,12 @@ True multitenancy can only be achieved with VCF Automation. A rethink is necessa
 		
 		<item>
 			<title>VCF9 - Building a VCF Operations Dashboard</title>
-			<link>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</link>
+			<link>http://localhost:62636/posts/vcf9-operations-dashboard/</link>
 			<pubDate>Sat, 20 Dec 2025 03:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-operations-dashboard/</guid>
+			<guid>http://localhost:62636/posts/vcf9-operations-dashboard/</guid>
 
 			
 			<description><![CDATA[A short blog about the joys of creating a dashboard in VCF 9 Operations.]]></description>
@@ -4677,12 +5618,12 @@ My thanks also go to
 		
 		<item>
 			<title>VCF9 - Dark Site Edge - Part 2</title>
-			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</link>
+			<link>http://localhost:62636/posts/vcf9-dark-site-edge-part2/</link>
 			<pubDate>Tue, 09 Dec 2025 00:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge-part2/</guid>
+			<guid>http://localhost:62636/posts/vcf9-dark-site-edge-part2/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
@@ -5060,12 +6001,12 @@ I hope I was able to give you some helpful ideas for your setups.</p>
 		
 		<item>
 			<title>VCF9 BUG: After deleting a VCF instance on VCF Operations, no VCF instance can be imported anymore</title>
-			<link>https://sdn-warrior.org/posts/bug-vcf-onboarding/</link>
+			<link>http://localhost:62636/posts/bug-vcf-onboarding/</link>
 			<pubDate>Wed, 03 Dec 2025 20:54:20 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/bug-vcf-onboarding/</guid>
+			<guid>http://localhost:62636/posts/bug-vcf-onboarding/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9 - Part 2]]></description>
@@ -5196,12 +6137,12 @@ I have tried this several times and was able to verify that it works. Would I do
 		
 		<item>
 			<title>VCF9 - Dark Site Edge</title>
-			<link>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</link>
+			<link>http://localhost:62636/posts/vcf9-dark-site-edge/</link>
 			<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
+			<guid>http://localhost:62636/posts/vcf9-dark-site-edge/</guid>
 
 			
 			<description><![CDATA[A short blog on how to deploy a Dark Site Edge in VCF9]]></description>
@@ -5482,12 +6423,12 @@ I must also say that I learned a lot. And as always, I have to express my gratit
 		
 		<item>
 			<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-			<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
+			<link>http://localhost:62636/posts/vcf9-ms-a2-special/</link>
 			<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
+			<guid>http://localhost:62636/posts/vcf9-ms-a2-special/</guid>
 
 			
 			<description><![CDATA[A short article containing all the workarounds for rolling out a complete VCF9 on 2 MS-A2s.]]></description>
@@ -5910,12 +6851,12 @@ So, in total, I have 5 more MS-01s that I can use to test things out alongside V
 		
 		<item>
 			<title>Tales from the Lab – Lab setup</title>
-			<link>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</link>
+			<link>http://localhost:62636/posts/tales-from-the-lab-setup/</link>
 			<pubDate>Fri, 12 Sep 2025 17:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/tales-from-the-lab-setup/</guid>
+			<guid>http://localhost:62636/posts/tales-from-the-lab-setup/</guid>
 
 			
 			<description><![CDATA[A brief blog about setting up my nested lab.]]></description>
@@ -6026,12 +6967,12 @@ My Ansible playbooks need to be revised because they no longer run properly with
 		
 		<item>
 			<title>VCF9 -  VCF5.X to VCF9 upgrade</title>
-			<link>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</link>
+			<link>http://localhost:62636/posts/vcf5-to-9-upgrade/</link>
 			<pubDate>Sun, 07 Sep 2025 23:00:08 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf5-to-9-upgrade/</guid>
+			<guid>http://localhost:62636/posts/vcf5-to-9-upgrade/</guid>
 
 			
 			<description><![CDATA[A brief guide to upgrading from VCF5.X to VCF9 on a brownfield site.]]></description>
@@ -6368,12 +7309,12 @@ If you have any questions or comments, please feel free to send me a message on 
 		
 		<item>
 			<title>VMware Explore 2025</title>
-			<link>https://sdn-warrior.org/posts/explore-2025/</link>
+			<link>http://localhost:62636/posts/explore-2025/</link>
 			<pubDate>Sun, 31 Aug 2025 12:00:00 +0000</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/explore-2025/</guid>
+			<guid>http://localhost:62636/posts/explore-2025/</guid>
 
 			
 			<description><![CDATA[My VMware Explore 2025]]></description>
@@ -6596,12 +7537,12 @@ I&rsquo;m already looking forward to the upcoming Knight exclusive events and Ex
 		
 		<item>
 			<title>VCF 9 - Certificate exchange</title>
-			<link>https://sdn-warrior.org/posts/vcf9-cert-exchange/</link>
+			<link>http://localhost:62636/posts/vcf9-cert-exchange/</link>
 			<pubDate>Tue, 19 Aug 2025 09:21:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-cert-exchange/</guid>
+			<guid>http://localhost:62636/posts/vcf9-cert-exchange/</guid>
 
 			
 			<description><![CDATA[A brief guide to replacing certificates in VCF9 with VCF Operations.]]></description>
@@ -6834,12 +7775,12 @@ It is also possible to exchange the certificates of the ESX servers. You just ha
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 3 - Security</title>
-			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</link>
+			<link>http://localhost:62636/posts/vcf9-nsx-vpc-part3/</link>
 			<pubDate>Tue, 29 Jul 2025 00:10:05 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part3/</guid>
+			<guid>http://localhost:62636/posts/vcf9-nsx-vpc-part3/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 3.]]></description>
@@ -7161,12 +8102,12 @@ I have written about why
 		
 		<item>
 			<title>VCF 9 - Migration to central VCF Operations instance</title>
-			<link>https://sdn-warrior.org/posts/vcf-operations-migration/</link>
+			<link>http://localhost:62636/posts/vcf-operations-migration/</link>
 			<pubDate>Mon, 07 Jul 2025 20:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-operations-migration/</guid>
+			<guid>http://localhost:62636/posts/vcf-operations-migration/</guid>
 
 			
 			<description><![CDATA[A brief guide on how to switch from a VCF9 Operations instance to a central VCF Operations instance.]]></description>
@@ -7449,12 +8390,12 @@ The components can still be shared by multiple instances if the security concept
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 2 - distributed Transit Gateway</title>
-			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</link>
+			<link>http://localhost:62636/posts/vcf9-nsx-vpc-part2/</link>
 			<pubDate>Thu, 26 Jun 2025 19:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc-part2/</guid>
+			<guid>http://localhost:62636/posts/vcf9-nsx-vpc-part2/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9 Part 2.]]></description>
@@ -8208,12 +9149,12 @@ The complete communication is as follows:</p>
 		
 		<item>
 			<title>NSX - IDFW &amp; DFW Troubleshooting</title>
-			<link>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</link>
+			<link>http://localhost:62636/posts/nsx-dfw-troubleshooting/</link>
 			<pubDate>Tue, 24 Jun 2025 01:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-dfw-troubleshooting/</guid>
+			<guid>http://localhost:62636/posts/nsx-dfw-troubleshooting/</guid>
 
 			
 			<description><![CDATA[A brief guide to troubleshooting the IdFW and dFW]]></description>
@@ -8352,12 +9293,12 @@ I hope this quick practical tip helps you. It has often helped me when the GUI h
 		
 		<item>
 			<title>Homelab V6 - It’s not just Taylor Swift who has different eras, my home lab does too</title>
-			<link>https://sdn-warrior.org/posts/homelab-v6/</link>
+			<link>http://localhost:62636/posts/homelab-v6/</link>
 			<pubDate>Fri, 20 Jun 2025 17:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/homelab-v6/</guid>
+			<guid>http://localhost:62636/posts/homelab-v6/</guid>
 
 			
 			<description><![CDATA[A quick update on what's been happening in my lab over the last few weeks.]]></description>
@@ -8444,12 +9385,12 @@ Thus, it has never really been considered part of the NUC era.</p>
 		
 		<item>
 			<title>VCF 9 - NSX VPC Part 1 - centralized Transit Gateway</title>
-			<link>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</link>
+			<link>http://localhost:62636/posts/vcf9-nsx-vpc/</link>
 			<pubDate>Tue, 17 Jun 2025 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf9-nsx-vpc/</guid>
+			<guid>http://localhost:62636/posts/vcf9-nsx-vpc/</guid>
 
 			
 			<description><![CDATA[A short article about VPCs in NSX 9 and VCF 9.]]></description>
@@ -9008,12 +9949,12 @@ Pretty cool. You can also cancel the assignment at any time, and the public IP w
 		
 		<item>
 			<title>Tales from the Lab - Minisforum MS-A2</title>
-			<link>https://sdn-warrior.org/posts/ms-a2/</link>
+			<link>http://localhost:62636/posts/ms-a2/</link>
 			<pubDate>Sat, 14 Jun 2025 10:14:45 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/ms-a2/</guid>
+			<guid>http://localhost:62636/posts/ms-a2/</guid>
 
 			
 			<description><![CDATA[A quick test of the new MS-A2 and how it compares to the MS-01.]]></description>
@@ -9397,12 +10338,12 @@ I paid €1,395.88 for the MS-A2 with 2 TB NVMe and 128 GB RAM. On top of that, 
 		
 		<item>
 			<title>ReSTNSX with HCX</title>
-			<link>https://sdn-warrior.org/posts/restnsx-with-hcx/</link>
+			<link>http://localhost:62636/posts/restnsx-with-hcx/</link>
 			<pubDate>Tue, 20 May 2025 18:00:16 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/restnsx-with-hcx/</guid>
+			<guid>http://localhost:62636/posts/restnsx-with-hcx/</guid>
 
 			
 			<description><![CDATA[How can ReSTNSX help me with the migration with HCX]]></description>
@@ -9605,12 +10546,12 @@ ReSTNSX also features a comprehensive reporting system and enables NSX documenta
 		
 		<item>
 			<title>NSX Expiring Transport Node Certificates</title>
-			<link>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</link>
+			<link>http://localhost:62636/posts/nsx-expiring-tn-certificates/</link>
 			<pubDate>Tue, 06 May 2025 18:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-expiring-tn-certificates/</guid>
+			<guid>http://localhost:62636/posts/nsx-expiring-tn-certificates/</guid>
 
 			
 			<description><![CDATA[On versions NSX 4.1.x and 4.2.0, Edge and Host Transport Nodes are instantiated using a certificate with validity period of 825 days.
@@ -9998,12 +10939,12 @@ You can find out how to do this in my blog here:
 		
 		<item>
 			<title>VMUG Connect St. Louis 2025</title>
-			<link>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</link>
+			<link>http://localhost:62636/posts/vmug-connect-stl-2025/</link>
 			<pubDate>Sat, 26 Apr 2025 16:00:10 -0500</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vmug-connect-stl-2025/</guid>
+			<guid>http://localhost:62636/posts/vmug-connect-stl-2025/</guid>
 
 			
 			<description><![CDATA[Brief report on my VMUG Connect in St. Louis]]></description>
@@ -10144,12 +11085,12 @@ To share knowledge, to learn from others, and to keep growing – together.</p>
 		
 		<item>
 			<title>VCF - How to use the Broadcom Download Token</title>
-			<link>https://sdn-warrior.org/posts/vcf-token/</link>
+			<link>http://localhost:62636/posts/vcf-token/</link>
 			<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
+			<guid>http://localhost:62636/posts/vcf-token/</guid>
 
 			
 			<description><![CDATA[A short article on how to use the Broadcom Download Token.]]></description>
@@ -10285,12 +11226,12 @@ The log can be found under /var/log/vmware/vcf/lcm/lcm-debug.log</p>
 		
 		<item>
 			<title>VCF Quick Tip - WLD with single NSX Manager</title>
-			<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
+			<link>http://localhost:62636/posts/vcf-single-nsx/</link>
 			<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
+			<guid>http://localhost:62636/posts/vcf-single-nsx/</guid>
 
 			
 			<description><![CDATA[Manipulate the SDDC Manager and Cloud Builder to enable deployment with only one NSX Manager.]]></description>
@@ -10577,12 +11518,12 @@ Happy VCF deployment!</p>
 		
 		<item>
 			<title>VCF Stretched Cluster</title>
-			<link>https://sdn-warrior.org/posts/vcf-stretched-cluster/</link>
+			<link>http://localhost:62636/posts/vcf-stretched-cluster/</link>
 			<pubDate>Thu, 13 Mar 2025 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-stretched-cluster/</guid>
+			<guid>http://localhost:62636/posts/vcf-stretched-cluster/</guid>
 
 			
 			<description><![CDATA[A short article on how to build a stretched vSAN cluster in the VCF.]]></description>
@@ -11061,12 +12002,12 @@ I have a nested ESXi server of AZ 1 and AZ 2 running on an MS-01. The vSAN Witne
 		
 		<item>
 			<title>VCF Import Tool - Enable Overlay in an imported VCF Domain</title>
-			<link>https://sdn-warrior.org/posts/vcf-import-overlay/</link>
+			<link>http://localhost:62636/posts/vcf-import-overlay/</link>
 			<pubDate>Wed, 05 Mar 2025 21:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-import-overlay/</guid>
+			<guid>http://localhost:62636/posts/vcf-import-overlay/</guid>
 
 			
 			<description><![CDATA[Part 2 VCF Import Cluster with NFS and activating the overlay.]]></description>
@@ -11223,12 +12164,12 @@ Hopefully Broadcom will also provide the sync for a regularly deployed VCF, whic
 		
 		<item>
 			<title>VCF Import Tool - Run VCF with NFS as principal Storage </title>
-			<link>https://sdn-warrior.org/posts/vcf-import-cluster/</link>
+			<link>http://localhost:62636/posts/vcf-import-cluster/</link>
 			<pubDate>Sun, 23 Feb 2025 16:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vcf-import-cluster/</guid>
+			<guid>http://localhost:62636/posts/vcf-import-cluster/</guid>
 
 			
 			<description><![CDATA[Importing from a vSphere cluster with NFS 3 as principal storage without losing support.]]></description>
@@ -11591,12 +12532,12 @@ We also still need to install licenses in the SDDC manager and setup the softwar
 		
 		<item>
 			<title>JetKVM - all show and no substance?</title>
-			<link>https://sdn-warrior.org/posts/jetkvm/</link>
+			<link>http://localhost:62636/posts/jetkvm/</link>
 			<pubDate>Mon, 03 Feb 2025 21:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/jetkvm/</guid>
+			<guid>http://localhost:62636/posts/jetkvm/</guid>
 
 			
 			<description><![CDATA[The good, the bad and the ugly - JetKVM]]></description>
@@ -11648,12 +12589,12 @@ Time will tell whether the saying “all show and no substance” applies.</p>
 		
 		<item>
 			<title>Migration with HCX</title>
-			<link>https://sdn-warrior.org/posts/migration-with-hcx/</link>
+			<link>http://localhost:62636/posts/migration-with-hcx/</link>
 			<pubDate>Tue, 28 Jan 2025 20:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/migration-with-hcx/</guid>
+			<guid>http://localhost:62636/posts/migration-with-hcx/</guid>
 
 			
 			<description><![CDATA[Live Migration of Workloads with VMware HCX: A Customer Story]]></description>
@@ -12031,12 +12972,12 @@ The HCX appliance must have access to the NSX manager, the vCenter must be confi
 		
 		<item>
 			<title>How Apply To works in NSX DFW</title>
-			<link>https://sdn-warrior.org/posts/nsx-apply-to/</link>
+			<link>http://localhost:62636/posts/nsx-apply-to/</link>
 			<pubDate>Sat, 11 Jan 2025 02:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-apply-to/</guid>
+			<guid>http://localhost:62636/posts/nsx-apply-to/</guid>
 
 			
 			<description><![CDATA[How Apply To works in NSX DFW and you can use it.]]></description>
@@ -12443,12 +13384,12 @@ In addition, there is a limit to the number of firewall rules that can be applie
 		
 		<item>
 			<title>More performance trough NSX Edge TEP groups?</title>
-			<link>https://sdn-warrior.org/posts/nsx-tep-groups/</link>
+			<link>http://localhost:62636/posts/nsx-tep-groups/</link>
 			<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
+			<guid>http://localhost:62636/posts/nsx-tep-groups/</guid>
 
 			
 			<description><![CDATA[How to use Edge TEP groups in NSX]]></description>
@@ -12775,12 +13716,12 @@ Use the API to update the transport node profile by linking it with the TEP HA p
 		
 		<item>
 			<title>Redeploy an NSX Edge VM Appliance</title>
-			<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
+			<link>http://localhost:62636/posts/nsx-edge-redeploy/</link>
 			<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
+			<guid>http://localhost:62636/posts/nsx-edge-redeploy/</guid>
 
 			
 			<description><![CDATA[Quicktip: Redeploy NSX Edge with API]]></description>
@@ -13053,12 +13994,12 @@ Ensure these values align with those defined in the node_settings section.</p>
 		
 		<item>
 			<title>Ansible VLAN deployment with MikroTik</title>
-			<link>https://sdn-warrior.org/posts/vlan-automation/</link>
+			<link>http://localhost:62636/posts/vlan-automation/</link>
 			<pubDate>Tue, 24 Dec 2024 13:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/vlan-automation/</guid>
+			<guid>http://localhost:62636/posts/vlan-automation/</guid>
 
 			
 			<description><![CDATA[Ansible VLAN deployment with MikroTik]]></description>
@@ -13323,12 +14264,12 @@ It’s also conceivable to extend the functionality by adding new VLANs directly
 		
 		<item>
 			<title>IPAM Automation with NetBox, Ansible, and Microsoft Windows DNS Server</title>
-			<link>https://sdn-warrior.org/posts/ipam-automation/</link>
+			<link>http://localhost:62636/posts/ipam-automation/</link>
 			<pubDate>Fri, 20 Dec 2024 02:00:04 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/ipam-automation/</guid>
+			<guid>http://localhost:62636/posts/ipam-automation/</guid>
 
 			
 			<description><![CDATA[IPAM Automation with Netbox and Ansible]]></description>
@@ -13596,12 +14537,12 @@ The <em><strong>hostvars[&rsquo;localhost&rsquo;]</strong></em> construct is use
 		
 		<item>
 			<title>From Zero to Automation: How I Used ChatGPT to Create My First Ansible Playbook</title>
-			<link>https://sdn-warrior.org/posts/first-steps-ansible/</link>
+			<link>http://localhost:62636/posts/first-steps-ansible/</link>
 			<pubDate>Tue, 17 Dec 2024 22:36:18 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/first-steps-ansible/</guid>
+			<guid>http://localhost:62636/posts/first-steps-ansible/</guid>
 
 			
 			<description><![CDATA[How I Used ChatGPT to Create My First Ansible Playbook]]></description>
@@ -14056,12 +14997,12 @@ Efficiency:</p>
 		
 		<item>
 			<title>Homelab V5</title>
-			<link>https://sdn-warrior.org/posts/homelab-v5/</link>
+			<link>http://localhost:62636/posts/homelab-v5/</link>
 			<pubDate>Sat, 14 Dec 2024 02:00:26 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/homelab-v5/</guid>
+			<guid>http://localhost:62636/posts/homelab-v5/</guid>
 
 			
 			<description><![CDATA[My Homelab Journey: From Unraid Beginnings to Version 5]]></description>
@@ -14307,12 +15248,12 @@ I also have a service router (RB5009) that establishes a VPN tunnel to a fellow 
 		
 		<item>
 			<title>How to use QoS in NSX</title>
-			<link>https://sdn-warrior.org/posts/nsx-qos/</link>
+			<link>http://localhost:62636/posts/nsx-qos/</link>
 			<pubDate>Tue, 10 Dec 2024 02:00:40 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-qos/</guid>
+			<guid>http://localhost:62636/posts/nsx-qos/</guid>
 
 			
 			<description><![CDATA[How to use QoS in NSX]]></description>
@@ -14840,12 +15781,12 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>NSX 4.2.1.1 Hotfix Update</title>
-			<link>https://sdn-warrior.org/posts/nsx4_2_1_1/</link>
+			<link>http://localhost:62636/posts/nsx4_2_1_1/</link>
 			<pubDate>Mon, 09 Dec 2024 14:55:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx4_2_1_1/</guid>
+			<guid>http://localhost:62636/posts/nsx4_2_1_1/</guid>
 
 			
 			<description><![CDATA[short summary of the NSX update 4.2.1.1]]></description>
@@ -14893,12 +15834,12 @@ This distinction ensures that the QoS profile at the gateway level is only appli
 		
 		<item>
 			<title>iSCSI Tuning</title>
-			<link>https://sdn-warrior.org/posts/iscsi-tuning/</link>
+			<link>http://localhost:62636/posts/iscsi-tuning/</link>
 			<pubDate>Sun, 08 Dec 2024 12:21:20 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/iscsi-tuning/</guid>
+			<guid>http://localhost:62636/posts/iscsi-tuning/</guid>
 
 			
 			<description><![CDATA[Optimizing iSCSI Performance in an Unraid Environment]]></description>
@@ -15083,12 +16024,12 @@ like mine, where jumbo frames are enabled across the network. Larger packets per
 		
 		<item>
 			<title>MAC Learning is your friend</title>
-			<link>https://sdn-warrior.org/posts/mac-learning/</link>
+			<link>http://localhost:62636/posts/mac-learning/</link>
 			<pubDate>Wed, 27 Nov 2024 19:54:18 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/mac-learning/</guid>
+			<guid>http://localhost:62636/posts/mac-learning/</guid>
 
 			
 			<description><![CDATA[Why you should use MAC Learning]]></description>
@@ -15256,12 +16197,12 @@ However, it&rsquo;s important to note that MAC Learning with Forged Transmits re
 		
 		<item>
 			<title>Unraid - A Storage Journey</title>
-			<link>https://sdn-warrior.org/posts/unraid-storage/</link>
+			<link>http://localhost:62636/posts/unraid-storage/</link>
 			<pubDate>Tue, 19 Nov 2024 23:00:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/unraid-storage/</guid>
+			<guid>http://localhost:62636/posts/unraid-storage/</guid>
 
 			
 			<description><![CDATA[How i use Unraid]]></description>
@@ -15376,12 +16317,12 @@ Random Read 4K (Q1T1): 0.021 GB/s – Here, only one small request is being hand
 		
 		<item>
 			<title>How to get most out of your Nuc </title>
-			<link>https://sdn-warrior.org/posts/nuc/</link>
+			<link>http://localhost:62636/posts/nuc/</link>
 			<pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nuc/</guid>
+			<guid>http://localhost:62636/posts/nuc/</guid>
 
 			
 			<description><![CDATA[Performance tuning for NUCs]]></description>
@@ -15524,12 +16465,12 @@ Fortunately, there are a few workarounds here.</p>
 		
 		<item>
 			<title>Homelab V4</title>
-			<link>https://sdn-warrior.org/posts/labv4/</link>
+			<link>http://localhost:62636/posts/labv4/</link>
 			<pubDate>Sat, 16 Nov 2024 20:00:00 +0000</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/labv4/</guid>
+			<guid>http://localhost:62636/posts/labv4/</guid>
 
 			
 			<description><![CDATA[Homelab v4]]></description>
@@ -15559,12 +16500,12 @@ I&rsquo;m already planning a further expansion stage though.\</p>
 		
 		<item>
 			<title>NSX Integration Fortigate</title>
-			<link>https://sdn-warrior.org/posts/nsx-integration-fortigate/</link>
+			<link>http://localhost:62636/posts/nsx-integration-fortigate/</link>
 			<pubDate>Mon, 26 Aug 2024 19:49:23 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-integration-fortigate/</guid>
+			<guid>http://localhost:62636/posts/nsx-integration-fortigate/</guid>
 
 			
 			<description><![CDATA[NSX and Fortigate]]></description>
@@ -15644,12 +16585,12 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX Identity Firewall – A Case Study With the Flavour VDI</title>
-			<link>https://sdn-warrior.org/posts/nsx-idfw-vdi/</link>
+			<link>http://localhost:62636/posts/nsx-idfw-vdi/</link>
 			<pubDate>Fri, 02 Aug 2024 08:34:23 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-idfw-vdi/</guid>
+			<guid>http://localhost:62636/posts/nsx-idfw-vdi/</guid>
 
 			
 			<description><![CDATA[IDFW with NSX and Windows Clients]]></description>
@@ -15825,12 +16766,12 @@ This uses an NSX tag to combine all VMs of type Alpine Linux into one security g
 		
 		<item>
 			<title>NSX 4.X Certificate exchange of the NSX Manager</title>
-			<link>https://sdn-warrior.org/posts/nsx-cert-exchange/</link>
+			<link>http://localhost:62636/posts/nsx-cert-exchange/</link>
 			<pubDate>Fri, 05 Apr 2024 23:22:00 +0100</pubDate>
 
 			
 
-			<guid>https://sdn-warrior.org/posts/nsx-cert-exchange/</guid>
+			<guid>http://localhost:62636/posts/nsx-cert-exchange/</guid>
 
 			
 			<description><![CDATA[Exchange your NSX Manager certificates]]></description>

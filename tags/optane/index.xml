@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Optane on SDN-Warrior | Daniel Krieger</title>
+		<link>http://localhost:62636/tags/optane/</link>
+		<description>Recent content in Optane on SDN-Warrior | Daniel Krieger</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+			<copyright>Daniel Krieger</copyright>
+		
+		
+			<lastBuildDate>Wed, 29 Jul 2026 01:00:00 +0200</lastBuildDate>
+		
+			<atom:link href="http://localhost:62636/tags/optane/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Intel Optane on Nutanix CE - Or I should have read the manual</title>
+				<link>http://localhost:62636/posts/intel-optane-on-nutanix-ce/</link>
+				<pubDate>Wed, 29 Jul 2026 01:00:00 +0200</pubDate>
+				<guid>http://localhost:62636/posts/intel-optane-on-nutanix-ce/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;m not quite sure how to start—maybe with a brief statement and a little foreshadowing. It doesn&amp;rsquo;t always work out when you set your mind on something, and it&amp;rsquo;s not always the software&amp;rsquo;s fault. So this post isn&amp;rsquo;t meant to bash Nutanix, but it&amp;rsquo;s intended to prevent people from making the same mistakes I did.&lt;/p&gt;&#xA;&lt;p&gt;But let’s take it slow and start from the beginning. What was I actually planning to do? A few weeks ago, I bought some Intel Optane drives on eBay for my VCF setup to use them as memory tiering devices. The drive just needs to be fast, have low latency, and deliver solid random IOPS. You can currently find 280 GB Intel Optane 900P cards on eBay at a pretty good price. The cards cost around 160 euros, give or take a few euros, plus shipping—and since they come from China, there’s also a bit of customs duty.&#xA;Long story short, the drives have proven themselves in memory tiering, which is why I thought, “Why not use them for Nutanix?” Since they work very well with VMware Memory Tiering and vSAN OSA — what could possibly go wrong?&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
