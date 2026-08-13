@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Sat, 11 Jul 2026 13:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Fri, 14 Aug 2026 01:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/vcf9.1/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - Setting up an Offline Repository</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</link>
+				<pubDate>Fri, 14 Aug 2026 01:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;We’ve all been there: you have multiple LAB installations in different states and versions, you live in Germany, and you only have what’s known as a “bamboo” internet connection - or, as a friend of mine once put it, “you with your McDonald’s hotspot internet.” Ouch!&lt;/p&gt;&#xA;&lt;p&gt;Unfortunately, even in 2026, I still don’t have fiber-optic internet, and on some days it’s faster to download files via my backup 5G router than through my primary connection. Sounds like fun, right? Okay, and another reason is what’s known as a “dark site” - when the actual VCF installation or the installer can’t or isn’t allowed to connect to the internet.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>

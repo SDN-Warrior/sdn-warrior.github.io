@@ -2,6 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/apache/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/repository/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/ubuntu/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
+    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/homelab/</loc>
     <lastmod>2026-07-29T01:00:00+02:00</lastmod>
   </url><url>
@@ -14,22 +38,10 @@
     <loc>https://sdn-warrior.org/tags/optane/</loc>
     <lastmod>2026-07-29T01:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-07-29T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2026-07-29T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2026-07-29T01:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/nsx/</loc>
     <lastmod>2026-07-11T13:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</loc>
-    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
     <lastmod>2026-07-11T13:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/vna/</loc>

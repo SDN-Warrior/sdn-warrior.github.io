@@ -12,14 +12,14 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Mon, 27 Jul 2026 23:33:22 +0200</lastBuildDate>
+			<lastBuildDate>Thu, 13 Aug 2026 21:23:54 +0200</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Intel Optane on Nutanix Ce</title>
-				<link>http://localhost:1313/posts/intel-optane-on-nutanix-ce/</link>
-				<pubDate>Mon, 27 Jul 2026 23:33:22 +0200</pubDate>
-				<guid>http://localhost:1313/posts/intel-optane-on-nutanix-ce/</guid>
+				<title>Vcf9.1 Offline Repo</title>
+				<link>http://localhost:1313/posts/vcf9.1-offline-repo/</link>
+				<pubDate>Thu, 13 Aug 2026 21:23:54 +0200</pubDate>
+				<guid>http://localhost:1313/posts/vcf9.1-offline-repo/</guid>
 				<description></description>
 			</item>
 	</channel>

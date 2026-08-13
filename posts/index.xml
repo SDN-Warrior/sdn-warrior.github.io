@@ -18,13 +18,340 @@
 		
 
 		
-		<lastBuildDate>Wed, 29 Jul 2026 01:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Fri, 14 Aug 2026 01:00:00 +0200</lastBuildDate>
 		
 
 		
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 
+		
+		<item>
+			<title>VCF 9.1 - Setting up an Offline Repository</title>
+			<link>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</link>
+			<pubDate>Fri, 14 Aug 2026 01:00:00 +0200</pubDate>
+
+			
+
+			<guid>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</guid>
+
+			
+			<description><![CDATA[In this short blog post, I'd like to briefly describe how to build an offline repository for VCF 9.1 or earlier, from start to finish.]]></description>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>We’ve all been there: you have multiple LAB installations in different states and versions, you live in Germany, and you only have what’s known as a “bamboo” internet connection - or, as a friend of mine once put it, “you with your McDonald’s hotspot internet.” Ouch!</p>
+<p>Unfortunately, even in 2026, I still don’t have fiber-optic internet, and on some days it’s faster to download files via my backup 5G router than through my primary connection. Sounds like fun, right? Okay, and another reason is what’s known as a “dark site” - when the actual VCF installation or the installer can’t or isn’t allowed to connect to the internet.</p>
+<p>Since I have to reinstall my vDefend Test VCF Lab installation every 90 days due to a lack of vDefend licenses, I just don&rsquo;t feel like downloading 120+ GB onto a new machine every time. On top of that, I have various VCF installers - yes, I realize it sounds like a first-world problem, but it is what it is. Today, we&rsquo;ll learn how to configure a basic Apache server, create certificates, use the VCF Download Tool, and—hopefully—end up with a ready-to-use Linux VM containing all the relevant data needed to update or redeploy a VCF installation. So, let&rsquo;s get started.</p>
+<h2 id="preparation">Preparation</h2>
+<p>The only preparation needed is a reasonably up-to-date Ubuntu installation with internet access, SSH, and enough disk space. I’m using Ubuntu 26.04 Server and have set up a 35 GB boot partition and a 1 TB data partition. 2 vCPUs and 4 GB of RAM are sufficient. My VM runs on a Proxmox management server, but you can also run the VM on a NAS - the main thing is that the machine is accessible in the end. For the TLS certificate, you should have a suitable DNS entry; my repository VM listens to the wonderful FQDN repo.home.lab.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Certificates</b>
+    </div>
+    <div class="admonition-content">Everyone loves certificates, which is why I&rsquo;ll show you two ways to solve this problem later. However, for the repository to work without any modifications to the VCF installer, it requires a valid and verifiable certificate, such as one from Let&rsquo;s Encrypt.</div>
+</aside>
+<h2 id="vcf-download-tool">VCF Download Tool</h2>
+<p>The process for obtaining the binaries has changed slightly again with VCF 9.1, as a download token is no longer required - or rather, can no longer be used. Instead, the VCF Download Tool must now be registered in the 
+<a href="https://vcf.broadcom.com/" target="_blank" rel="noopener">VCF Business Service Console</a>. This is done in a similar way to onboarding VCF Operations, but more on that later.</p>
+<p>The VCF Download Tool can be downloaded from the 
+<a href="https://support.broadcom.com" target="_blank" rel="noopener">Broadcom Support Portal</a>. The easiest way to do this is to go to “My Downloads” and search for “Cloud Foundation.” Once you&rsquo;ve navigated to the latest VCF version, you&rsquo;ll find the tool under “Driver &amp; Tools” -&gt; VCF Download Tool.</p>
+
+
+<aside class="admonition support-portal" data-admonition-type="support-portal">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div>
+        <b>Support Portal</b>
+    </div>
+    <div class="admonition-content">Broadcom periodically optimizes the download experience on the Support Portal ;) As of the time this post was written, the tool can be found at the location specified. I always recommend using the latest version of the tool to ensure that all downloads work properly.</div>
+</aside>
+<p>After downloading the file—which is just over 500 MB—the tool must be copied to the future repository VM and extracted. I like to use my Mac&rsquo;s built-in SCP support for this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">scp ~/Downloads/vcf-download-tool-9.1.0.0400.tar.gz daniel@repo.home.lab:/home/vcf/
+</span></span></code></pre></div><p>Next, the tool must be extracted to the correct directory. In my case, /home is located on the 1 TB hard drive.
+The actual executable files we need will then be located in <em><strong>/home/vcf/vcf-download-tool/bin</strong></em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tar -xzf vcf-download-tool-9.1.0.0400.*.tar.gz -C /home/vcf/vcf-download-tool --strip-components<span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /home/vcf/vcf-download-tool/bin
+</span></span></code></pre></div><p>As mentioned earlier, to use the download tool, it must be registered in the VCF Business Service Console. To begin this process, you must first generate a software depot ID. You can do this using the following command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./vcf-download-tool configuration generate --software-depot-id
+</span></span></code></pre></div><p>If everything went well, you should end up with a unique ID like this one: 78849cfe-****-47fd-99e6-***********
+This ID must be copied and then entered under <em><strong>Software Depot Registration -&gt; New Registration</strong></em> in the VCF Business Service Console. In response, you will receive an activation code. This code replaces the download token and must be saved to a file on the repository server.</p>
+
+
+<div class="image-gallery" id="gallery-8dbfee87"><a href="/vcf91-repo/Register%20Software%20Depot.jpg" class="gallery-item" data-lightbox-group="gallery-8dbfee87" data-title="Register Software Depot"><img src="/vcf91-repo/Register%20Software%20Depot_hu_e380c94069e590e6.jpg" alt="Register Software Depot" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Register Software Depot</div>
+                    </a><a href="/vcf91-repo/Software%20Depot%20Successfully%20Registered.jpg" class="gallery-item" data-lightbox-group="gallery-8dbfee87" data-title="Software Depot Successfully Registered"><img src="/vcf91-repo/Software%20Depot%20Successfully%20Registered_hu_2972433186f082e4.jpg" alt="Software Depot Successfully Registered" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Software Depot Successfully Registered</div>
+                    </a></div>
+<pre tabindex="0"><code>echo &#39;ACTIVATION-CODE&#39; &gt; /home/vcf/vcf-activation-code.txt
+</code></pre><p>If you want, you can set this file to read-only, or—if there are multiple users set up on the system—configure the permissions so that only authorized users can read the file. Since this is a lab installation for me, I&rsquo;ll skip that step. Next, I&rsquo;ll create the “depot” folder where all the files will be saved, and then the fun of downloading can really begin.
+Ideally, your folder structure should look like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/home/vcf/
+</span></span><span class="line"><span class="cl">├── depot/
+</span></span><span class="line"><span class="cl">├── vcf-activation-code.txt
+</span></span><span class="line"><span class="cl">├── vcf-download-tool/
+</span></span><span class="line"><span class="cl">└── vcf-download-tool-9.1.0.0400.25570101.tar.gz
+</span></span></code></pre></div>
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">The download tool can do much more than just download files; among other things, you can also run a cleanup to delete binaries you no longer need. I won&rsquo;t go into all the possibilities here, but there&rsquo;s a fairly detailed command reference that you can find 
+<a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/what-is-the-vcf-download-tool-.html" target="_blank" rel="noopener">here</a></div>
+</aside>
+<h3 id="download-the-installation-binaries">Download the installation binaries</h3>
+<p>To save storage space, you can limit the versions when using the download tool. In my case, I only need the 9.1.0 files with day 2 optional Components. But I could also filter for a specific express patch version or only download the installation binaries. run the following command for the full installation package:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">./vcf-download-tool binaries download --vcf-version 9.1.0 --sku VCF --type=INSTALL --depot-download-activation-code-file /home/vcf/vcf-activation-code.txt --depot-store /home/vcf/depot/
+</span></span></code></pre></div><p>Key Parameters:</p>
+<ul>
+<li>
+<p><code>binaries download</code> Downloads VCF product binaries into the local software depot.</p>
+</li>
+<li>
+<p><code>--vcf-version 9.1.0</code> Specifies VMware Cloud Foundation version 9.1.0.</p>
+</li>
+<li>
+<p><code>--sku VCF</code> Selects the VMware Cloud Foundation product SKU.</p>
+</li>
+<li>
+<p><code>--type INSTALL</code> Downloads binaries required for installation and Day-0 deployment.</p>
+</li>
+<li>
+<p><code>--depot-download-activation-code-file</code> Specifies the file containing the Software Depot Activation Code used for authentication.</p>
+</li>
+<li>
+<p><code>--depot-store</code> Specifies the root directory of the local offline depot where the binaries are stored.</p>
+</li>
+</ul>
+<p>For companies that use proxies, the proxy parameters might still be of interest.</p>
+<ul>
+<li><code>--proxy-server</code>, <code>--proxy-https</code>, <code>--proxy-user</code>, <code>--proxy-user-password-file</code></li>
+</ul>
+<p>I think they&rsquo;re pretty self-explanatory and don&rsquo;t need to be explained in more detail.</p>
+
+
+<aside class="admonition note" data-admonition-type="note">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">VCF 9.1.0 has 74 install binaries that need to be downloaded. It&rsquo;s more than 300 GB, so the download will take some time; make sure your SSH session stays stable. If necessary, use something like tmux.</div>
+</aside>
+<p>If the repo is only to be used for deployment, no further downloads are needed at this point. If upgrades are to be enabled, additional files will need to be downloaded.</p>
+<h3 id="download-the-upgrade-binaries">Download the upgrade binaries</h3>
+<p>To use our repository for upgrades as well, we still needed the upgrade binaries. These are loaded in exactly the same way as the installation binaries, except that the type is set to UPGRADE.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">./vcf-download-tool binaries download --vcf-version 9.1.0 --sku VCF --type=UPGRADE --depot-download-activation-code-file /home/vcf/vcf-activation-code.txt --depot-store /home/vcf/depot/
+</span></span></code></pre></div><h3 id="download-the-esx-binaries-and-metadata">Download the ESX binaries and metadata</h3>
+<p>In addition to the VCF components, you&rsquo;ll also need the ESX upgrade files. You can do this using the download tool as well, but the command is slightly different. By default, the Download Tool downloads patches up to ESXi 6.7 here. We should change that to a more appropriate level.</p>
+<p>You can use this command to check the current configuration. All possible versions should still be configured here.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">./vcf-download-tool esx configuration -G
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">embeddedEsx-6.7-INTL
+</span></span><span class="line"><span class="cl">embeddedEsx-7.0-INTL
+</span></span><span class="line"><span class="cl">embeddedEsx-8.0-INTL
+</span></span><span class="line"><span class="cl">embeddedEsx-9.0-INTL
+</span></span><span class="line"><span class="cl">embeddedEsx-9.1-INTL
+</span></span><span class="line"><span class="cl">esxio-8.0-INTL
+</span></span><span class="line"><span class="cl">esxio-9.0-INTL
+</span></span><span class="line"><span class="cl">esxio-9.1-INTL
+</span></span><span class="line"><span class="cl">armEsx-9.1-INTL
+</span></span></code></pre></div><p>As for me, I only need the VCF 9.1 ESX patches for Intel. That&rsquo;s why I&rsquo;m disabling everything except
+<em><strong>embeddedEsx-9.1-INTL</strong></em>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">./vcf-download-tool esx configuration \
+</span></span><span class="line"><span class="cl">-D embeddedEsx-6.7-INTL \
+</span></span><span class="line"><span class="cl">-D embeddedEsx-7.0-INTL \
+</span></span><span class="line"><span class="cl">-D embeddedEsx-8.0-INTL \
+</span></span><span class="line"><span class="cl">-D embeddedEsx-9.0-INTL \
+</span></span><span class="line"><span class="cl">-D esxio-8.0-INTL \
+</span></span><span class="line"><span class="cl">-D esxio-9.0-INTL \
+</span></span><span class="line"><span class="cl">-D esxio-9.1-INTL \
+</span></span><span class="line"><span class="cl">-D armEsx-9.1-INTL
+</span></span></code></pre></div><p>Before running the download command, you should double-check to make sure all unnecessary patches have been removed. After that, I use the following command to download the approximately 4 GB of patches.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">./vcf-download-tool esx download \
+</span></span><span class="line"><span class="cl">--depot-download-activation-code-file /root/vcf-activation-code.txt \
+</span></span><span class="line"><span class="cl">--depot-store /home/vcf/depot/
+</span></span></code></pre></div><p>If everything went through successfully, the repository directory should look something like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/home/vcf/depot/
+</span></span><span class="line"><span class="cl">├── PROD
+</span></span><span class="line"><span class="cl">│   ├── COMP
+</span></span><span class="line"><span class="cl">│   │   ├── DEPOT_SERVICE
+</span></span><span class="line"><span class="cl">│   │   ├── ESX_HOST
+</span></span><span class="line"><span class="cl">│   │   ├── HCX
+</span></span><span class="line"><span class="cl">│   │   ├── NSX_ALB
+</span></span><span class="line"><span class="cl">│   │   ├── NSX_T_MANAGER
+</span></span><span class="line"><span class="cl">│   │   ├── SDDC_MANAGER_VCF
+</span></span><span class="line"><span class="cl">│   │   ├── TELEMETRY_ACCEPTOR
+</span></span><span class="line"><span class="cl">│   │   ├── VCENTER
+</span></span><span class="line"><span class="cl">│   │   ├── VCFDT
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_FLEET_LCM
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_LICENSE_SERVER
+</span></span><span class="line"><span class="cl">│   │   ├── VCFMS_METRICS_STORE
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_OBSERVABILITY_DATA_PLATFORM
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_OPS_CLOUD_PROXY
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_SALT
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_SALT_RAAS
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_SDDC_LCM
+</span></span><span class="line"><span class="cl">│   │   ├── VCF_SERVICE_VCD_MIGRATION_BACKEND
+</span></span><span class="line"><span class="cl">│   │   ├── VIDB
+</span></span><span class="line"><span class="cl">│   │   ├── VRA
+</span></span><span class="line"><span class="cl">│   │   ├── VRLI
+</span></span><span class="line"><span class="cl">│   │   ├── VRNI
+</span></span><span class="line"><span class="cl">│   │   ├── VROPS
+</span></span><span class="line"><span class="cl">│   │   ├── VSAN_FILE_SERVICES
+</span></span><span class="line"><span class="cl">│   │   └── VSP
+</span></span><span class="line"><span class="cl">│   ├── metadata
+</span></span><span class="line"><span class="cl">│   │   ├── Compatibility
+</span></span><span class="line"><span class="cl">│   │   ├── manifest
+</span></span><span class="line"><span class="cl">│   │   ├── productVersionCatalog
+</span></span><span class="line"><span class="cl">│   │   └── vsan
+</span></span><span class="line"><span class="cl">│   └── vsan
+</span></span><span class="line"><span class="cl">│       └── hcl
+</span></span><span class="line"><span class="cl">└── umds-patch-store -&gt; /home/vcf/depot/PROD/COMP/ESX_HOST/patch-store
+</span></span></code></pre></div>
+
+<aside class="admonition tipp" data-admonition-type="tipp">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div>
+        <b>Tipp</b>
+    </div>
+    <div class="admonition-content"><p>William Lam has written a great cheat sheet article about the download tool; if you want to know more, feel free to check out his 
+<a href="https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html" target="_blank" rel="noopener">post</a>.</p>
+<p>If you run the commands again, the download tool will not download files that already exist. So if a new express patch or a new release is released, you simply need to run the commands again to download the missing deltas. For example, if you specify only 9.1 as the VCF version, all existing sub-releases will be downloaded as well.</p>
+</div>
+</aside>
+<h2 id="installing-and-configuring-the-apache-server">Installing and Configuring the apache Server</h2>
+<p>Now that we&rsquo;ve gotten the fun download part out of the way, let&rsquo;s move on to actually setting up the repo. To do this, I&rsquo;ll install a apache server and set up a minimal configuration for it. In production environments, of course, apache should be hardened.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">sudo apt install apache2 openssl apache2-utils unzip
+</span></span></code></pre></div><p>Next, I&rsquo;ll create an OpenSSL config file. I&rsquo;m using my Windows CA to generate the certificate. However, you can also create a self-signed certificate. Regardless of how you create your certificate, it must be imported into the VCF installer later.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[ req ]
+</span></span><span class="line"><span class="cl">default_bits = 4096
+</span></span><span class="line"><span class="cl">prompt = no
+</span></span><span class="line"><span class="cl">default_md = sha256
+</span></span><span class="line"><span class="cl">distinguished_name = dn
+</span></span><span class="line"><span class="cl">x509_extensions = v3_req
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[ dn ]
+</span></span><span class="line"><span class="cl">C = DE
+</span></span><span class="line"><span class="cl">ST = RLP
+</span></span><span class="line"><span class="cl">L = NW
+</span></span><span class="line"><span class="cl">O = SDN-Warrior
+</span></span><span class="line"><span class="cl">OU = SDN-Warrior
+</span></span><span class="line"><span class="cl">CN = repo.home.lab
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[ v3_req ]
+</span></span><span class="line"><span class="cl">basicConstraints = CA:FALSE
+</span></span><span class="line"><span class="cl">keyUsage = digitalSignature, keyEncipherment
+</span></span><span class="line"><span class="cl">extendedKeyUsage = serverAuth
+</span></span><span class="line"><span class="cl">subjectAltName = @alt_names
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[ alt_names ]
+</span></span><span class="line"><span class="cl">DNS.1 = repo.home.lab
+</span></span><span class="line"><span class="cl">IP.1 = 192.168.5.6
+</span></span></code></pre></div><p>I create a new folder in the Apache directory where I store my TLS files—namely, the private key, the CSR request, and, finally, the generated certificate.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo mkdir /etc/apache2/ssl/
+</span></span></code></pre></div>
+
+<aside class="admonition tipp" data-admonition-type="tipp">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div>
+        <b>Tipp</b>
+    </div>
+    <div class="admonition-content">The folder must be created with root privileges.</div>
+</aside>
+<p>To generate my certificate request and private key, I run the following command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo openssl req -nodes \
+</span></span><span class="line"><span class="cl">  -newkey rsa:4096 \
+</span></span><span class="line"><span class="cl">  -keyout /etc/apache2/ssl/vcf.key \
+</span></span><span class="line"><span class="cl">  -out /etc/apache2/ssl/vcf.csr \
+</span></span><span class="line"><span class="cl">  -config /home/vcf/openssl.cnf
+</span></span></code></pre></div><p>If you want to use a self-signed certificate instead, you can do so with this command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl"> sudo openssl req -x509 -nodes \
+</span></span><span class="line"><span class="cl">  -days 365 \
+</span></span><span class="line"><span class="cl">  -newkey rsa:4096 \
+</span></span><span class="line"><span class="cl">  -keyout /etc/apache2/ssl/vcf.key \
+</span></span><span class="line"><span class="cl">  -out /etc/apache2/ssl/vcf.crt \
+</span></span><span class="line"><span class="cl">  -config /home/vcf/openssl.cnf
+</span></span></code></pre></div><p>Next, you&rsquo;ll need a user for Apache&rsquo;s basic authentication. I&rsquo;m going to create a user named vcf here. After running the command, you&rsquo;ll need to set a password for the user. The same applies here: in a production environment, you should set a strong password. Additionally, basic authentication is unencrypted, so you must use HTTPS.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo htpasswd -c /etc/apache2/.htpasswd vcf
+</span></span></code></pre></div><p>Next, Apache needs to be configured. To do this, I cleared the original file and replaced it with my configuration.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo nano /etc/apache2/sites-available/default-ssl.conf
+</span></span></code></pre></div><p>Apache configuration:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">&lt;VirtualHost *:443&gt;
+</span></span><span class="line"><span class="cl">    ServerAdmin sdnwarrior@localhost
+</span></span><span class="line"><span class="cl">    DocumentRoot /home/vcf/depot
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    SSLEngine on
+</span></span><span class="line"><span class="cl">    SSLCertificateFile /etc/apache2/ssl/vcf.crt
+</span></span><span class="line"><span class="cl">    SSLCertificateKeyFile /etc/apache2/ssl/vcf.key
+</span></span><span class="line"><span class="cl">    SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
+</span></span><span class="line"><span class="cl">    RequestHeader unset Proxy early
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    &lt;Directory /home/vcf/depot&gt;
+</span></span><span class="line"><span class="cl">        Options Indexes FollowSymLinks
+</span></span><span class="line"><span class="cl">        AllowOverride None
+</span></span><span class="line"><span class="cl">        AuthType Basic
+</span></span><span class="line"><span class="cl">        AuthName &#34;VCF Depot&#34;
+</span></span><span class="line"><span class="cl">        AuthUserFile /etc/apache2/.htpasswd
+</span></span><span class="line"><span class="cl">        Require valid-user
+</span></span><span class="line"><span class="cl">    &lt;/Directory&gt;
+</span></span><span class="line"><span class="cl">&lt;/VirtualHost&gt;
+</span></span></code></pre></div><p>The most important thing here is the DocumentRoot, and that the paths to the certificate and the private key are correct. After that, just start the services, and the repository should be accessible.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">sudo a2enmod ssl headers
+</span></span><span class="line"><span class="cl">sudo a2ensite default-ssl
+</span></span><span class="line"><span class="cl">sudo systemctl restart apache2
+</span></span></code></pre></div>
+
+<div class="image-gallery" id="gallery-7f090d76"><a href="/vcf91-repo/Basic%20Auth.jpg" class="gallery-item" data-lightbox-group="gallery-7f090d76" data-title="Basic Auth"><img src="/vcf91-repo/Basic%20Auth_hu_420b44d6a671860c.jpg" alt="Basic Auth" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Basic Auth</div>
+                    </a><a href="/vcf91-repo/Repository.jpg" class="gallery-item" data-lightbox-group="gallery-7f090d76" data-title="Repository"><img src="/vcf91-repo/Repository_hu_7a47f471992f852f.jpg" alt="Repository" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Repository</div>
+                    </a></div>
+<p>Well, that was easy. However, there’s still one problem: the VCF Installer won’t accept the certificate.
+Now you have two options: either import the repository certificate into the VCF Installer, or - like I normally do - use an NGINX proxy with Cert Manager. I have this service running on my NAS as a Docker container and use my local DNS server with split DNS. This way, my repository gets a valid Let’s Encrypt certificate via the proxy, and thanks to Cert Manager, I don’t have to deal with renewing Let’s Encrypt certificates. In most cases, this solution probably won’t be feasible - and let’s just say it’s more of a specialized solution for the SDN-Warrior Lab - so I’ll also show you how to configure the repository certificate in the VCF Installer, since unfortunately it can’t be done via the UI.</p>
+<h2 id="importing-the-repo-certificate">Importing the Repo Certificate</h2>
+<p>To do this, I first need to build a valid certificate chain. In my case, this means creating a <code>cert.pem</code> file in the /tmp directory on the VCF installer and copying the root CA certificate and the repository certificate into it to create a valid certificate chain. Then I import the certificate using the Java Keytool.</p>
+<p>Between versions 9 and 9.1 of the VCF installer, the Java version was changed, so the keychains for the VCF 9.1 installer are located in a different directory (oh yeah, the fun with certificates—we love it).</p>
+<p>For the 9.0 installer, use the following command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">keytool -import -trustcacerts -file /tmp/cert.pem -keystore /usr/lib/jvm/openjdk-java17-headless.x86_64/lib/security/cacerts -alias repo.home.lab -storepass changeit
+</span></span></code></pre></div><p>For 9.1, please use this command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">keytool -import -trustcacerts -file /tmp/cert.pem -keystore /usr/lib/jvm/openjdk-java21-headless.x86_64/lib/security/cacerts -alias repo.home.lab -storepass changeit
+</span></span></code></pre></div><p>After that, all you have to do is restart the services:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo ‘y’ | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh
+</span></span></code></pre></div><p>As a final step, you can now configure the offline repository in the VCF Installer.</p>
+
+
+<div class="image-gallery" id="gallery-9fd82df6"><a href="/vcf91-repo/Working%20offline%20repository.jpg" class="gallery-item" data-lightbox-group="gallery-9fd82df6" data-title="Working offline repository"><img src="/vcf91-repo/Working%20offline%20repository_hu_84a9d833d70bda79.jpg" alt="Working offline repository" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Working offline repository</div>
+                    </a></div>
+<h2 id="final-words">Final words</h2>
+<p>It takes quite a bit of effort to get this up and running. If you want to make things easier on yourself, you should check out the
+VCF Infrastructure Services (VIS) Appliance for VCF 9.1 Lab/PoC by William Lam. It’s incredibly useful, but there might be the occasional situation in a consultant’s life where you can’t rely on an appliance like this. I don&rsquo;t really understand why you can&rsquo;t just accept the certificate in the installer via the UI, like with VCF Operations - that would make life a little easier. Well, in the end, building it was good for my rusty Linux skills, too. I hope this article helps you if you ever need to build a repository manually.</p>
+]]></content:encoded>
+		</item>
 		
 		<item>
 			<title>Intel Optane on Nutanix CE - Or I should have read the manual</title>
