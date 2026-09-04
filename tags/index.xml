@@ -12,9 +12,37 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Fri, 14 Aug 2026 01:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Wed, 02 Sep 2026 23:16:36 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Acme</title>
+				<link>https://sdn-warrior.org/tags/acme/</link>
+				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/acme/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Certificates</title>
+				<link>https://sdn-warrior.org/tags/certificates/</link>
+				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/certificates/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Letsencrypt</title>
+				<link>https://sdn-warrior.org/tags/letsencrypt/</link>
+				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/letsencrypt/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vcf9.1</title>
+				<link>https://sdn-warrior.org/tags/vcf9.1/</link>
+				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>Apache</title>
 				<link>https://sdn-warrior.org/tags/apache/</link>
@@ -34,13 +62,6 @@
 				<link>https://sdn-warrior.org/tags/ubuntu/</link>
 				<pubDate>Fri, 14 Aug 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/ubuntu/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Vcf9.1</title>
-				<link>https://sdn-warrior.org/tags/vcf9.1/</link>
-				<pubDate>Fri, 14 Aug 2026 01:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -132,27 +153,6 @@
 				<link>https://sdn-warrior.org/tags/unraid/</link>
 				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/unraid/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>VMware</title>
-				<link>https://sdn-warrior.org/tags/vmware/</link>
-				<pubDate>Fri, 01 May 2026 18:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/vmware/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Flow</title>
-				<link>https://sdn-warrior.org/tags/flow/</link>
-				<pubDate>Mon, 13 Apr 2026 23:30:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/flow/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Esx9</title>
-				<link>https://sdn-warrior.org/tags/esx9/</link>
-				<pubDate>Mon, 06 Apr 2026 23:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/tags/esx9/</guid>
 				<description></description>
 			</item>
 	</channel>

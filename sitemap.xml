@@ -2,28 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/acme/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/certificates/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/letsencrypt/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
+    <lastmod>2026-09-02T23:16:36+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/apache/</loc>
     <lastmod>2026-08-14T01:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/tags/repository/</loc>
-    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
     <lastmod>2026-08-14T01:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/ubuntu/</loc>
     <lastmod>2026-08-14T01:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</loc>
-    <lastmod>2026-08-14T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
     <lastmod>2026-08-14T01:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/homelab/</loc>
@@ -199,9 +211,6 @@
   </url><url>
     <loc>https://sdn-warrior.org/posts/explore-2025/</loc>
     <lastmod>2025-08-31T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/certificates/</loc>
-    <lastmod>2025-08-19T09:21:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9-cert-exchange/</loc>
     <lastmod>2025-08-19T09:21:00+02:00</lastmod>

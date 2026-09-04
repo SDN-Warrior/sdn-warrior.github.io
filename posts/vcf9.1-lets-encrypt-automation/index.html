@@ -1,0 +1,738 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="Fun with certificates - we&#39;ve all been there, right? In this - perhaps brief - blog post, I&#39;ll explain how to automate the whole process and use Let&#39;s Encrypt. Since this post contains a lot of code, I&#39;ve decided to publish it all in my public GitHub repo.
+">
+
+	<meta itemprop="name" content="VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline">
+	<meta itemprop="description" content="Fun with certificates - we&#39;ve all been there, right? In this - perhaps brief - blog post, I&#39;ll explain how to automate the whole process and use Let&#39;s Encrypt. Since this post contains a lot of code, I&#39;ve decided to publish it all in my public GitHub repo.">
+	<meta itemprop="datePublished" content="2026-09-02T23:16:36+02:00">
+	<meta itemprop="dateModified" content="2026-09-02T23:16:36+02:00">
+	<meta itemprop="wordCount" content="4169">
+	<meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+	<meta itemprop="keywords" content="Vcf9.1,Certificates,Letsencrypt,Acme"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/">
+	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+	<meta property="og:title" content="VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline">
+	<meta property="og:description" content="Fun with certificates - we&#39;ve all been there, right? In this - perhaps brief - blog post, I&#39;ll explain how to automate the whole process and use Let&#39;s Encrypt. Since this post contains a lot of code, I&#39;ve decided to publish it all in my public GitHub repo.">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-09-02T23:16:36+02:00">
+		<meta property="article:modified_time" content="2026-09-02T23:16:36+02:00">
+		<meta property="article:tag" content="Vcf9.1">
+		<meta property="article:tag" content="Certificates">
+		<meta property="article:tag" content="Letsencrypt">
+		<meta property="article:tag" content="Acme">
+		<meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta name="twitter:title" content="VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline">
+	<meta name="twitter:description" content="Fun with certificates - we&#39;ve all been there, right? In this - perhaps brief - blog post, I&#39;ll explain how to automate the whole process and use Let&#39;s Encrypt. Since this post contains a lot of code, I&#39;ve decided to publish it all in my public GitHub repo.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF 9.1 - C.E.R.B.E.R.U.S.: A Let's Encrypt Automation Pipeline",
+    "name": "VCF 9.1 - C.E.R.B.E.R.U.S.: A Let\u0027s Encrypt Automation Pipeline",
+    "description": "Fun with certificates - we've all been there, right? In this - perhaps brief - blog post, I'll explain how to automate the whole process and use Let's Encrypt. Since this post contains a lot of code, I've decided to publish it all in my public GitHub repo.\n",
+    "keywords": ["vcf9.1", "certificates", "letsencrypt", "acme"],
+    "articleBody": "Introduction If this were a marketing-driven blog, I’d call my pipeline C.E.R.B.E.R.U.S. - short for Certificate Exchange, Renewal \u0026 Backend Engine for Reliable Unified Security. But we’re dealing with a deadly serious topic here: certificates! And who hasn’t experienced that beautiful moment after deploying VCF 9.1 and Google Chrome clearly reminds you that you’re still using a self-signed certificate? Been there, done that.\nBut enough with the jokes. I want to use the pipeline to solve more than just one certificate warning. My goal is to ensure that my entire VCF setup-including Fleet and Management as well as Workload Domain components-is fully and automatically provisioned with valid certificates. The whole process should be Git-driven and declarative. I also want to rely on the ACME standard, since VCF natively only supports automatic certificate enrollment with a Windows-based CA, which unfortunately comes with several drawbacks.\nFirst, you have to enable the Windows CA web service, which can quickly become a security risk and is simply no longer up to date (depending on who you ask, it was never up to date to begin with); second, Basic Auth is required for authentication. I’m sure I don’t need to explain to anyone that Basic Authentication doesn’t provide sufficient protection and is completely insecure without transport encryption - or would you send your password on a postcard, for example?\nUnfortunately, there’s currently no ACME support in VCF 9.1, but luckily we live in modern times, and I decided to code my own solution for the problem. How hard could it be? Well, in the end it took longer than I expected, and despite massive artificial help, I’ve run over 58 workflows in the last two days and replaced my vCenter certificate at least 30 times. All of this so that you don’t have to.\nThe actual idea The actual idea came to me pretty quickly: I want to use ACME because, in theory, it makes me independent of the CA. ACME is a well-documented standard and should be familiar to most people through Let’s Encrypt (which played a major role in developing and popularizing it).\nSo what do I need to get started? First of all, an ACME client-I found one very quickly in Certbot. I also need to be able to complete the ACME challenge to prove to the CA that I’m authorized to request a Cert. This can be done, for example, via HTTP-01 or the DNS-01 challenge. Since I have a public domain i’m using the DNS challenge. I’d also like to mention that I bought a $20 domain just because of this article - no Bullsh#!t.\nHowever, since I definitely wanted to automate and centralize the issuance and renewal processes, my Gitea service quickly came to mind as the “source of truth.” Certbot and the rest of my automation stack will run on a VM, since I didn’t want to open up yet another side quest.\nBeing as smart and creative as I am, I’ve named my VM “CertManager,” and since my readers are all smart too, they surely won’t confuse my VM with the Kubernetes project “cert-manager.” Now that all the confusion has hopefully been straightened out, I can finally start building.\nBuilding the “CertManager” You can use any standard Linux distribution of your choice. In my case, it’s Ubuntu 26.04 LTS-not because it’s the best Linux distribution, but because it’s the one I’m most comfortable working with. The server will serve as my central hub for handling CSR requests, getting certificates, triggering APIs, and hosting a Gitea Runner. It’s important to note that “CertManager” is merely the executing instance. But let’s first take a look at the planned workflow, and to keep things simple, we’ll start with just the Let’s Encrypt mode of C.E.R.B.E.R.U.S..\nNote\rAt this point, at the very latest, I realize that a shorter acronym would have been better for writing, but the things I’ll do for a good joke.\rSince, as we all know, a picture is worth a thousand words, I’ve created a workflow diagram.\nC.E.R.B.E.R.U.S. Workflow At first glance, the workflow is very simple: a certificate definition must be uploaded to Gitea; the runner retrieves it and uses Ansible to trigger the VCF Operations API to generate a CSR. Next, the actual certificate is issued via ACME and Let’s Encrypt. Finally, it’s passed to VCF via the VCF Operations API and replaced on the target system. Simple, right? Well, we’ll get to that later. The great thing about this workflow is that the certificate’s private key is never accessible to any systems. The key remains securely with VCF Operations.\nNow that the principle is clear, there are still a few requirements that our Linux system must meet. The following software is required:\nGit Python 3 Ansible OpenSSL Certbot Certbot DNS Cloudflare Plugin Gitea Actions Runner Node.js 22 C.E.R.B.E.R.U.S. - Git repository Ubuntu comes with most of it already installed; the rest can be easily installed with this command.\nsudo apt update sudo apt install -y \\ git \\ python3 \\ ansible-core \\ openssl \\ curl \\ ca-certificates \\ certbot \\ python3-certbot-dns-cloudflare curl -fsSL https://deb.nodesource.com/setup_22.x -o /tmp/nodesource_setup.sh sudo -E bash /tmp/nodesource_setup.sh sudo apt install -y nodejs You can find the actual repository here.\nInformation\rI generated most of the Ansible code using AI. I’ve reviewed and tested it to the best of my knowledge and ability, but errors can still occur. Please keep that in mind. The current version has been tested with VCF 9.1 and 9.1.1. In 9.1.1, additional options have been added to exchange more certificates. As of now, it’s not yet possible to change certificates for cloud proxies, since they use a different API than Fleet or Domain components. That may change in the future.\rOn my server, I’ve kept the Git repository and runtime data neatly separated in different directories. You don’t have to do this, but I recommend it. I cloned my repository to /opt/vcf-certmanager, and my runtime data is located at /etc/vcf-certmanager. The runtime directory contains, for example, the generated CSRs and the final certificates - in other words, everything you need to get the job done. The VCF operations credentials are stored in encrypted form in an Ansible Vault, and the password for the vault is located at /etc/vcf-certmanager/vault-pass. This is important so that the vault can be opened automatically later on. The vault-pass file is protected from unauthorized access via file permissions. For the automated workflow, I use a dedicated gitea-runnerservice account as well as separate groups for runtime data and secrets.\n/opt/vcf-certmanager ├── ansible/ │ ├── inventory/ │ ├── playbooks/ │ └── vars/ │ └── vault.yml ├── certificates/ ├── .gitea/ │ └── workflows/ ├── hooks/ └── scripts/ /etc/vcf-certmanager ├── certificates/ └── vault-pass The individual directories serve the following purpose:\n/opt/vcf-certmanager/ansible – Contains the Ansible inventory, playbooks, and variables. /opt/vcf-certmanager/certificates – Contains the YAML definitions for the individual VCF certificates and endpoints. /opt/vcf-certmanager/.gitea/workflows – Contains the Gitea Actions workflows. /opt/vcf-certmanager/hooks – Contains the hooks used for the ACME DNS-01 challenge. /opt/vcf-certmanager/scripts – Contains helper and wrapper scripts used by the certificate workflow. /etc/vcf-certmanager/certificates – Contains the runtime data for each certificate, including the CSR, issued certificate, and certificate chain. No private keys are stored here. /etc/vcf-certmanager/vault-pass – Contains the password used to automatically unlock the Ansible Vault. My personal user account is only used for manual testing and repository maintenance and is therefore not relevant for the automated operation of VCF CertManager.\nUser Paths Permissions root /etc/vcf-certmanager root:root - 755 root /etc/vcf-certmanager/vault-pass root:vcf-certmanager-secrets - 640 gitea-runner /etc/vcf-certmanager/certificates/etc/vcf-certmanager/certificates/ gitea-runner:vcf-certmanager-runtime - 2770 The gitea-runner user is a member of the vcf-certmanager-runtime group for access to certificate runtime data and the vcf-certmanager-secrets group for read access to the Ansible Vault password.\nThe 2770 permissions on the certificate directories include the setgid bit, ensuring that newly created files and directories inherit the vcf-certmanager-runtime group.\nAnsible is configured to use /etc/vcf-certmanager/vault-pass as its Vault password file, allowing the encrypted vault.yml to be opened non-interactively during automated runs.\nNote\rIn a lab environment, you can make things much easier for yourself by giving a single user full access to the necessary files and directories. For production use, however, I would strongly recommend using dedicated service accounts and separate groups, and granting them only the permissions they actually need. Sensitive files, such as the password for the Ansible Vault, should remain protected with restrictive file permissions, while the automation user should be granted only the access necessary for the certificate workflow.\rGet the runner running The next component I need is the Gitea Actions Runner. I run it directly on the CertManager host rather than in a container. I didn’t want to complicate things any further. This allows the workflow to directly access locally installed tools such as Ansible, Certbot, OpenSSL, and Node.js. To keep this example simple, I’m using a single gitea-runner user for the entire automation process. How you implement this in practice is up to you, but I’m a fan of keeping it simple.\nCreate the user and the required directories: sudo useradd \\ --system \\ --home-dir /var/lib/gitea-runner \\ --create-home \\ --shell /bin/bash \\ gitea-runner sudo mkdir -p \\ /etc/gitea-runner \\ /etc/vcf-certmanager/certificates sudo chown -R gitea-runner:gitea-runner \\ /var/lib/gitea-runner \\ /etc/gitea-runner \\ /etc/vcf-certmanager Download and install the Gitea Runner. At the time I built this setup, I was using version 3.3.1: VERSION=3.3.1 curl -L \\ -o /tmp/gitea-runner \\ \"https://dl.gitea.com/gitea-runner/${VERSION}/gitea-runner-${VERSION}-linux-amd64\" sudo install -m 0755 \\ /tmp/gitea-runner \\ /usr/local/bin/gitea-runner Generate the runner configuration: sudo -u gitea-runner -H bash -c \\ 'gitea-runner generate-config \u003e /etc/gitea-runner/config.yaml' Register the Runner with Gitea. You can get the registration token from the Actions Runner settings in Gitea. The registration command starts an interactive setup. You will be asked for the Gitea instance URL, the registration token, a name for the runner, and the runner labels.\nsudo -u gitea-runner -H bash -c ' cd /var/lib/gitea-runner gitea-runner \\ --config /etc/gitea-runner/config.yaml \\ register ' I have chosen the following values:\nEnter the Gitea instance URL: http://192.168.11.28:3000/ Enter the runner token: Enter the runner name: certmanager Enter the runner labels: vcf-certmanager:host Create the systemd service sudo tee /etc/systemd/system/gitea-runner.service \u003e /dev/null \u003c\u003c'EOF' [Unit] Description=Gitea Actions Runner After=network-online.target Wants=network-online.target [Service] Type=simple User=gitea-runner Group=gitea-runner WorkingDirectory=/var/lib/gitea-runner Environment=HOME=/var/lib/gitea-runner ExecStart=/usr/local/bin/gitea-runner \\ --config /etc/gitea-runner/config.yaml \\ daemon Restart=always RestartSec=5 [Install] WantedBy=multi-user.target EOF sudo systemctl daemon-reload sudo systemctl enable --now gitea-runner Gitea Runner Info\rIn principle, this whole setup also works with GitHub Actions or Forgejo Actions. I decided to go with Gitea because it was already there and has been running as a service in my home lab for years.\rGee, Brain, whaddya wanna do tonight? The same thing we do every night, Pinky. Try to take over the world (and Issue Certificates)!\" Anyone who doesn’t think of ACME Labs when they hear that probably had a sad childhood or is too young. All I’m really trying to say is that I still need to configure ACME.\nBefore we can even think about certificate requests, we need to configure Certbot. In my environment, I generally use a split DNS setup. This means that I’ve created a forward and reverse lookup zone for my domain sdn-warrior.cloud in my local DNS. I don’t want any private IP addresses to be exposed on the internet via Cloudflare. The Cloudflare zone is used solely for the DNS challenge. To do this, I set up an API token for the appropriate zone and save the token as a file on my CertManager VM. For example, I chose the path /etc/letsencrypt/cloudflare/sdn-warrior-cloud.ini. It’s important that this file contains only the following content:\ndns_cloudflare_api_token = YOUR_CLOUDFLARE_API_TOKEN Since the API token is a secret, this should never be pushed to Git, and you should make sure the file permissions are set correctly. You know how to do that. That’s basically all the configuration you need to use Cloudflare. Of course, you can also use other DNS providers for ACME – as long as there’s a compatible plugin for Certbot available.\nFun with YAML - Certificate Definition To create a certificate using the pipeline, it must first be defined - sounds logical, right? This is all done with a small YAML file, and once you have a valid file, it just needs to be slightly adjusted. C.E.R.B.E.R.U.S. is designed to be flexible in this regard, and not all parameters necessarily make sense for Let’s Encrypt - but the idea behind it was that you could swap out the CA and only need to make minimal adjustments. If you’re as excited about YAML as I am, don’t worry - it’s really easy. I’ve also added a YAML file to the repository for all supported services. Let’s see what the cat dragged in.\n--- certificate: name: ops01-fleetlcm enabled: true common_name: fleetlcm.vcf.sdn-warrior.cloud subject: country: DE state: RLP locality: NW organization: SDN-Warrior organizational_unit: SDN-Warrior sans: - fleetlcm.vcf.sdn-warrior.cloud ip_sans: [] key: type: rsa size: 4096 acme: server: https://acme-v02.api.letsencrypt.org/directory issuance_timeout: 300 challenge: type: dns-01 provider: cloudflare credentials_file: /etc/letsencrypt/cloudflare/sdn-warrior-cloud.ini propagation_seconds: 30 deployment: type: vcf_operations ops_endpoint: ops01.vcf.sdn-warrior.cloud appliance: VCF_SERVICES_RUNTIME target: fleetlcm.vcf.sdn-warrior.cloud validate_certs: false root_ca_file: /etc/ssl/certs/ISRG_Root_X1.pem renewal: renew_before_days: 30 The most important parts are:\nname and enabled – Identify the certificate within the automation and control whether it should be processed. You don’t have to delete a certificate; you can simply disable it.\ncommon_name, subject, and sans – Define the certificate’s identity and the DNS names that must be included in the certificate.\nip_sans – Reserved for IP address SANs. These are not currently supported by the VCF Operations workflow, but the definition is already prepared for other APIs or future implementations.\nkey – Defines the requested key type and key size. The private key itself is still generated and stored within VCF Operations.\nacme and challenge – Define the ACME server and the method used to verify domain ownership. In this example, “Let’s Encrypt” is used along with a DNS-01 challenge via Cloudflare. Currently, an experimental implementation using an ACME bridge and a Windows CA is still supported. However, this implementation has very limited functionality and is currently only a proof of concept to demonstrate that other ACME interfaces can also be used.\ndeployment – Describes where the certificate should be installed. The value appliance identifies the VCF component type, while target specifies the actual endpoint whose certificate is to be replaced. The root_ca_file is a Let’s Encrypt-specific option; since Operations always requires the full certificate chain, the ISRG Root X1 is appended to the certificate chain generated by Certbot. This is still static in the current version and will likely be converted to a dynamic configuration in a future release.\nrenewal – Specifies when the certificate is eligible for renewal. In this example, the automation begins the renewal process 30 days before expiration.\nIn Git We Trust! Now that we have a rough idea of what the certificate definitions should look like, they need to be stored somewhere – and this is where my Gitea comes in, because only what’s in Git is true. As mentioned at the beginning, the CertManager VM is merely the execution platform. Local definitions are not taken into account; all definitions must be pushed to the Git repository under the “certificates” folder. The persistent runtime data remains outside Git on the CertManager VM.\nAside from the fact that the generated files aren’t stored in the repository, this also makes it easy to track changes to the certificate configuration. If I change a SAN, replace an endpoint, or adjust the renewal settings, that change becomes part of the Git history. Now we finally have everything we need to do something useful with the definition. In the next step, Gitea takes over and launches the actual certificate pipeline.\nStarting the Pipeline with Gitea Actions I’ve currently created two workflows for the certificate lifecycle: auto-new-certificate.yml and scheduled-certificate-renewal.yml. I think the names pretty much explain what they do. The first workflow, auto-new-certificate.yml, monitors the certificates directory in the main branch, and whenever a new definition is pushed to the repo, the workflow starts on the CertManager VM. The workflow checks which certificate definition was just added with the push. Changes to a definition or deletions do not trigger the workflow. It is important to understand this. Within the workflow, a few basic checks are performed - such as verifying that the YAML structure is valid - but this area certainly has room for improvement. If enabled is set to false, the definition remains in Git and the workflow skips it. Once all the prechecks are complete, the actual pipeline is started: ./scripts/run-certificate-pipeline.sh “${CERTIFICATE_NAME}”.\nCreating certificates is nice, but unfortunately, they also have a relatively short lifespan and need to be replaced regularly. That’s where the second automation comes into play. With scheduled-certificate-renewal.yml, certificates can be automatically renewed - and by “renewed,” I mean, in this case, re-created and replaced. To do this, a cron schedule within Gitea Actions workflow is set up that runs by default at 3:15. Why 3:15? No idea - why not? You can change that, of course. But what’s cool is that you can also start the workflow manually from Gitea. By default, the workflow checks whether the certificate needs to be renewed yet. This is based on the value in the certificate definition and is set to 30 days in my case. However, it doesn’t rely on any local certificates stored in working directories; instead, the CertManager server connects to the actual endpoint and checks how long the certificate is still valid. But if you want to change the certificate immediately for whatever reason, you can use “Force mode” to have the certificate regenerated regardless of its validity. Pretty cool, huh? When the certificate is about to expire, the same workflow kicks in at 3:15 a.m. and replaces it.\nNew YAML pushed | v auto-new-certificate.yml | v run-certificate-pipeline.sh Scheduled check | v scheduled-certificate-renewal.yml | +--\u003e Certificate still valid --\u003e Do nothing | +--\u003e Renewal required | v run-certificate-pipeline.sh The Pipe of Doom I think now is the perfect time to take a look at the pipeline itself. But don’t worry – I’m not going to explain every command here. Okay, okay, maybe the name is a little too dramatic, but whenever I hear “Pipeline,” I have to think of an old episode of Beavis and Butt-Head where one of them gets stuck in a pipe and yells, “Help, I’m stuck!” It has nothing to do with the topic, but sometimes I get sidetracked.\nThe script itself is relatively unspectacular but still important, because VCF doesn’t always make things easy for us. In version 9.1.1, there are now three APIs you have to use if you really want to replace all the certificates. At the current stage of development, the Cloud Proxies aren’t working yet, since this feature was just added in 9.1.1 and I haven’t had time to implement it yet. What does work, however, are Fleet components like VCF Operations and actual domain components like ESX and vCenter.\ncase \"${APPLIANCE}\" in VCENTER|SDDC_MANAGER|NSXT_MANAGER) CERTIFICATE_PLAYBOOK=\"ansible/playbooks/vcf-certificate.yml\" ;; VCF_OPERATIONS|IDENTITY_BROKER|VCF_SERVICES_RUNTIME|ESX) CERTIFICATE_PLAYBOOK=\"ansible/playbooks/vcf-management-certificate.yml\" ;; esac The good news is that both paths use the same three-step process, so there aren’t actually that many differences. Nevertheless, each path has its own playbook and can be customized independently of the other.\nStep 1 - Let VCF Operations create the CSR\nIn the first step, a CSR is generated via the VCF Operations API. Depending on the component type, either the VCF Component API or the VCF Management API is used for this purpose. The private key remains in Operations. In VCF 9.1, a maximum of one CSR was allowed per component. In 9.1.1, after the update, I had CSRs in the system for multiple components that I hadn’t generated myself. Therefore, I had to adjust the pipeline again to ensure that the selection of the correct CSR is robust. In the first version, I simply assumed that only one CSR would ever be returned. The CSR is temporarily stored in the working directory on the CertManager VM.\nStep 2 - Send the CSR\nOnce the CSR is on the CertManager VM, it is validated to ensure that all information required for ACME is present. Certbot will then use this CSR to request a valid certificate from Let’s Encrypt, provided the DNS challenge was successful.\nFor the Cloudflare implementation, Certbot uses the DNS plugin in combination with the values from the certificate definition. The actual command looks like this:\ncertbot certonly \\ --server https://acme-v02.api.letsencrypt.org/directory \\ --dns-cloudflare \\ --dns-cloudflare-credentials /etc/letsencrypt/cloudflare/sdn-warrior-cloud.ini \\ --dns-cloudflare-propagation-seconds 30 \\ --csr /etc/vcf-certmanager/certificates//request.csr \\ --cert-path /etc/vcf-certmanager/certificates//cert.pem \\ --chain-path /etc/vcf-certmanager/certificates//chain.pem \\ --fullchain-path /etc/vcf-certmanager/certificates//fullchain.pem \\ --non-interactive \\ --agree-tos The Cloudflare plugin automatically creates and deletes the required _acme-challengeTXT record. The values used here are not hard-coded; instead, they are taken from the certificate definition shown earlier. Most importantly, Certbot receives the CSR via –csr. Therefore, no new private key is generated.\nAfterward, the certificate is validated by C.E.R.B.E.R.U.S.. Among other things, the common name and SANs are checked, and the public key from the request is compared to the public key of the certificate. If anything doesn’t match, the pipeline is aborted.\nThere’s also a VCF-specific requirement. Let’s Encrypt does not normally include the self-signed root certificate in the full chain that is delivered. However, VCF operations require the complete chain, so if something is defined under root_ca_file in the certificate definition, C.E.R.B.E.R.U.S. appends this file, thereby ensuring a valid certificate chain for VCF operations. As of today, this is still done statically and is the next item on my roadmap.\nStep 3 - Send it home\nIf all validations were successful, the complete certificate chain is passed to operations via the API, and VCF Operations begins the certificate exchange.\nInfo\rDepending on the component, replacing the certificates can take up to 10 minutes. Anything related to the VCF Managed Services cluster takes quite a while. You can’t afford to be impatient here. The good news is that my solution supports batch processing. Just push all the certificate definitions, and C.E.R.B.E.R.U.S. takes care of the rest on its own. In my newly deployed VCF 9.1 environment with 3 ESX servers, it took about 50 minutes for all certificates to be replaced. But I’m happy to wait that long if I don’t have to do anything else once it’s started.\nThe C.E.R.B.E.R.U.S. repository also includes hooks for an experimental ACME bridge implementation using a Microsoft Windows certificate authority. These hooks are not required for the Let’s Encrypt workflow described in this article, so I won’t go into further detail about them here.\nLimitations and What’s Next C.E.R.B.E.R.U.S. already covers a large part of the VCF certificate lifecycle, but there are still some limitations and areas I would like to improve. The current version has been tested with VCF 9.1 and 9.1.1. Support varies slightly depending on the component, as not every VCF service provides certificate management via the same API.\nCloud proxies are not currently supported. They use a different API than the Fleet and Domain components and therefore require a separate implementation. There is also an experimental ACME bridge implementation for the Microsoft Windows certificate authority. The basic concept already works, but it has not been tested with VCF 9.1.1 and requires an ACME bridge. I used an open-source solution for this. But I have to admit, I’m not sure yet whether I’ll continue maintaining this solution in the future. It was initially intended only to demonstrate that ACME enables the exchange of CAs. Since the Windows CA doesn’t natively support ACME, this might not be the best choice - it was just what was available.\nAnother item on my roadmap is the dynamic management of the root certificate authority. Currently, the required root certificate is statically configured via root_ca_file and appended to the chain before being sent back to VCF Operations.\nThere is also room for improvement in input validation, error handling, and support for additional certificate endpoints and APIs. However, the most important part is already in place: the certificate authority itself is no longer tightly coupled to the automation. The same general workflow can be reused while the ACME endpoint or the certificate backend is swapped out with relatively minor changes.\nAnother point is automatic renewal, which could also be improved. Currently, I don’t catch any endpoints that don’t respond. Since I often have my lab turned off or partially turned off, the automatic renewal process falls apart. This is a minor issue, but I haven’t included it in the release yet.\nConclusion A 60-euro electricity bill and a handful of evenings – that’s all it took to build a halfway decent ACME support for VCF. It’s also my first pipeline, and without AI assistance, I certainly wouldn’t have been able to get it done in time.\nI’m making the entire code available under the Apache License 2.0, and I welcome any improvements that are incorporated. I’d love to see ACME integrated natively into the product – the implementation in Proxmox, for example, is a breeze and works perfectly. I hope this post has been helpful to some of you. But for now, I’m looking forward to tackling other topics. Thanks for reading.\nNote\rhttps://github.com/SDN-Warrior/vcf-certificate-automation\r",
+    "wordCount" : "4169",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/fan.jpg","datePublished": "2026-09-02T23:16:36+02:00",
+    "dateModified": "2026-09-02T23:16:36+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.39b7e8fb259d6e87ad10a097120c03acba2552098f1c0f557a0467c506c96ac9.css" integrity="sha256-Obfo+yWdboetEKCXEgwDrLolUgmPHA9VegRnxQbJask=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/fan.jpg');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a><a href="https://sdn-warrior.org/imprint/">Imprint</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-lets-encrypt-automation%2f&amp;text=VCF%209.1%20-%20C.E.R.B.E.R.U.S.%3a%20A%20Let%27s%20Encrypt%20Automation%20Pipeline" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-lets-encrypt-automation%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF%209.1%20-%20C.E.R.B.E.R.U.S.%3a%20A%20Let%27s%20Encrypt%20Automation%20Pipeline&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-lets-encrypt-automation%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1-lets-encrypt-automation%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209.1%20-%20C.E.R.B.E.R.U.S.%3a%20A%20Let%27s%20Encrypt%20Automation%20Pipeline&amp;summary=VCF%209.1%20-%20C.E.R.B.E.R.U.S.%3a%20A%20Let%27s%20Encrypt%20Automation%20Pipeline%2c%20by%20SDN-Warrior%0a%0aFun%20with%20certificates%20-%20we%27ve%20all%20been%20there%2c%20right%3f%20In%20this%20-%20perhaps%20brief%20-%20blog%20post%2c%20I%27ll%20explain%20how%20to%20automate%20the%20whole%20process%20and%20use%20Let%27s%20Encrypt.%20Since%20this%20post%20contains%20a%20lot%20of%20code%2c%20I%27ve%20decided%20to%20publish%20it%20all%20in%20my%20public%20GitHub%20repo.%0a%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline&#34;,&#34;https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/&#34;,&#34;VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline, by SDN-Warrior\n\nFun with certificates - we&#39;ve all been there, right? In this - perhaps brief - blog post, I&#39;ll explain how to automate the whole process and use Let&#39;s Encrypt. Since this post contains a lot of code, I&#39;ve decided to publish it all in my public GitHub repo.\n\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster">
+
+<div class="thin">
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+                <a href="/">SDN-Warrior | Daniel Krieger</a>
+            </li>
+            <li class="breadcrumbs__item">
+                <a href="/posts/">Posts</a>
+            </li>
+
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">
+            VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline
+        </li>
+    </ol>
+</nav>
+</div><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Sep 2, 2026</span></div>
+				<h1>VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline</h1>
+			</header>
+			<div class="post-info"><p>Fun with certificates - we&#39;ve all been there, right? In this - perhaps brief - blog post, I&#39;ll explain how to automate the whole process and use Let&#39;s Encrypt. Since this post contains a lot of code, I&#39;ve decided to publish it all in my public GitHub repo.
+</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/certificates">certificates</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/letsencrypt">letsencrypt</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/acme">acme</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>4169 Words
+     // ReadTime
+    
+    
+    
+    18 Minutes, 57 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-09-02 23:16 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>If this were a marketing-driven blog, I’d call my pipeline C.E.R.B.E.R.U.S. - short for Certificate Exchange, Renewal &amp; Backend Engine for Reliable Unified Security. But we’re dealing with a deadly serious topic here: certificates! And who hasn’t experienced that beautiful moment after deploying VCF 9.1 and Google Chrome clearly reminds you that  you’re still using a self-signed certificate? Been there, done that.</p>
+<p>But enough with the jokes. I want to use the pipeline to solve more than just one certificate warning. My goal is to ensure that my entire VCF setup-including Fleet and Management as well as Workload Domain components-is fully and automatically provisioned with valid certificates. The whole process should be Git-driven and declarative. I also want to rely on the ACME standard, since VCF natively only supports automatic certificate enrollment with a Windows-based CA, which unfortunately comes with several drawbacks.</p>
+<p>First, you have to enable the Windows CA web service, which can quickly become a security risk and is simply no longer up to date (depending on who you ask, it was never up to date to begin with); second, Basic Auth is required for authentication. I’m sure I don’t need to explain to anyone that Basic Authentication doesn’t provide sufficient protection and is completely insecure without transport encryption - or would you send your password on a postcard, for example?</p>
+<p>Unfortunately, there’s currently no ACME support in VCF 9.1, but luckily we live in modern times, and I decided to code my own solution for the problem. How hard could it be? Well, in the end it took longer than I expected, and despite massive artificial help, I’ve run over 58 workflows in the last two days and replaced my vCenter certificate at least 30 times. All of this so that you don’t have to.</p>
+<h2 id="the-actual-idea">The actual idea<a href="#the-actual-idea" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The actual idea came to me pretty quickly: I want to use ACME because, in theory, it makes me independent of the CA. ACME is a well-documented standard and should be familiar to most people through Let’s Encrypt (which played a major role in developing and popularizing it).</p>
+<p>So what do I need to get started? First of all, an ACME client-I found one very quickly in Certbot.
+I also need to be able to complete the ACME challenge to prove to the CA that I’m authorized to request a Cert. This can be done, for example, via HTTP-01 or the DNS-01 challenge. Since I have a public domain i’m using the DNS challenge. I’d also like to mention that I bought a $20 domain just because of this article - no Bullsh#!t.</p>
+<p>However, since I definitely wanted to automate and centralize the issuance and renewal processes, my Gitea service quickly came to mind as the “source of truth.” Certbot and the rest of my automation stack will run on a VM, since I didn’t want to open up yet another side quest.</p>
+<p>Being as smart and creative as I am, I’ve named my VM “CertManager,” and since my readers are all smart too, they surely won’t confuse my VM with the Kubernetes project “cert-manager.”
+Now that all the confusion has hopefully been straightened out, I can finally start building.</p>
+<h2 id="building-the-certmanager">Building the &ldquo;CertManager&rdquo;<a href="#building-the-certmanager" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>You can use any standard Linux distribution of your choice. In my case, it&rsquo;s Ubuntu 26.04 LTS-not because it&rsquo;s the best Linux distribution, but because it&rsquo;s the one I&rsquo;m most comfortable working with. The server will serve as my central hub for handling CSR requests, getting certificates, triggering APIs, and hosting a Gitea Runner. It&rsquo;s important to note that “CertManager” is merely the executing instance. But let&rsquo;s first take a look at the planned workflow, and to keep things simple, we&rsquo;ll start with just the Let&rsquo;s Encrypt mode of C.E.R.B.E.R.U.S..</p>
+
+
+<aside class="admonition note" data-admonition-type="note">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">At this point, at the very latest, I realize that a shorter acronym would have been better for writing, but the things I&rsquo;ll do for a good joke.</div>
+</aside>
+<p>Since, as we all know, a picture is worth a thousand words, I&rsquo;ve created a workflow diagram.</p>
+
+
+<div class="image-gallery" id="gallery-01821cf2"><a href="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow.jpg" class="gallery-item" data-lightbox-group="gallery-01821cf2" data-title="C.E.R.B.E.R.U.S. Workflow"><img src="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_24e026cf3787a078.jpg" alt="C.E.R.B.E.R.U.S. Workflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">C.E.R.B.E.R.U.S. Workflow</div>
+                    </a></div>
+<p>At first glance, the workflow is very simple: a certificate definition must be uploaded to Gitea; the runner retrieves it and uses Ansible to trigger the VCF Operations API to generate a CSR. Next, the actual certificate is issued via ACME and Let’s Encrypt. Finally, it’s passed to VCF via the VCF Operations API and replaced on the target system. Simple, right? Well, we’ll get to that later. The great thing about this workflow is that the certificate&rsquo;s private key is never accessible to any systems. The key remains securely with VCF Operations.</p>
+<p>Now that the principle is clear, there are still a few requirements that our Linux system must meet. The following software is required:</p>
+<ul>
+<li>Git</li>
+<li>Python 3</li>
+<li>Ansible</li>
+<li>OpenSSL</li>
+<li>Certbot</li>
+<li>Certbot DNS Cloudflare Plugin</li>
+<li>Gitea Actions Runner</li>
+<li>Node.js 22</li>
+<li>C.E.R.B.E.R.U.S. - Git repository</li>
+</ul>
+<p>Ubuntu comes with most of it already installed; the rest can be easily installed with this command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">sudo apt install -y <span class="se">\
+</span></span></span><span class="line"><span class="cl">  git <span class="se">\
+</span></span></span><span class="line"><span class="cl">  python3 <span class="se">\
+</span></span></span><span class="line"><span class="cl">  ansible-core <span class="se">\
+</span></span></span><span class="line"><span class="cl">  openssl <span class="se">\
+</span></span></span><span class="line"><span class="cl">  curl <span class="se">\
+</span></span></span><span class="line"><span class="cl">  ca-certificates <span class="se">\
+</span></span></span><span class="line"><span class="cl">  certbot <span class="se">\
+</span></span></span><span class="line"><span class="cl">  python3-certbot-dns-cloudflare
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl -fsSL https://deb.nodesource.com/setup_22.x -o /tmp/nodesource_setup.sh
+</span></span><span class="line"><span class="cl">sudo -E bash /tmp/nodesource_setup.sh
+</span></span><span class="line"><span class="cl">sudo apt install -y nodejs
+</span></span></code></pre></div><p>You can find the actual repository 
+<a href="https://github.com/SDN-Warrior/vcf-certificate-automation/" target="_blank" rel="noopener">here</a>.</p>
+
+
+<aside class="admonition bug" data-admonition-type="bug">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon">
+      <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Information</b>
+    </div>
+    <div class="admonition-content">I generated most of the Ansible code using AI. I’ve reviewed and tested it to the best of my knowledge and ability, but errors can still occur.
+Please keep that in mind. The current version has been tested with VCF 9.1 and 9.1.1. In 9.1.1, additional options have been added to exchange more certificates. As of now, it’s not yet possible to change certificates for cloud proxies, since they use a different API than Fleet or Domain components. That may change in the future.</div>
+</aside>
+<p>On my server, I&rsquo;ve kept the Git repository and runtime data neatly separated in different directories. You don&rsquo;t have to do this, but I recommend it. I cloned my repository to <em><strong>/opt/vcf-certmanager</strong></em>, and my runtime data is located at <em><strong>/etc/vcf-certmanager</strong></em>. The runtime directory contains, for example, the generated CSRs and the final certificates - in other words, everything you need to get the job done.
+The VCF operations credentials are stored in encrypted form in an Ansible Vault, and the password for the vault is located at <em><strong>/etc/vcf-certmanager/vault-pass</strong></em>. This is important so that the vault can be opened automatically later on. The vault-pass file is protected from unauthorized access via file permissions. For the automated workflow, I use a dedicated gitea-runnerservice account as well as separate groups for runtime data and secrets.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/opt/vcf-certmanager
+</span></span><span class="line"><span class="cl">├── ansible/
+</span></span><span class="line"><span class="cl">│   ├── inventory/
+</span></span><span class="line"><span class="cl">│   ├── playbooks/
+</span></span><span class="line"><span class="cl">│   └── vars/
+</span></span><span class="line"><span class="cl">│       └── vault.yml
+</span></span><span class="line"><span class="cl">├── certificates/
+</span></span><span class="line"><span class="cl">├── .gitea/
+</span></span><span class="line"><span class="cl">│   └── workflows/
+</span></span><span class="line"><span class="cl">├── hooks/
+</span></span><span class="line"><span class="cl">└── scripts/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/etc/vcf-certmanager
+</span></span><span class="line"><span class="cl">├── certificates/
+</span></span><span class="line"><span class="cl">└── vault-pass
+</span></span></code></pre></div><p>The individual directories serve the following purpose:</p>
+<ul>
+<li><strong><code>/opt/vcf-certmanager/ansible</code></strong> – Contains the Ansible inventory, playbooks, and variables.</li>
+<li><strong><code>/opt/vcf-certmanager/certificates</code></strong> – Contains the YAML definitions for the individual VCF certificates and endpoints.</li>
+<li><strong><code>/opt/vcf-certmanager/.gitea/workflows</code></strong> – Contains the Gitea Actions workflows.</li>
+<li><strong><code>/opt/vcf-certmanager/hooks</code></strong> – Contains the hooks used for the ACME DNS-01 challenge.</li>
+<li><strong><code>/opt/vcf-certmanager/scripts</code></strong> – Contains helper and wrapper scripts used by the certificate workflow.</li>
+<li><strong><code>/etc/vcf-certmanager/certificates</code></strong> – Contains the runtime data for each certificate, including the CSR, issued certificate, and certificate chain. No private keys are stored here.</li>
+<li><strong><code>/etc/vcf-certmanager/vault-pass</code></strong> – Contains the password used to automatically unlock the Ansible Vault.</li>
+</ul>
+<p>My personal user account is only used for manual testing and repository maintenance and is therefore not relevant for the automated operation of VCF CertManager.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Paths</th>
+            <th>Permissions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>root</strong></td>
+            <td><code>/etc/vcf-certmanager</code></td>
+            <td><code>root:root</code> - <code>755</code></td>
+        </tr>
+        <tr>
+            <td><strong>root</strong></td>
+            <td><code>/etc/vcf-certmanager/vault-pass</code></td>
+            <td><code>root:vcf-certmanager-secrets</code> - <code>640</code></td>
+        </tr>
+        <tr>
+            <td><strong>gitea-runner</strong></td>
+            <td><code>/etc/vcf-certmanager/certificates</code><!-- raw HTML omitted --><code>/etc/vcf-certmanager/certificates/&lt;endpoint&gt;</code></td>
+            <td><code>gitea-runner:vcf-certmanager-runtime</code> - <code>2770</code></td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>The <code>gitea-runner</code> user is a member of the <code>vcf-certmanager-runtime</code> group for access to certificate runtime data and the <code>vcf-certmanager-secrets</code> group for read access to the Ansible Vault password.</p>
+<p>The <code>2770</code> permissions on the certificate directories include the setgid bit, ensuring that newly created files and directories inherit the <code>vcf-certmanager-runtime</code> group.</p>
+<p>Ansible is configured to use <em><strong>/etc/vcf-certmanager/vault-pass</strong></em> as its Vault password file, allowing the encrypted vault.yml to be opened non-interactively during automated runs.</p>
+
+
+<aside class="admonition note" data-admonition-type="note">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content">In a lab environment, you can make things much easier for yourself by giving a single user full access to the necessary files and directories.
+For production use, however, I would strongly recommend using dedicated service accounts and separate groups, and granting them only the permissions they actually need. Sensitive files, such as the password for the Ansible Vault, should remain protected with restrictive file permissions, while the automation user should be granted only the access necessary for the certificate workflow.</div>
+</aside>
+<h2 id="get-the-runner-running">Get the runner running<a href="#get-the-runner-running" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The next component I need is the Gitea Actions Runner. I run it directly on the CertManager host rather than in a container. I didn&rsquo;t want to complicate things any further.  This allows the workflow to directly access locally installed tools such as Ansible, Certbot, OpenSSL, and Node.js.
+To keep this example simple, I’m using a single gitea-runner user for the entire automation process. How you implement this in practice is up to you, but I’m a fan of keeping it simple.</p>
+<ul>
+<li>Create the user and the required directories:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo useradd <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --system <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --home-dir /var/lib/gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --create-home <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --shell /bin/bash <span class="se">\
+</span></span></span><span class="line"><span class="cl">  gitea-runner 
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">sudo mkdir -p <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /etc/gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /etc/vcf-certmanager/certificates 
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">sudo chown -R gitea-runner:gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /var/lib/gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /etc/gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /etc/vcf-certmanager
+</span></span></code></pre></div><ul>
+<li>Download and install the Gitea Runner. At the time I built this setup, I was using version 3.3.1:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">VERSION</span><span class="o">=</span>3.3.1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl -L <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -o /tmp/gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  <span class="s2">&#34;https://dl.gitea.com/gitea-runner/</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">/gitea-runner-</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">-linux-amd64&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo install -m <span class="m">0755</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /tmp/gitea-runner <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /usr/local/bin/gitea-runner
+</span></span></code></pre></div><ul>
+<li>Generate the runner configuration:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo -u gitea-runner -H bash -c <span class="se">\
+</span></span></span><span class="line"><span class="cl">  <span class="s1">&#39;gitea-runner generate-config &gt; /etc/gitea-runner/config.yaml&#39;</span>
+</span></span></code></pre></div><ul>
+<li>Register the Runner with Gitea. You can get the registration token from the Actions Runner settings in Gitea.</li>
+</ul>
+<p>The registration command starts an interactive setup. You will be asked for the Gitea instance URL, the registration token, a name for the runner, and the runner labels.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo -u gitea-runner -H bash -c <span class="s1">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">  cd /var/lib/gitea-runner
+</span></span></span><span class="line"><span class="cl"><span class="s1">  gitea-runner \
+</span></span></span><span class="line"><span class="cl"><span class="s1">    --config /etc/gitea-runner/config.yaml \
+</span></span></span><span class="line"><span class="cl"><span class="s1">    register
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;</span>
+</span></span></code></pre></div><p>I have chosen the following values:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Enter the Gitea instance URL:
+</span></span><span class="line"><span class="cl">http://192.168.11.28:3000/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Enter the runner token:
+</span></span><span class="line"><span class="cl">&lt;YOUR_REGISTRATION_TOKEN&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Enter the runner name:
+</span></span><span class="line"><span class="cl">certmanager
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Enter the runner labels:
+</span></span><span class="line"><span class="cl">vcf-certmanager:host
+</span></span></code></pre></div><ul>
+<li>Create the systemd service</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo tee /etc/systemd/system/gitea-runner.service &gt; /dev/null <span class="s">&lt;&lt;&#39;EOF&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s">[Unit]
+</span></span></span><span class="line"><span class="cl"><span class="s">Description=Gitea Actions Runner
+</span></span></span><span class="line"><span class="cl"><span class="s">After=network-online.target
+</span></span></span><span class="line"><span class="cl"><span class="s">Wants=network-online.target
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[Service]
+</span></span></span><span class="line"><span class="cl"><span class="s">Type=simple
+</span></span></span><span class="line"><span class="cl"><span class="s">User=gitea-runner
+</span></span></span><span class="line"><span class="cl"><span class="s">Group=gitea-runner
+</span></span></span><span class="line"><span class="cl"><span class="s">WorkingDirectory=/var/lib/gitea-runner
+</span></span></span><span class="line"><span class="cl"><span class="s">Environment=HOME=/var/lib/gitea-runner
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">ExecStart=/usr/local/bin/gitea-runner \
+</span></span></span><span class="line"><span class="cl"><span class="s">  --config /etc/gitea-runner/config.yaml \
+</span></span></span><span class="line"><span class="cl"><span class="s">  daemon
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">Restart=always
+</span></span></span><span class="line"><span class="cl"><span class="s">RestartSec=5
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[Install]
+</span></span></span><span class="line"><span class="cl"><span class="s">WantedBy=multi-user.target
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo systemctl daemon-reload
+</span></span><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> --now gitea-runner
+</span></span></code></pre></div>
+
+<div class="image-gallery" id="gallery-6ce628b3"><a href="/vcf91-cert-pipeline/Gitea%20Runner.jpg" class="gallery-item" data-lightbox-group="gallery-6ce628b3" data-title="Gitea Runner"><img src="/vcf91-cert-pipeline/Gitea%20Runner_hu_5e678459ffc263f4.jpg" alt="Gitea Runner" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Gitea Runner</div>
+                    </a></div>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">In principle, this whole setup also works with GitHub Actions or Forgejo Actions. I decided to go with Gitea because it was already there and has been running as a service in my home lab for years.</div>
+</aside>
+<h2 id="gee-brain-whaddya-wanna-do-tonight">Gee, Brain, whaddya wanna do tonight?<a href="#gee-brain-whaddya-wanna-do-tonight" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The same thing we do every night, Pinky. Try to take over the world (and Issue Certificates)!&quot;
+Anyone who doesn&rsquo;t think of ACME Labs when they hear that probably had a sad childhood or is too young.
+All I&rsquo;m really trying to say is that I still need to configure ACME.</p>
+<p>Before we can even think about certificate requests, we need to configure Certbot. In my environment, I generally use a split DNS setup. This means that I’ve created a forward and reverse lookup zone for my domain sdn-warrior.cloud in my local DNS. I don’t want any private IP addresses to be exposed on the internet via Cloudflare. The Cloudflare zone is used solely for the DNS challenge. To do this, I set up an API token for the appropriate zone and save the token as a file on my CertManager VM. For example, I chose the path <em><strong>/etc/letsencrypt/cloudflare/sdn-warrior-cloud.ini</strong></em>. It’s important that this file contains only the following content:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">dns_cloudflare_api_token = YOUR_CLOUDFLARE_API_TOKEN
+</span></span></code></pre></div><p>Since the API token is a secret, this should never be pushed to Git, and you should make sure the file permissions are set correctly. You know how to do that. That&rsquo;s basically all the configuration you need to use Cloudflare. Of course, you can also use other DNS providers for ACME – as long as there&rsquo;s a compatible plugin for Certbot available.</p>
+<h2 id="fun-with-yaml---certificate-definition">Fun with YAML - Certificate Definition<a href="#fun-with-yaml---certificate-definition" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>To create a certificate using the pipeline, it must first be defined - sounds logical, right? This is all done with a small YAML file, and once you have a valid file, it just needs to be slightly adjusted. C.E.R.B.E.R.U.S. is designed to be flexible in this regard, and not all parameters necessarily make sense for Let’s Encrypt - but the idea behind it was that you could swap out the CA and only need to make minimal adjustments. If you&rsquo;re as excited about YAML as I am, don&rsquo;t worry - it&rsquo;s really easy. I&rsquo;ve also added a YAML file to the repository for all supported services. Let&rsquo;s see what the cat dragged in.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">certificate</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">ops01-fleetlcm</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">common_name</span><span class="p">:</span><span class="w"> </span><span class="l">fleetlcm.vcf.sdn-warrior.cloud</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">subject</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">country</span><span class="p">:</span><span class="w"> </span><span class="l">DE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l">RLP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">locality</span><span class="p">:</span><span class="w"> </span><span class="l">NW</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">organization</span><span class="p">:</span><span class="w"> </span><span class="l">SDN-Warrior</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">organizational_unit</span><span class="p">:</span><span class="w"> </span><span class="l">SDN-Warrior</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">sans</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">fleetlcm.vcf.sdn-warrior.cloud</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ip_sans</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">key</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">rsa</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="m">4096</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">acme</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l">https://acme-v02.api.letsencrypt.org/directory</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">issuance_timeout</span><span class="p">:</span><span class="w"> </span><span class="m">300</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">challenge</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">dns-01</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l">cloudflare</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">credentials_file</span><span class="p">:</span><span class="w"> </span><span class="l">/etc/letsencrypt/cloudflare/sdn-warrior-cloud.ini</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">propagation_seconds</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">deployment</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">vcf_operations</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ops_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l">ops01.vcf.sdn-warrior.cloud</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">appliance</span><span class="p">:</span><span class="w"> </span><span class="l">VCF_SERVICES_RUNTIME</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l">fleetlcm.vcf.sdn-warrior.cloud</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">root_ca_file</span><span class="p">:</span><span class="w"> </span><span class="l">/etc/ssl/certs/ISRG_Root_X1.pem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">renewal</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">renew_before_days</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">
+</span></span></span></code></pre></div><p>The most important parts are:</p>
+<ul>
+<li>
+<p>name and enabled – Identify the certificate within the automation and control whether it should be processed. You don&rsquo;t have to delete a certificate; you can simply disable it.</p>
+</li>
+<li>
+<p>common_name, subject, and sans – Define the certificate&rsquo;s identity and the DNS names that must be included in the certificate.</p>
+</li>
+<li>
+<p>ip_sans – Reserved for IP address SANs. These are not currently supported by the VCF Operations workflow, but the definition is already prepared for other APIs or future implementations.</p>
+</li>
+<li>
+<p>key – Defines the requested key type and key size. The private key itself is still generated and stored within VCF Operations.</p>
+</li>
+<li>
+<p>acme and challenge – Define the ACME server and the method used to verify domain ownership. In this example, “Let’s Encrypt” is used along with a DNS-01 challenge via Cloudflare. Currently, an experimental implementation using an ACME bridge and a Windows CA is still supported. However, this implementation has very limited functionality and is currently only a proof of concept to demonstrate that other ACME interfaces can also be used.</p>
+</li>
+<li>
+<p>deployment – Describes where the certificate should be installed. The value appliance identifies the VCF component type, while target specifies the actual endpoint whose certificate is to be replaced. The root_ca_file is a Let&rsquo;s Encrypt-specific option; since Operations always requires the full certificate chain, the ISRG Root X1 is appended to the certificate chain generated by Certbot. This is still static in the current version and will likely be converted to a dynamic configuration in a future release.</p>
+</li>
+<li>
+<p>renewal – Specifies when the certificate is eligible for renewal. In this example, the automation begins the renewal process 30 days before expiration.</p>
+</li>
+</ul>
+<h2 id="in-git-we-trust">In Git We Trust!<a href="#in-git-we-trust" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Now that we have a rough idea of what the certificate definitions should look like, they need to be stored somewhere – and this is where my Gitea comes in, because only what’s in Git is true. As mentioned at the beginning, the CertManager VM is merely the execution platform. Local definitions are not taken into account; all definitions must be pushed to the Git repository under the “certificates” folder. The persistent runtime data remains outside Git on the CertManager VM.</p>
+<p>Aside from the fact that the generated files aren&rsquo;t stored in the repository, this also makes it easy to track changes to the certificate configuration. If I change a SAN, replace an endpoint, or adjust the renewal settings, that change becomes part of the Git history.
+Now we finally have everything we need to do something useful with the definition. In the next step, Gitea takes over and launches the actual certificate pipeline.</p>
+<h3 id="starting-the-pipeline-with-gitea-actions">Starting the Pipeline with Gitea Actions<a href="#starting-the-pipeline-with-gitea-actions" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>I&rsquo;ve currently created two workflows for the certificate lifecycle: <code>auto-new-certificate.yml</code> and <code>scheduled-certificate-renewal.yml</code>. I think the names pretty much explain what they do. The first workflow, auto-new-certificate.yml, monitors the certificates directory in the main branch, and whenever a new definition is pushed to the repo, the workflow starts on the CertManager VM. The workflow checks which certificate definition was just added with the push. Changes to a definition or deletions do not trigger the workflow. It is important to understand this. Within the workflow, a few basic checks are performed - such as verifying that the YAML structure is valid - but this area certainly has room for improvement. If <code>enabled</code> is set to <code>false</code>, the definition remains in Git and the workflow skips it. Once all the prechecks are complete, the actual pipeline is started: <code>./scripts/run-certificate-pipeline.sh “${CERTIFICATE_NAME}”</code>.</p>
+<p>Creating certificates is nice, but unfortunately, they also have a relatively short lifespan and need to be replaced regularly. That’s where the second automation comes into play. With <code>scheduled-certificate-renewal.yml</code>, certificates can be automatically renewed - and by “renewed,” I mean, in this case, re-created and replaced. To do this, a cron schedule within Gitea Actions workflow is set up that runs by default at 3:15.
+Why 3:15? No idea - why not? You can change that, of course. But what’s cool is that you can also start the workflow manually from Gitea. By default, the workflow checks whether the certificate needs to be renewed yet. This is based on the value in the certificate definition and is set to 30 days in my case.
+However, it doesn’t rely on any local certificates stored in working directories; instead, the CertManager server connects to the actual endpoint and checks how long the certificate is still valid. But if you want to change the certificate immediately for whatever reason, you can use “Force mode” to have the certificate regenerated regardless of its validity. Pretty cool, huh? When the certificate is about to expire, the same workflow kicks in at 3:15 a.m. and replaces it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">New YAML pushed
+</span></span><span class="line"><span class="cl">      |
+</span></span><span class="line"><span class="cl">      v
+</span></span><span class="line"><span class="cl">auto-new-certificate.yml
+</span></span><span class="line"><span class="cl">      |
+</span></span><span class="line"><span class="cl">      v
+</span></span><span class="line"><span class="cl">run-certificate-pipeline.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Scheduled check
+</span></span><span class="line"><span class="cl">      |
+</span></span><span class="line"><span class="cl">      v
+</span></span><span class="line"><span class="cl">scheduled-certificate-renewal.yml
+</span></span><span class="line"><span class="cl">      |
+</span></span><span class="line"><span class="cl">      +--&gt; Certificate still valid --&gt; Do nothing
+</span></span><span class="line"><span class="cl">      |
+</span></span><span class="line"><span class="cl">      +--&gt; Renewal required
+</span></span><span class="line"><span class="cl">                |
+</span></span><span class="line"><span class="cl">                v
+</span></span><span class="line"><span class="cl">       run-certificate-pipeline.sh
+</span></span></code></pre></div><h3 id="the-pipe-of-doom">The Pipe of Doom<a href="#the-pipe-of-doom" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>I think now is the perfect time to take a look at the pipeline itself. But don&rsquo;t worry – I&rsquo;m not going to explain every command here.
+Okay, okay, maybe the name is a little too dramatic, but whenever I hear “Pipeline,” I have to think of an old episode of Beavis and Butt-Head where one of them gets stuck in a pipe and yells, “Help, I’m stuck!” It has nothing to do with the topic, but sometimes I get sidetracked.</p>
+<p>The script itself is relatively unspectacular but still important, because VCF doesn’t always make things easy for us. In version 9.1.1, there are now three APIs you have to use if you really want to replace all the certificates. At the current stage of development, the Cloud Proxies aren’t working yet, since this feature was just added in 9.1.1 and I haven’t had time to implement it yet. What does work, however, are Fleet components like VCF Operations and actual domain components like ESX and vCenter.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">case</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">APPLIANCE</span><span class="si">}</span><span class="s2">&#34;</span> in 
+</span></span><span class="line"><span class="cl">    VCENTER<span class="p">|</span>SDDC_MANAGER<span class="p">|</span>NSXT_MANAGER<span class="o">)</span>
+</span></span><span class="line"><span class="cl">     <span class="nv">CERTIFICATE_PLAYBOOK</span><span class="o">=</span><span class="s2">&#34;ansible/playbooks/vcf-certificate.yml&#34;</span> 
+</span></span><span class="line"><span class="cl">     <span class="p">;;</span> 
+</span></span><span class="line"><span class="cl">     
+</span></span><span class="line"><span class="cl">    VCF_OPERATIONS<span class="p">|</span>IDENTITY_BROKER<span class="p">|</span>VCF_SERVICES_RUNTIME<span class="p">|</span>ESX<span class="o">)</span>
+</span></span><span class="line"><span class="cl">     <span class="nv">CERTIFICATE_PLAYBOOK</span><span class="o">=</span><span class="s2">&#34;ansible/playbooks/vcf-management-certificate.yml&#34;</span> 
+</span></span><span class="line"><span class="cl">     <span class="p">;;</span> 
+</span></span><span class="line"><span class="cl"><span class="k">esac</span>
+</span></span></code></pre></div><p>The good news is that both paths use the same three-step process, so there aren&rsquo;t actually that many differences. Nevertheless, each path has its own playbook and can be customized independently of the other.</p>
+<p>Step 1 - Let VCF Operations create the CSR</p>
+<p>In the first step, a CSR is generated via the VCF Operations API. Depending on the component type, either the VCF Component API or the VCF Management API is used for this purpose. The private key remains in Operations. In VCF 9.1, a maximum of one CSR was allowed per component. In 9.1.1, after the update, I had CSRs in the system for multiple components that I hadn’t generated myself. Therefore, I had to adjust the pipeline again to ensure that the selection of the correct CSR is robust. In the first version, I simply assumed that only one CSR would ever be returned. The CSR is temporarily stored in the working directory on the CertManager VM.</p>
+<p>Step 2 - Send the CSR</p>
+<p>Once the CSR is on the CertManager VM, it is validated to ensure that all information required for ACME is present. Certbot will then use this CSR to request a valid certificate from Let’s Encrypt, provided the DNS challenge was successful.</p>
+<p>For the Cloudflare implementation, Certbot uses the DNS plugin in combination with the values from the certificate definition. The actual command looks like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">certbot certonly <span class="se">\
+</span></span></span><span class="line"><span class="cl"> --server https://acme-v02.api.letsencrypt.org/directory <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --dns-cloudflare <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --dns-cloudflare-credentials /etc/letsencrypt/cloudflare/sdn-warrior-cloud.ini <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --dns-cloudflare-propagation-seconds <span class="m">30</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --csr /etc/vcf-certmanager/certificates/&lt;certificate-name&gt;/request.csr <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --cert-path /etc/vcf-certmanager/certificates/&lt;certificate-name&gt;/cert.pem <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --chain-path /etc/vcf-certmanager/certificates/&lt;certificate-name&gt;/chain.pem <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --fullchain-path /etc/vcf-certmanager/certificates/&lt;certificate-name&gt;/fullchain.pem <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --non-interactive <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --agree-tos
+</span></span></code></pre></div><p>The Cloudflare plugin automatically creates and deletes the required _acme-challengeTXT record. The values used here are not hard-coded; instead, they are taken from the certificate definition shown earlier. Most importantly, Certbot receives the CSR via &ndash;csr. Therefore, no new private key is generated.</p>
+<p>Afterward, the certificate is validated by C.E.R.B.E.R.U.S..
+Among other things, the common name and SANs are checked, and the public key from the request is compared to the public key of the certificate. If anything doesn’t match, the pipeline is aborted.</p>
+<p>There’s also a VCF-specific requirement. Let’s Encrypt does not normally include the self-signed root certificate in the full chain that is delivered. However, VCF operations require the complete chain, so if something is defined under <code>root_ca_file</code> in the certificate definition, C.E.R.B.E.R.U.S. appends this file, thereby ensuring a valid certificate chain for VCF operations. As of today, this is still done statically and is the next item on my roadmap.</p>
+<p>Step 3 - Send it home</p>
+<p>If all validations were successful, the complete certificate chain is passed to operations via the API, and VCF Operations begins the certificate exchange.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content"><p>Depending on the component, replacing the certificates can take up to 10 minutes. Anything related to the VCF Managed Services cluster takes quite a while. You can’t afford to be impatient here. The good news is that my solution supports batch processing. Just push all the certificate definitions, and
+C.E.R.B.E.R.U.S. takes care of the rest on its own. In my newly deployed VCF 9.1 environment with 3 ESX servers, it took about 50 minutes for all certificates to be replaced. But I’m happy to wait that long if I don’t have to do anything else once it’s started.</p>
+<p>The C.E.R.B.E.R.U.S. repository also includes hooks for an experimental ACME bridge implementation using a Microsoft Windows certificate authority. These hooks are not required for the Let’s Encrypt workflow described in this article, so I won’t go into further detail about them here.</p>
+</div>
+</aside>
+<h2 id="limitations-and-whats-next">Limitations and What&rsquo;s Next<a href="#limitations-and-whats-next" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>C.E.R.B.E.R.U.S. already covers a large part of the VCF certificate lifecycle, but there are still some limitations and areas I would like to improve.
+The current version has been tested with VCF 9.1 and 9.1.1. Support varies slightly depending on the component, as not every VCF service provides certificate management via the same API.</p>
+<p>Cloud proxies are not currently supported. They use a different API than the Fleet and Domain components and therefore require a separate implementation.
+There is also an experimental ACME bridge implementation for the Microsoft Windows certificate authority. The basic concept already works, but it has not been tested with VCF 9.1.1 and requires an ACME bridge. I used an open-source solution for this. But I have to admit, I’m not sure yet whether I’ll continue maintaining this solution in the future. It was initially intended only to demonstrate that ACME enables the exchange of CAs. Since the Windows CA doesn’t natively support ACME, this might not be the best choice - it was just what was available.</p>
+<p>Another item on my roadmap is the dynamic management of the root certificate authority. Currently, the required root certificate is statically configured via root_ca_file and appended to the chain before being sent back to VCF Operations.</p>
+<p>There is also room for improvement in input validation, error handling, and support for additional certificate endpoints and APIs.
+However, the most important part is already in place: the certificate authority itself is no longer tightly coupled to the automation. The same general workflow can be reused while the ACME endpoint or the certificate backend is swapped out with relatively minor changes.</p>
+<p>Another point is automatic renewal, which could also be improved. Currently, I don’t catch any endpoints that don’t respond. Since I often have my lab turned off or partially turned off, the automatic renewal process falls apart. This is a minor issue, but I haven’t included it in the release yet.</p>
+<h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>A 60-euro electricity bill and a handful of evenings – that’s all it took to build a halfway decent ACME support for VCF. It’s also my first pipeline, and without AI assistance, I certainly wouldn’t have been able to get it done in time.</p>
+<p>I’m making the entire code available under the Apache License 2.0, and I welcome any improvements that are incorporated. I’d love to see ACME integrated natively into the product – the implementation in Proxmox, for example, is a breeze and works perfectly. I hope this post has been helpful to some of you. But for now, I’m looking forward to tackling other topics. Thanks for reading.</p>
+
+
+<aside class="admonition note" data-admonition-type="note">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+   </svg></div>
+        <b>Note</b>
+    </div>
+    <div class="admonition-content"><a href="https://github.com/SDN-Warrior/vcf-certificate-automation" target="_blank" rel="noopener">https://github.com/SDN-Warrior/vcf-certificate-automation</a></div>
+</aside>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf9.1-offline-repo/">VCF 9.1 - Setting up an Offline Repository</a></li>
+	
+	<li><a href="/posts/vcf9.1-dtgw-vxlan/">VCF 9.1 - DTGW &amp; VNA: the route controller within me</a></li>
+	
+	<li><a href="/posts/vcf9.1-platform-health-check-error/">VCF 9.1 - Platform Health Check Error</a></li>
+	
+	<li><a href="/posts/vcf9.1-vna-part2/">VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</a></li>
+	
+	<li><a href="/posts/vcf9.1-vna-vpc/">VCF 9.1 - VNA and VPCs</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9.1-offline-repo/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF 9.1 - Setting up an Offline Repository</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+<link rel="stylesheet" href="/klaro/klaro.css?v=1">
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

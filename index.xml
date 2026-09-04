@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Fri, 14 Aug 2026 01:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Wed, 02 Sep 2026 23:16:36 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</link>
+				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;If this were a marketing-driven blog, I’d call my pipeline C.E.R.B.E.R.U.S. - short for Certificate Exchange, Renewal &amp;amp; Backend Engine for Reliable Unified Security. But we’re dealing with a deadly serious topic here: certificates! And who hasn’t experienced that beautiful moment after deploying VCF 9.1 and Google Chrome clearly reminds you that  you’re still using a self-signed certificate? Been there, done that.&lt;/p&gt;&#xA;&lt;p&gt;But enough with the jokes. I want to use the pipeline to solve more than just one certificate warning. My goal is to ensure that my entire VCF setup-including Fleet and Management as well as Workload Domain components-is fully and automatically provisioned with valid certificates. The whole process should be Git-driven and declarative. I also want to rely on the ACME standard, since VCF natively only supports automatic certificate enrollment with a Windows-based CA, which unfortunately comes with several drawbacks.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - Setting up an Offline Repository</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-offline-repo/</link>
@@ -147,13 +154,6 @@
 				<pubDate>Sat, 22 Nov 2025 00:30:00 +0100</pubDate>
 				<guid>https://sdn-warrior.org/posts/vcf9-dark-site-edge/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;I haven&amp;rsquo;t written anything in a while, and I need to change that here with another niche topic.&#xA;I want to take a closer look at VCF9 Edge. This does not refer to the Edge cluster in NSX; no, VCF Edge is a special form of a VCF instance.&#xA;VCF offers nine complete designs for this form, and I would like to take a closer look at one special version — the so-called Dak Site Edge.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>VCF9 - Full-blown VCF 9 on 2 MS-A2 PCs</title>
-				<link>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</link>
-				<pubDate>Fri, 24 Oct 2025 21:00:00 +0200</pubDate>
-				<guid>https://sdn-warrior.org/posts/vcf9-ms-a2-special/</guid>
-				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In the past, I built all my labs in a nested structure, which worked well, but now the demands on me and my lab are increasing because I want more.&#xA;I want to try more, even in areas I previously neglected. The idea of a redesign took shape in my head, and I knew there had to be more possibilities with my hardware.&#xA;Above all, I wanted to work with VCF Automation, because it is essential for multi-tenancy environments and replaces vCloud Director.&#xA;And let&amp;rsquo;s be honest, automation is a resource hog.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>
