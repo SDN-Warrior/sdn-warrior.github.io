@@ -12,13 +12,13 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Wed, 02 Sep 2026 23:16:36 +0200</lastBuildDate>
+			<lastBuildDate>Sat, 05 Sep 2026 01:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</link>
-				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<pubDate>Sat, 05 Sep 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;If this were a marketing-driven blog, I’d call my pipeline C.E.R.B.E.R.U.S. - short for Certificate Exchange, Renewal &amp;amp; Backend Engine for Reliable Unified Security. But we’re dealing with a deadly serious topic here: certificates! And who hasn’t experienced that beautiful moment after deploying VCF 9.1 and Google Chrome clearly reminds you that  you’re still using a self-signed certificate? Been there, done that.&lt;/p&gt;&#xA;&lt;p&gt;But enough with the jokes. I want to use the pipeline to solve more than just one certificate warning. My goal is to ensure that my entire VCF setup-including Fleet and Management as well as Workload Domain components-is fully and automatically provisioned with valid certificates. The whole process should be Git-driven and declarative. I also want to rely on the ACME standard, since VCF natively only supports automatic certificate enrollment with a Windows-based CA, which unfortunately comes with several drawbacks.&lt;/p&gt;</description>
 			</item>

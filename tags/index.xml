@@ -12,34 +12,34 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Wed, 02 Sep 2026 23:16:36 +0200</lastBuildDate>
+			<lastBuildDate>Sat, 05 Sep 2026 01:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Acme</title>
 				<link>https://sdn-warrior.org/tags/acme/</link>
-				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<pubDate>Sat, 05 Sep 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/acme/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Certificates</title>
 				<link>https://sdn-warrior.org/tags/certificates/</link>
-				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<pubDate>Sat, 05 Sep 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/certificates/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Letsencrypt</title>
 				<link>https://sdn-warrior.org/tags/letsencrypt/</link>
-				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<pubDate>Sat, 05 Sep 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/letsencrypt/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Vcf9.1</title>
 				<link>https://sdn-warrior.org/tags/vcf9.1/</link>
-				<pubDate>Wed, 02 Sep 2026 23:16:36 +0200</pubDate>
+				<pubDate>Sat, 05 Sep 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/vcf9.1/</guid>
 				<description></description>
 			</item>
@@ -86,7 +86,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>NSX</title>
+				<title>Nsx</title>
 				<link>https://sdn-warrior.org/tags/nsx/</link>
 				<pubDate>Sat, 11 Jul 2026 13:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/nsx/</guid>
