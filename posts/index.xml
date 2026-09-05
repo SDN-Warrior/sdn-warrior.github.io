@@ -461,6 +461,15 @@ There is also an experimental ACME bridge implementation for the Microsoft Windo
 <p>There is also room for improvement in input validation, error handling, and support for additional certificate endpoints and APIs.
 However, the most important part is already in place: the certificate authority itself is no longer tightly coupled to the automation. The same general workflow can be reused while the ACME endpoint or the certificate backend is swapped out with relatively minor changes.</p>
 <p>Another point is automatic renewal, which could also be improved. Currently, I don’t catch any endpoints that don’t respond. Since I often have my lab turned off or partially turned off, the automatic renewal process falls apart. This is a minor issue, but I haven’t included it in the release yet.</p>
+<h2 id="cerberus-in-action">C.E.R.B.E.R.U.S. in action</h2>
+<div class="video-container">
+  <iframe width="560" height="315"
+    src="https://www.youtube-nocookie.com/embed/Bz5m0AddOAk"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
 <h2 id="conclusion">Conclusion</h2>
 <p>A 60-euro electricity bill and a handful of evenings – that’s all it took to build a halfway decent ACME support for VCF. It’s also my first pipeline, and without AI assistance, I certainly wouldn’t have been able to get it done in time.</p>
 <p>I’m making the entire code available under the Apache License 2.0, and I welcome any improvements that are incorporated. I’d love to see ACME integrated natively into the product – the implementation in Proxmox, for example, is a breeze and works perfectly. I hope this post has been helpful to some of you. But for now, I’m looking forward to tackling other topics. Thanks for reading.</p>
