@@ -417,7 +417,7 @@ I actually thought VCF 9.1.1 would just be a minor update, but there’s been a 
                     </a><a href="/dtgw-vxlan-2/Route%20Controller%20MP-BGP.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="Route Controller MP-BGP"><img src="/dtgw-vxlan-2/Route%20Controller%20MP-BGP_hu_16effa25ba7f1135.png" alt="Route Controller MP-BGP" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller MP-BGP</div>
                     </a><a href="/dtgw-vxlan-2/External%20Connection.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="External Connection"><img src="/dtgw-vxlan-2/External%20Connection_hu_bf9a0a5b000b4298.png" alt="External Connection" width="350" height="350" loading="lazy"><div class="gallery-item-caption">External Connection</div>
                     </a></div>
-<figure><a href="Route%20Controller%20with%20VyOS%20EVPN%20Fabric.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
+<figure><a href="Route%20Controller%20with%20Vyos%20EVPN%20Fabric.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
           <img
             src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="Route Controller with VyOS EVPN Fabric"width="92"
             height="105"/>
