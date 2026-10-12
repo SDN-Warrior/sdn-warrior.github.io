@@ -373,17 +373,17 @@
             height="627"/>
         </picture></a><figcaption><p>Network test user 1 (click to enlarge)</p></figcaption></figure>
 <p>The test was successful, both the TNC command and the actual opening of the file share worked. Now I’m running the same test on the same VDI (after it was recreated, because non-persistent VDI), only this time I’m using User2, which has no explicit firewall rules and is therefore blocked by my default cleanup rule. As expected, the traffic was successfully blocked.</p>
-<figure><a href="09.png"><picture><source srcset="/idfw/09_hu_af37365be7ab176f.png" type="image/png">
+<figure><a href="09.png"><picture><source srcset="/idfw/09_hu_8a5cdadc0b66c084.png" type="image/png">
           <img
-            src="/idfw/09_hu_af37365be7ab176f.png"alt="Network test user 2"width="993"
+            src="/idfw/09_hu_8a5cdadc0b66c084.png"alt="Network test user 2"width="993"
             height="499"/>
         </picture></a><figcaption><p>Network test user 2 (click to enlarge)</p></figcaption></figure>
 <h2 id="lessons-learned">Lessons learned<a href="#lessons-learned" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>This is where I would like to add a few more thoughts on the subject. Troubleshooting is more difficult in practice than I thought. Tools such as NSX Traceflow cannot be used because you cannot add an AD user to the request. This means that the traffic in the traceflow is always dropped or the identity rule is maybe configured incorrectly.</p>
 <p>But there is light at the end of the tunnel. In NSX 4.X there is a session view of the active IDFW user session under Security -&gt; Security Overview -&gt; Configuration. All active sessions, UserIDs and VMs are displayed here, as well as the source of the information.</p>
-<figure><a href="10.png"><picture><source srcset="/idfw/10_hu_6e27531d51e5c107.png" type="image/png">
+<figure><a href="10.png"><picture><source srcset="/idfw/10_hu_41bea3128af1c4fc.png" type="image/png">
           <img
-            src="/idfw/10_hu_6e27531d51e5c107.png"alt="Active Sessions"width="979"
+            src="/idfw/10_hu_41bea3128af1c4fc.png"alt="Active Sessions"width="979"
             height="278"/>
         </picture></a><figcaption><p>Active Sessions (click to enlarge)</p></figcaption></figure>
 <p>Next tip would be to always check the sync status with the AD. Ask your AD admin when the user was added to the group. If the user has several accounts, ask for the user name used. Experience has shown that this is where most problems occur.</p>

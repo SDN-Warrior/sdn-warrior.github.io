@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Sat, 11 Jul 2026 13:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Mon, 12 Oct 2026 01:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/</link>
+				<pubDate>Mon, 12 Oct 2026 01:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Sometimes sequels are better than the first one – take Batman, for example. &lt;em&gt;The Dark Knight&lt;/em&gt; was already a blast. Maybe this second article about the route controller will go just as well, and it might even be more popular with you guys than the first one. Anyway, my vacation is over, and now I finally have more time to take a closer look at VCF 9.1.1 – and wow, what can I say?&#xA;I actually thought VCF 9.1.1 would just be a minor update, but there’s been a lot going on in VCF Networking in particular. And just like that, we’re back in the networking rabbit hole, and I’ve been tinkering with a test setup for several days now to properly demonstrate the new features of the Route Controller.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</link>
@@ -147,13 +154,6 @@
 				<pubDate>Fri, 03 Jan 2025 12:00:00 +0100</pubDate>
 				<guid>https://sdn-warrior.org/posts/nsx-tep-groups/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My esteemed colleague, Steven Schramm, recently published an excellent article titled &lt;em&gt;&#xA;&lt;a href=&#34;https://sdn-techtalk.com/posts/multitep-ha/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Improving NSX Datacenter TEP Performance and Availability - Multi-TEP and TEP Group High Availability&lt;/a&gt;&lt;/em&gt;. This inspired me to explore how TEP Groups influence performance in NSX, specifically focusing on how North/South traffic can benefit from their implementation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-are-tep-groups-and-why-are-they-interesting&#34;&gt;What Are TEP Groups and Why Are They Interesting?&lt;/h2&gt;&#xA;&lt;p&gt;With NSX 4.2.1, TEP High Availability (HA) for Edge Transport Nodes was introduced. In addition to the HA feature, the load-sharing behavior was also modified.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>Redeploy an NSX Edge VM Appliance</title>
-				<link>https://sdn-warrior.org/posts/nsx-edge-redeploy/</link>
-				<pubDate>Mon, 30 Dec 2024 15:00:46 +0100</pubDate>
-				<guid>https://sdn-warrior.org/posts/nsx-edge-redeploy/</guid>
-				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;There are situations where you might need to redeploy an NSX Edge node. This could happen if an Edge VM becomes non-functional, or if it needs to be relocated within the datacenter—for instance, to a different datastore or compute resource. You might also redeploy to move the node to another network. Of course, the specific reasons for redeployment depend on your enviroment.&lt;/p&gt;&#xA;&lt;p&gt;It’s important to note that redeployment applies exclusively to existing NSX Edge nodes and can only be performed with an NSX Edge VM appliance.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

@@ -1,4 +1,10 @@
 [{
+    "title": "VCF 9.1.1 - DTGW \u0026 VNA: the route controller within me - Part 2",
+    "url": "/posts/vcf9.1.1-dtgw-vxlan/",
+    "date": "2026-10-12",
+    "description": "In this article, I'll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.",
+    "tags": ["vcf9.1.1","vcf9.1","nsx","vpc","vna","vxlan","VyOS"]
+  },{
     "title": "VCF 9.1 - C.E.R.B.E.R.U.S.: A Let's Encrypt Automation Pipeline",
     "url": "/posts/vcf9.1-lets-encrypt-automation/",
     "date": "2026-09-05",

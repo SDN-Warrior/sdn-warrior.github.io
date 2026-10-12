@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Sat, 05 Sep 2026 01:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Mon, 12 Oct 2026 01:00:00 +0200</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/vcf9.1/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/</link>
+				<pubDate>Mon, 12 Oct 2026 01:00:00 +0200</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Sometimes sequels are better than the first one – take Batman, for example. &lt;em&gt;The Dark Knight&lt;/em&gt; was already a blast. Maybe this second article about the route controller will go just as well, and it might even be more popular with you guys than the first one. Anyway, my vacation is over, and now I finally have more time to take a closer look at VCF 9.1.1 – and wow, what can I say?&#xA;I actually thought VCF 9.1.1 would just be a minor update, but there’s been a lot going on in VCF Networking in particular. And just like that, we’re back in the networking rabbit hole, and I’ve been tinkering with a test setup for several days now to properly demonstrate the new features of the Route Controller.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</link>

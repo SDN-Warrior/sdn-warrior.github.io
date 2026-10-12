@@ -2,6 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sdn-warrior.org/tags/nsx/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vcf9.1.1/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vna/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vpc/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vxlan/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
+    <loc>https://sdn-warrior.org/tags/vyos/</loc>
+    <lastmod>2026-10-12T01:00:00+02:00</lastmod>
+  </url><url>
     <loc>https://sdn-warrior.org/tags/acme/</loc>
     <lastmod>2026-09-05T01:00:00+02:00</lastmod>
   </url><url>
@@ -11,19 +44,7 @@
     <loc>https://sdn-warrior.org/tags/letsencrypt/</loc>
     <lastmod>2026-09-05T01:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/posts/</loc>
-    <lastmod>2026-09-05T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/</loc>
-    <lastmod>2026-09-05T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/</loc>
-    <lastmod>2026-09-05T01:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/</loc>
-    <lastmod>2026-09-05T01:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vcf9.1/</loc>
     <lastmod>2026-09-05T01:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/apache/</loc>
@@ -50,19 +71,7 @@
     <loc>https://sdn-warrior.org/tags/optane/</loc>
     <lastmod>2026-07-29T01:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://sdn-warrior.org/tags/nsx/</loc>
-    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
-  </url><url>
     <loc>https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/</loc>
-    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vna/</loc>
-    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vpc/</loc>
-    <lastmod>2026-07-11T13:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://sdn-warrior.org/tags/vxlan/</loc>
     <lastmod>2026-07-11T13:00:00+02:00</lastmod>
   </url><url>
     <loc>https://sdn-warrior.org/tags/kubernetes/</loc>

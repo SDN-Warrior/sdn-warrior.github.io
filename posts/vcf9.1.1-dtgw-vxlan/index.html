@@ -1,0 +1,1253 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior"><meta name="description" content="In this article, I&#39;ll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.">
+
+	<meta itemprop="name" content="VCF 9.1.1 - DTGW & VNA: the route controller within me - Part 2">
+	<meta itemprop="description" content="In this article, I&#39;ll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.">
+	<meta itemprop="datePublished" content="2026-10-12T01:00:00+02:00">
+	<meta itemprop="dateModified" content="2026-10-12T01:00:00+02:00">
+	<meta itemprop="wordCount" content="5485">
+	<meta itemprop="image" content="https://sdn-warrior.org/images/preview.png">
+	<meta itemprop="keywords" content="Vcf9.1.1,Vcf9.1,Nsx,Vpc,Vna,Vxlan,VyOS"><meta property="og:url" content="https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/">
+	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+	<meta property="og:title" content="VCF 9.1.1 - DTGW & VNA: the route controller within me - Part 2">
+	<meta property="og:description" content="In this article, I&#39;ll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-10-12T01:00:00+02:00">
+		<meta property="article:modified_time" content="2026-10-12T01:00:00+02:00">
+		<meta property="article:tag" content="Vcf9.1.1">
+		<meta property="article:tag" content="Vcf9.1">
+		<meta property="article:tag" content="Nsx">
+		<meta property="article:tag" content="Vpc">
+		<meta property="article:tag" content="Vna">
+		<meta property="article:tag" content="Vxlan">
+		<meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta name="twitter:title" content="VCF 9.1.1 - DTGW & VNA: the route controller within me - Part 2">
+	<meta name="twitter:description" content="In this article, I&#39;ll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "VCF 9.1.1 - DTGW \u0026 VNA: the route controller within me - Part 2",
+    "name": "VCF 9.1.1 - DTGW \u0026 VNA: the route controller within me - Part 2",
+    "description": "In this article, I'll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.",
+    "keywords": ["vcf9.1.1", "vcf9.1", "nsx", "vpc", "vna", "vxlan", "VyOS"],
+    "articleBody": "Introduction Sometimes sequels are better than the first one – take Batman, for example. The Dark Knight was already a blast. Maybe this second article about the route controller will go just as well, and it might even be more popular with you guys than the first one. Anyway, my vacation is over, and now I finally have more time to take a closer look at VCF 9.1.1 – and wow, what can I say? I actually thought VCF 9.1.1 would just be a minor update, but there’s been a lot going on in VCF Networking in particular. And just like that, we’re back in the networking rabbit hole, and I’ve been tinkering with a test setup for several days now to properly demonstrate the new features of the Route Controller.\nHowever, I won’t be covering all the new features in VCF Networking in this article. NSX Tepless setup and other topics may be covered in a separate article. I also won’t be explaining the physical aspects in every last detail; that would go beyond the scope of this article and the capabilities of my lab. I built my “physical” fabric for EVPN VXLAN using VyOS VMs and standalone Proxmox servers – but more on that later. I also need to apologize a bit – unfortunately, some of my drawings have turned out so large that they’re hard to see in the gallery view, but I’ll post links to them in full-screen mode.\nAnd if you’re now wondering, “What exactly is the Route Controller, and what on earth is this guy talking about?”, then I recommend checking out my article on the VCF 9.1 Route Controller, because in it I cover a lot of the basics that will be more or less essential for this article.\nEnough with the introduction, so grab a cup of coffee – or better yet, a whole pot – because we’re going to dive deep into the subject once again to take a closer look at the changes.\nVyOS EVPN Fabric A short disclaimer\rMy EVPN fabric is set up so that I can demonstrate all the features from an NSX perspective; it does not represent an ideal configuration as one would use in practice. However, since resources in the lab are limited, and I didn’t want to run multiple VyOS routers on a single Proxmox host – partly due to Layer 2 virtualization – and to avoid issues with the hypervisor’s virtual switches, the EVPN fabric should be viewed as an optimized test setup rather than a design recommendation.\rNow that that’s clear, we can take a closer look at the test setup. For my tests, I need an external EVPN/VXLAN fabric that will represent a physical network fabric. Since my MikroTik switches currently don’t support Type 5 routes, I decided to use a fabric based on VyOS VMs. I’m using two Proxmox servers running on Intel NUCs. These aren’t in a cluster, so test VMs can’t migrate between the hosts. Why Proxmox? It’s relatively simple – I don’t have enough vSphere licenses. For the functionality I need – namely, hosting a VyOS router and one test VM per server – this isn’t a problem. Since the setup is a bit more complex, I’m trying to break it down into smaller parts so I can gradually work my way toward the big picture. That’s why, at this point, I’ll focus only on the VXLAN fabric and won’t go into detail about the route controller setup just yet.\nComponent Role IP Address BGP AS VyOS-01-BGW Border Gateway / Leaf 10.28.4.100 64515 VyOS-02-Leaf Leaf 10.28.4.101 64515 Alpine-PR-01 Test VM connected to VyOS-01 192.168.250.10/24 — Alpine-PR-02 Test VM connected to VyOS-02 192.168.250.11/24 — The VyOS-01-BGW router serves a dual role. It acts as a leaf, connecting the Alpine-PR-01 test VM to the client network, while also functioning as a border gateway, thereby serving as the central BGP peering point with the NSX route controllers.\nVyOS-02 is only a leaf for Alpine-PR-02. In addition, EVPN information is exchanged via an iBGP session (L2VPN EVPN) with VyOS-01-BGW (AS 64515).\nThe VXLAN configuration uses two VNIs: a Layer 2 VNI (65260), which extends the client segment across both routers, and a Layer 3 VNI (65000), which is associated with the “Tenant” VRF and provides the routing context. Each VNI is connected to its own Linux bridge. For the L2 VNI, I used a static VXLAN remote VTEP for simplicity. The Linux bridge for the L2 VNI is also assigned to the “tenant” VRF so that later, both the test VMs on the physical side and the test VMs in the VPC will belong to the same routing context. Both routers use different export targets, and each imports all routes from the other router. The topic of route targets will become important again later when it comes to configuring the route controller.\nVyOS Fabric VLANs and Interfaces As you can clearly see in the diagram, I’m using 3 VLANs. Their functions are shown in the table below.\nVLAN ID Network Purpose 666 10.28.66.0/30 iBGP EVPN peering between VyOS routers 1004 10.28.4.0/24 VXLAN underlay and VTEP/TEP connectivity 1010 10.28.10.0/24 MP-eBGP peering with NSX Route Controllers I have listed the interfaces used in the following tables; I have purposely omitted the management interfaces, as they play no role in the test setup.\nVyOS-01-BGW\nInterface IP Address MTU Purpose eth0 — 9000 Physical trunk interface eth0.666 10.28.66.1/30 9000 iBGP peering with VyOS-02 eth0.1004 10.28.4.100/24 9000 VXLAN underlay / VTEP eth0.1010 10.28.10.1/24 9000 MP-eBGP peering with NSX RC cluster eth1 — 9000 Local client access br65260 192.168.250.1/24 9000 Client bridge / Tenant L3 interface br65000 — 9000 L3VNI bridge / VRF anchor VyOS-02-Leaf\nInterface IP Address MTU Purpose eth0 — 9000 Physical trunk interface eth0.666 10.28.66.2/30 9000 iBGP peering with VyOS-01 eth0.1004 10.28.4.101/24 9000 VXLAN underlay / VTEP eth1 — 9000 Local client access br65260 192.168.250.2/24 9000 Client bridge / Tenant L3 interface br65000 — 9000 L3VNI bridge / VRF anchor The attentive reader may have noticed by now that no AnyCast address has been configured. In a real fabric, you wouldn’t do that. However, since my focus is on the NSX features, I’ve chosen a simple setup that’s heavily customized to my needs. This is the reason behind why the TestVM on VyOS-01 has the bridge IP 192.168.250.1 as its gateway, and TestVM on VyOS-02 uses 192.168.250.2.\nVyos Config VYOS-01-BGW\nset interfaces bridge br65000 description 'L3VNI anchor for tenant VRF' set interfaces bridge br65000 mac '00:53:00:65:00:00' set interfaces bridge br65000 member interface vxlan65000 set interfaces bridge br65000 vrf 'tenant' set interfaces bridge br65260 address '192.168.250.1/24' set interfaces bridge br65260 description 'Client Network VNI 65260' set interfaces bridge br65260 member interface eth1 set interfaces bridge br65260 member interface vxlan65260 set interfaces bridge br65260 mtu '9000' set interfaces bridge br65260 vrf 'tenant' set interfaces ethernet eth0 mtu '9000' set interfaces ethernet eth0 vif 666 address '10.28.66.1/30' set interfaces ethernet eth0 vif 666 description 'VXLAN Underlay to VYOS-02-LEAF' set interfaces ethernet eth0 vif 666 mtu '9000' set interfaces ethernet eth0 vif 1004 address '10.28.4.100/24' set interfaces ethernet eth0 vif 1004 mtu '9000' set interfaces ethernet eth0 vif 1010 address '10.28.10.1/24' set interfaces ethernet eth1 description 'Untagged local client network in tenant VRF' set interfaces ethernet eth1 mtu '9000' set interfaces vxlan vxlan65000 description 'EVPN L3VNI 65000 toward NSX TGW' set interfaces vxlan vxlan65000 mtu '1500' set interfaces vxlan vxlan65000 port '4789' set interfaces vxlan vxlan65000 source-address '10.28.4.100' set interfaces vxlan vxlan65000 vni '65000' set interfaces vxlan vxlan65260 description 'L2 VNI 65260 Client Network to VYOS-02-LEAF' set interfaces vxlan vxlan65260 mtu '9000' set interfaces vxlan vxlan65260 port '4789' set interfaces vxlan vxlan65260 remote '10.28.4.101' set interfaces vxlan vxlan65260 source-address '10.28.4.100' set interfaces vxlan vxlan65260 vni '65260' set protocols bgp address-family ipv4-unicast import set protocols bgp address-family ipv4-unicast redistribute connected set protocols bgp address-family ipv4-unicast redistribute static set protocols bgp address-family l2vpn-evpn advertise ipv4 unicast set protocols bgp address-family l2vpn-evpn advertise-all-vni set protocols bgp address-family l2vpn-evpn advertise-default-gw set protocols bgp address-family l2vpn-evpn default-originate ipv4 set protocols bgp neighbor 10.28.10.100 address-family ipv4-unicast default-originate set protocols bgp neighbor 10.28.10.100 address-family l2vpn-evpn soft-reconfiguration inbound set protocols bgp neighbor 10.28.10.100 bfd set protocols bgp neighbor 10.28.10.100 description 'NSX Route Controller RC-01' set protocols bgp neighbor 10.28.10.100 remote-as '64520' set protocols bgp neighbor 10.28.10.100 timers holdtime '180' set protocols bgp neighbor 10.28.10.100 timers keepalive '60' set protocols bgp neighbor 10.28.10.100 update-source '10.28.10.1' set protocols bgp neighbor 10.28.10.101 address-family ipv4-unicast default-originate set protocols bgp neighbor 10.28.10.101 address-family l2vpn-evpn soft-reconfiguration inbound set protocols bgp neighbor 10.28.10.101 bfd set protocols bgp neighbor 10.28.10.101 description 'NSX Route Controller RC-02' set protocols bgp neighbor 10.28.10.101 remote-as '64520' set protocols bgp neighbor 10.28.10.101 timers holdtime '180' set protocols bgp neighbor 10.28.10.101 timers keepalive '60' set protocols bgp neighbor 10.28.10.101 update-source '10.28.10.1' set protocols bgp neighbor 10.28.66.2 address-family l2vpn-evpn set protocols bgp neighbor 10.28.66.2 description 'VYOS-02 EVPN Leaf' set protocols bgp neighbor 10.28.66.2 remote-as '64515' set protocols bgp neighbor 10.28.66.2 timers holdtime '180' set protocols bgp neighbor 10.28.66.2 timers keepalive '60' set protocols bgp neighbor 10.28.66.2 update-source '10.28.66.1' set protocols bgp parameters bestpath as-path multipath-relax set protocols bgp parameters graceful-restart stalepath-time '180' set protocols bgp parameters no-hard-administrative-reset set protocols bgp parameters router-id '10.28.10.1' set protocols bgp system-as '64515' set vrf name tenant protocols bgp address-family ipv4-unicast import set vrf name tenant protocols bgp address-family ipv4-unicast redistribute connected set vrf name tenant protocols bgp address-family ipv4-unicast redistribute static set vrf name tenant protocols bgp address-family l2vpn-evpn advertise ipv4 unicast set vrf name tenant protocols bgp address-family l2vpn-evpn advertise-default-gw set vrf name tenant protocols bgp address-family l2vpn-evpn default-originate ipv4 set vrf name tenant protocols bgp address-family l2vpn-evpn rd '10.28.4.100:10' set vrf name tenant protocols bgp address-family l2vpn-evpn route-target export '65000:10' set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import '65000:10' set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import '65000:20' set vrf name tenant protocols bgp address-family l2vpn-evpn vni 65000 set vrf name tenant protocols bgp parameters graceful-restart stalepath-time '180' set vrf name tenant protocols bgp parameters no-hard-administrative-reset set vrf name tenant protocols bgp parameters router-id '10.28.10.1' set vrf name tenant protocols bgp system-as '64515' set vrf name tenant table '100' set vrf name tenant vni '65000' VYOS-02-LEAF\nset interfaces bridge br65000 description 'L3VNI anchor for tenant VRF' set interfaces bridge br65000 mac '00:53:00:65:00:02' set interfaces bridge br65000 member interface vxlan65000 set interfaces bridge br65000 vrf 'tenant' set interfaces bridge br65260 address '192.168.250.2/24' set interfaces bridge br65260 description 'Client Network VNI 65260' set interfaces bridge br65260 member interface eth1 set interfaces bridge br65260 member interface vxlan65260 set interfaces bridge br65260 mtu '9000' set interfaces bridge br65260 vrf 'tenant' set interfaces ethernet eth0 mtu '9000' set interfaces ethernet eth0 vif 666 address '10.28.66.2/30' set interfaces ethernet eth0 vif 666 description 'VXLAN Underlay to VYOS-01-BGW' set interfaces ethernet eth0 vif 666 mtu '9000' set interfaces ethernet eth0 vif 1004 address '10.28.4.101/24' set interfaces ethernet eth0 vif 1004 description 'EVPN VXLAN VTEP Underlay' set interfaces ethernet eth0 vif 1004 mtu '9000' set interfaces ethernet eth1 mtu '9000' set interfaces vxlan vxlan65000 description 'EVPN L3VNI 65000' set interfaces vxlan vxlan65000 mtu '1500' set interfaces vxlan vxlan65000 port '4789' set interfaces vxlan vxlan65000 source-address '10.28.4.101' set interfaces vxlan vxlan65000 vni '65000' set interfaces vxlan vxlan65260 description 'L2 VNI 65260 Client Network to VYOS-01-BGW' set interfaces vxlan vxlan65260 mtu '9000' set interfaces vxlan vxlan65260 port '4789' set interfaces vxlan vxlan65260 remote '10.28.4.100' set interfaces vxlan vxlan65260 source-address '10.28.4.101' set interfaces vxlan vxlan65260 vni '65260' set protocols bgp address-family l2vpn-evpn advertise-all-vni set protocols bgp neighbor 10.28.66.1 address-family l2vpn-evpn set protocols bgp neighbor 10.28.66.1 description 'VYOS-01 EVPN Gateway' set protocols bgp neighbor 10.28.66.1 remote-as '64515' set protocols bgp neighbor 10.28.66.1 timers holdtime '180' set protocols bgp neighbor 10.28.66.1 timers keepalive '60' set protocols bgp neighbor 10.28.66.1 update-source '10.28.66.2' set protocols bgp parameters router-id '10.28.4.101' set protocols bgp system-as '64515' set vrf name tenant protocols bgp address-family l2vpn-evpn rd '10.28.4.101:10' set vrf name tenant protocols bgp address-family l2vpn-evpn route-target export '65000:20' set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import '65000:10' set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import '65000:20' set vrf name tenant protocols bgp parameters router-id '10.28.4.101' set vrf name tenant protocols bgp system-as '64515' set vrf name tenant table '100' set vrf name tenant vni '65000' Info\rFor clarity, the default settings, management settings, SSH access, NTP, and loopback configuration were removed from the configuration.\rNext, I’ll take care of connecting the route controller. The actual differences aren’t that big, so I won’t go through the setup step by step – I’ll just show you the changes I made. If you need more help, you’ll find it here.\nRoute Controller in 9.1.1 One of the cool new features is that the Route Controller now supports active/active mode and can scale out to up to 8 nodes. To use this effectively, you need at least two BGW routers. In my setup, I’m using just one router that has MP-BGP peering with both Route Controllers. Not ideal, but hey, it’s a lab.\nIn general, however, there are a few limitations or prerequisites. In active/active mode, only one MP-BGP interface per Route Controller can be used, even if a Route Controller has three interfaces. A non-configurable interface handles the notification messages during a vMotion operation. Another interface is used for management traffic. This means all three interfaces are in use. The physical fabric must continue to announce a default route, even when fancy features like Direct Prefix Routing are used - I’ll explain what that is later.\nSince pictures speak louder than words, I’ve created a diagram and attached some screenshots showing the key settings of the Route Controller. Since the diagram is quite large, it can be downloaded separately.\nRoute Controller with VyOS EVPN Fabric Route Controller Interfaces Route Controller MP-BGP External Connection VXLAN EVPN Fabric with RC (click to open)\nDesign Decisions for Active/Active Unlike in active/standby mode, no floating IP is used for the MP-BGP session. This means that the route controllers can be located in independent L3 segments and do not require a shared L2 infrastructure. As for the failure domain, Broadcom recommends using different ESX servers in different clusters and racks (if possible). At least two peerings to external BGW routers per route controller are recommended. ECMP with individual gateway VTEPs is possible. For BGP, the default values of 60/180 seconds are sufficient when BFD is used. While BFD is prohibited in active/standby mode, it is highly recommended in active/active mode.\nDirect Prefix Routing Strange name, big difference in the data path. The feature was just released in 9.1.1, and it changes quite a bit. In the 9.1 distributed VXLAN connectivity model, traffic between the virtual and physical fabrics was always routed through the BGW routers. With DPR, you can now change this. When this feature is enabled, the route controllers can receive and process specific host routes via the MP-BGP session. In 9.1, only a default route was accepted. If you look at the forwarding table of the Distributed Transit Gateway on the ESX server, you’ll see the difference right away. To make it easier to understand the forwarding table – and so you don’t have to search through the diagram for all the information – I’ve compiled all the relevant IP addresses in the following tables.\nESXi Hostname TEP 1 IP Address TEP 2 IP Address esx01.vcf.sdn-warrior.cloud 10.28.4.14 10.28.4.15 esx02.vcf.sdn-warrior.cloud 10.28.4.10 10.28.4.12 esx03.vcf.sdn-warrior.cloud 10.28.4.11 10.28.4.13 VyOS Hostname Role VTEP IP Address VYOS-01-BGW Border Gateway / Leaf 10.28.4.100 VYOS-02-Leaf Leaf 10.28.4.101 Test VM IP Address Connected To Alpine-PR-01 192.168.250.10/24 VYOS-01-BGW Alpine-PR-02 192.168.250.11/24 VYOS-02-Leaf Alpine-NSX-01 10.100.0.3/29 NSX VPC Alpine-NSX-02 10.100.0.4/29 NSX VPC DTGW forwarding Table without DPR:\nesx02.vcf.sdn-warrior.cloud\u003e get gateway 5c47d546-9769-4cad-9d93-942a1349579d forwarding Sun Oct 11 2026 UTC 12:38:08.233 Logical Routers Forwarding Table -------------------------------------------------------------------------------------------------------------- Flags Legend: [U: Up], [G: Gateway], [C: Connected], [I: Interface] [H: Host], [R: Reject], [B: Blackhole], [F: Soft Flush], [E: ECMP] [S1|S2|S3: TGW Private|Public|External Route Scope] Network Gateway Type Interface UUID ============================================================================================================== 0.0.0.0/0 10.28.4.100 UGS3 0016a939-70d3-454b-82f9-80d697d59940 10.100.0.0/29 100.64.0.1 UGS2 ebcf7572-759b-58b0-aa6c-c67d0741855a 10.100.0.8/32 100.64.0.1 UGHS2 ebcf7572-759b-58b0-aa6c-c67d0741855a 100.64.0.0/31 0.0.0.0 UCI ebcf7572-759b-58b0-aa6c-c67d0741855a fc37:a81f:5e4f:4000::/64 :: UCI ebcf7572-759b-58b0-aa6c-c67d0741855a fe80:11c:100:0:50:56ff:fe56:4452/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a ff02:11c:100::1:ff00:1/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a ff02:11c:100::1:ff56:4452/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a esx02.vcf.sdn-warrior.cloud\u003e The important thing here is the S3 route; without DPR, only the default route exists, with the next hop set to 10.28.4.100, which is the VTEP address of my BGW router. If I enable DPR now, the forwarding table will change.\nesx02.vcf.sdn-warrior.cloud\u003e get gateway 5c47d546-9769-4cad-9d93-942a1349579d forwarding Sun Oct 11 2026 UTC 12:46:58.152 Logical Routers Forwarding Table -------------------------------------------------------------------------------------------------------------- Flags Legend: [U: Up], [G: Gateway], [C: Connected], [I: Interface] [H: Host], [R: Reject], [B: Blackhole], [F: Soft Flush], [E: ECMP] [S1|S2|S3: TGW Private|Public|External Route Scope] Network Gateway Type Interface UUID ============================================================================================================== 0.0.0.0/0 10.28.4.100 UGS3 0016a939-70d3-454b-82f9-80d697d59940 10.100.0.0/29 100.64.0.1 UGS2 ebcf7572-759b-58b0-aa6c-c67d0741855a 10.100.0.8/32 100.64.0.1 UGHS2 ebcf7572-759b-58b0-aa6c-c67d0741855a 100.64.0.0/31 0.0.0.0 UCI ebcf7572-759b-58b0-aa6c-c67d0741855a 192.168.250.0/24 10.28.4.100 UGS3 0016a939-70d3-454b-82f9-80d697d59940 192.168.250.1/32 10.28.4.100 UGHS3 0016a939-70d3-454b-82f9-80d697d59940 192.168.250.10/32 10.28.4.100 UGHS3 0016a939-70d3-454b-82f9-80d697d59940 192.168.250.11/32 10.28.4.101 UGHS3 0016a939-70d3-454b-82f9-80d697d59940 fc37:a81f:5e4f:4000::/64 :: UCI ebcf7572-759b-58b0-aa6c-c67d0741855a fe80:11c:100:0:50:56ff:fe56:4452/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a ff02:11c:100::1:ff00:1/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a ff02:11c:100::1:ff56:4452/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a esx02.vcf.sdn-warrior.cloud\u003e There are now 4 new routes. All 4 are S3 routes, but 3 of them are host routes (UGHS3), and those are the exciting ones. We’ll ignore the route 192.168.250.1/32 - it’s due to my test setup. It’s the local bridge IP address I need for the L2 VNI setup, and it shouldn’t appear in a real fabric. The route 192.168.250.11/32 is more interesting. This route corresponds to my test VM, which is connected to my VyOS-02 leaf router. The default gateway for this route is the VTEP IP of the VyOS-02 leaf router, so I have a direct path to my VM without having to go through the BGW router. I also have a direct path for 192.168.250.10/32, but this test VM terminates at the BGW router, so its VTEP is listed as the next hop in the forwarding table.\nOf course, now I also need to take a look at the routing table on my VyOS-02 leaf.\nvyos@VYOS-02-LEAF:~$ show ip route vrf tenant bgp Codes: K - kernel route, C - connected, L - local, S - static, R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP, T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR, f - OpenFabric, t - Table-Direct, \u003e - selected route, * - FIB route, q - queued, r - rejected, b - backup t - trapped, o - offload failure IPv4 unicast VRF tenant: B\u003e* 0.0.0.0/0 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 1d03h25m B\u003e* 10.100.0.3/32 [200/0] via 10.28.4.14, br65000 onlink, weight 1, 1d03h20m B\u003e* 10.100.0.4/32 [200/0] via 10.28.4.12, br65000 onlink, weight 1, 1d03h20m B 192.168.250.0/24 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 1d03h25m B\u003e* 192.168.250.1/32 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 1d03h25m B\u003e* 192.168.250.10/32 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 00:14:32 vyos@VYOS-02-LEAF:~$ If I now compare the next-hop IPs, you can see that I have direct paths to the TEP interfaces of the ESX servers for each of my test VMs in my VPC. When I communicate from my test VM Alpine-PR-02 (192.168.250.11) to the test VM Alpine-NSX-01 (10.100.0.3), the BGW is not included in the data path.\nFor comparison, let’s now take a look at the routing table on the BGW router.\nvyos@VYOS-01-BGW:~$ show ip route vrf tenant bgp Codes: K - kernel route, C - connected, L - local, S - static, R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP, T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR, f - OpenFabric, t - Table-Direct, \u003e - selected route, * - FIB route, q - queued, r - rejected, b - backup t - trapped, o - offload failure IPv4 unicast VRF tenant: B\u003e* 10.100.0.3/32 [20/0] via 10.28.4.14, br65000 onlink, weight 1, 1d03h42m via 10.28.4.14, br65000 onlink (dup), weight 1, 1d03h42m B\u003e* 10.100.0.4/32 [20/0] via 10.28.4.12, br65000 onlink, weight 1, 00:03:07 via 10.28.4.12, br65000 onlink (dup), weight 1, 00:03:07 B\u003e* 10.100.0.8/32 [20/0] via 10.28.4.13, br65000 onlink, weight 1, 00:02:46 via 10.28.4.13, br65000 onlink (dup), weight 1, 00:02:46 B\u003e* 10.100.0.9/32 [20/0] via 10.28.4.15, br65000 onlink, weight 1, 1d03h42m via 10.28.4.15, br65000 onlink (dup), weight 1, 1d03h42m B\u003e* 192.168.250.11/32 [200/0] via 10.28.4.101, br65000 onlink, weight 1, 02:36:47 vyos@VYOS-01-BGW:~$ Here I see the same routes as on the Leaf Router, but these are learned by the Route Controller via the MP-BGP session rather than via iBGP. Since I’ve peered both Route Controllers to the same BGW, all routes are duplicated, which gives me control-plane redundancy – at least for the Route Controller.\nDesign Decisions Direct Prefix Routing Of course, you shouldn’t use this feature across the board for everything. In a large fabric, routing tables can quickly become very large. Broadcom recommends using DPR for latency-sensitive traffic such as S3 or NFS. Additionally, you should define additional route targets for targeted import and export and configure them only on the relevant leaf switches. The additional route targets (RTs) must also be configured in the External Connection for the DTGW. You can see this in my screenshot of the External Connection. I created a separate RT (65000:20) specifically for DPR. Another recommendation is to set up prefix filters. Thanks to DPR, the RC also supports received Type 2 routes and translates them into host prefix forwarding entries for the DTGW on the ESX. Another important point is that each ESX server must be able to communicate with all relevant VTEP IP addresses on the leaf switches via its TEP network. Traffic that cannot be routed via DPR will continue to be routed through the BGW routers.\nRT, Type 2, Type 5 ?! Yes, unfortunately, this topic isn’t quite that simple, and to be honest, I’m having a bit of a hard time explaining it all in English, but I’ll give it a try anyway. I’ve already provided a general overview of the differences between Type 2 and Type 5 here. To give a practical example, let’s take a look at how the DTGW obtains its information so that I can access my Alpine PR-02 from any VM in my VPC.\nThe Alpine-PR-02 VM is connected to the VyOS-02 leaf via eth1. The leaf learns the MAC/IP mapping and creates a Type 2 route based on it. vyos@VYOS-02-LEAF:~$ show bgp l2vpn evpn route type 2 BGP table version is 123, local router ID is 10.28.4.101 Status codes: s suppressed, d damped, h history, * valid, \u003e best, i - internal Origin codes: i - IGP, e - EGP, ? - incomplete EVPN type-1 prefix: [1]:[EthTag]:[ESI]:[IPlen]:[VTEP-IP]:[Frag-id] EVPN type-2 prefix: [2]:[EthTag]:[MAClen]:[MAC]:[IPlen]:[IP] EVPN type-3 prefix: [3]:[EthTag]:[IPlen]:[OrigIP] EVPN type-4 prefix: [4]:[ESI]:[IPlen]:[OrigIP] EVPN type-5 prefix: [5]:[EthTag]:[IPlen]:[IP] Network Next Hop Metric LocPrf Weight Path Extended Community Route Distinguisher: 10.28.4.101:2 *\u003e [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11] 10.28.4.101 32768 i ET:8 RT:64515:65260 RT:65000:20 Rmac:00:53:00:65:00:02 Here we find all the important information: the next hop (10.28.4.101), the IP address (192.168.250.11), the MAC address (bc:24:11:53:89:c5), and the RT (RT:65000:20).\nvyos@VYOS-02-LEAF:~$ show bgp l2vpn evpn neighbors 10.28.66.1 advertised-routes BGP table version is 0, local router ID is 10.28.4.101 Default local pref 100, local AS 64515 Status codes: s suppressed, d damped, h history, * valid, \u003e best, i - internal Origin codes: i - IGP, e - EGP, ? - incomplete Network Next Hop Metric LocPrf Weight Path Route Distinguisher: 10.28.4.101:2 *\u003e [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11] 100 32768 i The BGW receives the Type 2 route via iBGP. Since RT 65000:20 is configured as an import RT for its tenant VRF, the route can also be imported into the corresponding routing context.\nvyos@VYOS-01-BGW:~$ show bgp l2vpn evpn route type 2 BGP table version is 123, local router ID is 10.28.10.1 Status codes: s suppressed, d damped, h history, * valid, \u003e best, i - internal Origin codes: i - IGP, e - EGP, ? - incomplete EVPN type-1 prefix: [1]:[EthTag]:[ESI]:[IPlen]:[VTEP-IP]:[Frag-id] EVPN type-2 prefix: [2]:[EthTag]:[MAClen]:[MAC]:[IPlen]:[IP] EVPN type-3 prefix: [3]:[EthTag]:[IPlen]:[OrigIP] EVPN type-4 prefix: [4]:[ESI]:[IPlen]:[OrigIP] EVPN type-5 prefix: [5]:[EthTag]:[IPlen]:[IP] Network Next Hop Metric LocPrf Weight Path Extended Community Route Distinguisher: 10.28.4.101:2 *\u003ei [2]:[0]:[48]:[bc:24:11:53:89:c5] 10.28.4.101 100 0 i RT:64515:65260 ET:8 *\u003ei [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11] 10.28.4.101 100 0 i RT:64515:65260 RT:65000:20 ET:8 Rmac:00:53:00:65:00:02 Here, too, we can see all the relevant information. The BGW is now advertising this route as a Type 2 route to both route controllers.\nvyos@VYOS-01-BGW:~$ show bgp l2vpn evpn neighbors 10.28.10.100 advertised-routes BGP table version is 0, local router ID is 10.28.10.1 Default local pref 100, local AS 64515 Status codes: s suppressed, d damped, h history, * valid, \u003e best, i - internal Origin codes: i - IGP, e - EGP, ? - incomplete Network Next Hop Metric LocPrf Weight Path Route Distinguisher: 10.28.4.100:10 *\u003e [5]:[0]:[0]:[0.0.0.0] 32768 i *\u003e [5]:[0]:[24]:[192.168.250.0] 0 32768 ? Route Distinguisher: 10.28.4.101:2 *\u003e [2]:[0]:[48]:[bc:24:11:53:89:c5] 100 0 i *\u003e [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11] 100 0 i vyos@VYOS-01-BGW:~$ show bgp l2vpn evpn neighbors 10.28.10.101 advertised-routes BGP table version is 0, local router ID is 10.28.10.1 Default local pref 100, local AS 64515 Status codes: s suppressed, d damped, h history, * valid, \u003e best, i - internal Origin codes: i - IGP, e - EGP, ? - incomplete Network Next Hop Metric LocPrf Weight Path Route Distinguisher: 10.28.4.100:10 *\u003e [5]:[0]:[0]:[0.0.0.0] 32768 i *\u003e [5]:[0]:[24]:[192.168.250.0] 0 32768 ? Route Distinguisher: 10.28.4.101:2 *\u003e [2]:[0]:[48]:[bc:24:11:53:89:c5] 100 0 i *\u003e [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11] 100 0 i Here you can clearly see that not only is the route to the VM advertised, but also the default route (as a Type 5 route), which is still absolutely necessary. As the final step, the Route Controller learns the route when RT 65000:20 has been configured as an import and distributes the forwarding information to the ESX hosts via the CCP. As a result, we see a /32 Host route in the forwarding table on our ESX servers.\nesx02.vcf.sdn-warrior.cloud\u003e get gateway 5c47d546-9769-4cad-9d93-942a1349579d forwarding Sun Oct 11 2026 UTC 15:04:16.768 Logical Routers Forwarding Table -------------------------------------------------------------------------------------------------------------- Flags Legend: [U: Up], [G: Gateway], [C: Connected], [I: Interface] [H: Host], [R: Reject], [B: Blackhole], [F: Soft Flush], [E: ECMP] [S1|S2|S3: TGW Private|Public|External Route Scope] Network Gateway Type Interface UUID ============================================================================================================== 0.0.0.0/0 10.28.4.100 UGS3 0016a939-70d3-454b-82f9-80d697d59940 10.100.0.0/29 100.64.0.1 UGS2 ebcf7572-759b-58b0-aa6c-c67d0741855a 10.100.0.8/32 100.64.0.1 UGHS2 ebcf7572-759b-58b0-aa6c-c67d0741855a 100.64.0.0/31 0.0.0.0 UCI ebcf7572-759b-58b0-aa6c-c67d0741855a 192.168.250.0/24 10.28.4.100 UGS3 0016a939-70d3-454b-82f9-80d697d59940 192.168.250.1/32 10.28.4.100 UGHS3 0016a939-70d3-454b-82f9-80d697d59940 192.168.250.10/32 10.28.4.100 UGHS3 0016a939-70d3-454b-82f9-80d697d59940 192.168.250.11/32 10.28.4.101 UGHS3 0016a939-70d3-454b-82f9-80d697d59940 fc37:a81f:5e4f:4000::/64 :: UCI ebcf7572-759b-58b0-aa6c-c67d0741855a fe80:11c:100:0:50:56ff:fe56:4452/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a ff02:11c:100::1:ff00:1/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a ff02:11c:100::1:ff56:4452/128 :: UCIH ebcf7572-759b-58b0-aa6c-c67d0741855a Basically, that’s the whole magic behind DPR. Since the routes are distributed via the BGW router, the traffic can still be forwarded directly to the leaf.\nInfo\rFor this example, I’ve shortened the CLI output to keep the example clear.\rNow that we have the basics covered, we can expand the entire setup to include stateful services. Yes, you heard that right. VCF 9.1.1 now also supports stateful services using the Distributed VXLAN Connectivity Model.\nVNA and Route Controller - its a perfect match I’ve been waiting for this feature, and I had hoped it would be included in 9.1 when I checked out the RC. For anyone who doesn’t know what the VNA is, what it can do, or how it’s set up, I recommend reading this article and this one first.\nVNA Support enables the following:\nDefault Outbound NAT (Auto-SNAT) custom NAT DHCP relay for external DHCP servers load balancing This also means that you can use VKS and Automation in “All Apps” mode, but setting that up is a topic for a separate blog post. Here, I’ll just show you how to make the VNA work in the distributed VXLAN model.\nUnfortunately, you can’t simply enable stateful services on the Route Controller cluster. To do so, you must deploy a dedicated VNA cluster consisting of at least one VNA appliance. In my setup, I have therefore deployed a VNA node.\nTo use the VNA, you must configure it in the VPC connectivity profile. I encountered an error here and received the following error message:\nThis feature requires TN Minimum Version \u003e= 9.1.1.0 My deployment was a greenfield 9.1.1 setup that I had previously patched to 9.1.1.0100. And so my environment should actually have met all the requirements.\nKB Article 455545\rThere is a Knowledge Base article that describes my exact problem and helped me resolve the issue quickly. https://knowledge.broadcom.com/external/article/455545/cannot-configure-vpc-connectivity-profil.html In addition, the same solution is included in the design guide. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/ethernet-vpn-evpn/distributed-vxlan-connection/enable-advanced-networking-services-for-distributed-vxlan-connections.html\rTo resolve the issue, simply set the TN version to 9.1.1.0 via the API.\nPUT https:///policy/api/v1/infra/sites/default/enforcement-points/default/host-transport-nodes/feature-opt-in { \"host_tn_min_os_version\": \"9.1.1.0\" } It took about 5 minutes before I was able to configure the VNA in the VPC Connectivity Profile. Once the VNA is configured in the profile, a service subnet is configured for the VPC gateway. As you can see from the diagram, the VNA connection is set up exactly the same way as if I were using a DTGW with VLAN-backed connectivity.\nVPC Connectivity Profile VPC Topology Route Controller with Vyos EVPN Fabric and VNA VXLAN EVPN Fabric with RC and VNA (click to open)\nFor my test, I created a private segment in my VPC and deployed a test VM (Alpine-NSX-03/10.10.0.3). My VNA appliance is on my ESX Host 3, and DPR is enabled. When I look at the traffic in Traceflow now, I can clearly see how the traffic flows from Alpine-NSX-03 to Alpine-PR-02.\nOT Transport Node Component IP Address Injected esx01.vcf.sdn-warrior.cloud alpine-nsx-03.vmx@cf682e4f-9ae8-494a-8f0f-91e6b1874135 Forwarded esx01.vcf.sdn-warrior.cloud vpc01-private Received esx01.vcf.sdn-warrior.cloud VPC01 Forwarded esx01.vcf.sdn-warrior.cloud VPC01 Received esx01.vcf.sdn-warrior.cloud Services Subnet Forwarded esx01.vcf.sdn-warrior.cloud Physical Local:10.28.4.15 Remote:10.28.4.13 Received esx03.vcf.sdn-warrior.cloud Physical Forwarded esx03.vcf.sdn-warrior.cloud Physical Received vna01 Physical Forwarded vna01 Edge Host Switch Received vna01 VPC01 Forwarded vna01 VPC01 Received vna01 NAT Forwarded vna01 NAT Forwarded vna01 VPC01 Received vna01 Edge Host Switch Forwarded vna01 Physical Received esx03.vcf.sdn-warrior.cloud Physical Forwarded esx03.vcf.sdn-warrior.cloud Services Subnet Received esx03.vcf.sdn-warrior.cloud VPC01 Forwarded esx03.vcf.sdn-warrior.cloud VPC01 Forwarded esx03.vcf.sdn-warrior.cloud transit-lr-71e28b38-6043-4654-ad38-1367f351ae0d Received esx03.vcf.sdn-warrior.cloud VXLAN Forwarded esx03.vcf.sdn-warrior.cloud VXLAN Received esx03.vcf.sdn-warrior.cloud dtgw-evpn-transit-ls-65000 Forwarded esx03.vcf.sdn-warrior.cloud Physical Local:10.28.4.13 Remote:10.28.4.101 What becomes clear here is that the traffic is routed through the VNA appliance due to the default outbound NAT, and that the traffic is passed on to the physical network via the TEP interface of ESX03. Furthermore, the destination is not the BGW router, but the leaf to which the destination VM is connected. You can view the default outbound NAT IP (10.100.0.8) in the VPC overview in vCenter or in NSX. There is a dedicated /32 route for the VNA on the VyOS fabric.\nDefault Outbound NAT IP vyos@VYOS-01-BGW:~$ show ip route vrf tenant Codes: K - kernel route, C - connected, L - local, S - static, R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP, T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR, f - OpenFabric, t - Table-Direct, \u003e - selected route, * - FIB route, q - queued, r - rejected, b - backup t - trapped, o - offload failure IPv4 unicast VRF tenant: B\u003e* 10.100.0.3/32 [20/0] via 10.28.4.14, br65000 onlink, weight 1, 1d06h53m via 10.28.4.14, br65000 onlink (dup), weight 1, 1d06h53m B\u003e* 10.100.0.4/32 [20/0] via 10.28.4.12, br65000 onlink, weight 1, 03:13:50 via 10.28.4.12, br65000 onlink (dup), weight 1, 03:13:50 B\u003e* 10.100.0.8/32 [20/0] via 10.28.4.13, br65000 onlink, weight 1, 00:23:02 via 10.28.4.13, br65000 onlink (dup), weight 1, 00:23:02 C\u003e* 192.168.250.0/24 is directly connected, br65260, weight 1, 1d03h29m L\u003e* 192.168.250.1/32 is directly connected, br65260, weight 1, 1d03h29m B\u003e* 192.168.250.11/32 [200/0] via 10.28.4.101, br65000 onlink, weight 1, 05:47:30 vyos@VYOS-01-BGW:~$ What looks so complicated in the drawing isn’t really that complicated, is it?\nSpecial Case: External IP A quick note on external IPs: As you probably know, you can easily assign an external IP in vCenter by right-clicking a VM in a private segment. As soon as you do this, a reflexive 1-to-1 NAT is created on the ESX server, which automatically disables the default outbound NAT for the VM. As a result, a /32 route appears in VyOS for the external IP, pointing to the TEP IP of the ESX server on which the VM is running. Additionally, no traffic from this VM will pass through the VNA. This sounds good at first, but it comes with a drawback: reflexive NAT is stateless, meaning it exposes my VM and makes it more vulnerable since there is no session awareness, return traffic validation, and so on. Therefore, the recommendation is to use a combination of DNAT and SNAT instead if a VM in the private segment needs to be exposed, as this gives me more control. Of course, it always depends on the use case.\nConclusion With VCF 9.1.1, connecting VPCs becomes even more flexible, but this comes at the cost of a certain degree of complexity. In my view, the VNA extension is what makes Distributed VXLAN Connectivity truly interesting, as it allows you to harness the full potential of VPCs and, thanks to DPR, gives you significant control over the actual data path. The active/active setup is also a much-needed enhancement and makes my architecture more flexible and robust. VCF 9.1.1 offers even more new features, but that’s a topic for another article.\n",
+    "wordCount" : "5485",
+    "inLanguage": "en",
+    "image":"https://sdn-warrior.org/images/net2.JPG","datePublished": "2026-10-12T01:00:00+02:00",
+    "dateModified": "2026-10-12T01:00:00+02:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fd3dc4f72bdb0ba69569f04756373e47137a13d0186a949ec28ce22df3ad2eae.css" integrity="sha256-/T3E9yvbC6aVafBHVjc+RxN6E9AYapSewoziLfOtLq4=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/net2.JPG');}</style></head>
+<body id="page">
+<header id="site-header">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a><a href="https://sdn-warrior.org/imprint/">Imprint</a></nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1.1-dtgw-vxlan%2f&amp;text=VCF%209.1.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me%20-%20Part%202" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1.1-dtgw-vxlan%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=VCF%209.1.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me%20-%20Part%202&amp;body=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1.1-dtgw-vxlan%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2fposts%2fvcf9.1.1-dtgw-vxlan%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=VCF%209.1.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me%20-%20Part%202&amp;summary=VCF%209.1.1%20-%20DTGW%20%26%20VNA%3a%20the%20route%20controller%20within%20me%20-%20Part%202%2c%20by%20SDN-Warrior%0a%0aIn%20this%20article%2c%20I%27ll%20take%20another%20look%20at%20Route%20Controller%2c%20since%20additional%20features%20were%20added%20in%20VCF%209.1.1.%20Direct%20prefix%20routing%20and%20active%2factive%20mode%20are%20among%20the%20new%20features%20that%20have%20been%20introduced.%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;VCF 9.1.1 - DTGW \u0026 VNA: the route controller within me - Part 2&#34;,&#34;https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/&#34;,&#34;VCF 9.1.1 - DTGW \u0026 VNA: the route controller within me - Part 2, by SDN-Warrior\n\nIn this article, I&#39;ll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
+		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a></li>
+	</ul>
+</div>
+
+
+	<div class="bg-img"></div>
+	<main class="site-main section-inner animated fadeIn faster">
+
+<div class="thin">
+	<nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+                <a href="/">SDN-Warrior | Daniel Krieger</a>
+            </li>
+            <li class="breadcrumbs__item">
+                <a href="/posts/">Posts</a>
+            </li>
+
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">
+            VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2
+        </li>
+    </ol>
+</nav>
+</div><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Oct 12, 2026</span></div>
+				<h1>VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2</h1>
+			</header>
+			<div class="post-info"><p>In this article, I&#39;ll take another look at Route Controller, since additional features were added in VCF 9.1.1. Direct prefix routing and active/active mode are among the new features that have been introduced.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
+   <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+   <line x1="16" y1="8" x2="2" y2="22"></line>
+   <line x1="17.5" y1="15" x2="9" y2="15"></line>
+</svg><a href="/about/" target="_blank">SDN-Warrior</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7" y2="7"></line>
+   </svg><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9.1.1">vcf9.1.1</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vcf9.1">vcf9.1</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/nsx">nsx</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vpc">vpc</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vna">vna</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vxlan">vxlan</a></span><span class="tag"><a href="https://sdn-warrior.org/tags/vyos">VyOS</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+   </svg>5485 Words
+     // ReadTime
+    
+    
+    
+    24 Minutes, 55 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+   </svg>2026-10-12 01:00 &#43;0200</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Sometimes sequels are better than the first one – take Batman, for example. <em>The Dark Knight</em> was already a blast. Maybe this second article about the route controller will go just as well, and it might even be more popular with you guys than the first one. Anyway, my vacation is over, and now I finally have more time to take a closer look at VCF 9.1.1 – and wow, what can I say?
+I actually thought VCF 9.1.1 would just be a minor update, but there’s been a lot going on in VCF Networking in particular. And just like that, we’re back in the networking rabbit hole, and I’ve been tinkering with a test setup for several days now to properly demonstrate the new features of the Route Controller.</p>
+<p>However, I won&rsquo;t be covering all the new features in VCF Networking in this article. NSX Tepless setup and other topics may be covered in a separate article. I also won&rsquo;t be explaining the physical aspects in every last detail; that would go beyond the scope of this article and the capabilities of my lab. I built my &ldquo;physical&rdquo; fabric for EVPN VXLAN using VyOS VMs and standalone Proxmox servers – but more on that later. I also need to apologize a bit – unfortunately, some of my drawings have turned out so large that they&rsquo;re hard to see in the gallery view, but I&rsquo;ll post links to them in full-screen mode.</p>
+<p>And if you&rsquo;re now wondering, &ldquo;What exactly is the Route Controller, and what on earth is this guy talking about?&rdquo;, then I recommend checking out my 
+<a href="https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/" target="_blank" rel="noopener">article</a> on the VCF 9.1 Route Controller, because in it I cover a lot of the basics that will be more or less essential for this article.</p>
+<p>Enough with the introduction, so grab a cup of coffee – or better yet, a whole pot – because we&rsquo;re going to dive deep into the subject once again to take a closer look at the changes.</p>
+<h2 id="vyos-evpn-fabric">VyOS EVPN Fabric<a href="#vyos-evpn-fabric" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+
+
+<aside class="admonition a-short-disclaimer" data-admonition-type="a-short-disclaimer">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+   </svg></div>
+        <b>A short disclaimer</b>
+    </div>
+    <div class="admonition-content">My EVPN fabric is set up so that I can demonstrate all the features from an NSX perspective; it does not represent an ideal configuration as one would use in practice. However, since resources in the lab are limited, and I didn’t want to run multiple VyOS routers on a single Proxmox host – partly due to Layer 2 virtualization – and to avoid issues with the hypervisor’s virtual switches, the EVPN fabric should be viewed as an optimized test setup rather than a design recommendation.</div>
+</aside>
+<p>Now that that’s clear, we can take a closer look at the test setup. For my tests, I need an external EVPN/VXLAN fabric that will represent a physical network fabric. Since my MikroTik switches currently don’t support Type 5 routes, I decided to use a fabric based on VyOS VMs. I’m using two Proxmox servers running on Intel NUCs. These aren’t in a cluster, so test VMs can’t migrate between the hosts. Why Proxmox? It’s relatively simple – I don’t have enough vSphere licenses. For the functionality I need – namely, hosting a VyOS router and one test VM per server – this isn’t a problem. Since the setup is a bit more complex, I&rsquo;m trying to break it down into smaller parts so I can gradually work my way toward the big picture. That&rsquo;s why, at this point, I&rsquo;ll focus only on the VXLAN fabric and won&rsquo;t go into detail about the route controller setup just yet.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Component</th>
+            <th>Role</th>
+            <th>IP Address</th>
+            <th>BGP AS</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VyOS-01-BGW</td>
+            <td>Border Gateway / Leaf</td>
+            <td>10.28.4.100</td>
+            <td>64515</td>
+        </tr>
+        <tr>
+            <td>VyOS-02-Leaf</td>
+            <td>Leaf</td>
+            <td>10.28.4.101</td>
+            <td>64515</td>
+        </tr>
+        <tr>
+            <td>Alpine-PR-01</td>
+            <td>Test VM connected to VyOS-01</td>
+            <td>192.168.250.10/24</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>Alpine-PR-02</td>
+            <td>Test VM connected to VyOS-02</td>
+            <td>192.168.250.11/24</td>
+            <td>—</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>The VyOS-01-BGW router serves a dual role. It acts as a leaf, connecting the Alpine-PR-01 test VM to the client network, while also functioning as a border gateway, thereby serving as the central BGP peering point with the NSX route controllers.</p>
+<p>VyOS-02 is only a leaf for Alpine-PR-02. In addition, EVPN information is exchanged via an iBGP session (L2VPN EVPN) with VyOS-01-BGW (AS 64515).</p>
+<p>The VXLAN configuration uses two VNIs: a Layer 2 VNI (65260), which extends the client segment across both routers, and a Layer 3 VNI (65000), which is associated with the “Tenant” VRF and provides the routing context. Each VNI is connected to its own Linux bridge. For the L2 VNI, I used a static VXLAN remote VTEP for simplicity. The Linux bridge for the L2 VNI is also assigned to the “tenant” VRF so that later, both the test VMs on the physical side and the test VMs in the VPC will belong to the same routing context. Both routers use different export targets, and each imports all routes from the other router. The topic of route targets will become important again later when it comes to configuring the route controller.</p>
+
+
+<div class="image-gallery" id="gallery-ce205821"><a href="/dtgw-vxlan-2/VyOS%20Fabric.png" class="gallery-item" data-lightbox-group="gallery-ce205821" data-title="VyOS Fabric"><img src="/dtgw-vxlan-2/VyOS%20Fabric_hu_650bcb1b41b31335.png" alt="VyOS Fabric" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VyOS Fabric</div>
+                    </a></div>
+<h3 id="vlans-and-interfaces">VLANs and Interfaces<a href="#vlans-and-interfaces" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>As you can clearly see in the diagram, I&rsquo;m using 3 VLANs. Their functions are shown in the table below.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VLAN ID</th>
+            <th>Network</th>
+            <th>Purpose</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>666</td>
+            <td>10.28.66.0/30</td>
+            <td>iBGP EVPN peering between VyOS routers</td>
+        </tr>
+        <tr>
+            <td>1004</td>
+            <td>10.28.4.0/24</td>
+            <td>VXLAN underlay and VTEP/TEP connectivity</td>
+        </tr>
+        <tr>
+            <td>1010</td>
+            <td>10.28.10.0/24</td>
+            <td>MP-eBGP peering with NSX Route Controllers</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>I have listed the interfaces used in the following tables; I have purposely omitted the management interfaces, as they play no role in the test setup.</p>
+<p>VyOS-01-BGW</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Interface</th>
+            <th>IP Address</th>
+            <th>MTU</th>
+            <th>Purpose</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>eth0</td>
+            <td>—</td>
+            <td>9000</td>
+            <td>Physical trunk interface</td>
+        </tr>
+        <tr>
+            <td>eth0.666</td>
+            <td>10.28.66.1/30</td>
+            <td>9000</td>
+            <td>iBGP peering with VyOS-02</td>
+        </tr>
+        <tr>
+            <td>eth0.1004</td>
+            <td>10.28.4.100/24</td>
+            <td>9000</td>
+            <td>VXLAN underlay / VTEP</td>
+        </tr>
+        <tr>
+            <td>eth0.1010</td>
+            <td>10.28.10.1/24</td>
+            <td>9000</td>
+            <td>MP-eBGP peering with NSX RC cluster</td>
+        </tr>
+        <tr>
+            <td>eth1</td>
+            <td>—</td>
+            <td>9000</td>
+            <td>Local client access</td>
+        </tr>
+        <tr>
+            <td>br65260</td>
+            <td>192.168.250.1/24</td>
+            <td>9000</td>
+            <td>Client bridge / Tenant L3 interface</td>
+        </tr>
+        <tr>
+            <td>br65000</td>
+            <td>—</td>
+            <td>9000</td>
+            <td>L3VNI bridge / VRF anchor</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>VyOS-02-Leaf</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Interface</th>
+            <th>IP Address</th>
+            <th>MTU</th>
+            <th>Purpose</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>eth0</td>
+            <td>—</td>
+            <td>9000</td>
+            <td>Physical trunk interface</td>
+        </tr>
+        <tr>
+            <td>eth0.666</td>
+            <td>10.28.66.2/30</td>
+            <td>9000</td>
+            <td>iBGP peering with VyOS-01</td>
+        </tr>
+        <tr>
+            <td>eth0.1004</td>
+            <td>10.28.4.101/24</td>
+            <td>9000</td>
+            <td>VXLAN underlay / VTEP</td>
+        </tr>
+        <tr>
+            <td>eth1</td>
+            <td>—</td>
+            <td>9000</td>
+            <td>Local client access</td>
+        </tr>
+        <tr>
+            <td>br65260</td>
+            <td>192.168.250.2/24</td>
+            <td>9000</td>
+            <td>Client bridge / Tenant L3 interface</td>
+        </tr>
+        <tr>
+            <td>br65000</td>
+            <td>—</td>
+            <td>9000</td>
+            <td>L3VNI bridge / VRF anchor</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>The attentive reader may have noticed by now that no AnyCast address has been configured. In a real fabric, you wouldn’t do that. However, since my focus is on the NSX features, I’ve chosen a simple setup that’s heavily customized to my needs. This is the reason behind why the TestVM on VyOS-01 has the bridge IP 192.168.250.1 as its gateway, and TestVM on VyOS-02 uses 192.168.250.2.</p>
+<h3 id="vyos-config">Vyos Config<a href="#vyos-config" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>VYOS-01-BGW</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">set interfaces bridge br65000 description &#39;L3VNI anchor for tenant VRF&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65000 mac &#39;00:53:00:65:00:00&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65000 member interface vxlan65000
+</span></span><span class="line"><span class="cl">set interfaces bridge br65000 vrf &#39;tenant&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 address &#39;192.168.250.1/24&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 description &#39;Client Network VNI 65260&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 member interface eth1
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 member interface vxlan65260
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 vrf &#39;tenant&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 666 address &#39;10.28.66.1/30&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 666 description &#39;VXLAN Underlay to VYOS-02-LEAF&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 666 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 1004 address &#39;10.28.4.100/24&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 1004 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 1010 address &#39;10.28.10.1/24&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth1 description &#39;Untagged local client network in tenant VRF&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth1 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 description &#39;EVPN L3VNI 65000 toward NSX TGW&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 mtu &#39;1500&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 port &#39;4789&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 source-address &#39;10.28.4.100&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 vni &#39;65000&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 description &#39;L2 VNI 65260 Client Network to VYOS-02-LEAF&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 port &#39;4789&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 remote &#39;10.28.4.101&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 source-address &#39;10.28.4.100&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 vni &#39;65260&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set protocols bgp address-family ipv4-unicast import
+</span></span><span class="line"><span class="cl">set protocols bgp address-family ipv4-unicast redistribute connected
+</span></span><span class="line"><span class="cl">set protocols bgp address-family ipv4-unicast redistribute static
+</span></span><span class="line"><span class="cl">set protocols bgp address-family l2vpn-evpn advertise ipv4 unicast
+</span></span><span class="line"><span class="cl">set protocols bgp address-family l2vpn-evpn advertise-all-vni
+</span></span><span class="line"><span class="cl">set protocols bgp address-family l2vpn-evpn advertise-default-gw
+</span></span><span class="line"><span class="cl">set protocols bgp address-family l2vpn-evpn default-originate ipv4
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 address-family ipv4-unicast default-originate
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 address-family l2vpn-evpn soft-reconfiguration inbound
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 bfd
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 description &#39;NSX Route Controller RC-01&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 remote-as &#39;64520&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 timers holdtime &#39;180&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 timers keepalive &#39;60&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.100 update-source &#39;10.28.10.1&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 address-family ipv4-unicast default-originate
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 address-family l2vpn-evpn soft-reconfiguration inbound
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 bfd
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 description &#39;NSX Route Controller RC-02&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 remote-as &#39;64520&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 timers holdtime &#39;180&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 timers keepalive &#39;60&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.10.101 update-source &#39;10.28.10.1&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.2 address-family l2vpn-evpn
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.2 description &#39;VYOS-02 EVPN Leaf&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.2 remote-as &#39;64515&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.2 timers holdtime &#39;180&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.2 timers keepalive &#39;60&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.2 update-source &#39;10.28.66.1&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set protocols bgp parameters bestpath as-path multipath-relax
+</span></span><span class="line"><span class="cl">set protocols bgp parameters graceful-restart stalepath-time &#39;180&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp parameters no-hard-administrative-reset
+</span></span><span class="line"><span class="cl">set protocols bgp parameters router-id &#39;10.28.10.1&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp system-as &#39;64515&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family ipv4-unicast import
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family ipv4-unicast redistribute connected
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family ipv4-unicast redistribute static
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn advertise ipv4 unicast
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn advertise-default-gw
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn default-originate ipv4
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn rd &#39;10.28.4.100:10&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn route-target export &#39;65000:10&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import &#39;65000:10&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import &#39;65000:20&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn vni 65000
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp parameters graceful-restart stalepath-time &#39;180&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp parameters no-hard-administrative-reset
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp parameters router-id &#39;10.28.10.1&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp system-as &#39;64515&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant table &#39;100&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant vni &#39;65000&#39;
+</span></span></code></pre></div><p>VYOS-02-LEAF</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">set interfaces bridge br65000 description &#39;L3VNI anchor for tenant VRF&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65000 mac &#39;00:53:00:65:00:02&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65000 member interface vxlan65000
+</span></span><span class="line"><span class="cl">set interfaces bridge br65000 vrf &#39;tenant&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 address &#39;192.168.250.2/24&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 description &#39;Client Network VNI 65260&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 member interface eth1
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 member interface vxlan65260
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces bridge br65260 vrf &#39;tenant&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 666 address &#39;10.28.66.2/30&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 666 description &#39;VXLAN Underlay to VYOS-01-BGW&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 666 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 1004 address &#39;10.28.4.101/24&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 1004 description &#39;EVPN VXLAN VTEP Underlay&#39;
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth0 vif 1004 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces ethernet eth1 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 description &#39;EVPN L3VNI 65000&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 mtu &#39;1500&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 port &#39;4789&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 source-address &#39;10.28.4.101&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65000 vni &#39;65000&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 description &#39;L2 VNI 65260 Client Network to VYOS-01-BGW&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 mtu &#39;9000&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 port &#39;4789&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 remote &#39;10.28.4.100&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 source-address &#39;10.28.4.101&#39;
+</span></span><span class="line"><span class="cl">set interfaces vxlan vxlan65260 vni &#39;65260&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set protocols bgp address-family l2vpn-evpn advertise-all-vni
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.1 address-family l2vpn-evpn
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.1 description &#39;VYOS-01 EVPN Gateway&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.1 remote-as &#39;64515&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.1 timers holdtime &#39;180&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.1 timers keepalive &#39;60&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp neighbor 10.28.66.1 update-source &#39;10.28.66.2&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp parameters router-id &#39;10.28.4.101&#39;
+</span></span><span class="line"><span class="cl">set protocols bgp system-as &#39;64515&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn rd &#39;10.28.4.101:10&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn route-target export &#39;65000:20&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import &#39;65000:10&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp address-family l2vpn-evpn route-target import &#39;65000:20&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp parameters router-id &#39;10.28.4.101&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant protocols bgp system-as &#39;64515&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant table &#39;100&#39;
+</span></span><span class="line"><span class="cl">set vrf name tenant vni &#39;65000&#39;
+</span></span></code></pre></div>
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">For clarity, the default settings, management settings, SSH access, NTP, and loopback configuration were removed from the configuration.</div>
+</aside>
+<p>Next, I&rsquo;ll take care of connecting the route controller. The actual differences aren&rsquo;t that big, so I won&rsquo;t go through the setup step by step – I&rsquo;ll just show you the changes I made. If you need more help, you&rsquo;ll find it 
+<a href="https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/" target="_blank" rel="noopener">here</a>.</p>
+<h2 id="route-controller-in-911">Route Controller in 9.1.1<a href="#route-controller-in-911" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>One of the cool new features is that the Route Controller now supports active/active mode and can scale out to up to 8 nodes. To use this effectively, you need at least two BGW routers. In my setup, I’m using just one router that has MP-BGP peering with both Route Controllers. Not ideal, but hey, it’s a lab.</p>
+<p>In general, however, there are a few limitations or prerequisites. In active/active mode, only one MP-BGP interface per Route Controller can be used, even if a Route Controller has three interfaces. A non-configurable interface handles the notification messages during a vMotion operation.  Another interface is used for management traffic. This means all three interfaces are in use. The physical fabric must continue to announce a default route, even when fancy features like Direct Prefix Routing are used - I’ll explain what that is later.</p>
+<p>Since pictures speak louder than words, I&rsquo;ve created a diagram and attached some screenshots showing the key settings of the Route Controller. Since the diagram is quite large, it can be downloaded separately.</p>
+
+
+<div class="image-gallery" id="gallery-8098f134"><a href="/dtgw-vxlan-2/Route%20Controller%20with%20VyOS%20EVPN%20Fabric.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="Route Controller with VyOS EVPN Fabric"><img src="/dtgw-vxlan-2/Route%20Controller%20with%20VyOS%20EVPN%20Fabric_hu_4040912a04161d5c.png" alt="Route Controller with VyOS EVPN Fabric" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller with VyOS EVPN Fabric</div>
+                    </a><a href="/dtgw-vxlan-2/Route%20Controller%20Interfaces.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="Route Controller Interfaces"><img src="/dtgw-vxlan-2/Route%20Controller%20Interfaces_hu_f9cac7727d3e2acd.png" alt="Route Controller Interfaces" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller Interfaces</div>
+                    </a><a href="/dtgw-vxlan-2/Route%20Controller%20MP-BGP.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="Route Controller MP-BGP"><img src="/dtgw-vxlan-2/Route%20Controller%20MP-BGP_hu_16effa25ba7f1135.png" alt="Route Controller MP-BGP" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller MP-BGP</div>
+                    </a><a href="/dtgw-vxlan-2/External%20Connection.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="External Connection"><img src="/dtgw-vxlan-2/External%20Connection_hu_bf9a0a5b000b4298.png" alt="External Connection" width="350" height="350" loading="lazy"><div class="gallery-item-caption">External Connection</div>
+                    </a></div>
+<figure><a href="Route%20Controller%20with%20VyOS%20EVPN%20Fabric.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
+          <img
+            src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="Route Controller with VyOS EVPN Fabric"width="92"
+            height="105"/>
+        </picture></a><figcaption><p>VXLAN EVPN Fabric with RC (click to open)</p></figcaption></figure>
+<h3 id="design-decisions-for-activeactive">Design Decisions for Active/Active<a href="#design-decisions-for-activeactive" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Unlike in active/standby mode, no floating IP is used for the MP-BGP session. This means that the route controllers can be located in independent L3 segments and do not require a shared L2 infrastructure. As for the failure domain, Broadcom recommends using different ESX servers in different clusters and racks (if possible). At least two peerings to external BGW routers per route controller are recommended. ECMP with individual gateway VTEPs is possible. For BGP, the default values of 60/180 seconds are sufficient when BFD is used. While BFD is prohibited in active/standby mode, it is highly recommended in active/active mode.</p>
+<h3 id="direct-prefix-routing">Direct Prefix Routing<a href="#direct-prefix-routing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Strange name, big difference in the data path. The feature was just released in 9.1.1, and it changes quite a bit. In the 9.1 distributed VXLAN connectivity model, traffic between the virtual and physical fabrics was always routed through the BGW routers. With DPR, you can now change this. When this feature is enabled, the route controllers can receive and process specific host routes via the MP-BGP session. In 9.1, only a default route was accepted. If you look at the forwarding table of the Distributed Transit Gateway on the ESX server, you’ll see the difference right away. To make it easier to understand the forwarding table – and so you don&rsquo;t have to search through the diagram for all the information – I&rsquo;ve compiled all the relevant IP addresses in the following tables.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>ESXi Hostname</th>
+            <th>TEP 1 IP Address</th>
+            <th>TEP 2 IP Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>10.28.4.14</td>
+            <td>10.28.4.15</td>
+        </tr>
+        <tr>
+            <td>esx02.vcf.sdn-warrior.cloud</td>
+            <td>10.28.4.10</td>
+            <td>10.28.4.12</td>
+        </tr>
+        <tr>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>10.28.4.11</td>
+            <td>10.28.4.13</td>
+        </tr>
+    </tbody>
+  </table>
+</div><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VyOS Hostname</th>
+            <th>Role</th>
+            <th>VTEP IP Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VYOS-01-BGW</td>
+            <td>Border Gateway / Leaf</td>
+            <td>10.28.4.100</td>
+        </tr>
+        <tr>
+            <td>VYOS-02-Leaf</td>
+            <td>Leaf</td>
+            <td>10.28.4.101</td>
+        </tr>
+    </tbody>
+  </table>
+</div><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Test VM</th>
+            <th>IP Address</th>
+            <th>Connected To</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Alpine-PR-01</td>
+            <td>192.168.250.10/24</td>
+            <td>VYOS-01-BGW</td>
+        </tr>
+        <tr>
+            <td>Alpine-PR-02</td>
+            <td>192.168.250.11/24</td>
+            <td>VYOS-02-Leaf</td>
+        </tr>
+        <tr>
+            <td>Alpine-NSX-01</td>
+            <td>10.100.0.3/29</td>
+            <td>NSX VPC</td>
+        </tr>
+        <tr>
+            <td>Alpine-NSX-02</td>
+            <td>10.100.0.4/29</td>
+            <td>NSX VPC</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>DTGW forwarding Table without DPR:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esx02.vcf.sdn-warrior.cloud&gt; get gateway  5c47d546-9769-4cad-9d93-942a1349579d  forwarding
+</span></span><span class="line"><span class="cl">Sun Oct 11 2026 UTC 12:38:08.233
+</span></span><span class="line"><span class="cl">                                       Logical Routers Forwarding Table                                       
+</span></span><span class="line"><span class="cl">--------------------------------------------------------------------------------------------------------------
+</span></span><span class="line"><span class="cl">Flags Legend: [U: Up], [G: Gateway], [C: Connected], [I: Interface]
+</span></span><span class="line"><span class="cl">[H: Host], [R: Reject], [B: Blackhole], [F: Soft Flush], [E: ECMP]
+</span></span><span class="line"><span class="cl">[S1|S2|S3: TGW Private|Public|External Route Scope]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                   Network                               Gateway                Type               Interface UUID           
+</span></span><span class="line"><span class="cl">==============================================================================================================
+</span></span><span class="line"><span class="cl">0.0.0.0/0                                              10.28.4.100              UGS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">10.100.0.0/29                                           100.64.0.1              UGS2    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">10.100.0.8/32                                           100.64.0.1             UGHS2    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">100.64.0.0/31                                            0.0.0.0                UCI     ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">fc37:a81f:5e4f:4000::/64                                    ::                  UCI     ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">fe80:11c:100:0:50:56ff:fe56:4452/128                        ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">ff02:11c:100::1:ff00:1/128                                  ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">ff02:11c:100::1:ff56:4452/128                               ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">esx02.vcf.sdn-warrior.cloud&gt; 
+</span></span></code></pre></div><p>The important thing here is the S3 route; without DPR, only the default route exists, with the next hop set to 10.28.4.100, which is the VTEP address of my BGW router. If I enable DPR now, the forwarding table will change.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esx02.vcf.sdn-warrior.cloud&gt; get gateway  5c47d546-9769-4cad-9d93-942a1349579d  forwarding
+</span></span><span class="line"><span class="cl">Sun Oct 11 2026 UTC 12:46:58.152
+</span></span><span class="line"><span class="cl">                                       Logical Routers Forwarding Table                                       
+</span></span><span class="line"><span class="cl">--------------------------------------------------------------------------------------------------------------
+</span></span><span class="line"><span class="cl">Flags Legend: [U: Up], [G: Gateway], [C: Connected], [I: Interface]
+</span></span><span class="line"><span class="cl">[H: Host], [R: Reject], [B: Blackhole], [F: Soft Flush], [E: ECMP]
+</span></span><span class="line"><span class="cl">[S1|S2|S3: TGW Private|Public|External Route Scope]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                   Network                               Gateway                Type               Interface UUID           
+</span></span><span class="line"><span class="cl">==============================================================================================================
+</span></span><span class="line"><span class="cl">0.0.0.0/0                                              10.28.4.100              UGS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">10.100.0.0/29                                           100.64.0.1              UGS2    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">10.100.0.8/32                                           100.64.0.1             UGHS2    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">100.64.0.0/31                                            0.0.0.0                UCI     ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">192.168.250.0/24                                       10.28.4.100              UGS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">192.168.250.1/32                                       10.28.4.100             UGHS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">192.168.250.10/32                                      10.28.4.100             UGHS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">192.168.250.11/32                                      10.28.4.101             UGHS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">fc37:a81f:5e4f:4000::/64                                    ::                  UCI     ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">fe80:11c:100:0:50:56ff:fe56:4452/128                        ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">ff02:11c:100::1:ff00:1/128                                  ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">ff02:11c:100::1:ff56:4452/128                               ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">esx02.vcf.sdn-warrior.cloud&gt; 
+</span></span></code></pre></div><p>There are now 4 new routes. All 4 are S3 routes, but 3 of them are host routes (UGHS3), and those are the exciting ones.
+We&rsquo;ll ignore the route 192.168.250.1/32 - it&rsquo;s due to my test setup. It&rsquo;s the local bridge IP address I need for the L2 VNI setup, and it shouldn&rsquo;t appear in a real fabric. The route 192.168.250.11/32 is more interesting. This route corresponds to my test VM, which is connected to my VyOS-02 leaf router. The default gateway for this route is the VTEP IP of the VyOS-02 leaf router, so I have a direct path to my VM without having to go through the BGW router.  I also have a direct path for 192.168.250.10/32, but this test VM terminates at the BGW router, so its VTEP is listed as the next hop in the forwarding table.</p>
+<p>Of course, now I also need to take a look at the routing table on my VyOS-02 leaf.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-02-LEAF:~$ show ip route vrf tenant bgp 
+</span></span><span class="line"><span class="cl">Codes: K - kernel route, C - connected, L - local, S - static,
+</span></span><span class="line"><span class="cl">       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+</span></span><span class="line"><span class="cl">       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+</span></span><span class="line"><span class="cl">       f - OpenFabric, t - Table-Direct,
+</span></span><span class="line"><span class="cl">       &gt; - selected route, * - FIB route, q - queued, r - rejected, b - backup
+</span></span><span class="line"><span class="cl">       t - trapped, o - offload failure
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">IPv4 unicast VRF tenant:
+</span></span><span class="line"><span class="cl">B&gt;* 0.0.0.0/0 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 1d03h25m
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.3/32 [200/0] via 10.28.4.14, br65000 onlink, weight 1, 1d03h20m
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.4/32 [200/0] via 10.28.4.12, br65000 onlink, weight 1, 1d03h20m
+</span></span><span class="line"><span class="cl">B   192.168.250.0/24 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 1d03h25m
+</span></span><span class="line"><span class="cl">B&gt;* 192.168.250.1/32 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 1d03h25m
+</span></span><span class="line"><span class="cl">B&gt;* 192.168.250.10/32 [200/0] via 10.28.4.100, br65000 onlink, weight 1, 00:14:32
+</span></span><span class="line"><span class="cl">vyos@VYOS-02-LEAF:~$ 
+</span></span></code></pre></div><p>If I now compare the next-hop IPs, you can see that I have direct paths to the TEP interfaces of the ESX servers for each of my test VMs in my VPC. When I communicate from my test VM Alpine-PR-02 (192.168.250.11) to the test VM Alpine-NSX-01 (10.100.0.3), the BGW is not included in the data path.</p>
+<p>For comparison, let&rsquo;s now take a look at the routing table on the BGW router.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ show ip route vrf tenant bgp 
+</span></span><span class="line"><span class="cl">Codes: K - kernel route, C - connected, L - local, S - static,
+</span></span><span class="line"><span class="cl">       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+</span></span><span class="line"><span class="cl">       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+</span></span><span class="line"><span class="cl">       f - OpenFabric, t - Table-Direct,
+</span></span><span class="line"><span class="cl">       &gt; - selected route, * - FIB route, q - queued, r - rejected, b - backup
+</span></span><span class="line"><span class="cl">       t - trapped, o - offload failure
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">IPv4 unicast VRF tenant:
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.3/32 [20/0] via 10.28.4.14, br65000 onlink, weight 1, 1d03h42m
+</span></span><span class="line"><span class="cl">                         via 10.28.4.14, br65000 onlink (dup), weight 1, 1d03h42m
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.4/32 [20/0] via 10.28.4.12, br65000 onlink, weight 1, 00:03:07
+</span></span><span class="line"><span class="cl">                         via 10.28.4.12, br65000 onlink (dup), weight 1, 00:03:07
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.8/32 [20/0] via 10.28.4.13, br65000 onlink, weight 1, 00:02:46
+</span></span><span class="line"><span class="cl">                         via 10.28.4.13, br65000 onlink (dup), weight 1, 00:02:46
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.9/32 [20/0] via 10.28.4.15, br65000 onlink, weight 1, 1d03h42m
+</span></span><span class="line"><span class="cl">                         via 10.28.4.15, br65000 onlink (dup), weight 1, 1d03h42m
+</span></span><span class="line"><span class="cl">B&gt;* 192.168.250.11/32 [200/0] via 10.28.4.101, br65000 onlink, weight 1, 02:36:47
+</span></span><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ 
+</span></span></code></pre></div><p>Here I see the same routes as on the Leaf Router, but these are learned by the Route Controller via the MP-BGP session rather than via iBGP. Since I&rsquo;ve peered both Route Controllers to the same BGW, all routes are duplicated, which gives me control-plane redundancy – at least for the Route Controller.</p>
+<h3 id="design-decisions-direct-prefix-routing">Design Decisions Direct Prefix Routing<a href="#design-decisions-direct-prefix-routing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Of course, you shouldn&rsquo;t use this feature across the board for everything. In a large fabric, routing tables can quickly become very large. Broadcom recommends using DPR for latency-sensitive traffic such as S3 or NFS. Additionally, you should define additional route targets for targeted import and export and configure them only on the relevant leaf switches. The additional route targets (RTs) must also be configured in the External Connection for the DTGW. You can see this in my screenshot of the External Connection. I created a separate RT (65000:20) specifically for DPR. Another recommendation is to set up prefix filters. Thanks to DPR, the RC also supports received Type 2 routes and translates them into host prefix forwarding entries for the DTGW on the ESX. Another important point is that each ESX server must be able to communicate with all relevant VTEP IP addresses on the leaf switches via its TEP network. Traffic that cannot be routed via DPR will continue to be routed through the BGW routers.</p>
+<h2 id="rt-type-2-type-5-">RT, Type 2, Type 5 ?!<a href="#rt-type-2-type-5-" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Yes, unfortunately, this topic isn&rsquo;t quite that simple, and to be honest, I&rsquo;m having a bit of a hard time explaining it all in English, but I&rsquo;ll give it a try anyway. I&rsquo;ve already provided a general overview of the differences between Type 2 and Type 5 
+<a href="https://sdn-warrior.org/posts/vcf9.1-dtgw-vxlan/#type-2-vs-type-5" target="_blank" rel="noopener">here</a>. To give a practical example, let&rsquo;s take a look at how the DTGW obtains its information so that I can access my Alpine PR-02 from any VM in my VPC.</p>
+<ol>
+<li>The Alpine-PR-02 VM is connected to the VyOS-02 leaf via eth1. The leaf learns the MAC/IP mapping and creates a Type 2 route based on it.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-02-LEAF:~$ show bgp l2vpn evpn route type 2 
+</span></span><span class="line"><span class="cl">BGP table version is 123, local router ID is 10.28.4.101
+</span></span><span class="line"><span class="cl">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+</span></span><span class="line"><span class="cl">Origin codes: i - IGP, e - EGP, ? - incomplete
+</span></span><span class="line"><span class="cl">EVPN type-1 prefix: [1]:[EthTag]:[ESI]:[IPlen]:[VTEP-IP]:[Frag-id]
+</span></span><span class="line"><span class="cl">EVPN type-2 prefix: [2]:[EthTag]:[MAClen]:[MAC]:[IPlen]:[IP]
+</span></span><span class="line"><span class="cl">EVPN type-3 prefix: [3]:[EthTag]:[IPlen]:[OrigIP]
+</span></span><span class="line"><span class="cl">EVPN type-4 prefix: [4]:[ESI]:[IPlen]:[OrigIP]
+</span></span><span class="line"><span class="cl">EVPN type-5 prefix: [5]:[EthTag]:[IPlen]:[IP]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   Network          Next Hop            Metric LocPrf Weight Path
+</span></span><span class="line"><span class="cl">                    Extended Community
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.101:2
+</span></span><span class="line"><span class="cl"> *&gt;  [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11]
+</span></span><span class="line"><span class="cl">                    10.28.4.101                        32768 i
+</span></span><span class="line"><span class="cl">                    ET:8 RT:64515:65260 RT:65000:20 Rmac:00:53:00:65:00:02
+</span></span></code></pre></div><p>Here we find all the important information: the next hop (10.28.4.101), the IP address (192.168.250.11), the MAC address (bc:24:11:53:89:c5), and the RT (RT:65000:20).</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-02-LEAF:~$ show bgp l2vpn evpn neighbors 10.28.66.1 advertised-routes
+</span></span><span class="line"><span class="cl">BGP table version is 0, local router ID is 10.28.4.101
+</span></span><span class="line"><span class="cl">Default local pref 100, local AS 64515
+</span></span><span class="line"><span class="cl">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+</span></span><span class="line"><span class="cl">Origin codes: i - IGP, e - EGP, ? - incomplete
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   Network          Next Hop            Metric LocPrf Weight Path
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.101:2
+</span></span><span class="line"><span class="cl"> *&gt; [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11]
+</span></span><span class="line"><span class="cl">                                  100  32768 i
+</span></span></code></pre></div><p>The BGW receives the Type 2 route via iBGP. Since RT 65000:20 is configured as an import RT for its tenant VRF, the route can also be imported into the corresponding routing context.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ show bgp l2vpn evpn route type 2 
+</span></span><span class="line"><span class="cl">BGP table version is 123, local router ID is 10.28.10.1
+</span></span><span class="line"><span class="cl">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+</span></span><span class="line"><span class="cl">Origin codes: i - IGP, e - EGP, ? - incomplete
+</span></span><span class="line"><span class="cl">EVPN type-1 prefix: [1]:[EthTag]:[ESI]:[IPlen]:[VTEP-IP]:[Frag-id]
+</span></span><span class="line"><span class="cl">EVPN type-2 prefix: [2]:[EthTag]:[MAClen]:[MAC]:[IPlen]:[IP]
+</span></span><span class="line"><span class="cl">EVPN type-3 prefix: [3]:[EthTag]:[IPlen]:[OrigIP]
+</span></span><span class="line"><span class="cl">EVPN type-4 prefix: [4]:[ESI]:[IPlen]:[OrigIP]
+</span></span><span class="line"><span class="cl">EVPN type-5 prefix: [5]:[EthTag]:[IPlen]:[IP]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   Network          Next Hop            Metric LocPrf Weight Path
+</span></span><span class="line"><span class="cl">                    Extended Community
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.101:2
+</span></span><span class="line"><span class="cl"> *&gt;i [2]:[0]:[48]:[bc:24:11:53:89:c5]
+</span></span><span class="line"><span class="cl">                    10.28.4.101                   100      0 i
+</span></span><span class="line"><span class="cl">                    RT:64515:65260 ET:8
+</span></span><span class="line"><span class="cl"> *&gt;i [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11]
+</span></span><span class="line"><span class="cl">                    10.28.4.101                   100      0 i
+</span></span><span class="line"><span class="cl">                    RT:64515:65260 RT:65000:20 ET:8 Rmac:00:53:00:65:00:02
+</span></span></code></pre></div><p>Here, too, we can see all the relevant information. The BGW is now advertising this route as a Type 2 route to both route controllers.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ show bgp l2vpn evpn neighbors 10.28.10.100 advertised-routes 
+</span></span><span class="line"><span class="cl">BGP table version is 0, local router ID is 10.28.10.1
+</span></span><span class="line"><span class="cl">Default local pref 100, local AS 64515
+</span></span><span class="line"><span class="cl">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+</span></span><span class="line"><span class="cl">Origin codes: i - IGP, e - EGP, ? - incomplete
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   Network          Next Hop            Metric LocPrf Weight Path
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.100:10
+</span></span><span class="line"><span class="cl"> *&gt; [5]:[0]:[0]:[0.0.0.0]
+</span></span><span class="line"><span class="cl">                                       32768 i
+</span></span><span class="line"><span class="cl"> *&gt; [5]:[0]:[24]:[192.168.250.0]
+</span></span><span class="line"><span class="cl">                             0         32768 ?
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.101:2
+</span></span><span class="line"><span class="cl"> *&gt; [2]:[0]:[48]:[bc:24:11:53:89:c5]
+</span></span><span class="line"><span class="cl">                                  100      0 i
+</span></span><span class="line"><span class="cl"> *&gt; [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11]
+</span></span><span class="line"><span class="cl">                                  100      0 i
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ show bgp l2vpn evpn neighbors 10.28.10.101 advertised-routes 
+</span></span><span class="line"><span class="cl">BGP table version is 0, local router ID is 10.28.10.1
+</span></span><span class="line"><span class="cl">Default local pref 100, local AS 64515
+</span></span><span class="line"><span class="cl">Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+</span></span><span class="line"><span class="cl">Origin codes: i - IGP, e - EGP, ? - incomplete
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   Network          Next Hop            Metric LocPrf Weight Path
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.100:10
+</span></span><span class="line"><span class="cl"> *&gt; [5]:[0]:[0]:[0.0.0.0]
+</span></span><span class="line"><span class="cl">                                       32768 i
+</span></span><span class="line"><span class="cl"> *&gt; [5]:[0]:[24]:[192.168.250.0]
+</span></span><span class="line"><span class="cl">                             0         32768 ?
+</span></span><span class="line"><span class="cl">Route Distinguisher: 10.28.4.101:2
+</span></span><span class="line"><span class="cl"> *&gt; [2]:[0]:[48]:[bc:24:11:53:89:c5]
+</span></span><span class="line"><span class="cl">                                  100      0 i
+</span></span><span class="line"><span class="cl"> *&gt; [2]:[0]:[48]:[bc:24:11:53:89:c5]:[32]:[192.168.250.11]
+</span></span><span class="line"><span class="cl">                                  100      0 i
+</span></span></code></pre></div><p>Here you can clearly see that not only is the route to the VM advertised, but also the default route (as a Type 5 route), which is still absolutely necessary.
+As the final step, the Route Controller learns the route when RT 65000:20 has been configured as an import and distributes the forwarding information to the ESX hosts via the CCP. As a result, we see a /32 Host route in the forwarding table on our ESX servers.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">esx02.vcf.sdn-warrior.cloud&gt; get gateway  5c47d546-9769-4cad-9d93-942a1349579d  forwarding
+</span></span><span class="line"><span class="cl">Sun Oct 11 2026 UTC 15:04:16.768
+</span></span><span class="line"><span class="cl">                                       Logical Routers Forwarding Table                                       
+</span></span><span class="line"><span class="cl">--------------------------------------------------------------------------------------------------------------
+</span></span><span class="line"><span class="cl">Flags Legend: [U: Up], [G: Gateway], [C: Connected], [I: Interface]
+</span></span><span class="line"><span class="cl">[H: Host], [R: Reject], [B: Blackhole], [F: Soft Flush], [E: ECMP]
+</span></span><span class="line"><span class="cl">[S1|S2|S3: TGW Private|Public|External Route Scope]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                   Network                               Gateway                Type               Interface UUID           
+</span></span><span class="line"><span class="cl">==============================================================================================================
+</span></span><span class="line"><span class="cl">0.0.0.0/0                                              10.28.4.100              UGS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">10.100.0.0/29                                           100.64.0.1              UGS2    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">10.100.0.8/32                                           100.64.0.1             UGHS2    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">100.64.0.0/31                                            0.0.0.0                UCI     ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">192.168.250.0/24                                       10.28.4.100              UGS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">192.168.250.1/32                                       10.28.4.100             UGHS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">192.168.250.10/32                                      10.28.4.100             UGHS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">192.168.250.11/32                                      10.28.4.101             UGHS3    0016a939-70d3-454b-82f9-80d697d59940
+</span></span><span class="line"><span class="cl">fc37:a81f:5e4f:4000::/64                                    ::                  UCI     ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">fe80:11c:100:0:50:56ff:fe56:4452/128                        ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">ff02:11c:100::1:ff00:1/128                                  ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span><span class="line"><span class="cl">ff02:11c:100::1:ff56:4452/128                               ::                  UCIH    ebcf7572-759b-58b0-aa6c-c67d0741855a
+</span></span></code></pre></div><p>Basically, that&rsquo;s the whole magic behind DPR. Since the routes are distributed via the BGW router, the traffic can still be forwarded directly to the leaf.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">For this example, I&rsquo;ve shortened the CLI output to keep the example clear.</div>
+</aside>
+<p>Now that we have the basics covered, we can expand the entire setup to include stateful services. Yes, you heard that right. VCF 9.1.1 now also supports stateful services using the Distributed VXLAN Connectivity Model.</p>
+<h2 id="vna-and-route-controller---its-a-perfect-match">VNA and Route Controller - its a perfect match<a href="#vna-and-route-controller---its-a-perfect-match" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>I&rsquo;ve been waiting for this feature, and I had hoped it would be included in 9.1 when I checked out the RC. For anyone who doesn&rsquo;t know what the VNA is, what it can do, or how it&rsquo;s set up, I recommend reading this 
+<a href="https://sdn-warrior.org/posts/vcf9.1-vna-part2/" target="_blank" rel="noopener">article</a> and 
+<a href="https://sdn-warrior.org/posts/vcf9.1-vna-vpc/" target="_blank" rel="noopener">this</a> one first.</p>
+<p>VNA Support enables the following:</p>
+<ul>
+<li>Default Outbound NAT (Auto-SNAT)</li>
+<li>custom NAT</li>
+<li>DHCP relay for external DHCP servers</li>
+<li>load balancing</li>
+</ul>
+<p>This also means that you can use VKS and Automation in “All Apps” mode, but setting that up is a topic for a separate blog post. Here, I&rsquo;ll just show you how to make the VNA work in the distributed VXLAN model.</p>
+<p>Unfortunately, you can&rsquo;t simply enable stateful services on the Route Controller cluster. To do so, you must deploy a dedicated VNA cluster consisting of at least one VNA appliance. In my setup, I have therefore deployed a VNA node.</p>
+<p>To use the VNA, you must configure it in the VPC connectivity profile. I encountered an error here and received the following error message:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">This feature requires TN Minimum Version &gt;= 9.1.1.0
+</span></span></code></pre></div><p>My deployment was a greenfield 9.1.1 setup that I had previously patched to 9.1.1.0100. And so my environment should actually have met all the requirements.</p>
+
+
+<aside class="admonition bug" data-admonition-type="bug">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon">
+      <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>KB Article 455545</b>
+    </div>
+    <div class="admonition-content">There is a Knowledge Base article that describes my exact problem and helped me resolve the issue quickly. 
+<a href="https://knowledge.broadcom.com/external/article/455545/cannot-configure-vpc-connectivity-profil.html" target="_blank" rel="noopener">https://knowledge.broadcom.com/external/article/455545/cannot-configure-vpc-connectivity-profil.html</a> In addition, the same solution is included in the design guide. 
+<a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/ethernet-vpn-evpn/distributed-vxlan-connection/enable-advanced-networking-services-for-distributed-vxlan-connections.html" target="_blank" rel="noopener">https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/ethernet-vpn-evpn/distributed-vxlan-connection/enable-advanced-networking-services-for-distributed-vxlan-connections.html</a></div>
+</aside>
+<p>To resolve the issue, simply set the TN version to 9.1.1.0 via the API.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">PUT https://&lt;nsx-mgr&gt;/policy/api/v1/infra/sites/default/enforcement-points/default/host-transport-nodes/feature-opt-in 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">   &#34;host_tn_min_os_version&#34;: &#34;9.1.1.0&#34;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>It took about 5 minutes before I was able to configure the VNA in the VPC Connectivity Profile.
+Once the VNA is configured in the profile, a service subnet is configured for the VPC gateway. As you can see from the diagram, the VNA connection is set up exactly the same way as if I were using a DTGW with VLAN-backed connectivity.</p>
+
+
+<div class="image-gallery" id="gallery-da7f62cb"><a href="/dtgw-vxlan-2/VPC%20Connectivity%20Profile.png" class="gallery-item" data-lightbox-group="gallery-da7f62cb" data-title="VPC Connectivity Profile"><img src="/dtgw-vxlan-2/VPC%20Connectivity%20Profile_hu_bf292709b4cb7380.png" alt="VPC Connectivity Profile" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC Connectivity Profile</div>
+                    </a><a href="/dtgw-vxlan-2/VPC%20Topology.png" class="gallery-item" data-lightbox-group="gallery-da7f62cb" data-title="VPC Topology"><img src="/dtgw-vxlan-2/VPC%20Topology_hu_63dd1a8d4173e426.png" alt="VPC Topology" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC Topology</div>
+                    </a><a href="/dtgw-vxlan-2/Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" class="gallery-item" data-lightbox-group="gallery-da7f62cb" data-title="Route Controller with Vyos EVPN Fabric and VNA"><img src="/dtgw-vxlan-2/Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA_hu_f90e2479031318af.png" alt="Route Controller with Vyos EVPN Fabric and VNA" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller with Vyos EVPN Fabric and VNA</div>
+                    </a></div>
+<figure><a href="Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
+          <img
+            src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="Route Controller with VyOS EVPN Fabric and VNA"width="92"
+            height="105"/>
+        </picture></a><figcaption><p>VXLAN EVPN Fabric with RC and VNA (click to open)</p></figcaption></figure>
+<p>For my test, I created a private segment in my VPC and deployed a test VM (Alpine-NSX-03/10.10.0.3).
+My VNA appliance is on my ESX Host 3, and DPR is enabled. When I look at the traffic in Traceflow now, I can clearly see how the traffic flows from Alpine-NSX-03 to Alpine-PR-02.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>OT</th>
+            <th>Transport Node</th>
+            <th>Component</th>
+            <th>IP Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Injected</td>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>alpine-nsx-03.vmx@cf682e4f-9ae8-<!-- raw HTML omitted -->494a-8f0f-91e6b1874135</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>vpc01-private</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>Services Subnet</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx01.vcf.sdn-warrior.cloud</td>
+            <td>Physical</td>
+            <td>Local:10.28.4.15<!-- raw HTML omitted --> Remote:10.28.4.13</td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>vna01</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>vna01</td>
+            <td>Edge Host Switch</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>vna01</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>vna01</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>vna01</td>
+            <td>NAT</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>vna01</td>
+            <td>NAT</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>vna01</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>vna01</td>
+            <td>Edge Host Switch</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>vna01</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>Physical</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>Services Subnet</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>VPC01</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>transit-lr-71e28b38-6043-4654-<!-- raw HTML omitted -->ad38-1367f351ae0d</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>VXLAN</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>VXLAN</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Received</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>dtgw-evpn-transit-ls-65000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Forwarded</td>
+            <td>esx03.vcf.sdn-warrior.cloud</td>
+            <td>Physical</td>
+            <td>Local:10.28.4.13<!-- raw HTML omitted --> Remote:10.28.4.101</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>What becomes clear here is that the traffic is routed through the VNA appliance due to the default outbound NAT, and that the traffic is passed on to the physical network via the TEP interface of ESX03. Furthermore, the destination is not the BGW router, but the leaf to which the destination VM is connected. You can view the default outbound NAT IP (10.100.0.8) in the VPC overview in vCenter or in NSX. There is a dedicated /32 route for the VNA on the VyOS fabric.</p>
+
+
+<div class="image-gallery" id="gallery-fe1fa20a"><a href="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP.png" class="gallery-item" data-lightbox-group="gallery-fe1fa20a" data-title="Default Outbound NAT IP"><img src="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP_hu_ff2d0ef8ca446621.png" alt="Default Outbound NAT IP" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Default Outbound NAT IP</div>
+                    </a></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ show ip route vrf tenant 
+</span></span><span class="line"><span class="cl">Codes: K - kernel route, C - connected, L - local, S - static,
+</span></span><span class="line"><span class="cl">       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+</span></span><span class="line"><span class="cl">       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+</span></span><span class="line"><span class="cl">       f - OpenFabric, t - Table-Direct,
+</span></span><span class="line"><span class="cl">       &gt; - selected route, * - FIB route, q - queued, r - rejected, b - backup
+</span></span><span class="line"><span class="cl">       t - trapped, o - offload failure
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">IPv4 unicast VRF tenant:
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.3/32 [20/0] via 10.28.4.14, br65000 onlink, weight 1, 1d06h53m
+</span></span><span class="line"><span class="cl">                         via 10.28.4.14, br65000 onlink (dup), weight 1, 1d06h53m
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.4/32 [20/0] via 10.28.4.12, br65000 onlink, weight 1, 03:13:50
+</span></span><span class="line"><span class="cl">                         via 10.28.4.12, br65000 onlink (dup), weight 1, 03:13:50
+</span></span><span class="line"><span class="cl">B&gt;* 10.100.0.8/32 [20/0] via 10.28.4.13, br65000 onlink, weight 1, 00:23:02
+</span></span><span class="line"><span class="cl">                         via 10.28.4.13, br65000 onlink (dup), weight 1, 00:23:02
+</span></span><span class="line"><span class="cl">C&gt;* 192.168.250.0/24 is directly connected, br65260, weight 1, 1d03h29m
+</span></span><span class="line"><span class="cl">L&gt;* 192.168.250.1/32 is directly connected, br65260, weight 1, 1d03h29m
+</span></span><span class="line"><span class="cl">B&gt;* 192.168.250.11/32 [200/0] via 10.28.4.101, br65000 onlink, weight 1, 05:47:30
+</span></span><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ 
+</span></span></code></pre></div><p>What looks so complicated in the drawing isn&rsquo;t really that complicated, is it?</p>
+<h3 id="special-case-external-ip">Special Case: External IP<a href="#special-case-external-ip" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>A quick note on external IPs: As you probably know, you can easily assign an external IP in vCenter by right-clicking a VM in a private segment. As soon as you do this, a reflexive 1-to-1 NAT is created on the ESX server, which automatically disables the default outbound NAT for the VM. As a result, a /32 route appears in VyOS for the external IP, pointing to the TEP IP of the ESX server on which the VM is running. Additionally, no traffic from this VM will pass through the VNA.  This sounds good at first, but it comes with a drawback: reflexive NAT is stateless, meaning it exposes my VM and makes it more vulnerable since there is no session awareness, return traffic validation, and so on. Therefore, the recommendation is to use a combination of DNAT and SNAT instead if a VM in the private segment needs to be exposed, as this gives me more control. Of course, it always depends on the use case.</p>
+<h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>With VCF 9.1.1, connecting VPCs becomes even more flexible, but this comes at the cost of a certain degree of complexity. In my view, the VNA extension is what makes Distributed VXLAN Connectivity truly interesting, as it allows you to harness the full potential of VPCs and, thanks to DPR, gives you significant control over the actual data path. The active/active setup is also a much-needed enhancement and makes my architecture more flexible and robust. VCF 9.1.1 offers even more new features, but that’s a topic for another article.</p>
+
+			</div>
+			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+      <path
+         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
+      <path
+         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
+   </svg></abbr></a></div>
+
+
+<div class="coffee-support">
+    <span class="coffee-support-text">Enjoyed my work?</span>
+    <a
+        href="https://www.buymeacoffee.com/sdnwarrior"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="coffee-support-link"
+    >
+        [ BUY ME A COFFEE ]
+    </a>
+</div>
+
+
+			<div class="post-divider">
+  				<img src="/end.png" alt="End graphic" loading="lazy">
+			</div>
+
+<div class="related-posts thin">
+	<h2>See Also</h2>
+	<ul>
+	
+	<li><a href="/posts/vcf9.1-dtgw-vxlan/">VCF 9.1 - DTGW &amp; VNA: the route controller within me</a></li>
+	
+	<li><a href="/posts/vcf9.1-vna-part2/">VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</a></li>
+	
+	<li><a href="/posts/vcf9.1-vna-vpc/">VCF 9.1 - VNA and VPCs</a></li>
+	
+	<li><a href="/posts/vcf9.1-vpcs-connectivity-policy/">VCF 9.1 - VPCs Connectivity Policies</a></li>
+	
+	<li><a href="/posts/vcf9-nsx-vpc-part3/">VCF 9 - NSX VPC Part 3 - Security</a></li>
+	
+	</ul>
+</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9.1-lets-encrypt-automation/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+   </svg></span><br><span>VCF 9.1 - C.E.R.B.E.R.U.S.: A Let&#39;s Encrypt Automation Pipeline</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+<link rel="stylesheet" href="/klaro/klaro.css?v=1">
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

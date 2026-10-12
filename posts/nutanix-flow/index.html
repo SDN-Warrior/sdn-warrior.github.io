@@ -294,17 +294,17 @@ The network controller manages the network services configured via Prism and mus
     </div>
     <div class="admonition-content">If, like me, you want to test Flow 7, you must update the CE Edition to Prism Version 7.5.x, AOS 7.5.x, and AHV 11. As of today, this can only be done by manually uploading the packages from the Partner Portal. Today, I’m not describing any features that you couldn’t do with an older version of Flow. X-Small Prism installations do not support Flow by the way.</div>
 </aside>
-<figure><a href="02.png"><picture><source srcset="/nutanix-flow/02_hu_1db04cffcf8695.png" type="image/png">
+<figure><a href="02.png"><picture><source srcset="/nutanix-flow/02_hu_dc0a64cda8aaa307.png" type="image/png">
           <img
-            src="/nutanix-flow/02_hu_1db04cffcf8695.png"alt="Software Components"width="2978"
+            src="/nutanix-flow/02_hu_dc0a64cda8aaa307.png"alt="Software Components"width="2978"
             height="1718"/>
         </picture></a><figcaption><p>Software Components</p></figcaption></figure>
 <p>Once the patching is done—and yes, I know it’s not as convenient as being able to update everything online—we can finally start enabling Flow.
 P.S.: Flow 7 is supposed to be included in the next release of the CE Edition—at least that&rsquo;s what I was told, so take that with a grain of salt.</p>
 <p>To enable Flow, navigate to Flow Management via <em><strong>Prism Central -&gt; Infrastructure -&gt; Prism Central Settings -&gt; Flow Management</strong></em>. There, you can enable Flow with the click of a button. The only thing left to select is the deployment mode, and if you look at the resources required for the standalone deployment, it should be clear that I chose the <em><strong>Integrated with Prism Central</strong></em> option. And to be honest, that’s pretty much it. The deployment happens completely automatically in the background, and no interaction is necessary. For me, it took about 10 minutes for everything to be ready.</p>
-<figure><a href="01.png"><picture><source srcset="/nutanix-flow/01_hu_8d052a693cc66bd4.png" type="image/png">
+<figure><a href="01.png"><picture><source srcset="/nutanix-flow/01_hu_f9a5e31f9cd313cf.png" type="image/png">
           <img
-            src="/nutanix-flow/01_hu_8d052a693cc66bd4.png"alt="Flow deployment"width="1439"
+            src="/nutanix-flow/01_hu_f9a5e31f9cd313cf.png"alt="Flow deployment"width="1439"
             height="1168"/>
         </picture></a><figcaption><p>Flow deployment</p></figcaption></figure>
 <p>I really have to give Nutanix credit here—that was truly a great user experience. I wish NSX were this easy to deploy. Sure, I don’t have as many options for designing my environment as I do with NSX, though VCF’s approach is pretty rigid anyway, but everything here actually feels like it’s all part of a single solution. Flow integrates seamlessly into Prism Central, so no additional UI is needed.</p>
@@ -376,9 +376,9 @@ P.S.: Flow 7 is supposed to be included in the next release of the CE Edition—
 <p>Nutanix operates somewhat differently here than VMware does with NSX. This is because Flow does not have anything like EdgeVMs. There is a VyOS-based network gateway appliance required for VPN, BGP, and VxLAN configurations, but it is not comparable to the T0/T1 concept or the central transit gateway. For the VPC, I’m not looking into that for now. Furthermore, Nutanix follows the concept of NAT gateway services or No-NAT gateway services.
 No-NAT/NAT Gateway Services require AHV and are the default when creating a VPC. The service is automatically created on an AHV host. By default, two hosts are automatically selected from the cluster and act as No-NAT/NAT Gateway Service hosts. This can be expanded to up to four hosts.
 The advantage of this approach, compared to NSX, is that it supports stateful SNAT without requiring the deployment of additional edge VMs, since the entire solution runs automatically as a service on the AHV host. Nutanix automatically determines which VPC uses which AHV host with the NAT Gateway service.</p>
-<figure><a href="07.png"><picture><source srcset="/nutanix-flow/07_hu_f441410c9c8736c1.png" type="image/png">
+<figure><a href="07.png"><picture><source srcset="/nutanix-flow/07_hu_e2f3c66f1863779c.png" type="image/png">
           <img
-            src="/nutanix-flow/07_hu_f441410c9c8736c1.png"alt="VPCs"width="2021"
+            src="/nutanix-flow/07_hu_e2f3c66f1863779c.png"alt="VPCs"width="2021"
             height="840"/>
         </picture></a><figcaption><p>VPC</p></figcaption></figure>
 <p>Every VPC automatically includes a virtual router, which is connected to at least one but no more than two external networks. An external network is the primary way traffic enters and exits a VPC. There are two types of external networks: NAT and Routed (NoNAT). A VPC can have a maximum of one network of each type. This explains the limit of two external networks. VPCs can share the external network, as I showed in my example diagram.</p>
@@ -392,9 +392,9 @@ The advantage of this approach, compared to NSX, is that it supports stateful SN
 <p>Let&rsquo;s finally get to the fun part.</p>
 <h3 id="external-subnet">External Subnet<a href="#external-subnet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>To create a VPC, you must first define and configure an external network. To do this, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Subnets -&gt; Create Subnet</strong></em> in Prism Central. Of course, the VLAN must be connected to every AHV host, but I think that goes without saying; if not, go back and review the theory section.</p>
-<figure><a href="03.png"><picture><source srcset="/nutanix-flow/03_hu_8dd344683f227022.png" type="image/png">
+<figure><a href="03.png"><picture><source srcset="/nutanix-flow/03_hu_4aa62624eb416896.png" type="image/png">
           <img
-            src="/nutanix-flow/03_hu_8dd344683f227022.png"alt="External Subnet"width="1669"
+            src="/nutanix-flow/03_hu_4aa62624eb416896.png"alt="External Subnet"width="1669"
             height="1306"/>
         </picture></a><figcaption><p>External Subnet</p></figcaption></figure>
 <p>External subnets for VPCs cannot be of the VLAN Basic networking type and are therefore automatically managed by the network controller. In this setup, VLAN must be selected as the subnet type (Overlay would only be possible if we wanted to connect a transit VPC).
@@ -403,16 +403,16 @@ Once the network has been created using Save, you can proceed to create a VPC.</
 <h3 id="new-vpc">New VPC<a href="#new-vpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>To create the VPC, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Virtual Private Clouds -&gt; Create VPC</strong></em>.
 The settings are fairly self-explanatory.
-<figure><a href="05.png"><picture><source srcset="/nutanix-flow/05_hu_6553f87c9efde8ad.png" type="image/png">
+<figure><a href="05.png"><picture><source srcset="/nutanix-flow/05_hu_c69685d6bcc9c158.png" type="image/png">
           <img
-            src="/nutanix-flow/05_hu_6553f87c9efde8ad.png"alt="VPC Setup"width="1700"
+            src="/nutanix-flow/05_hu_c69685d6bcc9c158.png"alt="VPC Setup"width="1700"
             height="1229"/>
         </picture></a><figcaption><p>VPC Setuo</p></figcaption></figure>
 You need to enter a name, connect an external network, and, as mentioned earlier, this network must be of the VLAN type. In our simple example, we can also enable “Set this subnet as the default next hop for outbound traffic.”
 This option creates a static default route 0.0.0.0/0 via 192.168.200.1 in the virtual VPC router. I leave the SNAT IP set to “auto assigned.” Here, you could manually specify two SNAT IPs from the pool to have more control over outbound traffic. Additionally, the number of gateway hosts can be specified.</p>
-<figure><a href="06.png"><picture><source srcset="/nutanix-flow/06_hu_7ebaf19b6eb67262.png" type="image/png">
+<figure><a href="06.png"><picture><source srcset="/nutanix-flow/06_hu_7989ef3986cb9aba.png" type="image/png">
           <img
-            src="/nutanix-flow/06_hu_7ebaf19b6eb67262.png"alt="VPC External Subnet"width="1680"
+            src="/nutanix-flow/06_hu_7989ef3986cb9aba.png"alt="VPC External Subnet"width="1680"
             height="1305"/>
         </picture></a><figcaption><p>VPC External Subnet</p></figcaption></figure>
 <p>As a last option, you can configure one or more DNS servers in the VPC.
@@ -421,36 +421,36 @@ We&rsquo;re almost there, I promise. Now all that&rsquo;s left is to create a VP
 <h3 id="vpc-subnet">VPC Subnet<a href="#vpc-subnet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>This subnet is a private network, meaning that subnets with the same network address can be created across multiple VPCs, since they can only communicate within the VPC and rely on SNAT from the gateway service host for external communication. As long as they are unique within the VPC, everything is fine.
 To create such a subnet, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Subnets -&gt; Create Subnet</strong></em>.</p>
-<figure><a href="04.png"><picture><source srcset="/nutanix-flow/04_hu_2b3695e02c098b98.png" type="image/png">
+<figure><a href="04.png"><picture><source srcset="/nutanix-flow/04_hu_4ef928b473df8978.png" type="image/png">
           <img
-            src="/nutanix-flow/04_hu_2b3695e02c098b98.png"alt="VPC Subnet"width="1676"
+            src="/nutanix-flow/04_hu_4ef928b473df8978.png"alt="VPC Subnet"width="1676"
             height="1309"/>
         </picture></a><figcaption><p>Create a private VPC Subnet</p></figcaption></figure>
 <p>Here, too, the settings are very straightforward. We need a subnet name; this time, the type must be “Overlay” since we want to create a VPC subnet. The subnet must be assigned to the correct VPC—in my example, it’s VPC02. The actual subnet prefix and the gateway must be configured. If we don’t want to use automatic IP addressing in the subnet, we’d be done here.
 In my example, however, I want to keep this option open, so I’m defining an IP pool. When creating the VM, an IP address can then be automatically assigned from this pool. Since the VPC has a DNS server configuration, I don’t need to adjust anything in the domain settings to ensure that, at the end of the day, my VMs are assigned the correct DNS servers. Once the subnet has been saved and created, it can be used like any other network in Nutanix with IPAM enabled.</p>
-<figure><a href="08.png"><picture><source srcset="/nutanix-flow/08_hu_f76da280bb1fb28e.png" type="image/png">
+<figure><a href="08.png"><picture><source srcset="/nutanix-flow/08_hu_9740829f071498c0.png" type="image/png">
           <img
-            src="/nutanix-flow/08_hu_f76da280bb1fb28e.png"alt="Subnets"width="1716"
+            src="/nutanix-flow/08_hu_9740829f071498c0.png"alt="Subnets"width="1716"
             height="902"/>
         </picture></a><figcaption><p>VPC Subnets</p></figcaption></figure>
 <p>As you can clearly see in the screenshot, I’ve created two VPC subnets, and both use the same IP network; however, since they’re in separate VPCs, there are no issues, and each VM can communicate with the outside world.</p>
 <h2 id="testing-the-north-south-connection">Testing the North-South connection<a href="#testing-the-north-south-connection" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>To test out the whole setup, I created two Alpine Linux VMs, connected each to one of the two networks I had set up, and had Nutanix IPAM assign an IP address to each. I’ll admit that this whole Nutanix IPAM thing still confuses me a bit, and I need to take a closer look at it when I get the chance. On the one hand, it’s practical; on the other, it’s a bit annoying—but that’s just my current opinion, based on limited experience with the feature.</p>
 <p>Anyway—let&rsquo;s get back on track. I&rsquo;m happy to report that the VMs were automatically assigned IP addresses, and they were able to connect to the internet via SNAT right away.</p>
-<figure><a href="09.png"><picture><source srcset="/nutanix-flow/09_hu_563577d1adc70150.png" type="image/png">
+<figure><a href="09.png"><picture><source srcset="/nutanix-flow/09_hu_675edd0cb5138eea.png" type="image/png">
           <img
-            src="/nutanix-flow/09_hu_563577d1adc70150.png"alt="MTR"width="1078"
+            src="/nutanix-flow/09_hu_675edd0cb5138eea.png"alt="MTR"width="1078"
             height="757"/>
         </picture></a><figcaption><p>My Traceroute</p></figcaption></figure>
 <p>To test this, I used the My Tracroute tool, and in the screenshot you can clearly see the gateway I configured as an external VLAN listed as the third hop—in this case, my LAB router. As a cross-check, I look at the assigned NAT IP addresses for the VPC in the VPC Summary and filter for outbound traffic in my firewall; in the firewall log, I see the generated traffic using the second IP address of my VPC as SNAT IP.</p>
-<figure><a href="10.png"><picture><source srcset="/nutanix-flow/10_hu_9a1253c2a7b0cef8.png" type="image/png">
+<figure><a href="10.png"><picture><source srcset="/nutanix-flow/10_hu_be84c76e6d87bbe6.png" type="image/png">
           <img
-            src="/nutanix-flow/10_hu_9a1253c2a7b0cef8.png"alt="VPC SNAT IPs"width="1266"
+            src="/nutanix-flow/10_hu_be84c76e6d87bbe6.png"alt="VPC SNAT IPs"width="1266"
             height="745"/>
         </picture></a><figcaption><p>VPC SNAT IPs</p></figcaption></figure>
-<figure><a href="11.png"><picture><source srcset="/nutanix-flow/11_hu_cf83ffd4ff4fd6e0.png" type="image/png">
+<figure><a href="11.png"><picture><source srcset="/nutanix-flow/11_hu_3485f386b9f09864.png" type="image/png">
           <img
-            src="/nutanix-flow/11_hu_cf83ffd4ff4fd6e0.png"alt="Firewall"width="1439"
+            src="/nutanix-flow/11_hu_3485f386b9f09864.png"alt="Firewall"width="1439"
             height="734"/>
         </picture></a><figcaption><p>Firewall</p></figcaption></figure>
 <p>So our VPC is now fully functional, but one problem remains. While the VM can communicate outbound, by default it is initially isolated from the outside world. Perhaps I should also mention that VMs within a VPC can communicate with all subnets in that VPC, though this is one of the basic features of a VPC.

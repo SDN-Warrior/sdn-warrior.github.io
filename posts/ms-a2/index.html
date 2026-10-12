@@ -381,9 +381,9 @@ What I find a little strange is the network card selection. While the MS-01 has 
 <li><strong>MS-A2</strong>: 32 vCPUs (max useeable cores on Ryzen 9 9955HX)</li>
 </ul>
 <p>Both ESXi server had the <strong>power policy set to High Performance</strong>, and Cinebench 2024.01 was executed in a continuous loop for 30 minutes to simulate thermal and sustained performance under load.</p>
-<figure><a href="04.png"><picture><source srcset="/ms-a2/04_hu_be80f4599837500a.png" type="image/png">
+<figure><a href="04.png"><picture><source srcset="/ms-a2/04_hu_735f4eb4f68213.png" type="image/png">
           <img
-            src="/ms-a2/04_hu_be80f4599837500a.png"alt="Cinebench"width="2189"
+            src="/ms-a2/04_hu_735f4eb4f68213.png"alt="Cinebench"width="2189"
             height="781"/>
         </picture></a><figcaption><p>Cinebench on MS-A2 (click to enlarge)</p></figcaption></figure>
 <p>This may not be a perfect test, but since the MS-01 is already in lab operation, I didn&rsquo;t want to install Windows 11 natively. Of course, the Windows 11 test VM ran exclusively on the two hosts so as not to distort the results.</p>
@@ -537,9 +537,9 @@ The principal storage is NFS. If you&rsquo;re wondering how that works, I wrote 
 <a href="https://sdn-warrior.org/posts/vcf-import-cluster/" target="_blank" rel="noopener">here</a>.</p>
 <p>If you&rsquo;re good at math, you&rsquo;ll have noticed that 3x 45 GB RAM is more than 128 GB RAM, but a little oversubscription never hurt anyone (except when it comes to licenses).</p>
 <p>After everything had been migrated offline, since Intel and AMD are not compatible at all and therefore no live migration between the two systems is possible, I started VCF and the poor MS-A2 immediately went into full load.</p>
-<figure><picture><source srcset="/ms-a2/05_hu_fd3a693a75c2dbc1.png" type="image/png">
+<figure><picture><source srcset="/ms-a2/05_hu_85018b879be28a1e.png" type="image/png">
           <img
-            src="/ms-a2/05_hu_fd3a693a75c2dbc1.png"alt="A2 full load"width="1098"
+            src="/ms-a2/05_hu_85018b879be28a1e.png"alt="A2 full load"width="1098"
             height="384"/>
         </picture><figcaption><p>MS-A2 on full load</p></figcaption></figure>
 <p>Poor sweet summer child - the MS-A2 becomes slightly louder and the temperatures rise.</p>
@@ -555,9 +555,9 @@ Only NSX Manager is taking its time. But we are already familiar with that.</li>
 <h2 id="wheres-the-poop-robin">Where&rsquo;s the poop, Robin?<a href="#wheres-the-poop-robin" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>I&rsquo;m not sure which of my readers are familiar with the series, but never mind. AMD and NSX is one of those things. Officially, NSX does not work on Ryzen or other AMD consumer CPUs.</p>
 <p>At first, I was a little surprised, because I knew that NSX Edges cause problems during installation or upgrade on AMD consumer CPUs, but I deployed my Edges on Intel. A quick look at the console of one of my Edge VMs revealed the following.</p>
-<figure><picture><source srcset="/ms-a2/06_hu_a5f1805ef7776353.png" type="image/png">
+<figure><picture><source srcset="/ms-a2/06_hu_e11db21b9f62024a.png" type="image/png">
           <img
-            src="/ms-a2/06_hu_a5f1805ef7776353.png"alt="Edge VM"width="1490"
+            src="/ms-a2/06_hu_e11db21b9f62024a.png"alt="Edge VM"width="1490"
             height="1021"/>
         </picture><figcaption><p>Stress on the EdgeVM</p></figcaption></figure>
 <p>So, at first, I was pretty clueless. Luckily, there&rsquo;s the awesome vExpert community, because a) I&rsquo;m getting older and forgetting more than I want to admit, and b) I don&rsquo;t always know everything.

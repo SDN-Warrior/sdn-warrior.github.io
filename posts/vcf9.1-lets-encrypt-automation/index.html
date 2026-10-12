@@ -266,7 +266,7 @@ Now that all the confusion has hopefully been straightened out, I can finally st
 <p>Since, as we all know, a picture is worth a thousand words, I&rsquo;ve created a workflow diagram.</p>
 
 
-<div class="image-gallery" id="gallery-01821cf2"><a href="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow.jpg" class="gallery-item" data-lightbox-group="gallery-01821cf2" data-title="C.E.R.B.E.R.U.S. Workflow"><img src="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_24e026cf3787a078.jpg" alt="C.E.R.B.E.R.U.S. Workflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">C.E.R.B.E.R.U.S. Workflow</div>
+<div class="image-gallery" id="gallery-01821cf2"><a href="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow.jpg" class="gallery-item" data-lightbox-group="gallery-01821cf2" data-title="C.E.R.B.E.R.U.S. Workflow"><img src="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_74bdebafd965a79b.jpg" alt="C.E.R.B.E.R.U.S. Workflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">C.E.R.B.E.R.U.S. Workflow</div>
                     </a></div>
 <p>At first glance, the workflow is very simple: a certificate definition must be uploaded to Gitea; the runner retrieves it and uses Ansible to trigger the VCF Operations API to generate a CSR. Next, the actual certificate is issued via ACME and Let’s Encrypt. Finally, it’s passed to VCF via the VCF Operations API and replaced on the target system. Simple, right? Well, we’ll get to that later. The great thing about this workflow is that the certificate&rsquo;s private key is never accessible to any systems. The key remains securely with VCF Operations.</p>
 <p>Now that the principle is clear, there are still a few requirements that our Linux system must meet. The following software is required:</p>
@@ -475,7 +475,7 @@ To keep this example simple, I’m using a single gitea-runner user for the enti
 </span></span><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> --now gitea-runner
 </span></span></code></pre></div>
 
-<div class="image-gallery" id="gallery-6ce628b3"><a href="/vcf91-cert-pipeline/Gitea%20Runner.jpg" class="gallery-item" data-lightbox-group="gallery-6ce628b3" data-title="Gitea Runner"><img src="/vcf91-cert-pipeline/Gitea%20Runner_hu_5e678459ffc263f4.jpg" alt="Gitea Runner" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Gitea Runner</div>
+<div class="image-gallery" id="gallery-6ce628b3"><a href="/vcf91-cert-pipeline/Gitea%20Runner.jpg" class="gallery-item" data-lightbox-group="gallery-6ce628b3" data-title="Gitea Runner"><img src="/vcf91-cert-pipeline/Gitea%20Runner_hu_fc1407968006896.jpg" alt="Gitea Runner" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Gitea Runner</div>
                     </a></div>
 
 
@@ -729,6 +729,13 @@ However, the most important part is already in place: the certificate authority 
 
 		</article>
 		<div class="post-nav thin">
+			<a class="next-post" href="https://sdn-warrior.org/posts/vcf9.1.1-dtgw-vxlan/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+   </svg>&nbsp;Newer</span><br><span>VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2</span>
+			</a>
 			<a class="prev-post" href="https://sdn-warrior.org/posts/vcf9.1-offline-repo/">
 				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
