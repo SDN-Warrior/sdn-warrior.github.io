@@ -16,11 +16,7 @@
 		
 			<atom:link href="https://sdn-warrior.org/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-<<<<<<< Updated upstream
-				<title>Nsx</title>
-=======
 				<title>NSX</title>
->>>>>>> Stashed changes
 				<link>https://sdn-warrior.org/tags/nsx/</link>
 				<pubDate>Mon, 12 Oct 2026 01:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/tags/nsx/</guid>

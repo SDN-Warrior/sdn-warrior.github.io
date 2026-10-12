@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Homelab,nuc on SDN-Warrior | Daniel Krieger</title>
+    <link>http://localhost:1313/tags/homelabnuc/</link>
+    <description>Recent content in Homelab,nuc on SDN-Warrior | Daniel Krieger</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Daniel Krieger</copyright>
+    <lastBuildDate>Sun, 17 Nov 2024 11:57:43 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/homelabnuc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to get most out of your Nuc </title>
+      <link>http://localhost:1313/posts/nuc/</link>
+      <pubDate>Sun, 17 Nov 2024 11:57:43 +0100</pubDate>
+      <guid>http://localhost:1313/posts/nuc/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
