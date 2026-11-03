@@ -18,13 +18,723 @@
 		
 
 		
-		<lastBuildDate>Mon, 12 Oct 2026 01:00:00 +0200</lastBuildDate>
+		<lastBuildDate>Tue, 03 Nov 2026 21:00:00 +0100</lastBuildDate>
 		
 
 		
 		<atom:link href="https://sdn-warrior.org/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 
+		
+		<item>
+			<title>VCF9.1.1 - Password Managment</title>
+			<link>https://sdn-warrior.org/posts/vcf9.1.1-password-managment/</link>
+			<pubDate>Tue, 03 Nov 2026 21:00:00 +0100</pubDate>
+
+			
+
+			<guid>https://sdn-warrior.org/posts/vcf9.1.1-password-managment/</guid>
+
+			
+			<description><![CDATA[Passwords: the admin's bane. Everyone hates them, but they have to be done. Since VCF comes with a bunch of passwords and a bewildering number of options, I'll try to shed some light on the chaos here.]]></description>
+			
+
+			<content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>My favorite topic after certificates is, of course, passwords, and since VCF has always had a habit of forcing you to change your password – and since VCF 9.x does things a bit differently – it’s time to take a closer look at this topic. A little spoiler: it won’t be easy. But all in good time – I&rsquo;m trying to shed a little light on the password jungle here and show what works, what doesn&rsquo;t, and what you can do.</p>
+<h2 id="not-all-passwords-are-the-same">Not all passwords are the same.</h2>
+<p>First, we need to determine which password or type of account we&rsquo;re talking about. There are, in fact, three different types of accounts.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>Account Type</th>
+            <th>Description</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Local (OS) accounts</td>
+            <td>Accounts provisioned directly in the operating system of a virtual appliance, primarily used for secure shell (SSH) access.</td>
+            <td>Examples: <code>root</code>, <code>vcf</code></td>
+        </tr>
+        <tr>
+            <td>Application accounts</td>
+            <td>Accounts provisioned for interactive logins with access to the application&rsquo;s UI and API.</td>
+            <td>Some VCF components also use application accounts, such as <code>administrator@vsphere.local</code>, for inter-component communication.</td>
+        </tr>
+        <tr>
+            <td>Service accounts</td>
+            <td>System-managed accounts provisioned for inter-component communication.</td>
+            <td>Passwords are managed through automated mechanisms. Examples: <code>svc-vcf-*</code>, <code>svc-sddcm-*</code></td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>By the way, this is an official classification by Broadcom. And since we have a hodgepodge of very different products here, all of which were marketed under the VCF umbrella, we naturally don&rsquo;t have a standardized way to manage the passwords. But to be fair, it has improved with VCF 9.1. Now that we&rsquo;ve clarified that, we can take a look at the tools VCF provides for reading or changing passwords.</p>
+<h2 id="password-management-in-sddc-manager">Password Management in SDDC Manager</h2>
+<p>Yes, the SDDC is still an important component in VCF 9.1.x – they say it’s dead, but it’s still going strong. The SDDC offers us various options. Maybe I’ll start with the simple UI options. Three types of actions are supported: rotate, remediate, and update. Remediate and update are often confused. An update sets a new password; this requires both the old and the new password. Remediate changes the password in the database if a password has been changed outside the SDDC workflow or if a password is marked as &ldquo;disconnected&rdquo; for any reason.
+Manual password rotation via the UI and via the API is supported for the following accounts:</p>
+<h3 id="password-rotation-via-sddc-manager-ui">Password Rotation via SDDC Manager UI</h3>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VCF Component</th>
+            <th>Managed Accounts</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ESXi Hosts</td>
+            <td><code>root</code></td>
+        </tr>
+        <tr>
+            <td>vCenter Server</td>
+            <td><code>root</code></td>
+        </tr>
+        <tr>
+            <td>vCenter Single Sign-On (SSO)</td>
+            <td><code>administrator@vsphere.local</code></td>
+        </tr>
+        <tr>
+            <td>NSX Manager</td>
+            <td><code>root</code>, <code>admin</code>, <code>audit</code></td>
+        </tr>
+        <tr>
+            <td>NSX Edge Nodes</td>
+            <td><code>root</code>, <code>admin</code>, <code>audit</code></td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td><code>backup</code></td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 id="scheduled-password-rotation-via-sddc-manager-ui">Scheduled Password Rotation via SDDC Manager UI</h3>
+<p>In addition to manually controlled password rotation, the SDDC also supports automated password rotation.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VCF Component</th>
+            <th>Managed Accounts</th>
+            <th>Supported Rotation Intervals</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>vCenter Server</td>
+            <td><code>root</code></td>
+            <td>30, 60, or 90 days</td>
+        </tr>
+        <tr>
+            <td>NSX Manager</td>
+            <td><code>root</code>, <code>admin</code>, <code>audit</code></td>
+            <td>30, 60, or 90 days</td>
+        </tr>
+        <tr>
+            <td>NSX Edge Nodes</td>
+            <td><code>root</code>, <code>admin</code>, <code>audit</code></td>
+            <td>30, 60, or 90 days</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td><code>backup</code></td>
+            <td>30, 60, or 90 days</td>
+        </tr>
+    </tbody>
+  </table>
+</div><blockquote>
+<p><strong>Note:</strong> Custom intervals are also possible, but not through the UI.</p>
+</blockquote>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Unfortunately, it is not possible to enable automatic password rotation for ESX servers; this feature has not been supported for quite some time and, unfortunately, has not yet been brought back.</div>
+</aside>
+<h3 id="additional-service-accounts-exposed-via-sddc-manager-api">Additional Service Accounts Exposed via SDDC Manager API</h3>
+<p>In addition to the passwords that can be managed in the UI, there are other service passwords that can only be rotated or updated via the API.</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VCF Component</th>
+            <th>Managed Accounts</th>
+            <th>Automatic Rotation Policy</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ESXi Hosts</td>
+            <td><code>svc-vcf-*</code></td>
+            <td>Not exposed in API response</td>
+        </tr>
+        <tr>
+            <td>vCenter Server</td>
+            <td><code>svc-sddcm-*@vsphere.local</code></td>
+            <td>Every 30 days</td>
+        </tr>
+        <tr>
+            <td>NSX Manager</td>
+            <td><code>svc-sddcm-*</code></td>
+            <td>Every 30 days</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>Just for testing purposes, I&rsquo;ll show an example of a rotate operation via the API here. Since I&rsquo;m lazy, I used the graphical tools in the SDDC Manager. To perform the rotate, you need a <em><strong>CredentialsUpdateSpec</strong></em>, which must be included as a JSON body. The API endpoint is PATCH /v1/credentials. An example spec would look like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;operationType&#34;</span><span class="p">:</span> <span class="s2">&#34;ROTATE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;elements&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resourceName&#34;</span><span class="p">:</span> <span class="s2">&#34;esx01.lab.sdn-warrior.cloud&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resourceType&#34;</span><span class="p">:</span> <span class="s2">&#34;ESXI&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;credentials&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;credentialType&#34;</span><span class="p">:</span> <span class="s2">&#34;SSH&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;accountType&#34;</span><span class="p">:</span> <span class="s2">&#34;SERVICE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;svc-vcf-esx01&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+
+<div class="image-gallery" id="gallery-e22b62ee"><a href="/vcf911-password/Password%20rotate%20with%20API.png" class="gallery-item" data-lightbox-group="gallery-e22b62ee" data-title="Password rotate with API"><img src="/vcf911-password/Password%20rotate%20with%20API_hu_1e222b8f4d763ea.png" alt="Password rotate with API" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Password rotate with API</div>
+                    </a><a href="/vcf911-password/Changed%20credentials.png" class="gallery-item" data-lightbox-group="gallery-e22b62ee" data-title="Changed credentials"><img src="/vcf911-password/Changed%20credentials_hu_6d69f45d4f697836.png" alt="Changed credentials" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Changed credentials</div>
+                    </a></div>
+<p>Using the API endpoint GET /v1/ credentials/d0ccbc71-180c-49af-9e42-816d6bd50547, I check the account’s last modified date, and as you can see in the screenshot, the account was modified on November 3 (that’s the day I started writing this article – to be honest, I don’t know yet if it’ll be published on that day either. You’ll see that for yourselves then; otherwise, you’ll just have to take my word for it that the account changed its password). Of course, you can also use the same method to update and reset a password. I&rsquo;ve provided the specifications for a root account here.</p>
+<h4 id="update">Update</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;operationType&#34;</span><span class="p">:</span> <span class="s2">&#34;UPDATE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;elements&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resourceName&#34;</span><span class="p">:</span> <span class="s2">&#34;esx01.lab.sdn-warrior.cloud&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resourceType&#34;</span><span class="p">:</span> <span class="s2">&#34;ESXI&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;credentials&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;credentialType&#34;</span><span class="p">:</span> <span class="s2">&#34;SSH&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;accountType&#34;</span><span class="p">:</span> <span class="s2">&#34;USER&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;NEW_ROOT_PASSWORD&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="remediate">Remediate</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;operationType&#34;</span><span class="p">:</span> <span class="s2">&#34;REMEDIATE&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;elements&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resourceName&#34;</span><span class="p">:</span> <span class="s2">&#34;esx01.lab.sdn-warrior.cloud&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;resourceType&#34;</span><span class="p">:</span> <span class="s2">&#34;ESXI&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;credentials&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;credentialType&#34;</span><span class="p">:</span> <span class="s2">&#34;SSH&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;accountType&#34;</span><span class="p">:</span> <span class="s2">&#34;USER&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;CURRENT_WORKING_ESXI_ROOT_PASSWORD&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="sddc-local-users">SDDC local users</h3>
+<p>The local SDDC users vcf, root, and backup can be modified via the separate API endpoint <em><strong>PATCH /v1/sddc-manager/local-os-user-accounts</strong></em> , provided they have not yet expired. Of course, we need a customized spec here, and only updates are supported.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;root&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;oldPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;CURRENT_ROOT_PASSWORD&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;newPassword&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;NEW_ROOT_PASSWORD&gt;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>If you missed the deadline and your local root or vcf user account has already expired, here are the official recovery instructions via the VM console. 
+<a href="https://knowledge.broadcom.com/external/article/323984/how-to-reset-sddc-manager-vcf-and-root-u.html" target="_blank" rel="noopener">https://knowledge.broadcom.com/external/article/323984/how-to-reset-sddc-manager-vcf-and-root-u.html</a></p>
+<h3 id="retrieve-a-password-using-sddc-manager">Retrieve a password using SDDC Manager</h3>
+<p>This topic is certainly not new to you – for all accounts that I can manage via the SDDC Manager, I can, of course, also retrieve the password. This can be done either via the API endpoint GET /v1/credentials/ or via the <code>lookup_passwords</code> function on the SDDC Manager (via ssh) itself, provided you haven&rsquo;t locked out the VCF user.</p>
+
+
+<aside class="admonition info" data-admonition-type="info">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+   </svg></div>
+        <b>Info</b>
+    </div>
+    <div class="admonition-content">Passwords for local SDDC accounts cannot be retrieved this way.</div>
+</aside>
+<h2 id="what-can-vcf-operations-do-for-me">What can VCF Operations do for me?</h2>
+<p>Well, at first glance, to be honest, not much. But on closer look, it&rsquo;s a little more than I’d thought. In principle, VCF Operations can unfortunately only update passwords. No remediation, no rotation – which I personally find quite unfortunate. But Operations can, for example, update the root or VCF account of the SDDC Manager. So this might save you some API work, provided you still have the old password. In addition, for some service accounts, the password can be rotated via the integration if system-managed accounts are used. This is the default for greenfield deployments, but is generally not the case for brownfield deployments and should be changed.</p>
+
+
+<div class="image-gallery" id="gallery-0303a236"><a href="/vcf911-password/VCF%20Managment%20passwords%20in%20Operations.png" class="gallery-item" data-lightbox-group="gallery-0303a236" data-title="VCF Managment passwords in Operations"><img src="/vcf911-password/VCF%20Managment%20passwords%20in%20Operations_hu_1f4e5c9000e7e836.png" alt="VCF Managment passwords in Operations" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VCF Managment passwords in Operations</div>
+                    </a><a href="/vcf911-password/Passwords%20in%20VCF%20Operations.png" class="gallery-item" data-lightbox-group="gallery-0303a236" data-title="Passwords in VCF Operations"><img src="/vcf911-password/Passwords%20in%20VCF%20Operations_hu_963a00872944bb08.png" alt="Passwords in VCF Operations" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Passwords in VCF Operations</div>
+                    </a><a href="/vcf911-password/Rotate%20System%20Managed%20Accounts.png" class="gallery-item" data-lightbox-group="gallery-0303a236" data-title="Rotate System Managed Accounts"><img src="/vcf911-password/Rotate%20System%20Managed%20Accounts_hu_db8d62f235af95e3.png" alt="Rotate System Managed Accounts" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Rotate System Managed Accounts</div>
+                    </a></div>
+<p>However, when changing a password via Operations, the password policy is automatically enforced and verified. Operations itself does not store any passwords, and as far as I know, there is no way in version 9.1.1 – not even via the internal API – to have Operations display a password. If you want to automate password management, you’ll have no choice but to use an external secret vault where passwords are stored so that you can change them programmatically via the API. In version 9.1, CyberArk is directly supported via plugin integration in Operations, but since I don’t have CyberArk in my lab, I haven’t been able to test this yet.</p>
+<h2 id="password-policys">Password Policys</h2>
+<p>VCF 9.1 introduces another feature: password policies. This feature allows a password policy to be applied either fleet-wide or separately across VCF instances and VCF Management (fleet components). The feature can be found under Manage -&gt; Fleet Management -&gt; Passwords -&gt; Password Policy in VCF Operations. You can configure the minimum password length, character limits, account lockout parameters, and password expiration. By the way, this is a very convenient way to avoid having to constantly deal with expired passwords in the lab, especially when it&rsquo;s not always turned on.</p>
+
+
+<div class="image-gallery" id="gallery-94316b5e"><a href="/vcf911-password/Password%20Policy.png" class="gallery-item" data-lightbox-group="gallery-94316b5e" data-title="Password Policy"><img src="/vcf911-password/Password%20Policy_hu_709fdeb18d67a21e.png" alt="Password Policy" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Password Policy</div>
+                    </a></div>
+<h2 id="full-account-list-for-vcf-91x">Full Account List for VCF 9.1.x</h2>
+<p>It&rsquo;s fun — not!</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VCF Component</th>
+            <th>Account</th>
+            <th>Description</th>
+            <th>Managed by</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ESX</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: Never; password generated during deployment</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>root</td>
+            <td>Local OS account; OS-level and VAMI access; default expiry: 90 days; password generated during deployment</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>administrator@vsphere.local</td>
+            <td>vCenter SSO account; application and API access; default expiry: Never; password generated during deployment; password policy not enforced by default</td>
+            <td>Manual rotation requires an additional VCF Admin account</td>
+        </tr>
+        <tr>
+            <td>NSX Global Manager</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 90 days; password generated during deployment</td>
+            <td>NSX Global Manager UI/API: Manual</td>
+        </tr>
+        <tr>
+            <td>NSX Global Manager</td>
+            <td>admin</td>
+            <td>Local appliance account; OS, API, and application access; default expiry: 90 days; password generated during deployment</td>
+            <td>NSX Global Manager UI/API: Manual</td>
+        </tr>
+        <tr>
+            <td>NSX Global Manager</td>
+            <td>audit</td>
+            <td>Local appliance account; OS, API, and application access; default expiry: 90 days; password generated during deployment</td>
+            <td>NSX Global Manager UI/API: Manual</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 90 days; password generated during deployment</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>admin</td>
+            <td>Local application account; OS, API, and application access; default expiry: 90 days; password generated during deployment</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>audit</td>
+            <td>Local application account; read-only application access; default expiry: 90 days; password generated during deployment</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Edge</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 90 days</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Edge</td>
+            <td>admin</td>
+            <td>Local appliance account; OS, API, and application access; default expiry: 90 days</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Edge</td>
+            <td>audit</td>
+            <td>Local appliance account; read-only application access; default expiry: 90 days</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Virtual Network Appliance</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 90 days</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Virtual Network Appliance</td>
+            <td>admin</td>
+            <td>Local appliance account; OS, API, and application access; default expiry: 90 days</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>NSX Virtual Network Appliance</td>
+            <td>audit</td>
+            <td>Local appliance account; OS-level and read-only application access; default expiry: 90 days</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td>vcf</td>
+            <td>Local OS account; OS-level access; default expiry: 365 days; password generated during deployment</td>
+            <td>VCF 9.1: Manual via OS; VCF 9.1.1: VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 365 days; password generated during deployment</td>
+            <td>VCF 9.1: Manual via OS; VCF 9.1.1: VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td>backup</td>
+            <td>Local OS account; OS-level access; default expiry: 365 days; password generated during deployment</td>
+            <td>VCF Operations UI/API: Update; SDDC Manager UI/API: Update, Rotate, Remediate, Password Lookup, Scheduled Rotation</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td>admin@local</td>
+            <td>Application account; API access; default expiry: Never; password generated during deployment</td>
+            <td>VCF 9.1: Manual via SDDC Manager API; VCF 9.1.1: VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 90 days; password generated during deployment</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations</td>
+            <td>admin</td>
+            <td>Application account; API and application access; default expiry: Never; password generated during deployment</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>Cloud Proxy</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: 90 days; password generated during deployment</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations Orchestrator (Standalone)</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: Never</td>
+            <td>Manual via OS</td>
+        </tr>
+        <tr>
+            <td>VCF Operations Orchestrator (Standalone)</td>
+            <td>admin</td>
+            <td>Local appliance account; API and application access; default expiry: Never</td>
+            <td>Manual via OS</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: Never</td>
+            <td>Manual via OS</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks</td>
+            <td>admin@local</td>
+            <td>Application account; API and application access; default expiry: Never</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks</td>
+            <td>support</td>
+            <td>Local OS account; OS-level access; default expiry: Never</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks</td>
+            <td>consoleuser</td>
+            <td>Local appliance account; CLI-level access; default expiry: Never</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks Collector</td>
+            <td>support</td>
+            <td>Local OS account; OS-level access; default expiry: Never</td>
+            <td>VCF 9.1: Manual via OS; VCF 9.1.1: VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks Collector</td>
+            <td>consoleuser</td>
+            <td>Local appliance account; CLI-level access; default expiry: Never</td>
+            <td>VCF 9.1: Manual via OS; VCF 9.1.1: VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Operations HCX</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: Never</td>
+            <td>VCF Operations UI/API; HCX Management Pack required</td>
+        </tr>
+        <tr>
+            <td>VCF Operations HCX</td>
+            <td>admin</td>
+            <td>Local appliance account; API and application access; default expiry: Never</td>
+            <td>HCX Management Pack required for VCF Operations password management</td>
+        </tr>
+        <tr>
+            <td>VCF Management Services</td>
+            <td>admin@vsp.local</td>
+            <td>Local appliance account; OS and application access; default expiry: 365 days; password identical to vmware-system-user</td>
+            <td>Manual via VCF Management Services</td>
+        </tr>
+        <tr>
+            <td>VCF Management Services</td>
+            <td>vmware-system-user</td>
+            <td>Local appliance account; OS and application access; default expiry: 365 days; password generated during deployment</td>
+            <td>Manual via VCF Management Services</td>
+        </tr>
+        <tr>
+            <td>VCF Automation</td>
+            <td>admin</td>
+            <td>System organization administrator; default expiry: Never; password generated during deployment</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Automation</td>
+            <td>admin@vsp.local</td>
+            <td>Local appliance account; OS and application access; default expiry: 365 days; password generated during deployment</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VCF Automation</td>
+            <td>vmware-system-user</td>
+            <td>Local appliance account; OS-level access; default expiry: 365 days; password generated during deployment</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>vSphere Supervisor</td>
+            <td>vmware-system-user</td>
+            <td>Local appliance account; OS-level access; stored in a control plane namespace secret; default expiry: Never</td>
+            <td>Manual via Kubernetes Secrets</td>
+        </tr>
+        <tr>
+            <td>Protection and Recovery</td>
+            <td>root</td>
+            <td>Local OS account; OS-level access; default expiry: Never</td>
+            <td>Manual via OS</td>
+        </tr>
+        <tr>
+            <td>Protection and Recovery</td>
+            <td>admin</td>
+            <td>Local appliance account; API and application access; default expiry: Never</td>
+            <td>Manual via VAMI</td>
+        </tr>
+        <tr>
+            <td>VMware Avi Load Balancer</td>
+            <td>admin</td>
+            <td>Local appliance account; API and application access; default expiry: Never</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+        <tr>
+            <td>VMware Avi Load Balancer</td>
+            <td>vcfops-admin</td>
+            <td>Local application account; API and application access; default expiry: Never; used for VCF Operations integration</td>
+            <td>VCF Operations UI/API</td>
+        </tr>
+    </tbody>
+  </table>
+</div><blockquote>
+<p><strong>Note:</strong>
+The following services are included under VCF Management Services:</p>
+<ul>
+<li>VCF Services Runtime</li>
+<li>Fleet Lifecycle</li>
+<li>SDDC Lifecycle</li>
+<li>Salt RAAS</li>
+<li>Salt Master</li>
+<li>Telemetry</li>
+<li>Log Management</li>
+<li>Identity Broker</li>
+<li>License Server</li>
+</ul>
+</blockquote>
+<p><strong>VCF Operations Orchestrator</strong></p>
+<p>The <code>root</code> and <code>admin</code> accounts listed for VCF Operations Orchestrator apply only to standalone instances manually deployed using the appliance OVA. In a default VCF deployment, Orchestrator runs as an embedded component of VCF Automation. These standalone accounts do not apply to embedded deployments.</p>
+<p><strong>VCF Operations HCX</strong></p>
+<p>Password management for HCX local accounts through VCF Operations requires the VCF Operations Management Pack for HCX.</p>
+<h3 id="service-accounts">Service Accounts</h3>
+
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>Warning</b>
+    </div>
+    <div class="admonition-content">Please note: Service accounts are required for internal product communication. Service accounts created by VCF do not need to be manually rotated, modified, or managed. Changing passwords or rotating accounts can lead to critical service interruptions, broken internal processes, or even environment failures. I am listing these accounts solely for the sake of completeness.</div>
+</aside>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>VCF Component</th>
+            <th>Account</th>
+            <th>Description</th>
+            <th>Managed by</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ESX</td>
+            <td>svc-vcf-ESX-hostname</td>
+            <td>SDDC Manager → ESX host</td>
+            <td>SDDC Manager UI/API</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td>svc-sddc-manager-hostname-hcx-hostname-uuid</td>
+            <td>VCF Operations HCX → SDDC Manager; default expiry: Never</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>SDDC Manager</td>
+            <td>svc-vcf-sddc-lcm-SDDC_MANAGER-uuid</td>
+            <td>SDDC Lifecycle → SDDC Manager; Administrator role; default auto-rotation: 30 days; default expiry: 90 days; initially named svc-sddclcm-sddcm-uuid, renamed after first auto-rotation</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-sddc-manager-hostname-vcenter-hostname@vsphere.local</td>
+            <td>SDDC Manager → vCenter; Administrator role; default auto-rotation: 30 days; default expiry: 90 days</td>
+            <td>System managed; SDDC Manager UI/API; scheduled rotation supported</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-nsx-manager-hostname-vcenter-hostname@vsphere.local</td>
+            <td>NSX Manager → vCenter; Administrator role; default auto-rotation: 30 days; default expiry: 90 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-fleet-management-hostname-vcenter-hostname@vsphere.local</td>
+            <td>VCF Operations Fleet Management → vCenter; Administrator role; default auto-rotation: 30 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-ops-vc-ops-cluster-uid@vsphere.local</td>
+            <td>VCF Operations Fleet Management → vCenter; Administrator role; default auto-rotation: 30 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-vcfa_uid@vsphere.local</td>
+            <td>VCF Operations → vCenter; Administrator role; default auto-rotation: 30 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-vcfsp-vc-uid@vsphere.local</td>
+            <td>VCF Services Platform → vCenter; VCF Services Runtime role; default auto-rotation: 30 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-vcfsp-vc-admin-uid@vsphere.loca</td>
+            <td>VCF Services Platform → vCenter; VCF Services Platform Admin role; default auto-rotation: 30 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>vCenter</td>
+            <td>svc-hcx-hostname-vc-hostname-hcx-uuid</td>
+            <td>VCF Operations HCX → vCenter; Administrator role</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>svc-sddc-manager-hostname-nsx-vip-hostname-uid</td>
+            <td>SDDC Manager → NSX; Enterprise Admin role; default auto-rotation: 30 days; default expiry: 90 days</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>svc-ops-nsx-uid</td>
+            <td>VCF Operations → NSX; Enterprise Admin role</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>svc-ni-nsx-uid</td>
+            <td>VCF Operations for Networks → NSX</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>NSX Local Manager</td>
+            <td>svc-vcfa_uid</td>
+            <td>VCF Automation → NSX</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>VCF Operations</td>
+            <td>svc-salt-ops-uid</td>
+            <td>Salt RaaS → VCF Operations</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>VCF Operations</td>
+            <td>svc-ops-li-ops-uid</td>
+            <td>Log Management → VCF Operations</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>VCF Operations</td>
+            <td>svc-ops-ni-ops-uid</td>
+            <td>VCF Operations for Networks → VCF Operations</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>Log Management</td>
+            <td>svc-ops-ops-li-uid</td>
+            <td>VCF Operations → Log Management</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>VCF Operations for Networks</td>
+            <td>svc-ops-ops-ni-uid</td>
+            <td>VCF Operations → VCF Operations for Networks</td>
+            <td>System managed</td>
+        </tr>
+        <tr>
+            <td>Salt RaaS</td>
+            <td>svc-ops-salt-uid</td>
+            <td>VCF Operations → Salt RaaS</td>
+            <td>System managed</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h2 id="personal-thoughts">Personal Thoughts</h2>
+<p>As someone who’s once again dealing more frequently with operational issues, I have to say that I don’t think the password management solution is well-designed. It’s still very clear here that VCF 9 needs to be more tightly integrated. The fact that there’s no way to perform a password rotation via the Operations UI or API is also very frustrating.</p>
+<p>On the other hand, I really like the password policy, although I’d like to see a bit more granularity so that the policy could perhaps be broken down to the cluster level. It’s clear that in 2026, passwords are still no fun, and the flood of accounts within VCF doesn’t make things any easier.</p>
+<p>If anyone knows a way to retrieve the passwords through Operations, please send me a message. Cheers!</p>
+]]></content:encoded>
+		</item>
 		
 		<item>
 			<title>VCF 9.1.1 - DTGW &amp; VNA: the route controller within me - Part 2</title>

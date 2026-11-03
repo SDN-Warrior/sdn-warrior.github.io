@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Mon, 12 Jan 2026 02:00:00 +0100</lastBuildDate>
+			<lastBuildDate>Tue, 03 Nov 2026 21:00:00 +0100</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/vcf/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF9.1.1 - Password Managment</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1.1-password-managment/</link>
+				<pubDate>Tue, 03 Nov 2026 21:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1.1-password-managment/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My favorite topic after certificates is, of course, passwords, and since VCF has always had a habit of forcing you to change your password – and since VCF 9.x does things a bit differently – it’s time to take a closer look at this topic. A little spoiler: it won’t be easy. But all in good time – I&amp;rsquo;m trying to shed a little light on the password jungle here and show what works, what doesn&amp;rsquo;t, and what you can do.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF9 - Automation in All Apps mode</title>
 				<link>https://sdn-warrior.org/posts/vcf9-automation-all-apps/</link>
@@ -147,13 +154,6 @@
 				<pubDate>Thu, 10 Apr 2025 22:00:00 +0200</pubDate>
 				<guid>https://sdn-warrior.org/posts/vcf-token/</guid>
 				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Broadcom is currently changing the access to their public repo. This affects many products. Affected are vCenter, ESXi Updates, vSAN File Services and of course VCF.&#xA;The changes are far-reaching. The repo URL has changed and also the way it can be accessed. With the username and password of the Broadcom account, access will no longer work from April 23, 2025. Time to take a look at the whole thing.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>VCF Quick Tip - WLD with single NSX Manager</title>
-				<link>https://sdn-warrior.org/posts/vcf-single-nsx/</link>
-				<pubDate>Tue, 01 Apr 2025 00:42:39 +0200</pubDate>
-				<guid>https://sdn-warrior.org/posts/vcf-single-nsx/</guid>
-				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Here is a quick VCF tip for anyone who wants to deploy VCF but doesn&amp;rsquo;t have endless resources in the lab. With a few minor adjustments, it is possible to deploy a VI Workload WLD or even the Management WLD with just one NSX manager.&#xA;We can also reduce the MGMT domain to three hosts. The only more economical way is through the convert and NFS. In this case, a management domain with two hosts is possible.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

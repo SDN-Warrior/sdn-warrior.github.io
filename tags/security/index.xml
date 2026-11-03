@@ -12,9 +12,16 @@
 			<copyright>Daniel Krieger</copyright>
 		
 		
-			<lastBuildDate>Tue, 05 May 2026 16:00:00 +0200</lastBuildDate>
+			<lastBuildDate>Tue, 03 Nov 2026 21:00:00 +0100</lastBuildDate>
 		
 			<atom:link href="https://sdn-warrior.org/tags/security/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VCF9.1.1 - Password Managment</title>
+				<link>https://sdn-warrior.org/posts/vcf9.1.1-password-managment/</link>
+				<pubDate>Tue, 03 Nov 2026 21:00:00 +0100</pubDate>
+				<guid>https://sdn-warrior.org/posts/vcf9.1.1-password-managment/</guid>
+				<description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;My favorite topic after certificates is, of course, passwords, and since VCF has always had a habit of forcing you to change your password – and since VCF 9.x does things a bit differently – it’s time to take a closer look at this topic. A little spoiler: it won’t be easy. But all in good time – I&amp;rsquo;m trying to shed a little light on the password jungle here and show what works, what doesn&amp;rsquo;t, and what you can do.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>VCF 9.1 - VPCs Connectivity Policies</title>
 				<link>https://sdn-warrior.org/posts/vcf9.1-vpcs-connectivity-policy/</link>
