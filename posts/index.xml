@@ -1127,7 +1127,7 @@ I actually thought VCF 9.1.1 would just be a minor update, but there’s been a 
                     </a><a href="/dtgw-vxlan-2/Route%20Controller%20MP-BGP.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="Route Controller MP-BGP"><img src="/dtgw-vxlan-2/Route%20Controller%20MP-BGP_hu_16effa25ba7f1135.png" alt="Route Controller MP-BGP" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller MP-BGP</div>
                     </a><a href="/dtgw-vxlan-2/External%20Connection.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="External Connection"><img src="/dtgw-vxlan-2/External%20Connection_hu_bf9a0a5b000b4298.png" alt="External Connection" width="350" height="350" loading="lazy"><div class="gallery-item-caption">External Connection</div>
                     </a></div>
-<figure><a href="EVPN%20Route%20Controller%20with%20Vyos%20EVPN%20Fabric.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
+<figure><a href="Route%20Controller%20with%20Vyos%20EVPN%20Fabric.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
           <img
             src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="EVPN Route Controller with VyOS EVPN Fabric"width="92"
             height="105"/>
@@ -1495,7 +1495,7 @@ Once the VNA is configured in the profile, a service subnet is configured for th
                     </a><a href="/dtgw-vxlan-2/VPC%20Topology.png" class="gallery-item" data-lightbox-group="gallery-da7f62cb" data-title="VPC Topology"><img src="/dtgw-vxlan-2/VPC%20Topology_hu_63dd1a8d4173e426.png" alt="VPC Topology" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VPC Topology</div>
                     </a><a href="/dtgw-vxlan-2/Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" class="gallery-item" data-lightbox-group="gallery-da7f62cb" data-title="Route Controller with Vyos EVPN Fabric and VNA"><img src="/dtgw-vxlan-2/Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA_hu_f90e2479031318af.png" alt="Route Controller with Vyos EVPN Fabric and VNA" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller with Vyos EVPN Fabric and VNA</div>
                     </a></div>
-<figure><a href="EVPN%20Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
+<figure><a href="Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
           <img
             src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="EVPN Route Controller with VyOS EVPN Fabric and VNA"width="92"
             height="105"/>
