@@ -86,16 +86,27 @@
     }
 }
 </script><title>VCF 9.1 - DTGW &amp; VNA: the route controller within me</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fd3dc4f72bdb0ba69569f04756373e47137a13d0186a949ec28ce22df3ad2eae.css" integrity="sha256-/T3E9yvbC6aVafBHVjc+RxN6E9AYapSewoziLfOtLq4=" crossorigin="anonymous">
-	<style>.bg-img {background-image: url('/images/net2.JPG');}</style></head>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.ae743860a09cb54b4b8c47ffc2302d84016624025d523e3e50aa49c99eb47f6e.css" integrity="sha256-rnQ4YKCctUtLjEf/wjAthAFmJAJdUj4+UKpJyZ60f24=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/net2.JPG');}</style>
+</head>
 <body id="page">
-<header id="site-header">
+<header id="site-header" class="site-bar">
 	<div class="hdr-wrapper section-inner">
 		<div class="hdr-left">
 			<div class="site-branding">
-				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				<a href="https://sdn-warrior.org/" aria-label="SDN-Warrior | Daniel Krieger"><span class="site-wordmark">
+    <span>SDN-Warrior</span>
+    <span class="site-wordmark-divider" aria-hidden="true"></span>
+    <span>Daniel Krieger</span>
+  </span></a>
 			</div>
-			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a><a href="https://sdn-warrior.org/imprint/">Imprint</a></nav>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/" aria-current="true">Posts</a>
+<a href="https://sdn-warrior.org/field-notes/">Field Notes</a>
+<a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a>
+<a href="https://sdn-warrior.org/links/">Links</a>
+<a href="https://sdn-warrior.org/about/">About Me</a>
+<a href="https://sdn-warrior.org/imprint/">Imprint</a>
+</nav>
 		</div>
 
 		<div class="hdr-right hdr-icons">
@@ -169,19 +180,26 @@
 	</div>
 </header>
 
-<div id="mobile-menu" class="animated fast">
+<div id="mobile-menu" class="site-bar animated fast">
 	<ul>
-		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
-		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a></li>
+		<li><a href="https://sdn-warrior.org/posts/" aria-current="true">Posts</a>
+</li>
+		<li><a href="https://sdn-warrior.org/field-notes/">Field Notes</a>
+</li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a>
+</li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a>
+</li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a>
+</li>
+		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a>
+</li>
 	</ul>
 </div>
 
 
 	<div class="bg-img"></div>
-	<main class="site-main section-inner animated fadeIn faster">
+	<main class="site-main section-inner article-layout animated fadeIn faster">
 
 <div class="thin">
 	<nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -200,9 +218,10 @@
 </nav>
 </div><article class="thin">
 			<header class="post-header">
-				<div class="post-meta"><span>Jul 11, 2026</span></div>
-				<h1>VCF 9.1 - DTGW &amp; VNA: the route controller within me</h1>
-			</header>
+  <div class="post-meta"><span>Jul 11, 2026</span></div>
+  <h1>VCF 9.1 - DTGW &amp; VNA: the route controller within me</h1>
+</header>
+
 			<div class="post-info"><p>In this article, I’ll take another look at VPCs and the VNA. This time, the VNA acts as the route controller, and the VPC is connected via VXLAN/EVPN using Type 5 routes.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
    <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
@@ -236,16 +255,16 @@
    </svg>2026-07-11 13:00 &#43;0200</p></div>
 			<hr class="post-end">
 			<div class="content">
-				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+  <h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Oh no, not another one of those blogs—don’t you ever get tired of VPCs? To be honest, no, because VCF 9.1 offers a ton of new possibilities in this area, and I’m sure we’re still a long way from discovering its full potential. This article will focus on how to apply the Distributed VXLAN Connectivity Model in practice and in the lab. I hope you&rsquo;ve brought enough coffee, because I&rsquo;m afraid this might turn into another long journey down the rabbit hole.</p>
 
 
 <aside class="admonition quote" data-admonition-type="quote">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
+      <path d="M10 11H5a5 5 0 0 1 5-5v5a5 5 0 0 1-5 5v-5"></path>
+      <path d="M19 11h-5a5 5 0 0 1 5-5v5a5 5 0 0 1-5 5v-5"></path>
    </svg></div>
         <b>Quote</b>
     </div>
@@ -278,8 +297,8 @@ VXLAN stands for Virtual Extensible LAN. The basic concept is relatively simple:
     <tbody>
         <tr>
             <td>Developed by</td>
-            <td><!-- raw HTML omitted -->VMware, Arista Networks, and Cisco<!-- raw HTML omitted --></td>
-            <td><!-- raw HTML omitted -->VMware, Microsoft, Red Hat, and Intel<!-- raw HTML omitted --></td>
+            <td><code class="breakable">VMware, Arista Networks, and Cisco</code></td>
+            <td><code class="breakable">VMware, Microsoft, Red Hat, and Intel</code></td>
         </tr>
         <tr>
             <td>Protocol</td>
@@ -297,13 +316,13 @@ VXLAN stands for Virtual Extensible LAN. The basic concept is relatively simple:
             <td>16 bytes</td>
         </tr>
         <tr>
-            <td><!-- raw HTML omitted -->Transport security, service chaining, in-band telemetry <!-- raw HTML omitted --></td>
+            <td><code class="breakable">Transport security, service chaining, in-band telemetry </code></td>
             <td>Not supported</td>
             <td>Supported</td>
         </tr>
         <tr>
             <td>RFC</td>
-            <td><!-- raw HTML omitted -->VXLAN is documented by the IETF in RFC 7348<!-- raw HTML omitted --></td>
+            <td><code class="breakable">VXLAN is documented by the IETF in RFC 7348</code></td>
             <td>RFC 8926</td>
         </tr>
         <tr>
@@ -318,7 +337,7 @@ VXLAN stands for Virtual Extensible LAN. The basic concept is relatively simple:
         </tr>
         <tr>
             <td>Extensibility</td>
-            <td><!-- raw HTML omitted -->No. All fields in the VXLAN header have predefined values.<!-- raw HTML omitted --></td>
+            <td><code class="breakable">No. All fields in the VXLAN header have predefined values.</code></td>
             <td>Yes</td>
         </tr>
         <tr>
@@ -340,7 +359,7 @@ This is still feasible in small labs or simple environments, but becomes increas
 
 <aside class="admonition note" data-admonition-type="note">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
@@ -355,7 +374,7 @@ The Distributed VXLAN Connectivity Model was born. This feature integrates NSX w
 
 <aside class="admonition info" data-admonition-type="info">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -371,7 +390,7 @@ The Distributed VXLAN Connectivity Model was born. This feature integrates NSX w
 
 <aside class="admonition note" data-admonition-type="note">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
@@ -383,7 +402,7 @@ The Distributed VXLAN Connectivity Model was born. This feature integrates NSX w
 
 <aside class="admonition info" data-admonition-type="info">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -397,7 +416,10 @@ The Distributed VXLAN Connectivity Model was born. This feature integrates NSX w
 <p>To keep the lab as simple as possible, I decided to use a virtual VyOS router as the border gateway router. The Vyos router runs on a standalone ESX server outside my VCF environment; since having something like this nested within my VCF environment consistently leads to problems, I always perform such tests on dedicated hardware. I’m using a Route Controller in an active/standby configuration. The following diagram clearly illustrates the setup. I have two test Linux VMs: Alpine02 is part of my VPC’s public network (<code>10.100.0.8/29</code>), and Alpine01 is in the VRF <code>tenant</code> network <code>192.168.100.0/24</code>.</p>
 
 
-<div class="image-gallery" id="gallery-260d2d97"><a href="/vcf91-dtgw-vxlan/Lab-Setup.jpg" class="gallery-item" data-lightbox-group="gallery-260d2d97" data-title="Lab-Setup"><img src="/vcf91-dtgw-vxlan/Lab-Setup_hu_30e7a4609fbf51ab.jpg" alt="Lab-Setup" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Lab-Setup</div>
+<div class="image-gallery" id="gallery-260d2d97" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Lab-Setup.jpg" class="gallery-item" data-lightbox-group="gallery-260d2d97" data-title="Lab-Setup" data-preview-src="/vcf91-dtgw-vxlan/Lab-Setup_hu_3d450cf02194e9f6.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Lab-Setup_hu_7bce588eab4b2162.jpg" alt="Lab-Setup" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Lab-Setup</div>
                     </a></div>
 <p>In hindsight, it wasn’t the smartest idea to name my VRF <code>tenant</code>, but to be honest, I’m too lazy to adjust the configuration and graphics at this point. Both the Vyos router&rsquo;s VTEP interface and the ESX TEP interfaces are in VLAN 4 and on the same IP network. In a real-world setup, these would be in different VLANs, but I didn&rsquo;t want to introduce another routing instance into the underlay network.  The actual BGP session is initialized over VLAN 1002. Both VLANs 1002 and 4 belong to the Vyos default VRF. The VXLAN VNI used is 65000.</p>
 <p>In a real-world scenario, the setup is, of course, somewhat different. Normally, for EVPN peering between the route controller and the EVPN gateway, a loopback interface in the global routing context on the physical fabric is used.
@@ -721,8 +743,14 @@ In my lab setup, both the BGP peers and the VTEP and TEP interfaces are in the g
 <p>First, the Route Controller is deployed. This is not done from vCenter or in NSX via the VNA deployment, but rather in NSX under <em><strong>Networking -&gt; EVPN -&gt; Route Controller -&gt; ADD ROUTE CONTROLLER</strong></em>. The process is largely the same as for a standard VNA deployment. In my lab, I use the “Small” form factor. “Medium” is recommended for production environments. A larger form factor is not currently available, nor is it needed. A medium-size route controller already has enterprise-grade scale and can manage more than 100,000 prefixes. Since the route controller is only part of the control plane, this form factor is sufficient. As shown in the screenshots, the parameters that must be specified are identical to those for a VNA deployment. You’ll need an FQDN, a management IP address, a vSphere cluster, a datastore, and a port group. The route controller can be deployed as a single node or a 2-node cluster. In my setup, I’m using a 2-node cluster.</p>
 
 
-<div class="image-gallery" id="gallery-a4344659"><a href="/vcf91-dtgw-vxlan/Add%20Route%20Controller.jpg" class="gallery-item" data-lightbox-group="gallery-a4344659" data-title="Add Route Controller"><img src="/vcf91-dtgw-vxlan/Add%20Route%20Controller_hu_1f3f452f5bd0d8bf.jpg" alt="Add Route Controller" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Add Route Controller</div>
-                    </a><a href="/vcf91-dtgw-vxlan/Add%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-a4344659" data-title="Add Node"><img src="/vcf91-dtgw-vxlan/Add%20Node_hu_a515404e0866cd63.jpg" alt="Add Node" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Add Node</div>
+<div class="image-gallery" id="gallery-a4344659" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Add%20Route%20Controller.jpg" class="gallery-item" data-lightbox-group="gallery-a4344659" data-title="Add Route Controller" data-preview-src="/vcf91-dtgw-vxlan/Add%20Route%20Controller_hu_9c9de753f6149d68.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Add%20Route%20Controller_hu_93936d265df7196a.jpg" alt="Add Route Controller" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Add Route Controller</div>
+                    </a><a href="/vcf91-dtgw-vxlan/Add%20Node.jpg" class="gallery-item" data-lightbox-group="gallery-a4344659" data-title="Add Node" data-preview-src="/vcf91-dtgw-vxlan/Add%20Node_hu_66433f6a215abaf.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Add%20Node_hu_c67c5051f987e9a0.jpg" alt="Add Node" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Add Node</div>
                     </a></div>
 <p>Things get more interesting in the next step, where you need to configure the route controller interfaces. Here, you must select the correct port group—in my case, it’s VLAN 1002. The port group must be created before deployment and is used for BGP peering.
 Each route controller appliance is assigned a local IP address in this network, and a floating IP is also configured for BGP peering. In addition, my VyOS router on the same network also has a BGP peering IP (see the table earlier in the article).</p>
@@ -730,7 +758,7 @@ Each route controller appliance is assigned a local IP address in this network, 
 
 <aside class="admonition tip" data-admonition-type="tip">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -751,7 +779,7 @@ Each route controller appliance is assigned a local IP address in this network, 
 
 <aside class="admonition info" data-admonition-type="info">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -763,14 +791,20 @@ Each route controller appliance is assigned a local IP address in this network, 
 </aside>
 
 
-<div class="image-gallery" id="gallery-083c696e"><a href="/vcf91-dtgw-vxlan/Interface%20Address%20Configuration.jpg" class="gallery-item" data-lightbox-group="gallery-083c696e" data-title="Interface Address Configuration"><img src="/vcf91-dtgw-vxlan/Interface%20Address%20Configuration_hu_ae9f97b7eadf8345.jpg" alt="Interface Address Configuration" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Interface Address Configuration</div>
-                    </a><a href="/vcf91-dtgw-vxlan/BGP%20EVPN%20Configuration.jpg" class="gallery-item" data-lightbox-group="gallery-083c696e" data-title="BGP EVPN Configuration"><img src="/vcf91-dtgw-vxlan/BGP%20EVPN%20Configuration_hu_ad1acad64ed27998.jpg" alt="BGP EVPN Configuration" width="350" height="350" loading="lazy"><div class="gallery-item-caption">BGP EVPN Configuration</div>
+<div class="image-gallery" id="gallery-083c696e" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Interface%20Address%20Configuration.jpg" class="gallery-item" data-lightbox-group="gallery-083c696e" data-title="Interface Address Configuration" data-preview-src="/vcf91-dtgw-vxlan/Interface%20Address%20Configuration_hu_102379c26d139230.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Interface%20Address%20Configuration_hu_b6d67937faecd012.jpg" alt="Interface Address Configuration" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Interface Address Configuration</div>
+                    </a><a href="/vcf91-dtgw-vxlan/BGP%20EVPN%20Configuration.jpg" class="gallery-item" data-lightbox-group="gallery-083c696e" data-title="BGP EVPN Configuration" data-preview-src="/vcf91-dtgw-vxlan/BGP%20EVPN%20Configuration_hu_ad654e8b8338e5e.jpg">
+                        <img src="/vcf91-dtgw-vxlan/BGP%20EVPN%20Configuration_hu_8f47a3c23ca0f8e7.jpg" alt="BGP EVPN Configuration" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">BGP EVPN Configuration</div>
                     </a></div>
 
 
 <aside class="admonition tip" data-admonition-type="tip">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -790,9 +824,18 @@ I&rsquo;ll discuss this topic later in the article.</div>
 <p>Once this step has also been configured, the route controller appliances are automatically deployed. It only took me about 10 minutes to get it done. After that, all I have to do is adjust the BGP timers. To do this, click “Edit” under <em><strong>Networking -&gt; EVPN -&gt; Route Controller</strong></em> for the deployed route controller cluster. You can adjust the timers in the Neighbor settings. Broadcom recommends setting the timers to a 1-second keepalive time and a 3-second hold-down time. These settings are relatively aggressive, and depending on your infrastructure, different values may be more appropriate. You can check the current BGP session by clicking “Generate BGP Summary” on the route controller cluster. If everything is correct, one route controller should show “Established” and the other “Idle” (active/standby setup).</p>
 
 
-<div class="image-gallery" id="gallery-264f3813"><a href="/vcf91-dtgw-vxlan/Route%20Controller%20deployment.jpg" class="gallery-item" data-lightbox-group="gallery-264f3813" data-title="Route Controller deployment"><img src="/vcf91-dtgw-vxlan/Route%20Controller%20deployment_hu_7bc64b5a80e2993c.jpg" alt="Route Controller deployment" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Route Controller deployment</div>
-                    </a><a href="/vcf91-dtgw-vxlan/BGP%20Neighbors.jpg" class="gallery-item" data-lightbox-group="gallery-264f3813" data-title="BGP Neighbors"><img src="/vcf91-dtgw-vxlan/BGP%20Neighbors_hu_963453b6efc00b3f.jpg" alt="BGP Neighbors" width="350" height="350" loading="lazy"><div class="gallery-item-caption">BGP Neighbors</div>
-                    </a><a href="/vcf91-dtgw-vxlan/BGP%20Summary.jpg" class="gallery-item" data-lightbox-group="gallery-264f3813" data-title="BGP Summary"><img src="/vcf91-dtgw-vxlan/BGP%20Summary_hu_848cb5cbfa707e45.jpg" alt="BGP Summary" width="350" height="350" loading="lazy"><div class="gallery-item-caption">BGP Summary</div>
+<div class="image-gallery" id="gallery-264f3813" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Route%20Controller%20deployment.jpg" class="gallery-item" data-lightbox-group="gallery-264f3813" data-title="Route Controller deployment" data-preview-src="/vcf91-dtgw-vxlan/Route%20Controller%20deployment_hu_4196579b9aabf61f.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Route%20Controller%20deployment_hu_5e7652ebd47115a9.jpg" alt="Route Controller deployment" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Route Controller deployment</div>
+                    </a><a href="/vcf91-dtgw-vxlan/BGP%20Neighbors.jpg" class="gallery-item" data-lightbox-group="gallery-264f3813" data-title="BGP Neighbors" data-preview-src="/vcf91-dtgw-vxlan/BGP%20Neighbors_hu_47f8fb384766b6a3.jpg">
+                        <img src="/vcf91-dtgw-vxlan/BGP%20Neighbors_hu_671ba75ac72fa6db.jpg" alt="BGP Neighbors" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">BGP Neighbors</div>
+                    </a><a href="/vcf91-dtgw-vxlan/BGP%20Summary.jpg" class="gallery-item" data-lightbox-group="gallery-264f3813" data-title="BGP Summary" data-preview-src="/vcf91-dtgw-vxlan/BGP%20Summary_hu_abba0c313bd3eaac.jpg">
+                        <img src="/vcf91-dtgw-vxlan/BGP%20Summary_hu_f011297d35b8564a.jpg" alt="BGP Summary" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">BGP Summary</div>
                     </a></div>
 <h2 id="setup-the-transit-gateway">Setup the Transit Gateway<a href="#setup-the-transit-gateway" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>Next, you need to create the transit gateway. As before, you can do this in NSX under <em><strong>Networking -&gt; Transit Gateway -&gt; ADD TRANSIT GATEWAY</strong></em>. Here, you must select “Distributed VXLAN Connection.” Under “External Network Connectivity,” you must specify the EVPN L3 VNI. In my setup, this is 65000. Each External Connection can have at most one Layer 3 VNI. The Route Distinguisher is used to uniquely identify routes, since in EVPN setups, multiple tenants or VRFs can use the same IP range.</p>
@@ -801,7 +844,7 @@ I&rsquo;ll discuss this topic later in the article.</div>
 
 <aside class="admonition tip" data-admonition-type="tip">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -823,7 +866,7 @@ The RTs must match because they determine which routes are imported and exported
 
 <aside class="admonition tip" data-admonition-type="tip">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -841,23 +884,41 @@ The RTs must match because they determine which routes are imported and exported
 </aside>
 
 
-<div class="image-gallery" id="gallery-c3d37e19"><a href="/vcf91-dtgw-vxlan/Add%20Transit%20Gateway.jpg" class="gallery-item" data-lightbox-group="gallery-c3d37e19" data-title="Add Transit Gateway"><img src="/vcf91-dtgw-vxlan/Add%20Transit%20Gateway_hu_f92fabe25527332a.jpg" alt="Add Transit Gateway" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Add Transit Gateway</div>
-                    </a><a href="/vcf91-dtgw-vxlan/External%20Network%20Connectivity.jpg" class="gallery-item" data-lightbox-group="gallery-c3d37e19" data-title="External Network Connectivity"><img src="/vcf91-dtgw-vxlan/External%20Network%20Connectivity_hu_769d1abdf38153ef.jpg" alt="External Network Connectivity" width="350" height="350" loading="lazy"><div class="gallery-item-caption">External Network Connectivity</div>
+<div class="image-gallery" id="gallery-c3d37e19" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Add%20Transit%20Gateway.jpg" class="gallery-item" data-lightbox-group="gallery-c3d37e19" data-title="Add Transit Gateway" data-preview-src="/vcf91-dtgw-vxlan/Add%20Transit%20Gateway_hu_dc17f586528c3836.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Add%20Transit%20Gateway_hu_6f86c3555dcf9fa0.jpg" alt="Add Transit Gateway" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Add Transit Gateway</div>
+                    </a><a href="/vcf91-dtgw-vxlan/External%20Network%20Connectivity.jpg" class="gallery-item" data-lightbox-group="gallery-c3d37e19" data-title="External Network Connectivity" data-preview-src="/vcf91-dtgw-vxlan/External%20Network%20Connectivity_hu_991d15257d509873.jpg">
+                        <img src="/vcf91-dtgw-vxlan/External%20Network%20Connectivity_hu_8a4f4b4d5327be5a.jpg" alt="External Network Connectivity" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">External Network Connectivity</div>
                     </a></div>
 <h2 id="creating-the-vpc">Creating the VPC<a href="#creating-the-vpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>The final step is to create the actual VPC; this is no different from setting up other VPCs. The only important thing here is to select the correct connectivity profile; otherwise, the VPC will be created on my centralized transit gateway in my lab, and that’s not what we want. I use a DHCP server in my public subnet because I’m lazy. Once a VM has been created and connected to the public segment, I can start the first tests.</p>
 
 
-<div class="image-gallery" id="gallery-8450e380"><a href="/vcf91-dtgw-vxlan/Add%20Virtual%20Private%20Cloud.jpg" class="gallery-item" data-lightbox-group="gallery-8450e380" data-title="Add Virtual Private Cloud"><img src="/vcf91-dtgw-vxlan/Add%20Virtual%20Private%20Cloud_hu_e410746a50816a55.jpg" alt="Add Virtual Private Cloud" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Add Virtual Private Cloud</div>
-                    </a><a href="/vcf91-dtgw-vxlan/Set%20Subnet.jpg" class="gallery-item" data-lightbox-group="gallery-8450e380" data-title="Set Subnet"><img src="/vcf91-dtgw-vxlan/Set%20Subnet_hu_49d98f8f4aa33e76.jpg" alt="Set Subnet" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Set Subnet</div>
+<div class="image-gallery" id="gallery-8450e380" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Add%20Virtual%20Private%20Cloud.jpg" class="gallery-item" data-lightbox-group="gallery-8450e380" data-title="Add Virtual Private Cloud" data-preview-src="/vcf91-dtgw-vxlan/Add%20Virtual%20Private%20Cloud_hu_3d7497e17281c98f.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Add%20Virtual%20Private%20Cloud_hu_ef6931830f1d9a30.jpg" alt="Add Virtual Private Cloud" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Add Virtual Private Cloud</div>
+                    </a><a href="/vcf91-dtgw-vxlan/Set%20Subnet.jpg" class="gallery-item" data-lightbox-group="gallery-8450e380" data-title="Set Subnet" data-preview-src="/vcf91-dtgw-vxlan/Set%20Subnet_hu_df3689479c880d0b.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Set%20Subnet_hu_66a1a7edca77be52.jpg" alt="Set Subnet" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Set Subnet</div>
                     </a></div>
 <h2 id="test-the-setup">Test the Setup<a href="#test-the-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>By far the easiest test is a simple ping test from Alpine02 (<code>10.100.0.11</code>) to Alpine01 (<code>192.168.100.10</code>) or vice versa. As expected, the result is successful.
 In addition, I check the BGP summary in NSX, and now see an “In Prefix” and an “Out Prefix” displayed for L2VPN EVPN.</p>
 
 
-<div class="image-gallery" id="gallery-0887ad30"><a href="/vcf91-dtgw-vxlan/Connection%20Test.jpg" class="gallery-item" data-lightbox-group="gallery-0887ad30" data-title="Connection Test"><img src="/vcf91-dtgw-vxlan/Connection%20Test_hu_5cb8f84ee1390fbb.jpg" alt="Connection Test" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Connection Test</div>
-                    </a><a href="/vcf91-dtgw-vxlan/BGP%20Summary%20with%20Prefixes.jpg" class="gallery-item" data-lightbox-group="gallery-0887ad30" data-title="BGP Summary with Prefixes"><img src="/vcf91-dtgw-vxlan/BGP%20Summary%20with%20Prefixes_hu_3091fe63fc55d388.jpg" alt="BGP Summary with Prefixes" width="350" height="350" loading="lazy"><div class="gallery-item-caption">BGP Summary with Prefixes</div>
+<div class="image-gallery" id="gallery-0887ad30" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Connection%20Test.jpg" class="gallery-item" data-lightbox-group="gallery-0887ad30" data-title="Connection Test" data-preview-src="/vcf91-dtgw-vxlan/Connection%20Test_hu_7196d173808e4cc8.jpg">
+                        <img src="/vcf91-dtgw-vxlan/Connection%20Test_hu_dc2275d364f77468.jpg" alt="Connection Test" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Connection Test</div>
+                    </a><a href="/vcf91-dtgw-vxlan/BGP%20Summary%20with%20Prefixes.jpg" class="gallery-item" data-lightbox-group="gallery-0887ad30" data-title="BGP Summary with Prefixes" data-preview-src="/vcf91-dtgw-vxlan/BGP%20Summary%20with%20Prefixes_hu_6eede2ee695b77c7.jpg">
+                        <img src="/vcf91-dtgw-vxlan/BGP%20Summary%20with%20Prefixes_hu_42d28989a6c5883.jpg" alt="BGP Summary with Prefixes" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">BGP Summary with Prefixes</div>
                     </a></div>
 <p>Of course, I&rsquo;ll also take a look at all of this via the CLI. To do that, you need to connect via SSH to the ESX host where the Alpine02 test VM is running, and then you can read the forwarding table of the transit gateway. You can use the esx cli command <code>net-vdr -Il --brief</code> to display the distributed router UUIDs; these can be identified based on the API path.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">[root@vcf09-esx01:~] net-vdr -Il --brief
@@ -950,10 +1011,10 @@ I&rsquo;ll just quote Broadcom here:
 
 <aside class="admonition quote" data-admonition-type="quote">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
+      <path d="M10 11H5a5 5 0 0 1 5-5v5a5 5 0 0 1-5 5v-5"></path>
+      <path d="M19 11h-5a5 5 0 0 1 5-5v5a5 5 0 0 1-5 5v-5"></path>
    </svg></div>
         <b>Quote</b>
     </div>
@@ -978,13 +1039,9 @@ Since VyOS is not officially supported, I unfortunately cannot say how it would 
 <p>I was surprised at how easy the NSX configuration turned out to be in the end. With the VyOS configuration, I had to do quite a bit of searching, because I hadn&rsquo;t done it in a while—and as is often the case with things you haven&rsquo;t done in a while, you tend to forget how to do them. Back then, I didn&rsquo;t have a blog that I could use as a public notebook. So please forgive me if the VyOS configuration isn&rsquo;t quite 100% ideal.</p>
 <p>Personally, I think we’re still just at the beginning here; after all, this feature was just introduced with VCF 9.1.0, and there will certainly be a few more improvements to come. An active/active mode would certainly be appealing as well. It will also be interesting to see how the physical switches handle the many /32 routes, as there could end up being quite a few of them.</p>
 
-			</div>
-			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
-      <path
-         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
-      <path
-         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
-   </svg></abbr></a></div>
+</div>
+
+			
 
 
 <div class="coffee-support">
@@ -1038,20 +1095,26 @@ Since VyOS is not officially supported, I unfortunately cannot say how it would 
    </svg></span><br><span>VCF 9.1 - Platform Health Check Error</span>
 			</a>
 		</div>
-		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.9bab1677e25a6ada0f3780ce7176b4a4cf68fc3716a53f31f27154f4a82590d7.js" defer></script>
 	</main>
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
 		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger</p>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 <link rel="stylesheet" href="/klaro/klaro.css?v=1">
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.54693fbaf1b966c963df177373052bd727d34e53d4520740957385dfb56935d2.js" integrity="sha256-VGk/uvG5Zslj3xdzcwUr1yfTTlPUUgdAlXOF37VpNdI=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

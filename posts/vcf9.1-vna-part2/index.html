@@ -85,16 +85,27 @@
     }
 }
 </script><title>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</title>
-<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.fd3dc4f72bdb0ba69569f04756373e47137a13d0186a949ec28ce22df3ad2eae.css" integrity="sha256-/T3E9yvbC6aVafBHVjc+RxN6E9AYapSewoziLfOtLq4=" crossorigin="anonymous">
-	<style>.bg-img {background-image: url('/images/net2.JPG');}</style></head>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.ae743860a09cb54b4b8c47ffc2302d84016624025d523e3e50aa49c99eb47f6e.css" integrity="sha256-rnQ4YKCctUtLjEf/wjAthAFmJAJdUj4+UKpJyZ60f24=" crossorigin="anonymous">
+	<style>.bg-img {background-image: url('/images/net2.JPG');}</style>
+</head>
 <body id="page">
-<header id="site-header">
+<header id="site-header" class="site-bar">
 	<div class="hdr-wrapper section-inner">
 		<div class="hdr-left">
 			<div class="site-branding">
-				<a href="https://sdn-warrior.org/">SDN-Warrior | Daniel Krieger</a>
+				<a href="https://sdn-warrior.org/" aria-label="SDN-Warrior | Daniel Krieger"><span class="site-wordmark">
+    <span>SDN-Warrior</span>
+    <span class="site-wordmark-divider" aria-hidden="true"></span>
+    <span>Daniel Krieger</span>
+  </span></a>
 			</div>
-			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a><a href="https://sdn-warrior.org/links/">Links</a><a href="https://sdn-warrior.org/about/">About Me</a><a href="https://sdn-warrior.org/imprint/">Imprint</a></nav>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/" aria-current="true">Posts</a>
+<a href="https://sdn-warrior.org/field-notes/">Field Notes</a>
+<a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a>
+<a href="https://sdn-warrior.org/links/">Links</a>
+<a href="https://sdn-warrior.org/about/">About Me</a>
+<a href="https://sdn-warrior.org/imprint/">Imprint</a>
+</nav>
 		</div>
 
 		<div class="hdr-right hdr-icons">
@@ -168,19 +179,26 @@
 	</div>
 </header>
 
-<div id="mobile-menu" class="animated fast">
+<div id="mobile-menu" class="site-bar animated fast">
 	<ul>
-		<li><a href="https://sdn-warrior.org/posts/">Posts</a></li>
-		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a></li>
-		<li><a href="https://sdn-warrior.org/links/">Links</a></li>
-		<li><a href="https://sdn-warrior.org/about/">About Me</a></li>
-		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a></li>
+		<li><a href="https://sdn-warrior.org/posts/" aria-current="true">Posts</a>
+</li>
+		<li><a href="https://sdn-warrior.org/field-notes/">Field Notes</a>
+</li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a>
+</li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a>
+</li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a>
+</li>
+		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a>
+</li>
 	</ul>
 </div>
 
 
 	<div class="bg-img"></div>
-	<main class="site-main section-inner animated fadeIn faster">
+	<main class="site-main section-inner article-layout animated fadeIn faster">
 
 <div class="thin">
 	<nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -199,9 +217,10 @@
 </nav>
 </div><article class="thin">
 			<header class="post-header">
-				<div class="post-meta"><span>May 21, 2026</span></div>
-				<h1>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</h1>
-			</header>
+  <div class="post-meta"><span>May 21, 2026</span></div>
+  <h1>VCF 9.1 - VNA After Dark: Scaling, Spans, and Architecture</h1>
+</header>
+
 			<div class="post-info"><p>In this follow-up article, I take a deeper look at the VNA architecture in VCF 9.1, including placement, relocation, scaling, and network spans.</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather">
    <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
@@ -235,7 +254,7 @@
    </svg>2026-05-21 22:00 &#43;0200</p></div>
 			<hr class="post-end">
 			<div class="content">
-				<h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+  <h2 id="introduction">Introduction<a href="#introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>This article cost me a lot of sleep, long nights in the lab, and plenty of coffee. But let&rsquo;s start from the beginning. I was fortunate enough to have a conversation with a very nice Broadcom employee 
 <a href="https://www.linkedin.com/in/oliver-ziltener-4448785b/" target="_blank" rel="noopener">(Oliver Ziltener)</a> about the VNA. Thank you for your time, for your comments on my first article, and for answering my questions. That really helped me a lot.</p>
 <p>If you’re not familiar with the VNA, please read that 
@@ -247,7 +266,7 @@
 
 <aside class="admonition info" data-admonition-type="info">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -259,8 +278,14 @@
 </aside>
 
 
-<div class="image-gallery" id="gallery-d20d9f16"><a href="/vcf91-vna-2/VNA%20-%20Architecture.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Architecture"><img src="/vcf91-vna-2/VNA%20-%20Architecture_hu_7e66a8f1f9fc6a71.jpg" alt="VNA - Architecture" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Architecture</div>
-                    </a><a href="/vcf91-vna-2/VNA%20-%20Overlay%20Segment.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Overlay Segment"><img src="/vcf91-vna-2/VNA%20-%20Overlay%20Segment_hu_13ed6ad938f121a1.jpg" alt="VNA - Overlay Segment" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Overlay Segment</div>
+<div class="image-gallery" id="gallery-d20d9f16" data-gallery-picker><a href="/vcf91-vna-2/VNA%20-%20Architecture.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Architecture" data-preview-src="/vcf91-vna-2/VNA%20-%20Architecture_hu_8398392c098bc178.jpg">
+                        <img src="/vcf91-vna-2/VNA%20-%20Architecture_hu_db9e2d480e8fa6c7.jpg" alt="VNA - Architecture" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">VNA - Architecture</div>
+                    </a><a href="/vcf91-vna-2/VNA%20-%20Overlay%20Segment.jpg" class="gallery-item" data-lightbox-group="gallery-d20d9f16" data-title="VNA - Overlay Segment" data-preview-src="/vcf91-vna-2/VNA%20-%20Overlay%20Segment_hu_9fb91ea3e2ae3122.jpg">
+                        <img src="/vcf91-vna-2/VNA%20-%20Overlay%20Segment_hu_6d1c899e97b87583.jpg" alt="VNA - Overlay Segment" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">VNA - Overlay Segment</div>
                     </a></div>
 <p>The parent segment serves two purposes: first, it establishes the BFD session between each HA VRF on the VNA appliances via fp-eth0, and second, it distributes traffic from the VPC service subnets (more on that later).</p>
 <p>Additionally, another BFD session is established via the management interface of the VNA appliances using a standard distributed switch port group. Since an overlay segment depends on the NSX TEP network, this ensures that there is an “independent” second path to check the status of the VNA cluster.</p>
@@ -270,14 +295,17 @@ In addition, a fast path interface is automatically selected. This assignment is
 <p>The service segment (system owned VPC private subnet) is what is known as a child segment in NSX, which is simply an overlay segment connected to a parent overlay segment via a child port. This child port extracts traffic for a specific VLAN from the parent segment and forwards it to the child segment. The parent segment is used only to transport the tagged packets. This design is what makes the VNA possible in the first place.</p>
 
 
-<div class="image-gallery" id="gallery-3cff706b"><a href="/vcf91-vna-2/VNA%20-%20Trafficflow.jpg" class="gallery-item" data-lightbox-group="gallery-3cff706b" data-title="VNA - Trafficflow"><img src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_d5c37a4cdd7b765a.jpg" alt="VNA - Trafficflow" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Trafficflow</div>
+<div class="image-gallery" id="gallery-3cff706b" data-gallery-picker><a href="/vcf91-vna-2/VNA%20-%20Trafficflow.jpg" class="gallery-item" data-lightbox-group="gallery-3cff706b" data-title="VNA - Trafficflow" data-preview-src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_ed9c5ef348917e22.jpg">
+                        <img src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_3e17435c3934c5b4.jpg" alt="VNA - Trafficflow" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">VNA - Trafficflow</div>
                     </a></div>
 <p>My diagram clearly illustrates the actual egress traffic flow. Traffic from the Alpine test VM destined for the internet is first sent to the private segment and from there to the VPC gateway for VPC1. Like the transit gateway, the VPC gateway is implemented in a distributed manner, meaning it exists on every transport node.  Via the VPC gateway, the traffic is redirected to the service subnet of the VPC and sent there to the service port of the active service instance for VPC01. Each service instance always has the same IP address but resides in different VLANs and is thus isolated. Since the active service instance is running on a VNA on a different ESX host, the traffic is sent to the other ESX host via the parent segment. This happens in the usual way, as with any overlay network, via the TEP network between the ESX servers. Upon arriving at ESX Server 2, the child port extracts the VLAN-tagged traffic from the parent segment and forwards it into the corresponding child overlay segment to the active service instance for VPC01. After SNAT has been performed on the active service instance, the packet does not have to return to the original ESX host just to continue its north-south path. Instead, forwarding continues from the transport node where the active service instance is currently running. From the VPC Gateway, the traffic goes to the Transit Gateway and then into our Public VLAN, where the packets are handed over to the physical network. The public VLAN must be a VLAN within the physical infrastructure, and SNAT IP addresses and smaller subnets for VPC public networks are automatically provisioned from this network.</p>
 
 
 <aside class="admonition note" data-admonition-type="note">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
@@ -323,7 +351,10 @@ By the way, if you don&rsquo;t want to wait for NSX&rsquo;s slow UI, you can als
 </span></span></code></pre></div><p>And the corresponding option in the NSX UI.</p>
 
 
-<div class="image-gallery" id="gallery-f7805c58"><a href="/vcf91-vna-2/VNA%20-%20Gateway%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-f7805c58" data-title="VNA - Gateway Services"><img src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_5416ecb3d89b7d7d.jpg" alt="VNA - Gateway Services" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Gateway Services</div>
+<div class="image-gallery" id="gallery-f7805c58" data-gallery-picker><a href="/vcf91-vna-2/VNA%20-%20Gateway%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-f7805c58" data-title="VNA - Gateway Services" data-preview-src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_7152fb9cca3df605.jpg">
+                        <img src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_34e0246799dfcab5.jpg" alt="VNA - Gateway Services" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">VNA - Gateway Services</div>
                     </a></div>
 <p>The attentive reader will have noticed by now that all VPCs are displayed as T1 service routers in the VNA, and that the active service instances have a “1” in the ‘Neighbors’ column, while the passive ones have a “0.” This allows you to quickly check the status of the service instances via the CLI. Now I just need to explain auto-relocation, and hopefully it will all make sense.</p>
 <p>Automatic relocation is triggered when, while adding services (such as an L7 load balancer), resources are exhausted and the capacity of the current node pair is exceeded. This is checked every time a new service or VPC is created and is performed if necessary. Of course, this requires sufficient capacity within the cluster. The cluster does not scale out dynamically.</p>
@@ -338,7 +369,7 @@ In simple terms, this means that if VNA1 is not operational again within 30 minu
 
 <aside class="admonition note" data-admonition-type="note">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
@@ -379,7 +410,7 @@ The <em><strong>get segments</strong></em> command allows you to list the VPC se
 
 <aside class="admonition bug" data-admonition-type="bug">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon">
       <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
       <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -398,10 +429,10 @@ The <em><strong>get segments</strong></em> command allows you to list the VPC se
 
 <aside class="admonition quote" data-admonition-type="quote">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
+      <path d="M10 11H5a5 5 0 0 1 5-5v5a5 5 0 0 1-5 5v-5"></path>
+      <path d="M19 11h-5a5 5 0 0 1 5-5v5a5 5 0 0 1-5 5v-5"></path>
    </svg></div>
         <b>Quote</b>
     </div>
@@ -417,10 +448,9 @@ My VNA is deployed in the “small” size, which means the VNA has 2 vCPUs avai
 
 <aside class="admonition information-about-the-performance" data-admonition-type="information-about-the-performance">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
         <b>Information about the performance</b>
     </div>
@@ -429,8 +459,14 @@ My VNA is deployed in the “small” size, which means the VNA has 2 vCPUs avai
 <p>But enough talk—here are my measurement results.</p>
 
 
-<div class="image-gallery" id="gallery-d924245a"><a href="/vcf91-vna-2/Iperf3%20Results.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="Iperf3 Results"><img src="/vcf91-vna-2/Iperf3%20Results_hu_1a69af5d116b033.jpg" alt="Iperf3 Results" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Iperf3 Results</div>
-                    </a><a href="/vcf91-vna-2/VNA%20-%20CPU%20usage.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="VNA - CPU usage"><img src="/vcf91-vna-2/VNA%20-%20CPU%20usage_hu_e8ddf19c7092f395.jpg" alt="VNA - CPU usage" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - CPU usage</div>
+<div class="image-gallery" id="gallery-d924245a" data-gallery-picker><a href="/vcf91-vna-2/Iperf3%20Results.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="Iperf3 Results" data-preview-src="/vcf91-vna-2/Iperf3%20Results_hu_6dc793b0c129462e.jpg">
+                        <img src="/vcf91-vna-2/Iperf3%20Results_hu_48fa1315d4e5f89d.jpg" alt="Iperf3 Results" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Iperf3 Results</div>
+                    </a><a href="/vcf91-vna-2/VNA%20-%20CPU%20usage.jpg" class="gallery-item" data-lightbox-group="gallery-d924245a" data-title="VNA - CPU usage" data-preview-src="/vcf91-vna-2/VNA%20-%20CPU%20usage_hu_5cdeb539fd8af7bd.jpg">
+                        <img src="/vcf91-vna-2/VNA%20-%20CPU%20usage_hu_11a0943d4cc16b52.jpg" alt="VNA - CPU usage" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">VNA - CPU usage</div>
                     </a></div>
 <p>The tests were conducted using 128 parallel TCP streams in iPerf3 with a packet size of 1500 byte MTU. Each test VM was equipped with 4 vCPUs and 4 GB of RAM. As you can see in the screenshots, I achieved an impressive throughput of around 21.5 Gb/s with a VNA CPU core utilization of 90%. A small-form-factor VNA can use only one of its two vCPUs for the data path; the other CPU is responsible for the VNA itself.
 For my test results, it made no difference whether the test was unidirectional or bidirectional.
@@ -440,7 +476,7 @@ You can also see in TOP that fastpath interface 0 was used. I think the results 
 
 <aside class="admonition info" data-admonition-type="info">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -461,16 +497,18 @@ Spans can contain overlapping clusters; that is to say, a cluster can belong to 
 Here, you select the cluster, save it, and that&rsquo;s it.</p>
 
 
-<div class="image-gallery" id="gallery-a9fc1543"><a href="/vcf91-vna-2/Network%20Spans.jpg" class="gallery-item" data-lightbox-group="gallery-a9fc1543" data-title="Network Spans"><img src="/vcf91-vna-2/Network%20Spans_hu_36ca581955653ff6.jpg" alt="Network Spans" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Network Spans</div>
+<div class="image-gallery" id="gallery-a9fc1543" data-gallery-picker><a href="/vcf91-vna-2/Network%20Spans.jpg" class="gallery-item" data-lightbox-group="gallery-a9fc1543" data-title="Network Spans" data-preview-src="/vcf91-vna-2/Network%20Spans_hu_a8bb4b564f4f4764.jpg">
+                        <img src="/vcf91-vna-2/Network%20Spans_hu_5f2c7f8f02e6a735.jpg" alt="Network Spans" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Network Spans</div>
                     </a></div>
 
 
 <aside class="admonition node" data-admonition-type="node">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
         <b>Info</b>
     </div>
@@ -483,21 +521,33 @@ Here, you select the cluster, save it, and that&rsquo;s it.</p>
 <p>The solution here is to configure the span via the Desired State using the vCenter Client.</p>
 
 
-<div class="image-gallery" id="gallery-14a3ec81"><a href="/vcf91-vna-2/Span%20over%20Desired%20State.jpg" class="gallery-item" data-lightbox-group="gallery-14a3ec81" data-title="Span over Desired State"><img src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_ac78fe634c8c253d.jpg" alt="Span over Desired State" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Span over Desired State</div>
+<div class="image-gallery" id="gallery-14a3ec81" data-gallery-picker><a href="/vcf91-vna-2/Span%20over%20Desired%20State.jpg" class="gallery-item" data-lightbox-group="gallery-14a3ec81" data-title="Span over Desired State" data-preview-src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_2eb7e105ea235d50.jpg">
+                        <img src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_e7b3f3a4c5f780df.jpg" alt="Span over Desired State" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Span over Desired State</div>
                     </a></div>
 <p>To use Spans, simply create a new transit gateway and assign it to an existing Span. Alternatively, you can edit an existing one. However, if, for example, there are already VPCs active in a vSphere cluster that are not within the Span you want to assign, the operation will fail.</p>
 
 
-<div class="image-gallery" id="gallery-734281a7"><a href="/vcf91-vna-2/Transit%20Gateway%20Span.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Transit Gateway Span"><img src="/vcf91-vna-2/Transit%20Gateway%20Span_hu_e8067b4d7e775ae2.jpg" alt="Transit Gateway Span" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Transit Gateway Span</div>
-                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M01.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M01"><img src="/vcf91-vna-2/Networks%20for%20Span%20M01_hu_5182ad27cf87e3f9.jpg" alt="Networks for Span M01" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Networks for Span M01</div>
-                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M02.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M02"><img src="/vcf91-vna-2/Networks%20for%20Span%20M02_hu_4711c55b6e87f31c.jpg" alt="Networks for Span M02" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Networks for Span M02</div>
+<div class="image-gallery" id="gallery-734281a7" data-gallery-picker><a href="/vcf91-vna-2/Transit%20Gateway%20Span.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Transit Gateway Span" data-preview-src="/vcf91-vna-2/Transit%20Gateway%20Span_hu_d7a79dbfcfbaba21.jpg">
+                        <img src="/vcf91-vna-2/Transit%20Gateway%20Span_hu_29369e64b0bf6b1e.jpg" alt="Transit Gateway Span" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Transit Gateway Span</div>
+                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M01.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M01" data-preview-src="/vcf91-vna-2/Networks%20for%20Span%20M01_hu_352d319685110350.jpg">
+                        <img src="/vcf91-vna-2/Networks%20for%20Span%20M01_hu_d6354186206bd3e4.jpg" alt="Networks for Span M01" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Networks for Span M01</div>
+                    </a><a href="/vcf91-vna-2/Networks%20for%20Span%20M02.jpg" class="gallery-item" data-lightbox-group="gallery-734281a7" data-title="Networks for Span M02" data-preview-src="/vcf91-vna-2/Networks%20for%20Span%20M02_hu_42bb7de6cfc84502.jpg">
+                        <img src="/vcf91-vna-2/Networks%20for%20Span%20M02_hu_32b43c0827d9dea3.jpg" alt="Networks for Span M02" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Networks for Span M02</div>
                     </a></div>
 <p>As you can see in the screenshots, only the VPCs in the M02 span are visible on the M02 cluster, and only the VPCs assigned to the M01 span are visible on the M01 cluster.</p>
 
 
 <aside class="admonition note" data-admonition-type="note">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
@@ -515,15 +565,21 @@ However, this isn’t a major issue; the initial passwords can be retrieved via 
 It’s important to use the API call (GET /v1/credentials). The easiest way to find the correct credentials is to specify resourceName as a parameter; this is the FQDN of the VNA appliance. With the initial password, you can easily set your desired password via VCF Operations and Password Management.</p>
 
 
-<div class="image-gallery" id="gallery-eb5da8ef"><a href="/vcf91-vna-2/VNA%20-%20Credentials.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="VNA - Credentials"><img src="/vcf91-vna-2/VNA%20-%20Credentials_hu_25c20e245b3e8ee4.jpg" alt="VNA - Credentials" width="350" height="350" loading="lazy"><div class="gallery-item-caption">VNA - Credentials</div>
-                    </a><a href="/vcf91-vna-2/Inventory%20Sync.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="Inventory Sync"><img src="/vcf91-vna-2/Inventory%20Sync_hu_9a330d21dd0c2a2e.jpg" alt="Inventory Sync" width="350" height="350" loading="lazy"><div class="gallery-item-caption">Inventory Sync</div>
+<div class="image-gallery" id="gallery-eb5da8ef" data-gallery-picker><a href="/vcf91-vna-2/VNA%20-%20Credentials.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="VNA - Credentials" data-preview-src="/vcf91-vna-2/VNA%20-%20Credentials_hu_ae19022d264e3d29.jpg">
+                        <img src="/vcf91-vna-2/VNA%20-%20Credentials_hu_f6fb7075859bed44.jpg" alt="VNA - Credentials" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">VNA - Credentials</div>
+                    </a><a href="/vcf91-vna-2/Inventory%20Sync.jpg" class="gallery-item" data-lightbox-group="gallery-eb5da8ef" data-title="Inventory Sync" data-preview-src="/vcf91-vna-2/Inventory%20Sync_hu_640b477858f6239f.jpg">
+                        <img src="/vcf91-vna-2/Inventory%20Sync_hu_32ca562467daf437.jpg" alt="Inventory Sync" width="350" height="197" loading="lazy">
+
+                        <div class="gallery-item-caption">Inventory Sync</div>
                     </a></div>
 <p>In the future, password management will be removed from SDDC Manager and will be managed exclusively through VCF Operations. The current solution is therefore more of a temporary measure. This is also evident from the fact that the VNA is still listed as an “Edge” in the SDDC Manager UI.</p>
 
 
 <aside class="admonition note" data-admonition-type="note">
     <div class="admonition-title">
-        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
    </svg></div>
@@ -536,13 +592,9 @@ It’s important to use the API call (GET /v1/credentials). The easiest way to f
 <h2 id="conclusion">Conclusion<a href="#conclusion" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>My conclusion remains pretty much the same as in my first article. VNA is an exciting alternative or complement to the traditional edge cluster. It stands out for its simple configuration and the ease with which you can scale in and out. If I had to nitpick, I’d like to see a better password management workflow. It would be easy to make the automatic generation of passwords optional. Otherwise, I’ll just mention that the topic of VPCs and VNA isn’t exhausted yet, as there are still a few topics that didn’t make the cut. So I think there will be a third part coming soon.</p>
 
-			</div>
-			<div class="human posts"><a href="https://brainmade.org/" target="_blank" rel="external noreferrer noopener"><abbr title="I don't hate AIs; but I love humans!"><svg fill="#fff" width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
-      <path
-         d="M26.306 39.391H11.665a1.28 1.28 0 0 1-1.28-1.28v-3.838H6.399a1.28 1.28 0 0 1-1.28-1.28v-5.336l-4.41-2.198a1.28 1.28 0 0 1-.493-1.855l4.904-7.357v-2.175C5.12 6.298 11.422 0 19.194 0s14.073 6.3 14.075 14.071c-.316 13.912-5.38 11.758-5.59 17.023l-.093 7.018a1.3 1.3 0 0 1-.375.905 1.27 1.27 0 0 1-.905.375zm-13.361-2.559h12.082l.143-7.27c-.132-3.329 5.858-4.122 5.54-15.368-.179-6.356-5.157-11.635-11.515-11.635S7.68 7.713 7.679 14.071v2.559c-.001.253-.075.5-.215.71l-4.315 6.471 3.822 1.91a1.28 1.28 0 0 1 .708 1.145v4.848h3.987a1.28 1.28 0 0 1 1.28 1.28z" />
-      <path
-         d="M20.186 29.111v-9.644c.059 0 .118.009.177.009 4.885-.006 8.525-4.506 7.511-9.284a1.19 1.19 0 0 0-.911-.911 7.67 7.67 0 0 0-9.049 5.67l-.033-.036a7.66 7.66 0 0 0-7.03-2.085 1.19 1.19 0 0 0-.911.91c-1.014 4.777 2.627 9.277 7.51 9.284.118 0 .246-.014.369-.02v6.106zm1.419-16.072a5.33 5.33 0 0 1 4.062-1.553 5.33 5.33 0 0 1-5.614 5.615 5.3 5.3 0 0 1 1.552-4.061zm-7.904 6.057a5.3 5.3 0 0 1-1.559-4.061 5.323 5.323 0 0 1 5.614 5.615 5.3 5.3 0 0 1-4.055-1.554m38.419-6.79q0 2.346-1.567 3.63-1.567 1.282-4.351 1.283h-7.669V0h7.016q2.807 0 4.242 1.1 1.446 1.087 1.446 3.226 0 1.467-.729 2.481-.718 1.002-2.197 1.357 1.86.244 2.828 1.32.979 1.063.979 2.823zm-4.112-7.491q0-1.161-.663-1.65-.652-.488-1.947-.488h-3.655v4.265h3.677q1.36 0 1.968-.525.62-.537.62-1.601m.892 7.209q0-2.42-3.089-2.42h-4.069v4.938h4.188q1.545 0 2.252-.624.718-.635.718-1.894m16.26 5.194-3.557-6.538h-3.764v6.538H54.63V0h7.658q2.741 0 4.231 1.332 1.49 1.32 1.49 3.8 0 1.808-.913 3.128-.914 1.308-2.47 1.723l4.144 7.235zm-.381-11.94q0-2.481-2.828-2.481h-4.112v5.083h4.199q1.349 0 2.045-.684.696-.685.696-1.919m16.785 11.94-1.36-4.399h-5.841l-1.359 4.399h-3.209L75.386 0h3.785l5.569 17.219zM77.278 2.651l-.066.269q-.109.44-.261 1.002c-.152.563-.725 2.436-1.871 6.184h4.405l-1.512-4.949-.468-1.662zm9.551 14.567V0h3.209v17.219zm15.53 0L95.681 3.959q.196 1.931.196 3.104v10.155h-2.849V0h3.666l6.777 13.37q-.196-1.846-.196-3.361V0h2.85v17.219zM52.63 39.375V28.331q.011-.351.115-3.015-.818 3.257-1.209 4.541l-2.925 9.518h-2.418l-2.925-9.518-1.232-4.541q.139 2.809.139 3.717v10.342h-3.017V22.313h4.548l2.902 9.543.253.92.553 2.289.725-2.736 2.983-10.015h4.526v17.063zm17.64 0-1.44-4.359h-6.184l-1.44 4.359h-3.397l5.919-17.063h4.007l5.896 17.063zm-4.537-14.434-.069.267q-.115.436-.277.993c-.162.557-.767 2.414-1.98 6.128h4.663l-1.601-4.905-.495-1.647zm24.577 5.776q0 2.64-.99 4.614-.979 1.961-2.787 3.003-1.796 1.042-4.122 1.042h-6.564V22.313h5.873q4.099 0 6.345 2.18 2.245 2.167 2.245 6.224m-3.42 0q0-2.748-1.359-4.19-1.359-1.453-3.881-1.453h-2.407v11.54h2.879q2.188 0 3.478-1.586t1.29-4.311m6 8.659V22.313h12.759v2.761h-9.362v4.287h8.66v2.761h-8.66v4.492h9.835v2.761zm15.75 0v-3.693h3.328v3.693zm12.445-12.149q2.082 0 3.662.781 1.58.78 2.422 2.235.833 1.454.833 3.393 0 2.98-1.845 4.676Q124.302 40 121.085 40q-3.208 0-5.005-1.688-1.798-1.688-1.798-4.695c0-3.007.606-3.57 1.817-4.694q1.817-1.696 4.986-1.696m0 2.702q-2.157 0-3.378.97-1.23.97-1.23 2.72 0 1.777 1.22 2.747 1.211.97 3.388.97 2.195 0 3.462-.988 1.258-.997 1.258-2.711 0-1.778-1.23-2.738-1.23-.97-3.491-.97m6.725-13.402-5.062 2.935v3.107h5.062v2.648h-13.331v-6.322q0-2.261 1.031-3.491 1.022-1.23 2.942-1.23 1.4 0 2.422.754 1.012.754 1.334 2.038l5.601-3.42zm-9.244.314q-1.92 0-1.921 2.334v3.393h3.936v-3.465q0-1.113-.53-1.688t-1.486-.575m7.249-10.915a6.5 6.5 0 0 0-.313-2.002q-.321-.969-.814-1.499h-1.845v3.088h-2.063V0h4.901q1.088 1.005 1.703 2.622a9.4 9.4 0 0 1 .615 3.375q0 3.088-1.798 4.748-1.808 1.661-5.119 1.661-3.292 0-5.043-1.67-1.76-1.67-1.76-4.803 0-4.452 3.473-5.664l.776 2.442q-1.012.395-1.533 1.238-.52.844-.52 1.984 0 1.867 1.192 2.837t3.416.97q2.261 0 3.501-.997 1.23-1.005 1.23-2.818z" />
-   </svg></abbr></a></div>
+</div>
+
+			
 
 
 <div class="coffee-support">
@@ -596,20 +648,26 @@ It’s important to use the API call (GET /v1/credentials). The easiest way to f
    </svg></span><br><span>VCF 9.1 - VNA and VPCs</span>
 			</a>
 		</div>
-		<div id="comments" class="thin"></div><script src="/js/gallery.min.2ecc1b89d4341e7bbf04b2248466631f9b7e73500facb6de51f60247b392281b.js" defer></script>
+		<div id="comments" class="thin"></div><script src="/js/gallery.min.9bab1677e25a6ada0f3780ce7176b4a4cf68fc3716a53f31f27154f4a82590d7.js" defer></script>
 	</main>
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
 	<p>
 		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
-		&#183; COPYRIGHT Daniel Krieger</p>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
 
 <script defer src="/klaro/klaro-config.js"></script>
 
 <script defer src="/klaro/klaro.js"></script>
 <link rel="stylesheet" href="/klaro/klaro.css?v=1">
 </footer>
-<script async src="https://sdn-warrior.org/js/bundle.min.c7c384e4d29d192bbac6811ae4660bb01767194a5bea56baca77e8260f93ea16.js" integrity="sha256-x8OE5NKdGSu6xoEa5GYLsBdnGUpb6la6ynfoJg+T6hY=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+<script async src="https://sdn-warrior.org/js/bundle.min.54693fbaf1b966c963df177373052bd727d34e53d4520740957385dfb56935d2.js" integrity="sha256-VGk/uvG5Zslj3xdzcwUr1yfTTlPUUgdAlXOF37VpNdI=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
 </body>
 
 </html>
