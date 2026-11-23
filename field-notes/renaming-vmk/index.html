@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics">
+  // Hier kommt dein GA-Code (Google Analytics 4 empfohlen!)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YNTG7NNKQN', { 'anonymize_ip': true });
+</script>
+
+<script type="text/plain" data-type="application/javascript" data-name="googleAnalytics" src="https://www.googletagmanager.com/gtag/js?id=G-YNTG7NNKQN"></script>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge"><meta name="robots" content="index, follow"><link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico" type="image/x-icon"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c"><meta name="author" content="SDN-Warrior">
+
+	<meta itemprop="name" content="Renaming vmk Adapter">
+	<meta itemprop="description" content="Did you know that you can rename VMK adapters on an ESX host relatively easily? Did you know that you can rename VMK adapters on an ESX host relatively easily?
+Preparation The ESX host should be in maintenance mode, and a reboot is required to apply the settings. In addition, SSH must be temporarily enabled on the host. You can use esxcfg-vmknic -l to display all vmk adapters on the ESX host.">
+	<meta itemprop="datePublished" content="2026-11-23T22:44:02+01:00">
+	<meta itemprop="dateModified" content="2026-11-23T22:44:02+01:00">
+	<meta itemprop="wordCount" content="712">
+	<meta itemprop="image" content="https://sdn-warrior.org/images/preview.png"><meta property="og:url" content="https://sdn-warrior.org/field-notes/renaming-vmk/">
+	<meta property="og:site_name" content="SDN-Warrior | Daniel Krieger">
+	<meta property="og:title" content="Renaming vmk Adapter">
+	<meta property="og:description" content="Did you know that you can rename VMK adapters on an ESX host relatively easily? Did you know that you can rename VMK adapters on an ESX host relatively easily?
+Preparation The ESX host should be in maintenance mode, and a reboot is required to apply the settings. In addition, SSH must be temporarily enabled on the host. You can use esxcfg-vmknic -l to display all vmk adapters on the ESX host.">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="field-notes">
+		<meta property="article:published_time" content="2026-11-23T22:44:02+01:00">
+		<meta property="article:modified_time" content="2026-11-23T22:44:02+01:00">
+		<meta property="og:image" content="https://sdn-warrior.org/images/preview.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://sdn-warrior.org/images/preview.png">
+	<meta name="twitter:title" content="Renaming vmk Adapter">
+	<meta name="twitter:description" content="Did you know that you can rename VMK adapters on an ESX host relatively easily? Did you know that you can rename VMK adapters on an ESX host relatively easily?
+Preparation The ESX host should be in maintenance mode, and a reboot is required to apply the settings. In addition, SSH must be temporarily enabled on the host. You can use esxcfg-vmknic -l to display all vmk adapters on the ESX host.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Renaming vmk Adapter",
+    "name": "Renaming vmk Adapter",
+    "description": "Did you know that you can rename VMK adapters on an ESX host relatively easily? Did you know that you can rename VMK adapters on an ESX host relatively easily?\nPreparation The ESX host should be in maintenance mode, and a reboot is required to apply the settings. In addition, SSH must be temporarily enabled on the host. You can use esxcfg-vmknic -l to display all vmk adapters on the ESX host.\n",
+    "keywords": [],
+    "articleBody": "Did you know that you can rename VMK adapters on an ESX host relatively easily? Did you know that you can rename VMK adapters on an ESX host relatively easily?\nPreparation The ESX host should be in maintenance mode, and a reboot is required to apply the settings. In addition, SSH must be temporarily enabled on the host. You can use esxcfg-vmknic -l to display all vmk adapters on the ESX host.\nesxcfg-vmknic -l vmk0 20 IPv4 10.40.13.21 255.255.255.0 10.40.13.255 00:50:56:8e:73:88 1500 65535 true STATIC defaultTcpipStack vmk0 20 IPv6 fe80::250:56ff:fe8e:7388 64 00:50:56:8e:73:88 1500 65535 true STATIC, PREFERRED defaultTcpipStack vmk2 9 IPv4 10.49.50.46 255.255.255.0 10.49.50.255 00:50:56:6b:c1:45 8900 65535 true STATIC defaultTcpipStack vmk2 9 IPv6 fe80::250:56ff:fe6b:c145 64 00:50:56:6b:c1:45 8900 65535 true STATIC, PREFERRED defaultTcpipStack vmk10 5411cfdf-5a53-48be-a593-3fc4614eb396 IPv4 10.40.16.32 255.255.255.0 10.40.16.255 00:50:56:66:da:53 8900 65535 true STATIC vxlan vmk10 5411cfdf-5a53-48be-a593-3fc4614eb396 IPv6 fe80::250:56ff:fe66:da53 64 00:50:56:66:da:53 8900 65535 true STATIC, PREFERRED vxlan vmk11 496dd497-1942-4cb4-a342-32dda43d7b48 IPv4 10.40.16.33 255.255.255.0 10.40.16.255 00:50:56:64:b9:1b 8900 65535 true STATIC vxlan vmk11 496dd497-1942-4cb4-a342-32dda43d7b48 IPv6 fe80::250:56ff:fe64:b91b 64 00:50:56:64:b9:1b 8900 65535 true STATIC, PREFERRED vxlan vmk50 37f1293e-2490-4434-a3c4-e2d2ce975c14 IPv4 169.254.1.1 255.255.0.0 169.254.255.255 00:50:56:63:84:0a 1500 65535 true STATIC hyperbus vmk50 37f1293e-2490-4434-a3c4-e2d2ce975c14 IPv6 fe80::250:56ff:fe63:840a 64 00:50:56:63:84:0a 1500 65535 true STATIC, PREFERRED hyperbus vmk1 1 IPv4 10.40.15.16 255.255.255.0 10.40.15.255 00:50:56:64:5c:8d 8900 65535 true STATIC vmotion vmk1 1 IPv6 fe80::250:56ff:fe64:5c8d 64 00:50:56:64:5c:8d 8900 65535 true STATIC, PREFERRED vmotion Execution First, we export the current configuration of the vmk adapters to a JSON file so we can edit it manually. Then we overwrite the existing configuration with our changes and reboot the system. The changes will then be persistent.\nconfigstorecli config current get -c esx -g network -k vmknics \u003e vmknics.json vi vmknics.json configstorecli config current set -c esx -g network -k vmknics -j vmknics.json --overwrite reboot now Here is a sample JSON from one of my lab hosts.\n[ { \"device\": \"vmk0\", \"dhcp_bound\": false, \"enabled\": true, \"enabled_services\": { \"management\": true }, \"ip\": { \"dhcp\": false, \"dhcp_dns\": false, \"ipv4_address\": \"10.40.13.21\", \"ipv4_subnet_mask\": \"255.255.255.0\", \"ipv6\": { \"auto_configuration_enabled\": true, \"dhcp\": false, \"dhcp_dns\": false }, \"ipv6_enabled\": true }, \"ip_route_default_gateway\": \"10.40.13.1\", \"mac\": \"00:50:56:8e:73:88\", \"mac_mode\": \"PNIC_BASED\", \"net_stack_instance_key\": \"defaultTcpipStack\", \"nic\": \"vmnic0\", \"port_connection_type\": \"VDS\", \"tso_mss\": 0, \"vds_port\": { \"connection_cookie\": 953678596, \"port_key\": \"20\", \"portgroup_name\": \"wld-cls-vds-01-pg-mgmt\", \"switch_name\": \"wld-cls-vds-01\", \"switch_uuid\": \"50 01 26 d0 65 60 d8 d9-c6 05 02 f5 c2 49 45 e6\" } }, { \"device\": \"vmk1\", \"enabled\": true, \"enabled_services\": { \"vmotion\": true }, \"ip\": { \"dhcp\": false, \"dhcp_dns\": false, \"ipv4_address\": \"10.40.15.16\", \"ipv4_subnet_mask\": \"255.255.255.0\", \"ipv6\": { \"auto_configuration_enabled\": false, \"dhcp\": false, \"dhcp_dns\": false }, \"ipv6_enabled\": true }, \"ip_route_default_gateway\": \"0.0.0.0\", \"mac\": \"00:50:56:64:5c:8d\", \"mac_mode\": \"AUTO_GENERATED\", \"mtu\": 8900, \"net_stack_instance_key\": \"vmotion\", \"port_connection_type\": \"VDS\", \"tso_mss\": 0, \"vds_port\": { \"connection_cookie\": 949927750, \"port_key\": \"1\", \"portgroup_name\": \"wld-cls-vds-01-pg-vmotion\", \"switch_name\": \"wld-cls-vds-01\", \"switch_uuid\": \"50 01 26 d0 65 60 d8 d9-c6 05 02 f5 c2 49 45 e6\" } }, { \"device\": \"vmk2\", \"enabled\": true, \"ip\": { \"dhcp\": false, \"dhcp_dns\": false, \"ipv4_address\": \"10.49.50.46\", \"ipv4_subnet_mask\": \"255.255.255.0\", \"ipv6\": { \"auto_configuration_enabled\": false, \"dhcp\": false, \"dhcp_dns\": false }, \"ipv6_enabled\": true }, \"ip_route_default_gateway\": \"10.49.50.1\", \"mac\": \"00:50:56:6b:c1:45\", \"mac_mode\": \"AUTO_GENERATED\", \"mtu\": 8900, \"net_stack_instance_key\": \"defaultTcpipStack\", \"port_connection_type\": \"VDS\", \"tso_mss\": 0, \"vds_port\": { \"connection_cookie\": 952629631, \"port_key\": \"9\", \"portgroup_name\": \"wld-cls-vds-01-pg-nfs\", \"switch_name\": \"wld-cls-vds-01\", \"switch_uuid\": \"50 01 26 d0 65 60 d8 d9-c6 05 02 f5 c2 49 45 e6\" } } ] For demonstration purposes, I renamed my vmk0 to vmk4. (The CLI output has been shortened.)\n[root@esxwld01:~] esxcfg-vmknic -l Interface Port Group/DVPort/Opaque Network IP Family IP Address Netmask Broadcast MAC Address MTU TSO MSS Enabled Type NetStack vmk4 20 IPv4 10.40.13.21 255.255.255.0 10.40.13.255 00:50:56:8e:73:88 1500 65535 true STATIC defaultTcpipStack vmk4 20 IPv6 fe80::250:56ff:fe8e:7388 64 00:50:56:8e:73:88 1500 65535 true STATIC, PREFERRED defaultTcpipStack Why? Well, the answer is relatively simple: to simplify operation and troubleshooting. When you build a VCF cluster with different network configurations (different server generations or more network cards), it can be confusing when you try to troubleshoot something in the logs and find that the vMotion VMK adapter is adapter 2 on one server and adapter 3 on another. Another example is Host Add in a VxRail VCF cluster. With VCF 9.1, the VxRail host loses its VMK 0 discovery interface after host commissioning. As a result, the VMK assignment no longer matches that of the existing host. This isn’t really a problem, but having identical VMK names makes operations easier.\nA quick warning to wrap things up\rDo not use this method to change the names of the NSX vmk adapters!\r",
+    "wordCount" : "712",
+    "inLanguage": "en",
+    "datePublished": "2026-11-23T22:44:02+01:00",
+    "dateModified": "2026-11-23T22:44:02+01:00",
+    "author":{
+        "@type": "Person",
+        "name": "SDN-Warrior",
+        "url": "https://sdn-warrior.org/about/"
+        },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://sdn-warrior.org/field-notes/renaming-vmk/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SDN-Warrior | Daniel Krieger",
+      "description": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sdn-warrior.org/favicon.ico"
+      }
+    }
+}
+</script><title>Renaming vmk Adapter</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://sdn-warrior.org/css/style.min.ae743860a09cb54b4b8c47ffc2302d84016624025d523e3e50aa49c99eb47f6e.css" integrity="sha256-rnQ4YKCctUtLjEf/wjAthAFmJAJdUj4+UKpJyZ60f24=" crossorigin="anonymous">
+  <style>.bg-img {background-image: url('/images/net2.JPG');}</style>
+  <link rel="canonical" href="https://sdn-warrior.org/field-notes/renaming-vmk/">
+</head>
+<body id="page">
+  <header id="site-header" class="site-bar">
+	<div class="hdr-wrapper section-inner">
+		<div class="hdr-left">
+			<div class="site-branding">
+				<a href="https://sdn-warrior.org/" aria-label="SDN-Warrior | Daniel Krieger"><span class="site-wordmark">
+    <span>SDN-Warrior</span>
+    <span class="site-wordmark-divider" aria-hidden="true"></span>
+    <span>Daniel Krieger</span>
+  </span></a>
+			</div>
+			<nav class="site-nav hide-in-mobile"><a href="https://sdn-warrior.org/posts/">Posts</a>
+<a href="https://sdn-warrior.org/field-notes/" aria-current="true">Field Notes</a>
+<a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a>
+<a href="https://sdn-warrior.org/links/">Links</a>
+<a href="https://sdn-warrior.org/about/">About Me</a>
+<a href="https://sdn-warrior.org/imprint/">Imprint</a>
+</nav>
+		</div>
+
+		<div class="hdr-right hdr-icons">
+			<button id="img-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+   </svg></button><span class="hdr-links hide-in-mobile"><a href="https://de.linkedin.com/in/daniel-krieger-6476591a9" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+   </svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fsdn-warrior.org%2ffield-notes%2frenaming-vmk%2f&amp;text=Renaming%20vmk%20Adapter" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6" />
+</svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdn-warrior.org%2ffield-notes%2frenaming-vmk%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=Renaming%20vmk%20Adapter&amp;body=https%3a%2f%2fsdn-warrior.org%2ffield-notes%2frenaming-vmk%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+   <polyline points="22,6 12,13 2,6"></polyline>
+</svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fsdn-warrior.org%2ffield-notes%2frenaming-vmk%2f&amp;source=https%3a%2f%2fsdn-warrior.org%2f&amp;title=Renaming%20vmk%20Adapter&amp;summary=Renaming%20vmk%20Adapter%2c%20by%20SDN-Warrior%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+   <rect x="2" y="9" width="4" height="12"></rect>
+   <circle cx="4" cy="4" r="2"></circle>
+</svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;Renaming vmk Adapter&#34;,&#34;https://sdn-warrior.org/field-notes/renaming-vmk/&#34;,&#34;Renaming vmk Adapter, by SDN-Warrior\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+   </svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+   </svg></button>
+		</div>
+	</div>
+</header>
+
+<div id="mobile-menu" class="site-bar animated fast">
+	<ul>
+		<li><a href="https://sdn-warrior.org/posts/">Posts</a>
+</li>
+		<li><a href="https://sdn-warrior.org/field-notes/" aria-current="true">Field Notes</a>
+</li>
+		<li><a href="https://sdn-warrior.org/lab-bom/">Lab BOM</a>
+</li>
+		<li><a href="https://sdn-warrior.org/links/">Links</a>
+</li>
+		<li><a href="https://sdn-warrior.org/about/">About Me</a>
+</li>
+		<li><a href="https://sdn-warrior.org/imprint/">Imprint</a>
+</li>
+	</ul>
+</div>
+
+
+  <div class="bg-img"></div>
+  <main class="site-main section-inner article-layout animated fadeIn faster">
+    <div class="thin"><nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+                <a href="/">SDN-Warrior | Daniel Krieger</a>
+            </li>
+            <li class="breadcrumbs__item">
+                <a href="/field-notes/">Field Notes</a>
+            </li>
+
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">
+            Renaming vmk Adapter
+        </li>
+    </ol>
+</nav></div>
+    <article class="thin">
+      <header class="post-header">
+  <div class="post-meta"><span>Nov 23, 2026</span></div>
+  <h1>Renaming vmk Adapter</h1>
+</header>
+
+      
+      <hr class="post-end">
+      <div class="content">
+  <p>Did you know that you can rename VMK adapters on an ESX host relatively easily? Did you know that you can rename VMK adapters on an ESX host relatively easily?</p>
+<h2 id="preparation">Preparation<a href="#preparation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The ESX host should be in maintenance mode, and a reboot is required to apply the settings. In addition, SSH must be temporarily enabled on the host. You can use <code>esxcfg-vmknic -l</code> to display all vmk adapters on the ESX host.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">esxcfg-vmknic -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vmk0       <span class="m">20</span>                                      IPv4      10.40.13.21                             255.255.255.0   10.40.13.255    00:50:56:8e:73:88 <span class="m">1500</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              defaultTcpipStack   
+</span></span><span class="line"><span class="cl">vmk0       <span class="m">20</span>                                      IPv6      fe80::250:56ff:fe8e:7388                <span class="m">64</span>                              00:50:56:8e:73:88 <span class="m">1500</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   defaultTcpipStack   
+</span></span><span class="line"><span class="cl">vmk2       <span class="m">9</span>                                       IPv4      10.49.50.46                             255.255.255.0   10.49.50.255    00:50:56:6b:c1:45 <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              defaultTcpipStack   
+</span></span><span class="line"><span class="cl">vmk2       <span class="m">9</span>                                       IPv6      fe80::250:56ff:fe6b:c145                <span class="m">64</span>                              00:50:56:6b:c1:45 <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   defaultTcpipStack   
+</span></span><span class="line"><span class="cl">vmk10      5411cfdf-5a53-48be-a593-3fc4614eb396    IPv4      10.40.16.32                             255.255.255.0   10.40.16.255    00:50:56:66:da:53 <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              vxlan               
+</span></span><span class="line"><span class="cl">vmk10      5411cfdf-5a53-48be-a593-3fc4614eb396    IPv6      fe80::250:56ff:fe66:da53                <span class="m">64</span>                              00:50:56:66:da:53 <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   vxlan               
+</span></span><span class="line"><span class="cl">vmk11      496dd497-1942-4cb4-a342-32dda43d7b48    IPv4      10.40.16.33                             255.255.255.0   10.40.16.255    00:50:56:64:b9:1b <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              vxlan               
+</span></span><span class="line"><span class="cl">vmk11      496dd497-1942-4cb4-a342-32dda43d7b48    IPv6      fe80::250:56ff:fe64:b91b                <span class="m">64</span>                              00:50:56:64:b9:1b <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   vxlan               
+</span></span><span class="line"><span class="cl">vmk50      37f1293e-2490-4434-a3c4-e2d2ce975c14    IPv4      169.254.1.1                             255.255.0.0     169.254.255.255 00:50:56:63:84:0a <span class="m">1500</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              hyperbus            
+</span></span><span class="line"><span class="cl">vmk50      37f1293e-2490-4434-a3c4-e2d2ce975c14    IPv6      fe80::250:56ff:fe63:840a                <span class="m">64</span>                              00:50:56:63:84:0a <span class="m">1500</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   hyperbus            
+</span></span><span class="line"><span class="cl">vmk1       <span class="m">1</span>                                       IPv4      10.40.15.16                             255.255.255.0   10.40.15.255    00:50:56:64:5c:8d <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              vmotion             
+</span></span><span class="line"><span class="cl">vmk1       <span class="m">1</span>                                       IPv6      fe80::250:56ff:fe64:5c8d                <span class="m">64</span>                              00:50:56:64:5c:8d <span class="m">8900</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   vmotion            
+</span></span></code></pre></div><h2 id="execution">Execution<a href="#execution" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>First, we export the current configuration of the vmk adapters to a JSON file so we can edit it manually. Then we overwrite the existing configuration with our changes and reboot the system. The changes will then be persistent.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">configstorecli config current get -c esx -g network -k vmknics &gt; vmknics.json
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vi vmknics.json
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">configstorecli config current <span class="nb">set</span> -c esx -g network -k vmknics -j vmknics.json --overwrite
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">reboot now
+</span></span></code></pre></div><p>Here is a sample JSON from one of my lab hosts.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-JSON" data-lang="JSON"><span class="line"><span class="cl"><span class="p">[</span>
+</span></span><span class="line"><span class="cl">   <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;device&#34;</span><span class="p">:</span> <span class="s2">&#34;vmk0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;dhcp_bound&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;enabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;enabled_services&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;management&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;dhcp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;dhcp_dns&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv4_address&#34;</span><span class="p">:</span> <span class="s2">&#34;10.40.13.21&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv4_subnet_mask&#34;</span><span class="p">:</span> <span class="s2">&#34;255.255.255.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv6&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;auto_configuration_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;dhcp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;dhcp_dns&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">         <span class="p">},</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv6_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip_route_default_gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.40.13.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mac&#34;</span><span class="p">:</span> <span class="s2">&#34;00:50:56:8e:73:88&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mac_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;PNIC_BASED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;net_stack_instance_key&#34;</span><span class="p">:</span> <span class="s2">&#34;defaultTcpipStack&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;nic&#34;</span><span class="p">:</span> <span class="s2">&#34;vmnic0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;port_connection_type&#34;</span><span class="p">:</span> <span class="s2">&#34;VDS&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;tso_mss&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vds_port&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;connection_cookie&#34;</span><span class="p">:</span> <span class="mi">953678596</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;port_key&#34;</span><span class="p">:</span> <span class="s2">&#34;20&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;portgroup_name&#34;</span><span class="p">:</span> <span class="s2">&#34;wld-cls-vds-01-pg-mgmt&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;switch_name&#34;</span><span class="p">:</span> <span class="s2">&#34;wld-cls-vds-01&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;switch_uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;50 01 26 d0 65 60 d8 d9-c6 05 02 f5 c2 49 45 e6&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">},</span>
+</span></span><span class="line"><span class="cl">   <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;device&#34;</span><span class="p">:</span> <span class="s2">&#34;vmk1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;enabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;enabled_services&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;vmotion&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;dhcp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;dhcp_dns&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv4_address&#34;</span><span class="p">:</span> <span class="s2">&#34;10.40.15.16&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv4_subnet_mask&#34;</span><span class="p">:</span> <span class="s2">&#34;255.255.255.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv6&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;auto_configuration_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;dhcp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;dhcp_dns&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">         <span class="p">},</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv6_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip_route_default_gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;0.0.0.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mac&#34;</span><span class="p">:</span> <span class="s2">&#34;00:50:56:64:5c:8d&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mac_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;AUTO_GENERATED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="mi">8900</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;net_stack_instance_key&#34;</span><span class="p">:</span> <span class="s2">&#34;vmotion&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;port_connection_type&#34;</span><span class="p">:</span> <span class="s2">&#34;VDS&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;tso_mss&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vds_port&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;connection_cookie&#34;</span><span class="p">:</span> <span class="mi">949927750</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;port_key&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;portgroup_name&#34;</span><span class="p">:</span> <span class="s2">&#34;wld-cls-vds-01-pg-vmotion&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;switch_name&#34;</span><span class="p">:</span> <span class="s2">&#34;wld-cls-vds-01&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;switch_uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;50 01 26 d0 65 60 d8 d9-c6 05 02 f5 c2 49 45 e6&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">},</span>
+</span></span><span class="line"><span class="cl">   <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;device&#34;</span><span class="p">:</span> <span class="s2">&#34;vmk2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;enabled&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;dhcp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;dhcp_dns&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv4_address&#34;</span><span class="p">:</span> <span class="s2">&#34;10.49.50.46&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv4_subnet_mask&#34;</span><span class="p">:</span> <span class="s2">&#34;255.255.255.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv6&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;auto_configuration_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;dhcp&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;dhcp_dns&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">         <span class="p">},</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;ipv6_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;ip_route_default_gateway&#34;</span><span class="p">:</span> <span class="s2">&#34;10.49.50.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mac&#34;</span><span class="p">:</span> <span class="s2">&#34;00:50:56:6b:c1:45&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mac_mode&#34;</span><span class="p">:</span> <span class="s2">&#34;AUTO_GENERATED&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mtu&#34;</span><span class="p">:</span> <span class="mi">8900</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;net_stack_instance_key&#34;</span><span class="p">:</span> <span class="s2">&#34;defaultTcpipStack&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;port_connection_type&#34;</span><span class="p">:</span> <span class="s2">&#34;VDS&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;tso_mss&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vds_port&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;connection_cookie&#34;</span><span class="p">:</span> <span class="mi">952629631</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;port_key&#34;</span><span class="p">:</span> <span class="s2">&#34;9&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;portgroup_name&#34;</span><span class="p">:</span> <span class="s2">&#34;wld-cls-vds-01-pg-nfs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;switch_name&#34;</span><span class="p">:</span> <span class="s2">&#34;wld-cls-vds-01&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;switch_uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;50 01 26 d0 65 60 d8 d9-c6 05 02 f5 c2 49 45 e6&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></div><p>For demonstration purposes, I renamed my vmk0 to vmk4. (The CLI output has been shortened.)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>root@esxwld01:~<span class="o">]</span> esxcfg-vmknic -l
+</span></span><span class="line"><span class="cl">Interface  Port Group/DVPort/Opaque Network        IP Family IP Address                              Netmask         Broadcast       MAC Address       MTU     TSO MSS   Enabled Type                NetStack            
+</span></span><span class="line"><span class="cl">vmk4       <span class="m">20</span>                                      IPv4      10.40.13.21                             255.255.255.0   10.40.13.255    00:50:56:8e:73:88 <span class="m">1500</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC              defaultTcpipStack   
+</span></span><span class="line"><span class="cl">vmk4       <span class="m">20</span>                                      IPv6      fe80::250:56ff:fe8e:7388                <span class="m">64</span>                              00:50:56:8e:73:88 <span class="m">1500</span>    <span class="m">65535</span>     <span class="nb">true</span>    STATIC, PREFERRED   defaultTcpipStack   
+</span></span></code></pre></div><h2 id="why">Why?<a href="#why" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Well, the answer is relatively simple: to simplify operation and troubleshooting. When you build a VCF cluster with different network configurations (different server generations or more network cards), it can be confusing when you try to troubleshoot something in the logs and find that the vMotion VMK adapter is adapter 2 on one server and adapter 3 on another. Another example is Host Add in a VxRail VCF cluster. With VCF 9.1, the VxRail host loses its VMK 0 discovery interface after host commissioning. As a result, the VMK assignment no longer matches that of the existing host. This isn’t really a problem, but having identical VMK names makes operations easier.</p>
+
+
+<aside class="admonition warning" data-admonition-type="warning">
+    <div class="admonition-title">
+        <div class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+   </svg></div>
+        <b>A quick warning to wrap things up</b>
+    </div>
+    <div class="admonition-content">Do not use this method to change the names of the NSX vmk adapters!</div>
+</aside>
+
+</div>
+
+      <div class="coffee-support">
+  <span class="coffee-support-text">Enjoyed my work?</span>
+  <a
+    href="https://www.buymeacoffee.com/sdnwarrior"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="coffee-support-link"
+  >
+    [ BUY ME A COFFEE ]
+  </a>
+</div>
+
+<div class="post-divider">
+  <img src="/end.png" alt="End graphic" loading="lazy">
+</div>
+
+    </article>
+    <script src="/js/gallery.min.9bab1677e25a6ada0f3780ce7176b4a4cf68fc3716a53f31f27154f4a82590d7.js" defer></script>
+  </main>
+
+  <footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2026 <a href="https://sdn-warrior.org/">SDN-Warrior</a>
+		&#183; COPYRIGHT Daniel Krieger
+		&#183; <a href="https://sdn-warrior.org/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss">
+   <path d="M4 11a9 9 0 0 1 9 9"></path>
+   <path d="M4 4a16 16 0 0 1 16 16"></path>
+   <circle cx="5" cy="19" r="1"></circle>
+</svg></a></p>
+
+<script defer src="/klaro/klaro-config.js"></script>
+
+<script defer src="/klaro/klaro.js"></script>
+<link rel="stylesheet" href="/klaro/klaro.css?v=1">
+</footer>
+<script async src="https://sdn-warrior.org/js/bundle.min.54693fbaf1b966c963df177373052bd727d34e53d4520740957385dfb56935d2.js" integrity="sha256-VGk/uvG5Zslj3xdzcwUr1yfTTlPUUgdAlXOF37VpNdI=" crossorigin="anonymous"></script><script async src="https://sdn-warrior.org/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>
