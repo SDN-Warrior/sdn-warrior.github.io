@@ -300,13 +300,11 @@ Manual password rotation via the UI and via the API is supported for the followi
 <p>However, when changing a password via Operations, the password policy is automatically enforced and verified. Operations itself does not store any passwords, and as far as I know, there is no way in version 9.1.1 – not even via the internal API – to have Operations display a password. If you want to automate password management, you’ll have no choice but to use an external secret vault where passwords are stored so that you can change them programmatically via the API. In version 9.1, CyberArk is directly supported via plugin integration in Operations, but since I don’t have CyberArk in my lab, I haven’t been able to test this yet.</p>
 <h2 id="password-policys">Password Policys</h2>
 <p>VCF 9.1 introduces another feature: password policies. This feature allows a password policy to be applied either fleet-wide or separately across VCF instances and VCF Management (fleet components). The feature can be found under Manage -&gt; Fleet Management -&gt; Passwords -&gt; Password Policy in VCF Operations. You can configure the minimum password length, character limits, account lockout parameters, and password expiration. By the way, this is a very convenient way to avoid having to constantly deal with expired passwords in the lab, especially when it&rsquo;s not always turned on.</p>
-
-
-<div class="image-gallery" id="gallery-94316b5e" data-gallery-picker><a href="/vcf911-password/Password%20Policy.png" class="gallery-item" data-lightbox-group="gallery-94316b5e" data-title="Password Policy" data-preview-src="/vcf911-password/Password%20Policy_hu_c28e00ac871eb3eb.png">
-                        <img src="/vcf911-password/Password%20Policy_hu_52254383f02021a5.png" alt="Password Policy" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Password Policy</div>
-                    </a></div>
+<figure><a href="Password%20Policy.png"><picture><source srcset="/vcf911-password/Password%20Policy_hu_7442048b8aeef847.png" type="image/png">
+          <img
+            src="/vcf911-password/Password%20Policy_hu_7442048b8aeef847.png"alt="Password Policy"width="1694"
+            height="1267" loading="lazy"/>
+        </picture></a><figcaption><p>Password Policy</p></figcaption></figure>
 <h2 id="full-account-list-for-vcf-91x">Full Account List for VCF 9.1.x</h2>
 <p>It&rsquo;s fun — not!</p>
 <div class="table-wrapper">
@@ -828,13 +826,11 @@ I actually thought VCF 9.1.1 would just be a minor update, but there’s been a 
 </div><p>The VyOS-01-BGW router serves a dual role. It acts as a leaf, connecting the Alpine-PR-01 test VM to the client network, while also functioning as a EVPN gateway, thereby serving as the central BGP peering point with the NSX EVPN Route Controllers. The table shows the VTEP addresses of the two VyOS routers and the addresses of the test VMs in the L2 VNI. Details can be found in the diagram. For MP-BGP peering, VyOS-01 uses another address: 10.28.10.1. I have excluded the management addresses from the overview.</p>
 <p>VyOS-02 is only a leaf for Alpine-PR-02. In addition, EVPN information is exchanged via an iBGP session (L2VPN EVPN) with VyOS-01-BGW (AS 64515).</p>
 <p>The VXLAN configuration uses two VNIs: a Layer 2 VNI (65260), which extends the client segment across both routers, and a Layer 3 VNI (65000), which is associated with the “Tenant” VRF and provides the routing context. Each VNI is connected to its own Linux bridge. For the L2 VNI, I used a static VXLAN remote VTEP for simplicity. The Linux bridge for the L2 VNI is also assigned to the “tenant” VRF so that later, both the test VMs on the physical side and the test VMs in the VPC will belong to the same routing context. Both routers use different export targets, and each imports all routes from the other router. The topic of route targets will become important again later when it comes to configuring the EVPN Route Controller.</p>
-
-
-<div class="image-gallery" id="gallery-ce205821" data-gallery-picker><a href="/dtgw-vxlan-2/VyOS%20Fabric.png" class="gallery-item" data-lightbox-group="gallery-ce205821" data-title="VyOS Fabric" data-preview-src="/dtgw-vxlan-2/VyOS%20Fabric_hu_f6bbe97b4a1178b1.png">
-                        <img src="/dtgw-vxlan-2/VyOS%20Fabric_hu_db6877b6038f30d4.png" alt="VyOS Fabric" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">VyOS Fabric</div>
-                    </a></div>
+<figure><a href="VyOS%20Fabric.png"><picture><source srcset="/dtgw-vxlan-2/VyOS%20Fabric_hu_5d4f3cf31ec63092.png" type="image/png">
+          <img
+            src="/dtgw-vxlan-2/VyOS%20Fabric_hu_5d4f3cf31ec63092.png"alt="VyOS Fabric"width="2740"
+            height="2254" loading="lazy"/>
+        </picture></a><figcaption><p>VyOS Fabric</p></figcaption></figure>
 <h3 id="vlans-and-interfaces">VLANs and Interfaces</h3>
 <p>As you can clearly see in the diagram, I&rsquo;m using 3 VLANs. Their functions are shown in the table below.</p>
 <div class="table-wrapper">
@@ -1139,7 +1135,7 @@ I actually thought VCF 9.1.1 would just be a minor update, but there’s been a 
 <h2 id="evpn-route-controller-in-911">EVPN Route Controller in 9.1.1</h2>
 <p>One of the cool new features is that the EVPN Route Controller now supports active/active mode and can scale out to up to 8 nodes. To use this effectively, you need at least two EVPN Gateways. In my setup, I’m using just one router that has MP-BGP peering with both EVPN Route Controllers. Not ideal, but hey, it’s a lab.</p>
 <p>In general, however, there are a few limitations or prerequisites. In active/active mode, only one MP-BGP interface per EVPN Route Controller can be used, even if a EVPN Route Controller has three interfaces. A non-configurable interface handles the notification messages during a vMotion operation.  Another interface is used for management traffic. This means all three interfaces are in use. Furthermore, configuring two or more interfaces for MP-BGP would only make the configuration unnecessarily complex, while providing minimal gains in resilience. The physical fabric must continue to announce a default route, even when fancy features like Direct Prefix Routing are used - I’ll explain what that is later.</p>
-<p>Since pictures speak louder than words, I&rsquo;ve created a diagram and attached some screenshots showing the key settings of the EVPN Route Controller. Since the diagram is quite large, it can be downloaded separately.</p>
+<p>Since pictures speak louder than words, I&rsquo;ve created a diagram and attached some screenshots showing the key settings of the EVPN Route Controller. Since the diagram is quite large, you can open the original in a separate tab.</p>
 
 
 <div class="image-gallery" id="gallery-8098f134" data-gallery-picker><a href="/dtgw-vxlan-2/Route%20Controller%20with%20VyOS%20EVPN%20Fabric.png" class="gallery-item" data-lightbox-group="gallery-8098f134" data-title="Route Controller with VyOS EVPN Fabric" data-preview-src="/dtgw-vxlan-2/Route%20Controller%20with%20VyOS%20EVPN%20Fabric_hu_5522d9de247aa9a1.png">
@@ -1159,11 +1155,23 @@ I actually thought VCF 9.1.1 would just be a minor update, but there’s been a 
 
                         <div class="gallery-item-caption">External Connection</div>
                     </a></div>
-<figure><a href="Route%20Controller%20with%20Vyos%20EVPN%20Fabric.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
-          <img
-            src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="EVPN Route Controller with VyOS EVPN Fabric"width="92"
-            height="105"/>
-        </picture></a><figcaption><p>VXLAN EVPN Fabric with RC (click to open)</p></figcaption></figure>
+<div class="diagram-link">
+      <span class="diagram-link-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9.5" y="2.5" width="5" height="5" rx="1"></rect>
+          <rect x="2" y="16.5" width="5" height="5" rx="1"></rect>
+          <rect x="17" y="16.5" width="5" height="5" rx="1"></rect>
+          <path d="M12 7.5v4.5m-7.5 4.5V12h15v4.5"></path>
+        </svg>
+      </span>
+      <div>
+        <strong class="diagram-link-title">VXLAN EVPN Fabric with RC</strong>
+        <span class="diagram-link-meta">Original PNG · 6,870 × 2,405 px</span>
+      </div>
+      <a class="diagram-link-action" href="/posts/vcf9.1.1-dtgw-vxlan/Route%20Controller%20with%20Vyos%20EVPN%20Fabric.png" target="_blank" rel="noopener" aria-label="Open diagram in new tab: VXLAN EVPN Fabric with RC">
+        Open diagram in new tab <span aria-hidden="true">↗</span>
+      </a>
+    </div>
 <h3 id="design-decisions-for-activeactive">Design Decisions for Active/Active</h3>
 <p>Unlike in active/standby mode, no floating IP is used for the MP-BGP session. This means that the EVPN Route Controllers can be located in independent L3 segments and do not require a shared L2 infrastructure. As for the failure domain, Broadcom recommends using different ESX servers in different vSphere clusters and racks (if possible). If vSAN is used, it is also recommended to distribute the EVPN route controllers across different vSAN storage clusters. At least two peerings to external BGW routers per EVPN Route Controller are recommended. ECMP with individual gateway VTEPs is possible. For BGP, the default values of 60/180 seconds are sufficient when BFD is used. While BFD is not recommended in active/standby mode, it is highly recommended in active/active mode.</p>
 
@@ -1536,11 +1544,23 @@ Once the VNA is configured in the profile, a service subnet is configured for th
 
                         <div class="gallery-item-caption">Route Controller with Vyos EVPN Fabric and VNA</div>
                     </a></div>
-<figure><a href="Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" target="_blank"><picture><source srcset="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png" type="image/png">
-          <img
-            src="/dtgw-vxlan-2/diag_hu_e33490608466ff2.png"alt="EVPN Route Controller with VyOS EVPN Fabric and VNA"width="92"
-            height="105"/>
-        </picture></a><figcaption><p>VXLAN EVPN Fabric with RC and VNA (click to open)</p></figcaption></figure>
+<div class="diagram-link">
+      <span class="diagram-link-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9.5" y="2.5" width="5" height="5" rx="1"></rect>
+          <rect x="2" y="16.5" width="5" height="5" rx="1"></rect>
+          <rect x="17" y="16.5" width="5" height="5" rx="1"></rect>
+          <path d="M12 7.5v4.5m-7.5 4.5V12h15v4.5"></path>
+        </svg>
+      </span>
+      <div>
+        <strong class="diagram-link-title">VXLAN EVPN Fabric with RC and VNA</strong>
+        <span class="diagram-link-meta">Original PNG · 7,779 × 2,394 px</span>
+      </div>
+      <a class="diagram-link-action" href="/posts/vcf9.1.1-dtgw-vxlan/Route%20Controller%20with%20Vyos%20EVPN%20Fabric%20and%20VNA.png" target="_blank" rel="noopener" aria-label="Open diagram in new tab: VXLAN EVPN Fabric with RC and VNA">
+        Open diagram in new tab <span aria-hidden="true">↗</span>
+      </a>
+    </div>
 <p>For my test, I created a private segment in my VPC and deployed a test VM (Alpine-NSX-03/10.10.0.3).
 My VNA appliance is on my ESX Host 3, and DPR is enabled. When I look at the traffic in Traceflow now, I can clearly see how the traffic flows from Alpine-NSX-03 to Alpine-PR-02.</p>
 <div class="table-wrapper">
@@ -1717,13 +1737,11 @@ ad38-1367f351ae0d</td>
     </tbody>
   </table>
 </div><p>What becomes clear here is that the traffic is routed through the VNA appliance due to the default outbound NAT, and that the traffic is passed on to the physical network via the TEP interface of ESX03. Furthermore, the destination is not the BGW router, but the leaf to which the destination VM is connected. You can view the default outbound NAT IP (10.100.0.8) in the VPC overview in vCenter or in NSX. There is a dedicated /32 route for the VNA on the VyOS fabric.</p>
-
-
-<div class="image-gallery" id="gallery-fe1fa20a" data-gallery-picker><a href="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP.png" class="gallery-item" data-lightbox-group="gallery-fe1fa20a" data-title="Default Outbound NAT IP" data-preview-src="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP_hu_e588d74001ef755.png">
-                        <img src="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP_hu_33e30f3166aadf1d.png" alt="Default Outbound NAT IP" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Default Outbound NAT IP</div>
-                    </a></div>
+<figure><a href="Default%20Outbound%20NAT%20IP.png"><picture><source srcset="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP_hu_d79c68ea03a2239.png" type="image/png">
+          <img
+            src="/dtgw-vxlan-2/Default%20Outbound%20NAT%20IP_hu_d79c68ea03a2239.png"alt="Default Outbound NAT IP"width="1439"
+            height="877" loading="lazy"/>
+        </picture></a><figcaption><p>Default Outbound NAT IP</p></figcaption></figure>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">vyos@VYOS-01-BGW:~$ show ip route vrf tenant 
 </span></span><span class="line"><span class="cl">Codes: K - kernel route, C - connected, L - local, S - static,
 </span></span><span class="line"><span class="cl">       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
@@ -1792,13 +1810,11 @@ Now that all the confusion has hopefully been straightened out, I can finally st
     <div class="admonition-content">At this point, at the very latest, I realize that a shorter acronym would have been better for writing, but the things I&rsquo;ll do for a good joke.</div>
 </aside>
 <p>Since, as we all know, a picture is worth a thousand words, I&rsquo;ve created a workflow diagram.</p>
-
-
-<div class="image-gallery" id="gallery-01821cf2" data-gallery-picker><a href="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow.jpg" class="gallery-item" data-lightbox-group="gallery-01821cf2" data-title="C.E.R.B.E.R.U.S. Workflow" data-preview-src="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_1f05f7330b43ab8f.jpg">
-                        <img src="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_1458ec4d1759ab87.jpg" alt="C.E.R.B.E.R.U.S. Workflow" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">C.E.R.B.E.R.U.S. Workflow</div>
-                    </a></div>
+<figure><a href="C.E.R.B.E.R.U.S.%20Workflow.jpg"><picture><source srcset="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_9939379d014f1835.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-cert-pipeline/C.E.R.B.E.R.U.S.%20Workflow_hu_9939379d014f1835.jpg"alt="C.E.R.B.E.R.U.S. Workflow"width="1784"
+            height="1882" loading="lazy"/>
+        </picture></a><figcaption><p>C.E.R.B.E.R.U.S. Workflow</p></figcaption></figure>
 <p>At first glance, the workflow is very simple: a certificate definition must be uploaded to Gitea; the runner retrieves it and uses Ansible to trigger the VCF Operations API to generate a CSR. Next, the actual certificate is issued via ACME and Let’s Encrypt. Finally, it’s passed to VCF via the VCF Operations API and replaced on the target system. Simple, right? Well, we’ll get to that later. The great thing about this workflow is that the certificate&rsquo;s private key is never accessible to any systems. The key remains securely with VCF Operations.</p>
 <p>Now that the principle is clear, there are still a few requirements that our Linux system must meet. The following software is required:</p>
 <ul>
@@ -2005,13 +2021,11 @@ To keep this example simple, I’m using a single gitea-runner user for the enti
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">sudo systemctl daemon-reload
 </span></span><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> --now gitea-runner
-</span></span></code></pre></div>
-
-<div class="image-gallery" id="gallery-6ce628b3" data-gallery-picker><a href="/vcf91-cert-pipeline/Gitea%20Runner.jpg" class="gallery-item" data-lightbox-group="gallery-6ce628b3" data-title="Gitea Runner" data-preview-src="/vcf91-cert-pipeline/Gitea%20Runner_hu_384f774e9dfac64b.jpg">
-                        <img src="/vcf91-cert-pipeline/Gitea%20Runner_hu_8cacb4bf6bba5d01.jpg" alt="Gitea Runner" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Gitea Runner</div>
-                    </a></div>
+</span></span></code></pre></div><figure><a href="Gitea%20Runner.jpg"><picture><source srcset="/vcf91-cert-pipeline/Gitea%20Runner_hu_68bb50db9e803deb.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-cert-pipeline/Gitea%20Runner_hu_68bb50db9e803deb.jpg"alt="Gitea Runner"width="1535"
+            height="812" loading="lazy"/>
+        </picture></a><figcaption><p>Gitea Runner</p></figcaption></figure>
 
 
 <aside class="admonition info" data-admonition-type="info">
@@ -2563,13 +2577,11 @@ Now you have two options: either import the repository certificate into the VCF 
 </span></span></code></pre></div><p>After that, all you have to do is restart the services:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">echo ‘y’ | /opt/vmware/vcf/operationsmanager/scripts/cli/sddcmanager_restart_services.sh
 </span></span></code></pre></div><p>As a final step, you can now configure the offline repository in the VCF Installer.</p>
-
-
-<div class="image-gallery" id="gallery-9fd82df6" data-gallery-picker><a href="/vcf91-repo/Working%20offline%20repository.jpg" class="gallery-item" data-lightbox-group="gallery-9fd82df6" data-title="Working offline repository" data-preview-src="/vcf91-repo/Working%20offline%20repository_hu_89a0edd64caef4e6.jpg">
-                        <img src="/vcf91-repo/Working%20offline%20repository_hu_7dded8ddd752e507.jpg" alt="Working offline repository" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Working offline repository</div>
-                    </a></div>
+<figure><a href="Working%20offline%20repository.jpg"><picture><source srcset="/vcf91-repo/Working%20offline%20repository_hu_9790121488a0d6e6.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-repo/Working%20offline%20repository_hu_9790121488a0d6e6.jpg"alt="Working offline repository"width="1622"
+            height="991" loading="lazy"/>
+        </picture></a><figcaption><p>Working offline repository</p></figcaption></figure>
 <h2 id="final-words">Final words</h2>
 <p>It takes quite a bit of effort to get this up and running. If you want to make things easier on yourself, you should check out the
 VCF Infrastructure Services (VIS) Appliance for VCF 9.1 Lab/PoC by William Lam. It’s incredibly useful, but there might be the occasional situation in a consultant’s life where you can’t rely on an appliance like this. I don&rsquo;t really understand why you can&rsquo;t just accept the certificate in the installer via the UI, like with VCF Operations - that would make life a little easier. Well, in the end, building it was good for my rusty Linux skills, too. I hope this article helps you if you ever need to build a repository manually.</p>
@@ -2596,13 +2608,11 @@ Long story short, the drives have proven themselves in memory tiering, which is 
 <h2 id="intel-optane">Intel Optane</h2>
 <p>Intel Optane SSDs such as the 900P are PCIe/NVMe drives built around 3D XPoint storage technology developed by Intel and Micron. 3D XPoint stores bits by changing the resistance state of the memory cell in a transistor-less cross-point array. Don’t ask me exactly how it works - maybe black magic.</p>
 <p>But what I do know is that Optane drives are characterized by tremendous durability, low latency, and, above all, consistent read/write performance. Unlike many consumer NAND SSDs, they do not depend on a small SLC write cache, so there is no dramatic performance cliff once that cache is exhausted. In my tests, I was able to fill the entire drive to its maximum capacity without any loss of performance. This is also consistent with Intel&rsquo;s tests, which can still be found online. Unfortunately, Optane was discontinued in 2022.</p>
-
-
-<div class="image-gallery" id="gallery-231dde72" data-gallery-picker><a href="/intel-optane-nutanix/Optane%20900P.jpg" class="gallery-item" data-lightbox-group="gallery-231dde72" data-title="Optane 900P" data-preview-src="/intel-optane-nutanix/Optane%20900P_hu_56fc1860c7a5ac64.jpg">
-                        <img src="/intel-optane-nutanix/Optane%20900P_hu_d49e44aee10657be.jpg" alt="Optane 900P" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Optane 900P</div>
-                    </a></div>
+<figure><a href="Optane%20900P.jpg"><picture><source srcset="/intel-optane-nutanix/Optane%20900P_hu_1c87289b2def7531.jpg" type="image/jpeg">
+          <img
+            src="/intel-optane-nutanix/Optane%20900P_hu_1c87289b2def7531.jpg"alt="Optane 900P"width="2016"
+            height="1512" loading="lazy"/>
+        </picture></a><figcaption><p>Optane 900P</p></figcaption></figure>
 <p>It’s also important to distinguish between consumer and enterprise Optane drives. The 900P was positioned as a client and enthusiast SSD, while enterprise models offered additional features such as enhanced power-loss protection and end-to-end data protection. Although the 900P falls into the consumer category, in terms of IOPS for random read and write operations, latency, and lifespan, it outperforms every other consumer NVMe drive I&rsquo;ve ever used.</p>
 <h2 id="the-idea">The Idea</h2>
 <p>My idea was simple, more or less. Using Intel Optane as a dedicated CVM and performance-tier device in a Nutanix CE node was intended to reduce storage latency, improve performance for random and mixed I/O operations, and ensure more consistent write behavior under sustained load. That’s how simple and straightforward my thinking was.</p>
@@ -3727,13 +3737,11 @@ The Distributed VXLAN Connectivity Model was born. This feature integrates NSX w
 </aside>
 <h2 id="lab-setup">Lab Setup</h2>
 <p>To keep the lab as simple as possible, I decided to use a virtual VyOS router as the border gateway router. The Vyos router runs on a standalone ESX server outside my VCF environment; since having something like this nested within my VCF environment consistently leads to problems, I always perform such tests on dedicated hardware. I’m using a Route Controller in an active/standby configuration. The following diagram clearly illustrates the setup. I have two test Linux VMs: Alpine02 is part of my VPC’s public network (<code>10.100.0.8/29</code>), and Alpine01 is in the VRF <code>tenant</code> network <code>192.168.100.0/24</code>.</p>
-
-
-<div class="image-gallery" id="gallery-260d2d97" data-gallery-picker><a href="/vcf91-dtgw-vxlan/Lab-Setup.jpg" class="gallery-item" data-lightbox-group="gallery-260d2d97" data-title="Lab-Setup" data-preview-src="/vcf91-dtgw-vxlan/Lab-Setup_hu_3d450cf02194e9f6.jpg">
-                        <img src="/vcf91-dtgw-vxlan/Lab-Setup_hu_7bce588eab4b2162.jpg" alt="Lab-Setup" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Lab-Setup</div>
-                    </a></div>
+<figure><a href="Lab-Setup.jpg"><picture><source srcset="/vcf91-dtgw-vxlan/Lab-Setup_hu_cee5c9d9154c3291.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-dtgw-vxlan/Lab-Setup_hu_cee5c9d9154c3291.jpg"alt="Lab-Setup"width="3421"
+            height="2154" loading="lazy"/>
+        </picture></a><figcaption><p>Lab-Setup</p></figcaption></figure>
 <p>In hindsight, it wasn’t the smartest idea to name my VRF <code>tenant</code>, but to be honest, I’m too lazy to adjust the configuration and graphics at this point. Both the Vyos router&rsquo;s VTEP interface and the ESX TEP interfaces are in VLAN 4 and on the same IP network. In a real-world setup, these would be in different VLANs, but I didn&rsquo;t want to introduce another routing instance into the underlay network.  The actual BGP session is initialized over VLAN 1002. Both VLANs 1002 and 4 belong to the Vyos default VRF. The VXLAN VNI used is 65000.</p>
 <p>In a real-world scenario, the setup is, of course, somewhat different. Normally, for EVPN peering between the route controller and the EVPN gateway, a loopback interface in the global routing context on the physical fabric is used.
 In addition, the route controller BGP interfaces are often in a customer-specific VRF. The same can and should apply to the TEP interfaces of the ESX servers, which necessitates route leaking, since IP connectivity is required between BGP peers and between TEP and VTEP interfaces.
@@ -4631,13 +4639,11 @@ k get pods -A -o wide | grep logging-operator-fluentd
 In addition, a fast path interface is automatically selected. This assignment is initially fixed and cannot be changed via the UI. In my diagram, VPC1 Active runs on VNA02 via fast path interface 1, and the standby instance is on VNA01, also via fast path interface 1. For VPC2, it’s exactly the opposite: my active instance is on VNA01 via fast path interface 3, and the passive instance is on VNA02. This means the VNA cluster can be active/active from an overall cluster utilization perspective, because different VPC service instances can be active on different VNAs. However, each individual VPC service instance still follows an active/standby model.</p>
 <h2 id="service-segments">Service Segments</h2>
 <p>The service segment (system owned VPC private subnet) is what is known as a child segment in NSX, which is simply an overlay segment connected to a parent overlay segment via a child port. This child port extracts traffic for a specific VLAN from the parent segment and forwards it to the child segment. The parent segment is used only to transport the tagged packets. This design is what makes the VNA possible in the first place.</p>
-
-
-<div class="image-gallery" id="gallery-3cff706b" data-gallery-picker><a href="/vcf91-vna-2/VNA%20-%20Trafficflow.jpg" class="gallery-item" data-lightbox-group="gallery-3cff706b" data-title="VNA - Trafficflow" data-preview-src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_ed9c5ef348917e22.jpg">
-                        <img src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_3e17435c3934c5b4.jpg" alt="VNA - Trafficflow" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">VNA - Trafficflow</div>
-                    </a></div>
+<figure><a href="VNA%20-%20Trafficflow.jpg"><picture><source srcset="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_7809550e948634da.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-vna-2/VNA%20-%20Trafficflow_hu_7809550e948634da.jpg"alt="VNA - Trafficflow"width="7189"
+            height="4656" loading="lazy"/>
+        </picture></a><figcaption><p>VNA - Trafficflow</p></figcaption></figure>
 <p>My diagram clearly illustrates the actual egress traffic flow. Traffic from the Alpine test VM destined for the internet is first sent to the private segment and from there to the VPC gateway for VPC1. Like the transit gateway, the VPC gateway is implemented in a distributed manner, meaning it exists on every transport node.  Via the VPC gateway, the traffic is redirected to the service subnet of the VPC and sent there to the service port of the active service instance for VPC01. Each service instance always has the same IP address but resides in different VLANs and is thus isolated. Since the active service instance is running on a VNA on a different ESX host, the traffic is sent to the other ESX host via the parent segment. This happens in the usual way, as with any overlay network, via the TEP network between the ESX servers. Upon arriving at ESX Server 2, the child port extracts the VLAN-tagged traffic from the parent segment and forwards it into the corresponding child overlay segment to the active service instance for VPC01. After SNAT has been performed on the active service instance, the packet does not have to return to the original ESX host just to continue its north-south path. Instead, forwarding continues from the transport node where the active service instance is currently running. From the VPC Gateway, the traffic goes to the Transit Gateway and then into our Public VLAN, where the packets are handed over to the physical network. The public VLAN must be a VLAN within the physical infrastructure, and SNAT IP addresses and smaller subnets for VPC public networks are automatically provisioned from this network.</p>
 
 
@@ -4687,13 +4693,11 @@ By the way, if you don&rsquo;t want to wait for NSX&rsquo;s slow UI, you can als
 </span></span><span class="line"><span class="cl">76b971e4-e29a-4bdc-bfb6-38090bf8ee12   5      2059         SR-DTGW-VPC04                     SERVICE_ROUTER_TIER1        4       1/50000        
 </span></span><span class="line"><span class="cl">23f4d581-62a6-41e6-84c1-3501953af6aa   6      2056         SR-DTGW-VPC03                     SERVICE_ROUTER_TIER1        4       0/50000
 </span></span></code></pre></div><p>And the corresponding option in the NSX UI.</p>
-
-
-<div class="image-gallery" id="gallery-f7805c58" data-gallery-picker><a href="/vcf91-vna-2/VNA%20-%20Gateway%20Services.jpg" class="gallery-item" data-lightbox-group="gallery-f7805c58" data-title="VNA - Gateway Services" data-preview-src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_7152fb9cca3df605.jpg">
-                        <img src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_34e0246799dfcab5.jpg" alt="VNA - Gateway Services" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">VNA - Gateway Services</div>
-                    </a></div>
+<figure><a href="VNA%20-%20Gateway%20Services.jpg"><picture><source srcset="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_cc9551e193fcfcf2.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-vna-2/VNA%20-%20Gateway%20Services_hu_cc9551e193fcfcf2.jpg"alt="VNA - Gateway Services"width="3456"
+            height="1856" loading="lazy"/>
+        </picture></a><figcaption><p>VNA - Gateway Services</p></figcaption></figure>
 <p>The attentive reader will have noticed by now that all VPCs are displayed as T1 service routers in the VNA, and that the active service instances have a “1” in the ‘Neighbors’ column, while the passive ones have a “0.” This allows you to quickly check the status of the service instances via the CLI. Now I just need to explain auto-relocation, and hopefully it will all make sense.</p>
 <p>Automatic relocation is triggered when, while adding services (such as an L7 load balancer), resources are exhausted and the capacity of the current node pair is exceeded. This is checked every time a new service or VPC is created and is performed if necessary. Of course, this requires sufficient capacity within the cluster. The cluster does not scale out dynamically.</p>
 <p>To better explain (auto) standby-relocation, let’s consider a VNA cluster consisting of at least three VNAs. I have created a VPC, and for this VPC, an active service instance is created on VNA1 and a passive one on VNA2. In this scenario, VNA3 remains empty. If, for any reason, the first VNA appliance fails—that is, the appliance hosting my active service instance for VPC 1—then two things will happen.</p>
@@ -4833,13 +4837,11 @@ Spans can contain overlapping clusters; that is to say, a cluster can belong to 
 </ul>
 <p>There are several ways to do this. The simplest is to create a new span via NSX in <em><strong>Inventory -&gt; Network Spans -&gt; Add Network Span</strong></em>.
 Here, you select the cluster, save it, and that&rsquo;s it.</p>
-
-
-<div class="image-gallery" id="gallery-a9fc1543" data-gallery-picker><a href="/vcf91-vna-2/Network%20Spans.jpg" class="gallery-item" data-lightbox-group="gallery-a9fc1543" data-title="Network Spans" data-preview-src="/vcf91-vna-2/Network%20Spans_hu_a8bb4b564f4f4764.jpg">
-                        <img src="/vcf91-vna-2/Network%20Spans_hu_5f2c7f8f02e6a735.jpg" alt="Network Spans" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Network Spans</div>
-                    </a></div>
+<figure><a href="Network%20Spans.jpg"><picture><source srcset="/vcf91-vna-2/Network%20Spans_hu_c052dcf6b4f8e243.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-vna-2/Network%20Spans_hu_c052dcf6b4f8e243.jpg"alt="Network Spans"width="1720"
+            height="1324" loading="lazy"/>
+        </picture></a><figcaption><p>Network Spans</p></figcaption></figure>
 
 
 <aside class="admonition node" data-admonition-type="node">
@@ -4857,13 +4859,11 @@ Here, you select the cluster, save it, and that&rsquo;s it.</p>
 </div>
 </aside>
 <p>The solution here is to configure the span via the Desired State using the vCenter Client.</p>
-
-
-<div class="image-gallery" id="gallery-14a3ec81" data-gallery-picker><a href="/vcf91-vna-2/Span%20over%20Desired%20State.jpg" class="gallery-item" data-lightbox-group="gallery-14a3ec81" data-title="Span over Desired State" data-preview-src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_2eb7e105ea235d50.jpg">
-                        <img src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_e7b3f3a4c5f780df.jpg" alt="Span over Desired State" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Span over Desired State</div>
-                    </a></div>
+<figure><a href="Span%20over%20Desired%20State.jpg"><picture><source srcset="/vcf91-vna-2/Span%20over%20Desired%20State_hu_4a6717993f65408.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-vna-2/Span%20over%20Desired%20State_hu_4a6717993f65408.jpg"alt="Span over Desired State"width="1719"
+            height="1028" loading="lazy"/>
+        </picture></a><figcaption><p>Span over Desired State</p></figcaption></figure>
 <p>To use Spans, simply create a new transit gateway and assign it to an existing Span. Alternatively, you can edit an existing one. However, if, for example, there are already VPCs active in a vSphere cluster that are not within the Span you want to assign, the operation will fail.</p>
 
 
@@ -5131,13 +5131,11 @@ Next, select the previously created External Connection and the External IP Bloc
 </span></span><span class="line"><span class="cl">round-trip min/avg/max <span class="o">=</span> 7.458/7.778/8.112 ms
 </span></span></code></pre></div><h3 id="how-does-it-all-work">How does it all work?</h3>
 <p>Let&rsquo;s go into the rabbit hole and take a look at the Traceflow results first.</p>
-
-
-<div class="image-gallery" id="gallery-223dd1c2" data-gallery-picker><a href="/vcf91-vna-vpc/Traceflow.jpg" class="gallery-item" data-lightbox-group="gallery-223dd1c2" data-title="Traffic:  Traceflow" data-preview-src="/vcf91-vna-vpc/Traceflow_hu_bc5d3269f9dd9a65.jpg">
-                        <img src="/vcf91-vna-vpc/Traceflow_hu_1251885f4c0a0266.jpg" alt="Traffic:  Traceflow" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Traffic:  Traceflow</div>
-                    </a></div>
+<figure><a href="Traceflow.jpg"><picture><source srcset="/vcf91-vna-vpc/Traceflow_hu_d7348e0d69a533a.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-vna-vpc/Traceflow_hu_d7348e0d69a533a.jpg"alt="Traffic: Traceflow"width="1454"
+            height="970" loading="lazy"/>
+        </picture></a><figcaption><p>Traffic: Traceflow</p></figcaption></figure>
 <p>Since the traceflow is too long and unfortunately doesn&rsquo;t fit in a screenshot, I took the time to write it all out in a table. Okay, to be honest, I just selected everything and told ChatGPT to create a Markdown table and shorten the columns, but there’s no need to make more work for yourself than necessary.</p>
 <p>To fully understand Traceflow, you need to know that my test VM is running on ESX03 and my actively used VNA is on ESX02. Additionally—and I haven’t mentioned this yet—every VPC connected to a distributed transit gateway with stateful services has a private service subnet. This is created automatically and cannot be modified. In my case, this is a /24 subnet from the 100.64.0.0/16 range. Unfortunately, the documentation does not specify exactly what this service subnet does at the time of writing this article. So I can only speculate.</p>
 <div class="table-wrapper">
@@ -5690,13 +5688,11 @@ To restrict this, you must use vDefend. VPCs that are not added to any connectiv
 </aside>
 <h2 id="but-where-does-this-blocking-actually-take-place">But where does this blocking actually take place?</h2>
 <p>The answer is quite simple. The policy is enforced on the transit gateway, which is why the policies only work within a single transit gateway. If traffic from another VPC passes through a second transit gateway, the policy does not apply, and the traffic is treated as if it came from an external system.</p>
-
-
-<div class="image-gallery" id="gallery-4189b13a" data-gallery-picker><a href="/vcf91-vpc-con-policy/Policies%20Overview.jpg" class="gallery-item" data-lightbox-group="gallery-4189b13a" data-title="Policies Overview" data-preview-src="/vcf91-vpc-con-policy/Policies%20Overview_hu_862719ed03c24c37.jpg">
-                        <img src="/vcf91-vpc-con-policy/Policies%20Overview_hu_20881723b2aa1b09.jpg" alt="Policies Overview" width="350" height="197" loading="lazy">
-
-                        <div class="gallery-item-caption">Policies Overview</div>
-                    </a></div>
+<figure><a href="Policies%20Overview.jpg"><picture><source srcset="/vcf91-vpc-con-policy/Policies%20Overview_hu_f69127a96349c189.jpg" type="image/jpeg">
+          <img
+            src="/vcf91-vpc-con-policy/Policies%20Overview_hu_f69127a96349c189.jpg"alt="Policies Overview"width="595"
+            height="503" loading="lazy"/>
+        </picture></a><figcaption><p>Policies Overview</p></figcaption></figure>
 <h2 id="so-what-do-we-do-with-this-now">So what do we do with this now?</h2>
 <p>To be honest, it’s not that simple; at first glance, it offers a kind of enhanced isolation for VPCs within the transit gateway. Of course, this feature doesn’t replace vDefend, but depending on your network architecture, it can provide significant added value. You just have to follow a few rules. For example, you need to consider whether and how you want to use the promiscuous policy.</p>
 <p>One possible scenario, for example, would be isolating specific VKS Kubernetes clusters by strictly using separate communities and VPCs here. In this case, you don&rsquo;t need to worry about isolation between the Kubernetes clusters, as the connectivity policies handle that. Because the Kubernetes clusters are in different VPCs with different communities, they cannot access public services from other VPCs in diffrent communities. Specifically, this means that even if the Kubernetes workload is accessible to the public, it cannot be accessed by another VPC unless that VPC has a promiscuous policy or is in the same community.</p>
@@ -6050,13 +6046,13 @@ NAT is selected by default. When creating a No-NAT external subnet, you must unc
 Once the network has been created using Save, you can proceed to create a VPC.</p>
 <h3 id="new-vpc">New VPC</h3>
 <p>To create the VPC, navigate to <em><strong>Infrastructure -&gt; Network &amp; Security -&gt; Virtual Private Clouds -&gt; Create VPC</strong></em>.
-The settings are fairly self-explanatory.
+The settings are fairly self-explanatory.</p>
 <figure><a href="05.png"><picture><source srcset="/nutanix-flow/05_hu_c69685d6bcc9c158.png" type="image/png">
           <img
             src="/nutanix-flow/05_hu_c69685d6bcc9c158.png"alt="VPC Setup"width="1700"
             height="1229"/>
         </picture></a><figcaption><p>VPC Setuo</p></figcaption></figure>
-You need to enter a name, connect an external network, and, as mentioned earlier, this network must be of the VLAN type. In our simple example, we can also enable “Set this subnet as the default next hop for outbound traffic.”
+<p>You need to enter a name, connect an external network, and, as mentioned earlier, this network must be of the VLAN type. In our simple example, we can also enable “Set this subnet as the default next hop for outbound traffic.”
 This option creates a static default route 0.0.0.0/0 via 192.168.200.1 in the virtual VPC router. I leave the SNAT IP set to “auto assigned.” Here, you could manually specify two SNAT IPs from the pool to have more control over outbound traffic. Additionally, the number of gateway hosts can be specified.</p>
 <figure><a href="06.png"><picture><source srcset="/nutanix-flow/06_hu_7989ef3986cb9aba.png" type="image/png">
           <img
@@ -6091,16 +6087,16 @@ In my example, however, I want to keep this option open, so I’m defining an IP
             height="757"/>
         </picture></a><figcaption><p>My Traceroute</p></figcaption></figure>
 <p>To test this, I used the My Tracroute tool, and in the screenshot you can clearly see the gateway I configured as an external VLAN listed as the third hop—in this case, my LAB router. As a cross-check, I look at the assigned NAT IP addresses for the VPC in the VPC Summary and filter for outbound traffic in my firewall; in the firewall log, I see the generated traffic using the second IP address of my VPC as SNAT IP.</p>
-<figure><a href="10.png"><picture><source srcset="/nutanix-flow/10_hu_be84c76e6d87bbe6.png" type="image/png">
+<figure><picture><source srcset="/nutanix-flow/10_hu_be84c76e6d87bbe6.png" type="image/png">
           <img
             src="/nutanix-flow/10_hu_be84c76e6d87bbe6.png"alt="VPC SNAT IPs"width="1266"
             height="745"/>
-        </picture></a><figcaption><p>VPC SNAT IPs</p></figcaption></figure>
-<figure><a href="11.png"><picture><source srcset="/nutanix-flow/11_hu_3485f386b9f09864.png" type="image/png">
+        </picture><figcaption><p>VPC SNAT IPs</p></figcaption></figure>
+<figure><picture><source srcset="/nutanix-flow/11_hu_3485f386b9f09864.png" type="image/png">
           <img
             src="/nutanix-flow/11_hu_3485f386b9f09864.png"alt="Firewall"width="1439"
             height="734"/>
-        </picture></a><figcaption><p>Firewall</p></figcaption></figure>
+        </picture><figcaption><p>Firewall</p></figcaption></figure>
 <p>So our VPC is now fully functional, but one problem remains. While the VM can communicate outbound, by default it is initially isolated from the outside world. Perhaps I should also mention that VMs within a VPC can communicate with all subnets in that VPC, though this is one of the basic features of a VPC.
 There is another useful feature that allows you to make a VM accessible from outside the VPC after all.</p>
 <h3 id="floating-ips">Floating IPs</h3>
